@@ -4,6 +4,9 @@ Mods is a framework to create interactive visualizations in TIBCO Spotfire. Mods
 
 [API Reference](./docs/index.md)
 
+
+[API Reference 2.](./docs2/README.md)
+
 ![][area-chart-mod-example]
 
 ## Developing a mod
