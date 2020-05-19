@@ -1,10 +1,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Spotfire® mods – API</title>
+    <title>Spotfire® Mods – API</title>
     <link>https://tibcosoftware.github.io/spotfire-mods/docs/api/</link>
-    <description>Recent content in API on Spotfire® mods</description>
+    <description>Recent content in API on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 27 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="https://tibcosoftware.github.io/spotfire-mods/docs/api/index.xml" rel="self" type="application/rss+xml" />
     
