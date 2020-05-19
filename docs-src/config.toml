@@ -1,5 +1,5 @@
 baseURL = "https://tibcosoftware.github.io/spotfire-mods/"
-title = "Spotfire® mods"
+title = "Spotfire® Mods"
 
 enableRobotsTXT = true
 
@@ -55,7 +55,7 @@ id = "UA-218413-1"
 
 [languages]
 [languages.en]
-title = "Spotfire® mods"
+title = "Spotfire® Mods"
 description = "Mods is a framework to create interactive visualizations in TIBCO Spotfire."
 languageName ="English"
 # Weight used for sorting.
