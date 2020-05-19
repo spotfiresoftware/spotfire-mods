@@ -1,0 +1,21 @@
+{{ define "main" }}
+<div class="td-content">
+	{{ $readTime := mul (div (countwords .Content) 220.0) 60 }}
+	{{ $minutes := math.Floor (div $readTime 60) }}
+	{{ $seconds := mod $readTime 60 }}
+	<p class="-text-secondary pt-3 h6" >Reading time: {{ $minutes }} {{ cond (eq $minutes 1) "minute" "minutes" }} and {{ $seconds }} {{ cond (eq $seconds 1) "second" "seconds" }}.</p>
+	<h1>{{ .Title }}</h1>
+	{{ with .Params.description }}<div class="lead">{{ . | markdownify }}</div>{{ end }}
+	{{ .Content }}
+        {{ partial "section-index.html" . }}
+	{{ if (and (not .Params.hide_feedback) (.Site.Params.ui.feedback.enable) (.Site.GoogleAnalytics)) }}
+		{{ partial "feedback.html" .Site.Params.ui.feedback }}
+		<br />
+	{{ end }}
+	{{ if (.Site.DisqusShortname) }}
+		<br />
+		{{ partial "disqus-comment.html" . }}
+	{{ end }}
+	<div class="text-muted mt-5 pt-3 border-top">{{ partial "page-meta-lastmod.html" . }}</div>
+</div>
+{{ end }}

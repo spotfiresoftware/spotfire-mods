@@ -1,0 +1,12 @@
+name = "tibcolabs"
+license = "Apache 2.0"
+licenselink = "https://github.com/google/docsy/blob/master/LICENSE"
+description = "A Hugo theme for TIBCO LABS documentation sites"
+homepage = "https://docsy.dev"
+tags = ["documentation", "multilingual", "customizable", "responsive", "docs"]
+features = []
+min_version = 0.53
+
+[author]
+  name = "The Docsy Authors, modified by TIBCO LABS"
+  homepage = "https://docsy.dev"

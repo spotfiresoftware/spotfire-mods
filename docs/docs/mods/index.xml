@@ -1,0 +1,75 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spotfire® mods – Packages</title>
+    <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/</link>
+    <description>Recent content in Packages on Spotfire® mods</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 13 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="https://tibcosoftware.github.io/spotfire-mods/docs/mods/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: custom1 Package</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/custom1/</link>
+      <pubDate>Fri, 13 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/mods/custom1/</guid>
+      <description>
+        
+        
+        &lt;p&gt;With this Package you can u&amp;hellip;&lt;/p&gt;
+&lt;h3 id=&#34;preview&#34;&gt;Preview&lt;/h3&gt;
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+&lt;h2 id=&#34;content&#34;&gt;Content&lt;/h2&gt;
+&lt;p&gt;ready to use &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Package&lt;/a&gt; | 
+Implementation &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: custom2 Package</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/custom2/</link>
+      <pubDate>Fri, 13 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/mods/custom2/</guid>
+      <description>
+        
+        
+        &lt;p&gt;With this Package you can u&amp;hellip;&lt;/p&gt;
+&lt;h3 id=&#34;preview&#34;&gt;Preview&lt;/h3&gt;
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+&lt;h2 id=&#34;content&#34;&gt;Content&lt;/h2&gt;
+&lt;p&gt;ready to use &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Package&lt;/a&gt; | 
+Implementation &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: custom3 Package</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/custom3/</link>
+      <pubDate>Fri, 13 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/mods/custom3/</guid>
+      <description>
+        
+        
+        &lt;p&gt;With this Package you can u&amp;hellip;&lt;/p&gt;
+&lt;h3 id=&#34;preview&#34;&gt;Preview&lt;/h3&gt;
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+&lt;h2 id=&#34;content&#34;&gt;Content&lt;/h2&gt;
+&lt;p&gt;ready to use &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Package&lt;/a&gt; | 
+Implementation &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>
