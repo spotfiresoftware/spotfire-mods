@@ -1,8 +1,8 @@
 ---
-title: "Packages"
-linkTitle: "Packages"
+title: "Mods"
+linkTitle: "Mods"
 weight: 2
 description: >
-  all our ready to use Packages.
+  All our mod examples and prototypes.
 ---
 

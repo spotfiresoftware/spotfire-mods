@@ -1,0 +1,10 @@
+{
+  "mode": "file",
+  "out": "docs-src/static/api-docs",
+  "theme": "./typedoc-theme",
+  "hideGenerator": false,
+  "name": "API Documentation",
+  "includeDeclarations": true,
+  "excludeExternals": true,
+  "readme": "none"
+}

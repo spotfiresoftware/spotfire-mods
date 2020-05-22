@@ -1,25 +1,18 @@
-baseURL = "https://tibcosoftware.github.io/spotfire-mods/"
+baseURL = ""
 title = "Spotfire® Mods"
-
 enableRobotsTXT = true
-
 # Hugo allows theme composition (and inheritance). The precedence is from left to right.
 theme = ["tibcolabs"]
-
-publishDir = "../docs"
-
+publishDir = "../dist"
 # Will give values to .Lastmod etc.
-enableGitInfo = true
-
+enableGitInfo = false
 # Language settings
 contentDir = "content/en"
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 # Useful when translating.
 enableMissingTranslationPlaceholders = true
-
 disableKinds = ["taxonomy", "taxonomyTerm"]
-
 # Highlighting config
 pygmentsCodeFences = true
 pygmentsUseClasses = false
@@ -47,53 +40,47 @@ quality = 75
 anchor = "smart"
 
 [services]
+
 [services.googleAnalytics]
 # Comment out the next line to disable GA tracking. Also disables the feature described in [params.ui.feedback].
 id = "UA-218413-1"
 
 # Language configuration
-
 [languages]
+
 [languages.en]
 title = "Spotfire® Mods"
 description = "Mods is a framework to create interactive visualizations in TIBCO Spotfire."
-languageName ="English"
+languageName = "English"
 # Weight used for sorting.
 weight = 1
 
-
 [markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      unsafe = true
+
+[markup.goldmark]
+
+[markup.goldmark.renderer]
+unsafe = true
 
 # Everything below this are Site Params
-
 [params]
 copyright = "TIBCO Software Inc."
 privacy_policy = "https://www.tibco.com/company/terms-of-use"
-
 # First one is picked as the Twitter card image if not set on page.
 # images = ["images/project-illustration.png"]
-
 # Menu title if your navbar has a versions selector to access old versions of your site.
 # This menu appears only if you have at least one [params.versions] set.
 version_menu = "Releases"
-
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/TIBCOSoftware/spotfire-mods/"
 # An optional link to a related project repo. For example, the sibling repository where your product code lives.
 github_project_repo = "https://github.com/TIBCOSoftware/spotfire-mods/"
-
 # Specify a value here if your content directory is not in your repo's root directory
 github_subdir = "docs-src"
-
 # Google Custom Search Engine ID. Remove or comment out to disable search.
 #gcs_engine_id = "017084625331617839746:6p1bvjvphxf"
-
 # Enable Algolia DocSearch
 algolia_docsearch = false
-
 # Enable Lunr.js offline search
 offlineSearch = true
 
@@ -121,36 +108,48 @@ yes = 'Glad to hear it! Please <a href="https://github.com/TIBCOSoftware/spotfir
 no = 'Sorry to hear that. Please <a href="https://github.com/TIBCOSoftware/spotfire-mods/issues/new">tell us how we can improve</a>.'
 
 [params.links]
+
 # End user relevant links. These will show up on left side of footer and in the community page if you have one.
 [[params.links.user]]
-	name = "Facebook"
-	url = "https://www.facebook.com/TIBCO"
-	icon = "fab fa-facebook"
-        desc = "Show your love"
+name = "Facebook"
+url = "https://www.facebook.com/TIBCO"
+icon = "fab fa-facebook"
+desc = "Show your love"
+
 [[params.links.user]]
-	name ="Twitter"
-	url = "https://twitter.com/tibco"
-	icon = "fab fa-twitter"
-        desc = "Follow us on Twitter to get the latest news!"
+name = "Twitter"
+url = "https://twitter.com/tibco"
+icon = "fab fa-twitter"
+desc = "Follow us on Twitter to get the latest news!"
+
 [[params.links.user]]
-	name = "Linkedin"
-	url = "https://www.linkedin.com/company/tibco/"
-	icon = "fab fa-linkedin"
-        desc = "Practical questions and curated answers"
+name = "Linkedin"
+url = "https://www.linkedin.com/company/tibco/"
+icon = "fab fa-linkedin"
+desc = "Practical questions and curated answers"
+
 # Developer relevant links. These will show up on right side of footer and in the community page if you have one.
 [[params.links.developer]]
-	name = "GitHub"
-	url = "https://github.com/TIBCOSoftware/spotfire-mods/"
-	icon = "fab fa-github"
-        desc = "Development takes place here!"
-[[params.links.developer]]
-	name = "TIBCO Community"
-	url = "https://community.tibco.com/wiki/"
-	icon = "fa fa-comment-alt"
-        desc = "Connect with other project developers"
-[[params.links.developer]]
-	name = "TIBCO LABS Email"
-	url = "mailto:tibcolabs@tibco.com"
-	icon = "fa fa-envelope"
-        desc = "Discuss development issues around the project"
+name = "GitHub"
+url = "https://github.com/TIBCOSoftware/spotfire-mods/"
+icon = "fab fa-github"
+desc = "Development takes place here!"
 
+[[params.links.developer]]
+name = "TIBCO Community"
+url = "https://community.tibco.com/wiki/"
+icon = "fa fa-comment-alt"
+desc = "Connect with other project developers"
+
+[[params.links.developer]]
+name = "TIBCO LABS Email"
+url = "mailto:tibcolabs@tibco.com"
+icon = "fa fa-envelope"
+desc = "Discuss development issues around the project"
+
+[menu]
+
+    [[menu.main]]
+    name = "API Documentation"
+    url = "/api-docs/"
+    weight = 25
