@@ -2,7 +2,9 @@
 title: "Area Chart"
 linkTitle: "Area Chart"
 date: 2020-05-20
-weight: 2
+weight: 3
+description: > 
+    A basic Area Chart Mod.
 ---
 
 <img src="../../area-chart.png" style="margin-bottom: 40px">
