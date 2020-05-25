@@ -1,0 +1,17 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spotfire® Mods – Mod Data Views</title>
+    <link>https://tibcosoftware.github.io/spotfire-mods/docs/mod-data-views/</link>
+    <description>Recent content in Mod Data Views on Spotfire® Mods</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="https://tibcosoftware.github.io/spotfire-mods/docs/mod-data-views/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+  </channel>
+</rss>

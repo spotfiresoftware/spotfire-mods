@@ -6,4 +6,4 @@ description: >
 
 ---
 
-{{< readfile file="static/docs/mod-schema/index.html" html="true" >}}
+< readfile file="static/docs/mod-schema/index.html" html="true" >
