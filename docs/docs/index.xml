@@ -14,22 +14,6 @@
     
     
     <item>
-      <title>Docs: Basic Bar Chart</title>
-      <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/bar-chart/</link>
-      <pubDate>Wed, 20 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/mods/bar-chart/</guid>
-      <description>
-        
-        
-        &lt;img src=&#34;step5-1.PNG&#34; style=&#34;margin-bottom: 40px&#34;&gt;
-&lt;p&gt;This is a basic bar chart&lt;/p&gt;
-&lt;p&gt;Implementation &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
       <title>Docs: Barchart mod using GoogleCharts</title>
       <link>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/barchart-googlechart/</link>
       <pubDate>Wed, 20 May 2020 00:00:00 +0000</pubDate>
@@ -643,6 +627,37 @@ Reconnection is necessary at the time of writing; it may not be necessary in fut
     </item>
     
     <item>
+      <title>Docs: Blank Mod</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/mod-starter/</link>
+      <pubDate>Wed, 20 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/mods/mod-starter/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Blank Mod. Perfect for starting from scratch.&lt;/p&gt;
+&lt;p&gt;Implementation &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Basic Bar Chart</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/bar-chart/</link>
+      <pubDate>Wed, 20 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/mods/bar-chart/</guid>
+      <description>
+        
+        
+        &lt;img src=&#34;step5-1.PNG&#34; style=&#34;margin-bottom: 40px&#34;&gt;
+&lt;p&gt;This is a basic bar chart&lt;/p&gt;
+&lt;p&gt;Implementation &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Area Chart</title>
       <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/area-chart/</link>
       <pubDate>Wed, 20 May 2020 00:00:00 +0000</pubDate>
@@ -653,21 +668,6 @@ Reconnection is necessary at the time of writing; it may not be necessary in fut
         
         &lt;img src=&#34;../../area-chart.png&#34; style=&#34;margin-bottom: 40px&#34;&gt;
 &lt;p&gt;This is an area chart build with D3.&lt;/p&gt;
-&lt;p&gt;Implementation &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: Blank Mod</title>
-      <link>https://tibcosoftware.github.io/spotfire-mods/docs/mods/mod-starter/</link>
-      <pubDate>Wed, 20 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/mods/mod-starter/</guid>
-      <description>
-        
-        
-        &lt;p&gt;Blank Mod. Perfect for starting from scratch.&lt;/p&gt;
 &lt;p&gt;Implementation &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
 
       </description>
