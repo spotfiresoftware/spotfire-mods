@@ -4,7 +4,7 @@ enableRobotsTXT = true
 
 # Hugo allows theme composition (and inheritance). The precedence is from left to right.
 theme = ["tibcolabs"]
-publishDir = "../docs"
+publishDir = "../dist"
 
 # Will give values to .Lastmod etc.
 enableGitInfo = false
@@ -155,5 +155,5 @@ desc = "Discuss development issues around the project"
 
     [[menu.main]]
     name = "API Documentation"
-    url = "/api-docs/"
+    url = "api-docs/index.html"
     weight = 25
