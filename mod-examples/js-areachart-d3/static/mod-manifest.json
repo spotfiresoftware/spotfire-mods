@@ -1,0 +1,64 @@
+{
+    "apiVersion": "1.0",
+    "version": "0.2.14",
+    "name": "Area Chart",
+    "id": "spotfire-area-chart-mod",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "chartType",
+            "type": "string",
+            "defaultValue": "overlapping"
+        },
+        {
+            "name": "curveType",
+            "type": "string",
+            "defaultValue": "rounded"
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "X",
+                "mode": "categorical",
+                "placement": "bottom",
+                "dropTarget": {
+                    "icon": "XAxis3D",
+                    "description": "Use {0} on the mod's X-axis"
+                },
+                "propertyControl": {
+                    "title": "X-axis"
+                },
+                "legendItem": {
+                    "title": "X-axis",
+                    "defaultVisibility": "hidden"
+                }
+            },
+            {
+                "name": "Y",
+                "mode": "continuous",
+                "allowMultipleMeasures": true,
+                "placement": "left",
+                "propertyControl": {
+                    "title": "Y-axis"
+                },
+                "legendItem": {
+                    "title": "Y-axis",
+                    "defaultVisibility": "hidden"
+                }
+            }
+        ]
+    },
+    "files": [
+        "index.html",
+        "main.css",
+        "bundle.js"
+    ]
+}

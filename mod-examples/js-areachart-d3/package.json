@@ -1,0 +1,23 @@
+{
+    "name": "js-areachart-d3",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "server": "node development-server.js dist",
+        "build": "webpack",
+        "build-watch": "webpack --watch",
+        "start": "npm run build-watch"
+    },
+    "author": "dcroitor, dhategan",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "d3": "^5.14.2",
+        "live-server": "^1.2.1",
+        "webpack": "^4.41.5",
+        "webpack-cli": "^3.3.10",
+        "array-flatten": "^3.0.0",
+        "copy-webpack-plugin": "^5.1.1"
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "apiVersion": "1.0",
+    "version": "1.0",
+    "name": "BarChart example using googlecharts",
+    "id": "basic-barchart-googlecharts",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "orientation",
+            "type": "string",
+            "defaultValue": "vertical"
+        },
+        {
+            "name": "stacking",
+            "type": "string",
+            "defaultValue": "side-by-side"
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "X",
+                "mode": "categorical",
+                "placement": "bottom",
+                "dropTarget": {
+                    "icon": "XAxis3D",
+                    "description": "Use {0} on the mod's X-axis"
+                }
+            },
+            {
+                "name": "Y",
+                "mode": "continuous",
+                "placement": "left"
+            }
+        ]
+    },
+    "files": [
+        "index.html",
+        "main.css",
+        "main.js"
+    ]
+}

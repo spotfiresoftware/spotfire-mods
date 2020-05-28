@@ -1,0 +1,39 @@
+{
+    "apiVersion": "1.0",
+    "version": "1.0",
+    "name": "Gauge",
+    "id": "spotfire-mod-example-gauge",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "image",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "coordinates",
+            "type": "string",
+            "defaultValue": "{}"
+        },
+        {
+            "name": "settings",
+            "type": "string",
+            "defaultValue": "{}"
+        }
+    ],
+    "dataViewDefinition": {
+        "axes": [
+            {
+                "name": "Category",
+                "mode": "categorical",
+                "placement": "bottom"
+            },
+            {
+                "name": "Measurement",
+                "mode": "continuous",
+                "placement": "left"
+            }
+        ]
+    },
+    "files": []
+}
