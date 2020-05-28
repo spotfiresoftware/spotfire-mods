@@ -5,4 +5,4 @@ description: >
     This document contains the generated documentation for the mod-manifest.json file.
 ---
 
-< readfile file="static/docs/mod-schema/index.html" html="true" >
+{{< mod-schema "mod-schema/index.html" >}}

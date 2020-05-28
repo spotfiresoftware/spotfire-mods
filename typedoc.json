@@ -1,7 +1,7 @@
 {
   "mode": "file",
   "out": "docs-src/static/api-docs",
-  "theme": "./typedoc-theme",
+  "theme": "./mod-api/typedoc-theme",
   "hideGenerator": false,
   "name": "API Documentation",
   "includeDeclarations": true,

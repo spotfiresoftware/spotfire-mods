@@ -2,4 +2,4 @@ node_modules/
 dist/
 **/resources/_gen/
 docs-src/static/api-docs
-docs-src/static/docs
+docs-src/static/mod-schema

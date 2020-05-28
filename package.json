@@ -13,8 +13,8 @@
     "live-server": "live-server dist",
     "serve": "hugo serve --source ./docs-src -D",
     "build-website": "hugo -s ./docs-src -D",
-    "extract-api": "typedoc spotfire-api/spotfire-api.d.ts",
-    "extract-schema": "bootprint json-schema -f mod-schema/config.js mod-schema/mod-schema.json docs-src/static/docs/mod-schema"
+    "extract-api": "typedoc mod-api/spotfire-api.d.ts",
+    "extract-schema": "bootprint json-schema -f mod-schema/config.js mod-schema/mod-schema.json docs-src/static/mod-schema"
   },
   "dependencies": {
     "bootprint": "^4.0.4",

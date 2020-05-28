@@ -1,0 +1,9 @@
+<iframe id="schema-frame" width="100%" onload="resizeIFrameToFitContent()" src="{{.Site.BaseURL}}{{.Get 0}}"  frameborder="0" allowfullscreen="allowfullscreen" allow="geolocation *; microphone *; camera *; midi *; encrypted-media *"></iframe>
+<script type="application/javascript">
+
+    function resizeIFrameToFitContent( ) {
+        let frame = document.getElementById("schema-frame");
+        frame.height = frame.contentWindow.document.body.scrollHeight;
+    }
+    window.addEventListener("resize",resizeIFrameToFitContent);
+</script>
