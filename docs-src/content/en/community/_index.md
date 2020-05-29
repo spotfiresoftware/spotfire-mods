@@ -1,5 +1,6 @@
 ---
 title: Community
+draft: true
 menu:
   main:
     weight: 40

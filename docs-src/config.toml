@@ -63,6 +63,9 @@ weight = 1
 
 [markup.goldmark]
 
+[markup.goldmark.extensions]
+footnote = true
+
 [markup.goldmark.renderer]
 unsafe = true
 
