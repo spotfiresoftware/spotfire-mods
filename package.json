@@ -12,7 +12,8 @@
   "scripts": {
     "live-server": "live-server dist",
     "serve": "hugo serve --source ./docs-src -D",
-    "build-website": "hugo -s ./docs-src -D",
+    "build-website": "hugo -s ./docs-src",
+    "build-website-locally": "hugo -s ./docs-src -D -b \"/\"",
     "extract-api": "typedoc mod-api/spotfire-api.d.ts",
     "extract-schema": "bootprint json-schema -f mod-schema/config.js mod-schema/mod-schema.json docs-src/static/mod-schema"
   },

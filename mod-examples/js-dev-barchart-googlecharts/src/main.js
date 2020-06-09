@@ -43,13 +43,14 @@ Spotfire.initialize(async mod => {
         /**
          * Check for any errors. 
          */
-        if(await dataView.hasError())
+        const error = await dataView.getError();
+        if(error !== null)
         {
             /**
              * Here we should really clear the previous rendering
              * and display the message to the user.
              */
-            console.log(await dataView.getError());
+            console.log(error);
             return;
         }
 

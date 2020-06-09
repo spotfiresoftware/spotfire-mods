@@ -3,6 +3,8 @@ title: Barchart mod using GoogleCharts
 linkTitle: "Barchart mod using GoogleCharts"
 date: 2020-05-20
 weight: 1
+description: > 
+    This tutorial shows how to create a basic bar chart using googlecharts and the Spotfire API.
 ---
 
 

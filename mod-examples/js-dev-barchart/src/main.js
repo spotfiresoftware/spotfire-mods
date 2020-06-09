@@ -36,13 +36,15 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.Axis} yAxis
      */
     async function renderBarChart(dataView, yAxisMode, splitBars, yAxis) {
-        if (await dataView.hasError()) {
-            onError(await dataView.getError());
+        
+        let error = await dataView.getError();
+        if (error !== null) {
+            onError(error);
             return;
         }
 
         // Get y-axis
-        let dataViewYAxis = await dataView.getAxis("Y");
+        let dataViewYAxis = await dataView.continuousAxes("Y");
         if(dataViewYAxis == null)
         {
             onError("No data on y axis.");

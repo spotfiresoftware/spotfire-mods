@@ -86,9 +86,8 @@ const init = async (mod) => {
     const onChange = async (dataView, windowSize, chartType, curveType) => {
         try {
             tooltip.hide();
-            const hasError = await dataView.hasError();
-            if (hasError) {
-                const error = await dataView.getError();
+            const error = await dataView.getError();
+            if (error !== null) {
                 printError(error);
             } else {
                 clearError();
