@@ -15,6 +15,7 @@ export const addHandlersSelection = (state, callback) => {
 
     document.onmousedown = (e) => {
         setSelectionActive(true);
+        callback({ dragSelectActive: true });
         const { x, y } = e;
         selectionPoint = { x, y };
         selectionDiv.style.left = x + "px";
@@ -49,13 +50,16 @@ export const addHandlersSelection = (state, callback) => {
         selectionBgDiv.style.visibility = "hidden";
 
         const minSelectionSize = 2;
-        if (width > minSelectionSize && height > minSelectionSize)
+        if (width > minSelectionSize && height > minSelectionSize) {
             callback({
                 x: x < selectionPoint.x ? x : selectionPoint.x,
                 y: y < selectionPoint.y ? y : selectionPoint.y,
                 width,
                 height
             });
+        } else {
+            callback({ dragSelectActive: false });
+        }
 
         document.removeEventListener("mousemove", mousemove);
         document.removeEventListener("mouseup", mouseup);

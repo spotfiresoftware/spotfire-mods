@@ -1,18 +1,19 @@
 //@ts-check
 
-const EMPTY = "(Empty)"
+const EMPTY = "(Empty)";
+const SEPARATOR = ":";
 export const is = (property) => (value) => property.value == value;
-export const X = (row) => row.categorical("X").getValue();
-export const Y = (row) => row.continuous("Y").getValue();
+export const X = (row) => row.categorical("X").fullName();
+export const Y = (row) => row.continuous("Y").value();
 export const Color = (row) => {
     try {
-        return row.categorical("Color").getValue();
+        return row.categorical("Color").fullName();
     } catch (e) {
         return EMPTY;
     }
 };
 export const marked = (row) => row.isMarked();
-export const hexCode = (row) => row.getColor().hexCode;
+export const hexCode = (row) => row.color().hexCode;
 export const mark = (row) => row.mark;
 export const getName = (node) => node.name;
 export const getKey = (node) => node.key;
@@ -20,23 +21,23 @@ export const markGroup = (group) => (key) => group.select(key).__node.mark();
 export const Path = (row) =>
     row
         .categorical("X")
-        .path.map(({ key }) => String(key))
-        .join(":");
+        .path.map(({ key }) => (key == null ? EMPTY : String(key)))
+        .join(SEPARATOR);
 
 /**
  *
  * @param {Spotfire.DataViewRow} row
  */
-export const createRowId = (row) => Path(row) + ":" + Color(row);
+export const createRowId = (row) => Path(row) + SEPARATOR + Color(row);
 
 /**
  *
  * @param {Spotfire.DataViewHierarchyNode} node
  */
 export const createHierarchyId = (node) => {
-    if (node.leafIndex != undefined && node.parent != undefined) {
+    if (node.parent != undefined && node.level >= 0) {
         const parentId = createHierarchyId(node.parent);
-        return parentId.length ? parentId + ":" + node.key : node.key;
+        return parentId.length ? parentId + SEPARATOR + node.key : node.key;
     } else return node.key;
 };
 
@@ -72,7 +73,7 @@ export const createPoint = (row) => {
 export const createGroup = (node) => {
     const points = node.rows().map(createRowId);
     const sum = node.rows().reduce((acc, row) => acc + Y(row), 0);
-    const name = node.fullName(":");
+    const name = node.fullName(SEPARATOR);
     const id = createHierarchyId(node);
 
     return {

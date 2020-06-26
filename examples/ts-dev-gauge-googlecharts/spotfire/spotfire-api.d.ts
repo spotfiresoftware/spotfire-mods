@@ -1,6 +1,58 @@
 export as namespace Spotfire;
 
 /**
+ * Predicate to determine if a current read operation for {@link DataView.allRows} should be aborted when there is new, non-streaming, data available. If this predicate returns true the {@link DataView.allRows} promise will be rejected and no rows will be returned.
+ * @public
+ */
+export declare type AbortPredicate = (currentRowCount: number) => boolean;
+
+/**
+ * Represents a property owned by the Spotfire document.
+ * These can be either document properties, data table properties or data column properties.
+ * @public
+ */
+export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType> extends AnalysisPropertyValue<T> {
+    /**
+     * Set the value of this instance.
+     * @param value - The value to set.
+     */
+    set(value: T | T[] | null): void;
+}
+
+/**
+ * Represents the data types possible to store in a document, table or column {@link AnalysisProperty}.
+ * @public
+ */
+export declare type AnalysisPropertyDataType = string | number | boolean | Date | TimeSpan | Time;
+
+/**
+ * Represents the values held by a {@link AnalysisProperty}.
+ * @public
+ */
+export declare interface AnalysisPropertyValue<T extends AnalysisPropertyDataType = AnalysisPropertyDataType> {
+    /**
+     * Gets the name of this instance.
+     */
+    name: string;
+    /**
+     * Gets the value held by this instance. Will throw if the value is a list, i.e. {@link AnalysisPropertyValue.isList} returns true;
+     */
+    value<T2 extends T>(): T2 | null;
+    /**
+     * Gets the value held by this instance. Will throw if the value is not a list, i.e. {@link AnalysisPropertyValue.isList} returns false;
+     */
+    valueList<T2 extends T>(): T2[];
+    /**
+     * Get the Spotfire internal data type of the property.
+     */
+    dataType: DataType;
+    /**
+     * Gets a value indicating whether the property is a list.
+     */
+    isList: boolean;
+}
+
+/**
  * Represents an axis of the Mod Visualization.
  * @public
  */
@@ -45,86 +97,9 @@ export declare interface AxisValues {
      */
     expression: string;
     /**
-     * Gets the mode that this axis is currently in.
-     * @deprecated - Use isCategorical
-     */
-    mode: "categorical" | "continuous";
-    /**
      * Gets a value indicating whether the axis is categorical or continuous.
      */
     isCategorical: boolean;
-}
-
-/**
- * Represents options describing how to render a button. See {@link PopoutComponentFactory.button}.
- * @public
- */
-export declare interface ButtonOptions {
-    /**
-     * Specifies the name that identifies the component.
-     */
-    name: string;
-    /**
-     * Specifies the text to display in the button.
-     */
-    text: string;
-}
-
-/**
- * Represents an element in the `path` of a {@link DataViewCategoricalValue}.
- * @public
- */
-export declare interface CategoricalValuePathElement {
-    /**
-     * Gets the display name of this element.
-     */
-    name: string;
-    /**
-     * Gets a key that uniquely identifies this element.
-     *
-     * In many cases this will be the same as {@link CategoricalValuePathElement.name} or {@link CategoricalValuePathElement.value}.
-     * However there are cases when those values can contain duplicates. For instance when working with cube data,
-     * or when using formatters and display values.
-     *
-     * They key is suitable to be used for identifying objects when implementing rendering transitions.
-     *
-     * The key can be null when the corresponding {@link CategoricalValuePathElement.value} is null.
-     */
-    key: string | null;
-    /**
-     * Gets the value of this element, or null if this element represents a missing or invalid data point.
-     *
-     * The type of the returned value can be determined from the {@link DataViewHierarchy.levels} in the {@link DataViewHierarchy} of
-     * the associated {@link DataViewCategoricalAxis}.
-     */
-    value<T extends DataViewValueType>(): T | null;
-}
-
-/**
- * Represents options describing how to render a checkbox. See {@link PopoutComponentFactory.checkbox}.
- * @public
- */
-export declare interface CheckboxOptions {
-    /**
-     * Specifies the name that identifies the component.
-     */
-    name: string;
-    /**
-     * Specifies the text to display next to the checkbox.
-     */
-    text: string;
-    /**
-     * Specifies the tooltip to display. If undefined, no tooltip is shown.
-     */
-    tooltip?: string;
-    /**
-     * Specifies whether the checkbox is checked.
-     */
-    checked: boolean;
-    /**
-     * Specifies whether the checkbox is enabled.
-     */
-    enabled: boolean;
 }
 
 /**
@@ -133,13 +108,13 @@ export declare interface CheckboxOptions {
  */
 export declare interface Column extends ColumnValues {
     /**
-     * Provides access to the properties of this instance. See {@link Property}.
+     * Provides access to the properties of this instance. See {@link AnalysisProperty}.
      */
-    properties(): Readable<PropertyValue[]>;
+    properties(): Readable<AnalysisPropertyValue[]>;
     /**
-     * Provides access to the {@link Property} with the specified `name`.
+     * Provides access to the {@link AnalysisProperty} with the specified `name`.
      */
-    property(name: string): Readable<PropertyValue>;
+    property(name: string): Readable<AnalysisPropertyValue>;
 }
 
 /**
@@ -154,26 +129,28 @@ export declare interface ColumnValues {
     /**
      * Gets the data type of this instance.
      */
-    dataType: string;
+    dataType: DataType;
 }
 
 /**
- * Represents the data of an event that occurs when a {@link PopoutComponent} has been changed by the user.
+ * Represents an object with methods to show a context menu.
  * @public
  */
-export declare interface ComponentEvent {
+export declare interface ContextMenu {
     /**
-     * Gets the name that identifies the component tha thas been changed.
+     * Shows a context menu with the specified `items`. The context menu closes when the user clicks one of the
+     * items or outside the context menu.
+     * @param x - The horizontal pixel coordinate where to show the context menu.
+     * @param y - The vertical pixel coordinate where to show the context menu.
+     * @param items - Defines the content of the context menu.
+     * @returns A Promise that, when resolved, provides the {@link ContextMenuItem} that was clicked by the user,
+     * or `undefined` if the user clicked outside the context menu.
      */
-    name: string;
-    /**
-     * Gets the value of the component that has been changed.
-     */
-    value?: any;
+    show(x: number, y: number, items: ContextMenuItem[]): Promise<ContextMenuItem>;
 }
 
 /**
- * Represents an item in a context menu shown by calling {@link Controls.showContextMenu}.
+ * Represents an item in a context menu shown by calling {@link ContextMenu.show}.
  * @public
  */
 export declare interface ContextMenuItem {
@@ -201,15 +178,9 @@ export declare interface ContextMenuItem {
  */
 export declare interface Controls {
     /**
-     * Shows a context menu with the specified `items`. The context menu closes when the user clicks one of the
-     * items or outside the context menu.
-     * @param x - The horizontal pixel coordinate where to show the context menu.
-     * @param y - The vertical pixel coordinate where to show the context menu.
-     * @param items - Defines the content of the context menu.
-     * @returns A Promise that, when resolved, provides the {@link ContextMenuItem} that was clicked by the user,
-     * or `undefined` if the user clicked outside the context menu.
+     * Gets an object with methods to show a context menu.
      */
-    showContextMenu(x: number, y: number, items: ContextMenuItem[]): Promise<ContextMenuItem>;
+    contextMenu: ContextMenu;
     /**
      * Gets an object with methods to show and hide a Spotfire tooltip.
      */
@@ -221,7 +192,7 @@ export declare interface Controls {
     /**
      * Gets an object that can be used to create and show a Spotfire popout dialog.
      */
-    popout: PopoutControl;
+    popout: Popout;
 }
 
 /**
@@ -238,13 +209,13 @@ export declare interface DataTable extends DataTableValues {
      */
     column(name: string): ReadableProxy<Column>;
     /**
-     * Provides access to the properties of this instance. See {@link Property}.
+     * Provides access to the properties of this instance. See {@link AnalysisProperty}.
      */
-    properties(): Readable<PropertyValue[]>;
+    properties(): Readable<AnalysisPropertyValue[]>;
     /**
-     * Provides access to the {@link Property} with the specified `name`.
+     * Provides access to the {@link AnalysisProperty} with the specified `name`.
      */
-    property(name: string): Readable<PropertyValue>;
+    property(name: string): Readable<AnalysisPropertyValue>;
 }
 
 /**
@@ -270,16 +241,24 @@ export declare interface DataType {
     /**
      * Gets the name of this DataType.
      */
-    name: "String" | "Integer" | "Real" | "Date" | "DateTime" | "Time" | "Currency" | "Binary" | "Boolean" | "LongInteger" | "TimeSpan" | "SingleReal";
+    name: "String" | "Integer" | "LongInteger" | "Real" | "SingleReal" | "Currency" | "Boolean" | "Date" | "DateTime" | "Time" | "TimeSpan" | "Binary";
     /**
      * Gets a value indicating whether the data type is numeric or not, that is,
      * Integer, Currency, Real, LongInteger, or SingleReal.
      */
-    isNumeric(): boolean;
+    isNumber(): boolean;
     /**
-     * Gets a value indicating whether the data type represents time or not, that is, Time, Date, or DateTime.
+     * Gets a value indicating whether the data type is represents by Date or not, that is, Date, or DateTime.
+     */
+    isDate(): boolean;
+    /**
+     * Gets a value indicating whether the data type is represents by {@link Time} or not.
      */
     isTime(): boolean;
+    /**
+     * Gets a value indicating whether the data type is represents by {@link TimeSpan} or not.
+     */
+    isTimeSpan(): boolean;
 }
 
 /**
@@ -292,49 +271,6 @@ export declare interface DataType {
  */
 export declare interface DataView {
     /**
-     * The rows property can be used to asynchronously iterate all rows via the `for await ()` syntax.
-     * This is an alternative way to {@link DataView.getAllRows} method to access the rows of a dataview.
-     *
-     * __NOTE:__ This approach comes with a number of limitations.
-     * The rows can only be iterated once.
-     * {@link DataView.getAllRows} will not work when using the iterator.
-     * {@link DataViewHierarchy.populateWithRows} will not work when using the iterator.
-     *
-     * In older JavaScript environments the iterator can be retrieved via the `getIterator()` method.
-     * @example
-     * ```
-     * const rows = [];
-     * for await (const row of dataView.rows) {
-     *     rows.push(row);
-     * }
-     * ```
-     */
-    rows: {
-        [Symbol.asyncIterator](): AsyncIterator<DataViewRow>;
-        /**
-         * Gets the total number of rows of the {@link DataView}.
-         */
-        getCount(): Promise<number>;
-        /**
-         * Gets the row iterator. The iterator is used to retrieve rows from the data view. The iterator can only be retrieved and consumed once per data view.
-         *
-         * Using the iterator directly allows much more flexibility compared to the {@link DataView.getAllRows} helper function.
-         * It is possible to check if the dataView is valid and abort the fetch if needed. It is also possible to track progress since the total row count is
-         * known via the {@link DataView.rows.getCount} property.
-         * @example
-         * ```
-         * let iterator = dataView.rows.getIterator();
-         * let rows = [];
-         * let row = await iterator.next()
-         * while(!row.done) {
-         *     rows.push(row.value);
-         *     row = await iterator.next()
-         * }
-         * ```
-         */
-        getIterator(): DataViewRowIterator;
-    };
-    /**
      * Mark a set of rows.
      * The full set will be the union of all mark operations performed within one transaction (see {@link Mod.transaction}).
      * All mark operations must have the same marking operation.
@@ -346,17 +282,9 @@ export declare interface DataView {
      */
     clearMarking(): void;
     /**
-     * Gets a value indicating if marking is enabled in the visualization.
+     * Gets the marking information, or null if marking is not enabled.
      */
-    markingEnabled(): Promise<boolean>;
-    /**
-     * Gets a value indicating if the dataView is valid.
-     * When valid, the contents of the dataView can be accessed
-     * using getAllRows or getIterator.
-     * When not valid, use getError to get a description of the issue.
-     * @deprecated Use hasExpired (for cancellation of data) or hasError (for configuration errors);
-     */
-    isValid(): Promise<boolean>;
+    marking(): Promise<MarkingInfo | null>;
     /**
      * Gets a value indicating whether the dataView has expired.
      * The dataview has expired when there has been changes to the document,
@@ -365,39 +293,31 @@ export declare interface DataView {
      */
     hasExpired(): Promise<boolean>;
     /**
-     * Gets a value indicating if the dataView has any errors.
-     * When true, use {@link DataView.getError} to get a description of the issue.
+     * Gets any errors generated while creating the dataview.
+     * Returns null if none occurred.
      */
-    hasError(): Promise<boolean>;
-    /**
-     * Gets an error message when {@link DataView.hasError} returns true.
-     */
-    getError(): Promise<string>;
-    /**
-     * Gets all categorical axes.
-     * Categorical axes are defined in the manifest file as categorical or dual.
-     * Axes with empty expressions are omitted.
-     * @deprecated Use getAxis(name)
-     */
-    getCategoricalAxes(): Promise<DataViewCategoricalAxis[]>;
-    /**
-     * Gets all continuous axes.
-     * Continuous axes are defined in the manifest file.
-     * Axes with empty expressions are omitted.
-     * @deprecated Use getAxis(name)
-     */
-    getContinuousAxes(): Promise<DataViewContinuousAxis[]>;
+    getError(): Promise<string | null>;
     /**
      * Gets metadata for a specific axis in the {@link DataView}.
-     * Axes with empty expressions returns null.
+     * Categorical axes are defined in the manifest file as categorical or dual.
+     * Returns null for axes with empty expressions.
+     * Returns null for dual mode axes that currently are in continuous mode.
      * @param name - The axis name.
      */
-    getAxis(name: string): Promise<DataViewAxis | null>;
+    categoricalAxis(name: string): Promise<DataViewCategoricalAxis | null>;
+    /**
+     * Gets metadata for a specific axis in the {@link DataView}.
+     * Continuous axes are defined in the manifest file as continuous or dual.
+     * Returns null for axes with empty expressions.
+     * Returns null for dual mode axes that currently are in categorical mode.
+     * @param name - The axis name.
+     */
+    continuousAxis(name: string): Promise<DataViewContinuousAxis | null>;
     /**
      * Gets metadata of all axes currently present in the {@link DataView}.
      * Axes with empty expression are omitted.
      */
-    getAxes(): Promise<DataViewAxis[]>;
+    axes(): Promise<DataViewAxis[]>;
     /**
      * Gets a hierarchy for a categorical axis.
      *
@@ -407,12 +327,18 @@ export declare interface DataView {
      * @param name - The name of the axis to get the hierarchy for.
      * @param populateWithRows - Optional. If set to true, all available data in the dataview will be retrieved. If set to false the populateWithRows function must be called (and awaited)  in order for the row methods to be available in the hierarchy.
      */
-    getHierarchy(name: string, populateWithRows?: boolean): Promise<DataViewHierarchy | null>;
+    hierarchy(name: string, populateWithRows?: boolean): Promise<DataViewHierarchy | null>;
+    /**
+     * Gets the total number of rows of the {@link DataView} without actually getting all the rows. Use this function to determine whether or not the mod will be able to handle the amount of data rows.
+     * When there are errors in the mod configuration there will be no rows available and this method will return undefined.
+     */
+    rowCount(): Promise<number | undefined>;
     /**
      * Gets all rows from the data view as one asynchronous operation.
      * The getAllRows function has a built in cache and can be called multiple times with the same dataView and it will return the same list of rows.
+     * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns true the promise will be rejected.
      */
-    getAllRows(): Promise<DataViewRow[]>;
+    allRows(abortPredicate?: AbortPredicate): Promise<DataViewRow[]>;
 }
 
 /**
@@ -425,7 +351,7 @@ export declare interface DataViewAxis {
      */
     name: string;
     /**
-     * Gets a value indicating whether this axis is categorical or continuous.
+     * Gets a value indicating whether this axis is an instance of {@link DataViewContinuousAxis} or {@link DataViewCategoricalAxis} .
      */
     isCategorical: boolean;
 }
@@ -436,10 +362,6 @@ export declare interface DataViewAxis {
  */
 export declare interface DataViewCategoricalAxis extends DataViewAxis {
     /**
-     * Gets a value indicating that this axis is categorical.
-     */
-    isCategorical: true;
-    /**
      * Gets the hierarchy of this axis.
      */
     hierarchy: DataViewHierarchy;
@@ -449,17 +371,17 @@ export declare interface DataViewCategoricalAxis extends DataViewAxis {
  * Represents a value of a categorical axis for one row in a data view.
  * @public
  */
-export declare interface DataViewCategoricalValue extends DataViewValue {
+export declare interface DataViewCategoricalValue {
     /**
      * Gets an array representing the full path of the value in the hierarchy defined by the axis expression.
      * The first element is the top level of the hierarchy and the last element is the leaf level.
      */
-    path: CategoricalValuePathElement[];
+    path: DataViewCategoricalValuePathElement[];
     /**
-     * Gets a string representing the full path. The root is not included.
+     * Gets a string representing the full name by concatenating the name properties of the elements in the {@link DataViewCategoricalValue.path}. The root is not included.
      * @param separator - The separator used to create the full path. The default separator is "\>\>".
      */
-    getValue(separator?: string): string;
+    fullName(separator?: string): string;
     /**
      * Gets the index among the leaf nodes of the associated {@link DataViewHierarchy} of this {@link DataViewCategoricalAxis}.
      * This can for example be used to determine the position on a scale where to render the visual element.
@@ -468,7 +390,37 @@ export declare interface DataViewCategoricalValue extends DataViewValue {
 }
 
 /**
- * Color information for a row.
+ * Represents an element in the `path` of a {@link DataViewCategoricalValue}.
+ * @public
+ */
+export declare interface DataViewCategoricalValuePathElement {
+    /**
+     * Gets the display name of this element.
+     */
+    name: string;
+    /**
+     * Gets a key that uniquely identifies this element.
+     *
+     * In many cases this will be the same as {@link DataViewCategoricalValuePathElement.name} or {@link DataViewCategoricalValuePathElement.value}.
+     * However there are cases when those values can contain duplicates. For instance when working with cube data,
+     * or when using formatters and display values.
+     *
+     * They key is suitable to be used for identifying objects when implementing rendering transitions.
+     *
+     * The key can be null when the corresponding {@link DataViewCategoricalValuePathElement.value} is null.
+     */
+    key: string | null;
+    /**
+     * Gets the value of this element, or null if this element represents a missing or invalid data point.
+     *
+     * The type of the returned value can be determined from the {@link DataViewHierarchy.levels} in the {@link DataViewHierarchy} of
+     * the associated {@link DataViewCategoricalAxis}.
+     */
+    value<T extends DataViewValueType>(): T | null;
+}
+
+/**
+ * Color information for a {@link DataViewRow}.
  * @public
  */
 export declare interface DataViewColorInfo {
@@ -482,10 +434,6 @@ export declare interface DataViewColorInfo {
  */
 export declare interface DataViewContinuousAxis extends DataViewAxis {
     /**
-     * Gets a value indicating that this axis is continuous.
-     */
-    isCategorical: false;
-    /**
      * Gets the data type of the values computed by this axis.
      */
     dataType: DataType;
@@ -495,24 +443,19 @@ export declare interface DataViewContinuousAxis extends DataViewAxis {
  * Represents a value of a continuous axis for one row in a data view.
  * @public
  */
-export declare interface DataViewContinuousValue<T extends DataViewValueType> extends DataViewValue {
-    /**
-     * Returns a boolean that is true if this value is valid and false otherwise.
-     * A value can be invalid if it cannot be computed for instance due to missing/invalid data.
-     */
-    isValid(): boolean;
+export declare interface DataViewContinuousValue<T extends DataViewValueType = DataViewValueType> {
     /**
      * Gets the value of this instance. The type depending on the type of the
      * expression on the associated {@link DataViewContinuousAxis}.
      *
-     * This method will return `null` when {@link DataViewContinuousValue.isValid} returns false.
+     * This method will return `null` when the underlying data value is missing or invalid.
      */
-    getValue(): T | null;
+    value<T2 extends DataViewValueType = T>(): T2 | null;
     /**
      * Gets a formatted string that can be used to display this value. The formatting settings in Spotfire
      * are used to create this string.
      */
-    getFormattedValue(): string;
+    formattedValue(): string;
 }
 
 /**
@@ -607,7 +550,7 @@ export declare interface DataViewHierarchyNode {
      */
     children?: DataViewHierarchyNode[];
     /**
-     * Gets the leaf nodes of this hierarchy node.
+     * Computes an array of all leaf nodes in the sub tree of the hierarchy spanned from this node.
      */
     leaves(): DataViewHierarchyNode[];
     /**
@@ -622,15 +565,15 @@ export declare interface DataViewHierarchyNode {
      */
     mark(operation?: MarkingOperation): void;
     /**
-     * Gets the number of {@link DataViewRow}s corresponding to the sub tree of the hierarchy spanned from this node.
+     * Computes the number of {@link DataViewRow}s corresponding to the sub tree of the hierarchy spanned from this node.
      */
     rowCount(): number;
     /**
-     * Gets the number of leaf nodes in the sub tree of the hierarchy spanned from this node.
+     * Computes the number of leaf nodes in the sub tree of the hierarchy spanned from this node.
      */
     leafCount(): number;
     /**
-     * Gets the number of marked {@link DataViewRow}s in the sub tree of the hierarchy spanned from this node.
+     * Computes the number of marked {@link DataViewRow}s in the sub tree of the hierarchy spanned from this node.
      * This function will throw if {@link DataViewHierarchy.populateWithRows} has not been called.
      */
     markedRowCount(): number;
@@ -639,7 +582,7 @@ export declare interface DataViewHierarchyNode {
      */
     level: number;
     /**
-     * Gets the {@link DataViewRow}s corresponding to the sub tree of the hierarchy spanned from this node.
+     * Computes the {@link DataViewRow}s corresponding to the sub tree of the hierarchy spanned from this node.
      * This function will throw if {@link DataViewHierarchy.populateWithRows} has not been called.
      */
     rows(): DataViewRow[];
@@ -673,20 +616,23 @@ export declare interface DataViewRow {
     isMarked(): boolean;
     /**
      * Gets a {@link DataViewCategoricalValue} representing the value of the axis with the specified `axisName`.
+     * This method will throw an error if there is no categorical axis by that name.
+     * Use {@link DataView.categoricalAxis} to check the current existence of a categorical value.
      * @param axisName - The name of the axis to get the value for.
      */
     categorical(axisName: string): DataViewCategoricalValue;
     /**
      * Gets a {@link DataViewContinuousValue} representing the value of the axis with the specified `axisName`.
+     * This method will throw an error if there is no continuous axis by that name.
+     * Use {@link DataView.continuousAxis} to check the current existence of a continuous value.
      * @param axisName - The name of the axis to get the value for.
      */
-    continuous<T extends DataViewValueType = DataViewValueType>(axisName: string): DataViewContinuousValue<T>;
+    continuous<T extends DataViewValueType>(axisName: string): DataViewContinuousValue<T>;
     /**
-     * Gets the {@link DataViewColorInfo} for the row.
-     * Will return null for unmarked rows when there is no color axis defined in the manifest.
-     * If there is a color axis defined in the manifest the underlying data value can be retrieved by using {@link DataViewRow.categorical}("Color") or {@link DataViewRow.continuous}("Color"), depending on the mode of the color axis.
+     * Gets the {@link DataViewColorInfo} for the row, if a color axis is defined in the mod manifest.
+     * The underlying data value can be retrieved by using {@link DataViewRow.categorical}("Color") or {@link DataViewRow.continuous}("Color"), depending on the mode of the color axis.
      */
-    getColor(): DataViewColorInfo | null;
+    color(): DataViewColorInfo;
     /**
      * Performs the specified marking operation in the current marking.
      *
@@ -707,6 +653,11 @@ export declare interface DataViewRowIterator {
      * Steps this instance to the next {@link DataViewRow} of the associated {@link DataView}.
      */
     next(): Promise<DataViewRowIteratorResult>;
+    /**
+     * Appends the next batch of {@link DataViewRow}s of the associated {@link DataView}to the array.
+     * @returns done flag, true if all rows have been read.
+     */
+    appendNextBatch(rows: DataViewRow[]): Promise<boolean>;
 }
 
 /**
@@ -714,41 +665,22 @@ export declare interface DataViewRowIterator {
  * @public
  */
 export declare type DataViewRowIteratorResult = {
-    value: DataViewRow;
-    done: false;
-} | {
-    value: undefined;
-    done: true;
+    row: DataViewRow | null;
 };
-
-/**
- * Represents a value of a continuous or categorical axis for one row in a data view.
- * @public
- */
-export declare interface DataViewValue {
-    /**
-     * Gets a value indicating whether this is a {@link DataViewCategoricalValue}.
-     */
-    isCategorical: boolean;
-    /**
-     * Gets the name of the axis associated with this value.
-     */
-    axisName: string;
-}
 
 /**
  * Represents the type of a {@link DataView} value. The actual type that a given value has depends on the
  * type of the expression on the associated axis.
  * @public
  */
-export declare type DataViewValueType = number | string | boolean | Date;
+export declare type DataViewValueType = number | string | boolean | Date | Time | TimeSpan;
 
 /**
  * From readableArray, an array of Readable of some value type, extract an array of this value type.
  * @public
  */
 export declare type ExtractValueType<readableArray extends ReadonlyArray<Readable<any>>> = {
-    [contentName in keyof readableArray]: readableArray[contentName] extends Readable<infer contentNameType> ? contentNameType : never;
+    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType> ? readableNameType : never;
 };
 
 /**
@@ -819,6 +751,17 @@ declare interface LineStylingInfo {
 }
 
 /**
+ * Marking information for a {@link DataView}.
+ * @public
+ */
+export declare interface MarkingInfo {
+    /** The hex code for the marking. Note that when the mod has a defined color axis, the color should be retrieved via the {@link DataViewRow.color} method. */
+    colorHexCode: string;
+    /** The name of the marking. */
+    name: string;
+}
+
+/**
  * Specifies how a Marking shall be modified.
  * <pre>
  * - "Replace" - replaces the current marking.
@@ -844,7 +787,7 @@ export declare type MethodKeys<T> = {
  * Represents the entire Mod API and exposes methods for interacting with and reading data from
  * the Mod Visualization and the Spotfire document.
  *
- * Reading content from the Mod is made with the{@link Mod.reader} method.
+ * Reading content from the Mod is made by using either of the methods {@link Reader.subscribe}, {@link Reader.once} or {@link Reader.read} on an instance of a {@link Reader}.
  * @public
  */
 export declare interface Mod {
@@ -857,50 +800,18 @@ export declare interface Mod {
      */
     visualization: ModVisualization;
     /**
-     * Creates a {@link ReadFunction} that can be called with a callback function to access content specified
-     * by the `readables` parameter. The callback will be invoked on the initial call of the {@link ReadFunction} and
-     * for subsequent calls whenever the content specified by at least one of the {@link Readable}s has changed.
-     *
-     * @example Read the {@link DataView} once.
-     * ```
-     * let read = mod.reader(mod.visualization.data());
-     * read((dataView) => {
-     *    console.log(await dataView.rows.getCount());
-     * });
-     * ```
-     *
-     * @example Read the dataView each time it changes.
-     * ```
-     * let read = mod.reader(mod.visualization.data());
-     * read(async function onChange(dataView) {
-     *    console.log(await dataView.rows.getCount());
-     *    read(onChange);
-     * });
-     * ```
-     *
-     * @example Read the dataView and property X each time any of them changes.
-     * ```
-     * let read = mod.reader(mod.visualization.data(), mod.visualization.property("X"));
-     * read(async function onChange(dataView, xValue) {
-     *    console.log(await dataView.rows.getCount());
-     *    console.log(xValue);
-     *    read(onChange);
-     * });
-     * ```
-     *
-     * @example The {@link ReadFunction} returns a promise with the values if no callback is passed.
-     * ```
-     * let read = mod.reader(mod.visualization.data(), mod.visualization.property("X"));
-     * while(true) {
-     *    let [dataView, xValue] = await read(); // Only resolves when a value has changed.
-     *    console.log(await dataView.rows.getCount());
-     *    console.log(xValue);
-     * }
-     * ```
-     * @param readables - A list of requested content. Readables are found in {@link Mod.document} and {@link Mod.visualization}.
-     * @returns - function used to read content.
+     * Provides access to the {@link ModProperty} with the specified `name`.
      */
-    reader<T extends ReadonlyArray<Readable>>(...readables: T): ReadFunction<ExtractValueType<T>>;
+    property<T extends ModPropertyDataType>(name: string): ReadableProxy<ModProperty<T>>;
+    /**
+     * Provides read-only access to the current size of the browser window in which the Mod
+     * is rendered. That is, the size of the iframe created for the Mod in the Spotfire UI.
+     */
+    windowSize(): Readable<Size>;
+    /**
+     * Creates a {@link Reader} that can be used to access content specified by the {@link Readable}s parameters.
+     */
+    createReader<T extends ReadonlyArray<Readable>>(...readables: T): Reader<ExtractValueType<T>>;
     /**
      * Gets an object that allows showing Spotfire controls and other UI component, like context menus, tooltips, etc.
      */
@@ -915,8 +826,8 @@ export declare interface Mod {
      * @example
      * ```
      * mod.transaction(() => {
-     *     mod.visualization.property("X").set("new value for X");
-     *     mod.visualization.property("Y").set("new value for Y");
+     *     mod.property("X").set("new value for X");
+     *     mod.property("Y").set("new value for Y");
      * });
      * ```
      */
@@ -966,19 +877,53 @@ export declare interface ModMetadata {
 }
 
 /**
+ * Represents a property owned by the Mod Visualization.
+ * The Mod manifest defines the properties owned by the Mod Visualization.
+ * @public
+ */
+export declare interface ModProperty<T extends ModPropertyDataType = ModPropertyDataType> extends ModPropertyValue<T> {
+    /**
+     * Set the value of this instance.
+     * @param value - The value to set.
+     */
+    set(value: T): void;
+}
+
+/**
+ * Represents the data types possible to store in a mod {@link ModProperty}.
+ * @public
+ */
+export declare type ModPropertyDataType = string | number | boolean;
+
+/**
+ * Represents the values held by a {@link ModProperty}.
+ * @public
+ */
+export declare interface ModPropertyValue<T extends ModPropertyDataType = ModPropertyDataType> {
+    /**
+     * Gets the name of this instance.
+     */
+    name: string;
+    /**
+     * Gets the value held by this instance;
+     */
+    value<T2 extends T>(): T2 | null;
+    /**
+     * Get the Spotfire internal data type of the property.
+     */
+    dataType: DataType;
+}
+
+/**
  * Represents the content in the Mod Visualization that can be read and/or modified.
  *
  * The content is a combination of state stored by the Mod Visualization in the Spotfire document,
  * its view of the data and relevant UI properties. All values are {@link Readable} objects and are
- * typically accessed using the {@link Mod.reader} method.
+ * typically accessed using the {@link Reader} object.
  *
  * @public
  */
 export declare interface ModVisualization {
-    /**
-     * Provides access to the {@link Property} with the specified `name`.
-     */
-    property(name: string): ReadableProxy<Property>;
     /**
      * Provides access to the {@link DataView} that the Mod Visualization is to render.
      */
@@ -993,12 +938,13 @@ export declare interface ModVisualization {
      * must be declared in the mod-manifest.json.
      */
     axis(name: string): ReadableProxy<Axis>;
-    /**
-     * Provides read-only access to the current size of the browser window in which the Mod
-     * is rendered. That is, the size of the iframe created for the Mod in the Spotfire UI.
-     */
-    windowSize(): Readable<Size>;
 }
+
+/**
+ * Represents methods that are not available on a {@link ReadableProxy}. To access these methods the {@link ReadableProxy} must be awaited.
+ * @public
+ */
+export declare type OmittedReadableProxyMethods = "value" | "valueList";
 
 /**
  * Represents a function that consumes the {@link Mod} API. See {@link initialize}.
@@ -1037,14 +983,70 @@ export declare interface PageValues {
 }
 
 /**
- * Represents a pop out dialog that is shown by Spotfire. See {@link Controls.popout}.
+ * Represents an object that can be used to create and show a Spotfire popout dialog.
  * @public
  */
 export declare interface Popout {
     /**
-     * Closes the pop out dialog.
+     * Shows a pop out dialog as specified by the `options` and `controls`.
+     * @param options - Specifies where and how to show the pop out dialog.
+     * @param components - A callback that shall produce the array of components that the
+     * pop out will show. If the pop out is shown with {@link PopoutOptions.autoClose} set to `false`
+     * this callback will be invoked every time the user has interacted with one of the {@link PopoutComponent}s
+     * so that the pop out can be re-rendered to show the result of the interaction.
      */
-    close(): void;
+    show(options: PopoutOptions, components: () => PopoutSection[]): PopoutDialog;
+    /**
+     * Creates a section that contains a heading and components.
+     * @param options - Specifies the heading and the components.
+     */
+    section(options: PopoutSectionOptions): PopoutSection;
+    /**
+     *  Gets an object with methods that create {@link PopoutComponent}s.
+     */
+    components: PopoutComponentFactory;
+}
+
+/**
+ * Represents options describing how to render a button. See {@link PopoutComponentFactory.button}.
+ * @public
+ */
+export declare interface PopoutButtonOptions {
+    /**
+     * Specifies the name that identifies the component.
+     */
+    name: string;
+    /**
+     * Specifies the text to display in the button.
+     */
+    text: string;
+}
+
+/**
+ * Represents options describing how to render a checkbox. See {@link PopoutComponentFactory.checkbox}.
+ * @public
+ */
+export declare interface PopoutCheckboxOptions {
+    /**
+     * Specifies the name that identifies the component.
+     */
+    name: string;
+    /**
+     * Specifies the text to display next to the checkbox.
+     */
+    text: string;
+    /**
+     * Specifies the tooltip to display. If undefined, no tooltip is shown.
+     */
+    tooltip?: string;
+    /**
+     * Specifies whether the checkbox is checked.
+     */
+    checked: boolean;
+    /**
+     * Specifies whether the checkbox is enabled.
+     */
+    enabled: boolean;
 }
 
 /**
@@ -1059,60 +1061,51 @@ export declare interface PopoutComponent {
 }
 
 /**
+ * Represents the data of an event that occurs when a {@link PopoutComponent} has been changed by the user.
+ * @public
+ */
+export declare interface PopoutComponentEvent {
+    /**
+     * Gets the name that identifies the component that has been changed.
+     */
+    name: string;
+    /**
+     * Gets the value of the component that has been changed.
+     */
+    value?: any;
+}
+
+/**
  * Represents an object with methods that create {@link PopoutComponent}s.
  * @public
  */
 export declare interface PopoutComponentFactory {
     /**
-     * Groups the specified `children` components into a single row and returns a
-     * new {@link PopoutComponent} representing this group.
-     * @param children - The components to group together in a row.
-     */
-    row(children: PopoutComponent[]): PopoutComponent;
-    /**
-     * Creates a component that renders as a divider.
-     */
-    divider(): PopoutComponent;
-    /**
-     * Creates a component that renders as a heading for other components.
-     * @param text - The text to display in the heading.
-     */
-    heading(text: string): PopoutComponent;
-    /**
      * Creates a component that renders as a radio button.
      * @param options - Specifies how the radio button shall be rendered.
      */
-    radioButton(options: RadioButtonOptions): PopoutComponent;
+    radioButton(options: PopoutRadioButtonOptions): PopoutComponent;
     /**
      * Creates a component that renders as a checkbox.
      * @param options - Specifies how the checkbox shall be rendered.
      */
-    checkbox(options: CheckboxOptions): PopoutComponent;
+    checkbox(options: PopoutCheckboxOptions): PopoutComponent;
     /**
      * Creates a component that renders as a button.
      * @param options - Specifies how the button shall be rendered.
      */
-    button(options: ButtonOptions): PopoutComponent;
+    button(options: PopoutButtonOptions): PopoutComponent;
 }
 
 /**
- * Represents an object that can be used to create and show a Spotfire popout dialog.
+ * Represents a pop out dialog that is shown by Spotfire. See {@link Controls.popout}.
  * @public
  */
-export declare interface PopoutControl {
+export declare interface PopoutDialog {
     /**
-     * Shows a pop out dialog as specified by the `options` and `controls`.
-     * @param options - Specifies where and how to show the pop out dialog.
-     * @param components - A callback that shall produce the array of components that the
-     * pop out will show. If the pop out is shown with {@link PopoutOptions.autoClose} set to `false`
-     * this callback will be invoked every time the user has interacted with one of the {@link PopoutComponent}s
-     * so that the pop out can be re-rendered to show the result of the interaction.
+     * Closes the pop out dialog.
      */
-    show(options: PopoutOptions, components: () => PopoutComponent[]): Popout;
-    /**
-     * Gets an object with methods that create {@link PopoutComponent}s.
-     */
-    components: PopoutComponentFactory;
+    close(): void;
 }
 
 /**
@@ -1146,7 +1139,7 @@ export declare interface PopoutOptions {
     /**
      * Specifies the callback to invoke when a component in the pop out dialog is changed.
      */
-    onChange(event: ComponentEvent): void;
+    onChange(event: PopoutComponentEvent): void;
     /**
      * Specifies the callback to invoke when the pop out dialog has been closed.
      * This callback is optional and can be left unassigned.
@@ -1155,59 +1148,10 @@ export declare interface PopoutOptions {
 }
 
 /**
- * Represents an object with methods to show and hide the Spotfire progress indicator.
- * @public
- */
-export declare interface Progress {
-    /**
-     * Shows the progress indicator.
-     */
-    show(): void;
-    /**
-     * Hides the progress indicator.
-     */
-    hide(): void;
-}
-
-/**
- * Represents a property owned by the Mod Visualization or by the Spotfire document, its data tables and data columns.
- * The Mod manifest defines the properties owned by the Mod Visualization.
- * @public
- */
-export declare interface Property<ValueType extends PropertyDataType = any> extends PropertyValue<ValueType> {
-    /**
-     * Set the value of this instance.
-     * @param value - The value to set.
-     */
-    set(value: PropertyDataType): void;
-}
-
-/**
- * Represents the data types possible to store in a {@link Property}.
- * @public
- */
-export declare type PropertyDataType = string | number | boolean;
-
-/**
- * Represents the values held by a {@link Property}.
- * @public
- */
-export declare interface PropertyValue<T = string> {
-    /**
-     * Gets the name of this instance.
-     */
-    name: string;
-    /**
-     * Gets the value held by this instance.
-     */
-    value: T;
-}
-
-/**
  * Represents options describing how to render a radio button. See {@link PopoutComponentFactory.radioButton}.
  * @public
  */
-export declare interface RadioButtonOptions {
+export declare interface PopoutRadioButtonOptions {
     /**
      * Specifies the name that identifies the component.
      */
@@ -1231,8 +1175,53 @@ export declare interface RadioButtonOptions {
 }
 
 /**
+ * Represents a section of a pop out dialog. See {@link Controls.popout}.
+ * @public
+ */
+export declare interface PopoutSection {
+    /**
+     * Specifies the heading of the section
+     */
+    heading?: string;
+    /**
+     * Specifies the components in the section
+     */
+    children: PopoutComponent[];
+}
+
+/**
+ * Represents a section of a pop out dialog. See {@link Controls.popout}.
+ * @public
+ */
+export declare interface PopoutSectionOptions {
+    /**
+     * Specifies the heading of the section
+     */
+    heading?: string;
+    /**
+     * Specifies the components in the section
+     */
+    children: PopoutComponent[];
+}
+
+/**
+ * Represents an object with methods to show and hide the Spotfire progress indicator.
+ * @public
+ */
+export declare interface Progress {
+    /**
+     * Shows the progress indicator.
+     */
+    show(): void;
+    /**
+     * Hides the progress indicator.
+     */
+    hide(): void;
+}
+
+/**
  * Represents a value in the Mod API that can be accessed and/or modified. These values can
- * be passed to the {@link Mod.reader} function in order to get updates when the value is changed.
+ * be used when creating an instance of a {@link Reader} via the {@link Mod.createReader} method.
  * @public
  */
 export declare interface Readable<T = any> extends Promise<T> {
@@ -1252,21 +1241,58 @@ export declare interface Readable<T = any> extends Promise<T> {
  * Nodes that represent model state in the Spotfire document can thus be modified without first waiting
  * and materializing them in the browser.
  *
- * A full node will be created by waiting for the promise of by reading the node with {@link Mod.reader}.
+ * A full node will be created by using a {@link Reader}.
  * @public
  */
-export declare type ReadableProxy<Node> = Readable<Node> & Pick<Node, MethodKeys<Node>>;
+export declare type ReadableProxy<Node> = Readable<Node> & Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
 
 /**
- * Represents a function that is used to read values from the Mod Visualization and Spotfire document.
- * A read function is created by calling the {@link Mod.reader} method.
+ * Object containing functionality to read values from the Mod Visualization and Spotfire document.
+ * An instance of the reader is created by calling the {@link Mod.createReader} method.
  * @public
  */
-export declare interface ReadFunction<T extends ReadonlyArray<any>> {
-    /** Read content and the callback will be invoked when all values have been resolved. At least one new value will be read. */
-    (callback: (...values: T) => void, errorCallback?: (error: string) => void): void;
-    /** Read all values and retrieve them as a promise. */
-    (): Promise<T>;
+export declare interface Reader<T extends ReadonlyArray<any>> {
+    /**
+     * Subscribe to changes in the content for the specified readables when the reader was created.
+     * @example Subscribe to changes in the {@link DataView}.
+     *
+     * ```
+     * let reader = mod.createReader(mod.visualization.data());
+     * reader.subscribe((dataView) => {
+     *    console.log(await dataView.rowCount());
+     * });
+     * ```
+     *
+     * @param callback - The callback function that is called every time when there is at least one new value to read.
+     * The callback function will not be called until the previous callback function has returned.
+     */
+    subscribe(callback: (...values: T) => void, errorCallback?: (error: string) => void): void;
+    /**
+     * Read the content once for the readables specified when the reader was created.
+     * Any current subscription for this reader will be cancelled.
+     * @example Read content of a mod property once.
+     *
+     * ```
+     * let reader = mod.createReader(mod.property("CreatedBy"));
+     * reader.once((dataView) => {
+     *    console.log(await dataView.rowCount());
+     * });
+     * ```
+     *
+     * @param callback - The callback function that is called every time when there is at least one new value to read.
+     */
+    once(callback: (...values: T) => void, errorCallback?: (error: string) => void): void;
+    /**
+     * Read all values and retrieve them as a promise.
+     * Any awaiting once or subscription will be cancelled.
+     */
+    read(): Promise<ReadonlyArray<any>>;
+    /**
+     * Checks if any of the readables have a new value available.
+     * If this function returns true, the callback in the current subscription is guaranteed to be invoked.
+     * Calling once for an expired reader also guarantees to invoke the callback function.
+     */
+    hasExpired(): Promise<boolean>;
 }
 
 /**
@@ -1320,17 +1346,17 @@ declare interface ScaleStylingInfo {
 }
 
 /**
- * Represents the size of the browser window in which the Mod is rendered. That is, the
- * size of the iframe created for the Mod in the Spotfire UI.
+ * Represents the size of an area in the UI, for example the size of the browser window in which the Mod
+ * is rendered. See {@link Mod.windowSize}.
  * @public
  */
 export declare interface Size {
     /**
-     * Gets the width of the window.
+     * Gets the width.
      */
     width: number;
     /**
-     * Gets the height of the window.
+     * Gets the height.
      */
     height: number;
 }
@@ -1349,13 +1375,13 @@ export declare interface SpotfireDocument {
      */
     table(name: string): ReadableProxy<DataTable>;
     /**
-     * Provides access to the `Document Properies` in the Spotfire Document.
+     * Provides access to the `Document Properties` in the Spotfire Document.
      */
-    properties(): Readable<Property[]>;
+    properties(): Readable<AnalysisProperty[]>;
     /**
      * Provides access to the `Document Property` with the specified `name` in the Spotfire Document.
      */
-    property(name: string): ReadableProxy<Property>;
+    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(name: string): ReadableProxy<AnalysisProperty<T>>;
     /**
      * Provides access to the {@link Page}s in the Spotfire document.
      */
@@ -1399,7 +1425,53 @@ declare interface TickStylingInfo {
 }
 
 /**
- * Represent an object with methods to show and hide a Spotfire tooltip.
+ * Represents a Time property. The time has no notion of time zone.
+ * @public
+ */
+export declare interface Time {
+    /** The total number of milliseconds since midnight. */
+    totalMilliseconds: number;
+    /** The millisecond part of the instance. */
+    milliseconds: number;
+    /** The total number of seconds since midnight. */
+    totalSeconds: number;
+    /** The second part of the instance. */
+    seconds: number;
+    /** The total number of minutes since midnight. */
+    totalMinutes: number;
+    /** The minute part of the instance. */
+    minutes: number;
+    /** The total number of hours since midnight. */
+    hours: number;
+}
+
+/**
+ * Represents a TimeSpan property. A time span is used to measure the time between two points in time.
+ * @public
+ */
+export declare interface TimeSpan {
+    /** The total number of milliseconds of the instance. */
+    totalMilliseconds: number;
+    /** The millisecond part of the instance. */
+    milliseconds: number;
+    /** The total number of seconds of the instance. */
+    totalSeconds: number;
+    /** The second part of the instance. */
+    seconds: number;
+    /** The total number of minutes of the instance. */
+    totalMinutes: number;
+    /** The minute part of the instance. */
+    minutes: number;
+    /** The total number of hours of the instance. */
+    totalHours: number;
+    /** The hour part of the instance. */
+    hours: number;
+    /** The day part of the instance. */
+    days: number;
+}
+
+/**
+ * Represents an object with methods to show and hide a Spotfire tooltip.
  * @public
  */
 export declare interface Tooltip {

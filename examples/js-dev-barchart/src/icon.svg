@@ -1,11 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 112">
-    <title>Mod visualizaion bar chart
-    
-Shows colorful bars indicating values for each category.
-    </title>
-    <rect width="112" height="112" style="fill:#f6f7fa"/>
-    <path d="M61,81h6V31H61Z" style="fill:#f77968"/>
-    <path d="M75,81h6V57H75Z" style="fill:#f77968"/>
-    <path d="M31,81h6V43H31Z" style="fill:#f77968"/>
-    <path d="M46,81h6V38H46Z" style="fill:#f77968"/>
-</svg>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><style>.cls-1{fill:#6489fa;}</style></defs><title>Mods_icons</title><rect class="cls-1" y="21" width="21" height="3"/><path class="cls-1" d="M6,18H9V3H6ZM0,18H3V6H0Zm12,0h3V0H12Zm6-6v6h3V12Z"/></svg>

@@ -39,7 +39,7 @@
                             "title": "Expression heuristics",
                             "enum": ["none", "default"],
                             "default": "default",
-                            "description": "Specifies the heuristics to use when this axis is assigned an initial expression. Use 'none' to skip the heuristics and leave this axis with and empty expression."
+                            "description": "Specifies the heuristics to use when this axis is assigned an initial expression. Use 'none' to skip the heuristics and leave this axis with an empty expression."
                         },
                         "priority": {
                             "type": "integer",
@@ -52,7 +52,7 @@
                 "dataTypes": {
                     "type": "object",
                     "title": "Supported Data Types",
-                    "description": "Specifies which data types that this axis supports. These settings affect which kinds of expressions that Spotfire will consider valid for this axis.",
+                    "description": "Specifies which data types that this axis supports when in continuous mode. These settings affect which kinds of expressions that Spotfire will consider valid for this axis.",
                     "additionalProperties": false,
                     "properties": {
                         "allowNumeric": {
@@ -141,7 +141,7 @@
 
     "title": "The Spotfire mod manifest schema",
     "type": "object",
-    "required": ["apiVersion", "version", "name", "id", "files"],
+    "required": ["apiVersion", "version", "name", "id", "icon", "files"],
     "additionalProperties": false,
     "properties": {
         "version": {

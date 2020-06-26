@@ -6,16 +6,18 @@ const visualizationElementId = "#chart_div";
 /**
  * This function loads the google gauge visualization asynchronously and returns an API with a render function.
  */
-export function googleGauge(): Promise<{ render: typeof render }> {
+export function googleGauge(): Promise<{ render: typeof render, element: HTMLElement }> {
     let chart: google.visualization.LineChart;
+    let element = findElem(visualizationElementId);
 
     return new Promise(resolve => {
         google.charts.load("current", { packages: ["gauge"] });
         google.charts.setOnLoadCallback(() => {
-            chart = new (google.visualization as any).Gauge(findElem(visualizationElementId));
+            chart = new (google.visualization as any).Gauge(element);
             // Resolve the promise when the charting library is loaded.
             resolve({
-                render
+                render,
+                element
             });
         });
     });

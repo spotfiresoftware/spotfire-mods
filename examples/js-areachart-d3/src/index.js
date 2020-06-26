@@ -57,21 +57,36 @@ const init = async (mod) => {
 
     const styling = context.styling;
     const { tooltip, popout } = mod.controls;
-    const { divider, heading, radioButton } = popout.components;
+    const { radioButton } = popout.components;
+    const { section } = popout;
 
-    let xHasData = false;
-    let yHasData = false;
-    let colorHasData = false;
+    let state = { render: true };
+    const setState = ({ dragSelectActive }) => {
+        state = { ...state, render: dragSelectActive != true };
+    };
+
+    const showOrHideTooltip = () => {
+        const nodeList = document.querySelectorAll(":hover");
+        if (nodeList.length > 0) {
+            const lastNode = nodeList[nodeList.length - 1];
+            const tooltipValue = lastNode.getAttribute("tooltip");
+            if (tooltipValue) {
+                tooltip.show(tooltipValue);
+            } else {
+                tooltip.hide();
+            }
+        }
+    };
 
     /**
      * Create reader function which is actually a one time listener for the provided values.
-     * @type {Spotfire.ReadFunction}
+     * @type {Spotfire.Reader}
      */
-    const read = mod.reader(
+    const reader = mod.createReader(
         mod.visualization.data(),
-        mod.visualization.windowSize(),
-        mod.visualization.property("chartType"),
-        mod.visualization.property("curveType")
+        mod.windowSize(),
+        mod.property("chartType"),
+        mod.property("curveType")
     );
 
     /**
@@ -80,12 +95,13 @@ const init = async (mod) => {
      * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
      * @param {Spotfire.DataView} dataView
      * @param {Spotfire.Size} windowSize
-     * @param {Spotfire.Property} chartType
-     * @param {Spotfire.Property} curveType
+     * @param {Spotfire.AnalysisProperty<string>} chartType
+     * @param {Spotfire.AnalysisProperty<string>} curveType
      */
     const onChange = async (dataView, windowSize, chartType, curveType) => {
         try {
-            tooltip.hide();
+            showOrHideTooltip();
+
             const error = await dataView.getError();
             if (error !== null) {
                 printError(error);
@@ -106,13 +122,12 @@ const init = async (mod) => {
             console.error(e);
             printError(e.message || "☹️ Something went wrong, check developer console");
         }
-        read(onChange);
     };
 
     /**
      * Initiates the read-render loop
      */
-    read(onChange);
+    reader.subscribe(onChange);
 
     /**
      * Renders the chart.
@@ -120,23 +135,27 @@ const init = async (mod) => {
      * @typedef {Object} RenderOptions
      * @property {Spotfire.DataView} dataView - dataView
      * @property {Spotfire.Size} windowSize - windowSize
-     * @property {Spotfire.Property} chartType - chartType
-     * @property {Spotfire.Property} curveType - curveType
+     * @property {Spotfire.ModProperty<string>} chartType - chartType
+     * @property {Spotfire.ModProperty<string>} curveType - curveType
      */
     async function render({ dataView, windowSize, chartType, curveType }) {
         /**
          * Hard abort if row count exceeds an arbitrary selected limit
          */
-        const rowCount = await dataView.rows.getCount();
+        const rowCount = await dataView.rowCount();
         const limit = 1250;
         if (rowCount > limit) {
             printError(`☹️ Cannot render - too many rows (rowCount: ${rowCount}, limit: ${limit}) `);
             return;
         }
 
-        const allRows = await dataView.getAllRows();
-        const colorHierarchy = await dataView.getHierarchy("Color", true);
-        const xHierarchy = await dataView.getHierarchy("X", true);
+        if (state.render === false) {
+            return;
+        }
+
+        const allRows = await dataView.allRows();
+        const colorHierarchy = await dataView.hierarchy("Color", true);
+        const xHierarchy = await dataView.hierarchy("X", true);
         const pointsTable = createTable(createRowId, createPoint)(allRows);
         const xGroup = await xHierarchy.leaves();
         const xTable = createTable(createHierarchyId, createGroup)(xGroup);
@@ -165,9 +184,9 @@ const init = async (mod) => {
 
         const margin = { top: 20, right: 40, bottom: 40, left: 80 };
 
-        const { curveMarked, curveUnmarked } = createCurveFunction_placeholder(curveType.value);
+        const { curveMarked, curveUnmarked } = createCurveFunction_placeholder(curveType.value());
         const { xScale, yScale, line, area, fillOpacity, yScaleTickFormat } = createOtherFunctions_placeholder(
-            chartType.value
+            chartType.value()
         );
 
         /**
@@ -190,9 +209,9 @@ const init = async (mod) => {
             .attr("id", "clipPath")
             .append("rect")
             .attr("x", margin.left)
-            .attr("y", 0)
+            .attr("y", margin.top)
             .attr("width", windowSize.width - margin.left)
-            .attr("height", windowSize.height - margin.bottom);
+            .attr("height", windowSize.height - (margin.bottom + margin.top));
 
         /**
          * Background rectangle - used to catch click events and clear marking.
@@ -209,7 +228,7 @@ const init = async (mod) => {
         /**
          * Prepare groups that will hold all elements of an area chart.
          * The groups are drawn in a specific order for the best user experience:
-         * - 'unmarked-area', 'unmaked line' - contains all areas and lines drawn with their respective 'unmarked' color
+         * - 'unmarked-area', 'unmarked line' - contains all areas and lines drawn with their respective 'unmarked' color
          * - 'marked-area', 'marked-line' - contains areas and lines that we consider 'marked' (consecutive marked points)
          * - 'unmarked-circles' - contains circles that represent unmarked points; only appear in a special case when 'X axis expression' == 'Color axis expression'
          * - 'marked-circles' - contains circles that represent marked points; will show only edge points if the whole group is marked;
@@ -219,8 +238,7 @@ const init = async (mod) => {
         svg.append("g").attr("class", "unmarked-line").attr("clip-path", "url(#clipPath)");
         svg.append("g").attr("class", "marked-area").attr("clip-path", "url(#clipPath)");
         svg.append("g").attr("class", "marked-line").attr("clip-path", "url(#clipPath)");
-        svg.append("g").attr("class", "unmarked-circles");
-        svg.append("g").attr("class", "marked-circles");
+
         svg.append("g").attr("class", "hover-line").attr("clip-path", "url(#clipPath)");
         // svg.append("g").attr("class", "hover-circles");
 
@@ -252,6 +270,7 @@ const init = async (mod) => {
                     .tickPadding(styling.scales.tick.stroke != "none" ? 3 : 9)
             )
             .selectAll("text")
+            .attr("tooltip", (d) => d)
             .on("mouseover", function (d) {
                 if (isNaN(d)) return;
                 tooltip.show(d);
@@ -259,6 +278,9 @@ const init = async (mod) => {
             .on("mouseout", function () {
                 tooltip.hide();
             });
+
+        svg.append("g").attr("class", "unmarked-circles");
+        svg.append("g").attr("class", "marked-circles");
 
         /**
          * Style all strokes and text using current theme.
@@ -298,10 +320,11 @@ const init = async (mod) => {
             .style("color", styling.scales.font.color)
             .style("font-family", styling.scales.font.fontFamily)
             .style("font-size", styling.scales.font.fontSize + "px")
+            .attr("tooltip", (d) => xTable.select(d).name)
             .html((d) => {
                 return xTable.select(d).name;
             })
-            .on("mouseover", (d) => tooltip.show(d))
+            .on("mouseover", (d) => tooltip.show(xTable.select(d).name))
             .on("mouseout", (d) => tooltip.hide());
 
         /**
@@ -329,13 +352,17 @@ const init = async (mod) => {
          * The callback will check the selection bounding box against each point and mark those that intersect the box.
          */
         addHandlersSelection({}, (box) => {
-            pointsTable.values.forEach((row) => {
-                const xPos = xScale(row.X_ID);
-                const yPos = is(chartType)("overlapping") ? yScale(row.Y) : yScale(row.y1);
-                if (xPos >= box.x && xPos <= box.x + box.width && yPos >= box.y && yPos <= box.y + box.height) {
-                    row.__row.mark();
-                }
-            });
+            setState(box);
+            if (box.active) {
+            } else {
+                pointsTable.values.forEach((row) => {
+                    const xPos = xScale(row.X_ID);
+                    const yPos = is(chartType)("overlapping") ? yScale(row.Y) : yScale(row.y1);
+                    if (xPos >= box.x && xPos <= box.x + box.width && yPos >= box.y && yPos <= box.y + box.height) {
+                        row.__row.mark();
+                    }
+                });
+            }
         });
 
         /**
@@ -366,7 +393,8 @@ const init = async (mod) => {
                 .attr("fill", unmarkedColor)
                 .attr("fill-opacity", opacity)
                 .attr("d", area.curve(curveUnmarked)(rows))
-                .attr("mod-Color", name);
+                .attr("mod-Color", name)
+                .attr("tooltip", createLineHoverString({ Color: name }));
         }
 
         /**
@@ -409,7 +437,8 @@ const init = async (mod) => {
              * to create the correct curve function.
              */
             function createPathStringFromSegment(segment) {
-                if (curveType.value == "rounded") {
+                
+                if (curveType.value() == "rounded") {
                     const extendedSegment = extendSegment(segment, 0, maxIndex);
                     return area.curve(curveMarked)(extendedSegment.map(selectRow));
                 }
@@ -439,7 +468,7 @@ const init = async (mod) => {
             });
 
             function createPathStringFromSegment(segment) {
-                if (curveType.value == "rounded") {
+                if (curveType.value() == "rounded") {
                     const extendedSegment = extendSegment(segment, 0, maxIndex);
                     return line.curve(curveMarked)(extendedSegment.map(selectRow));
                 }
@@ -641,38 +670,45 @@ const init = async (mod) => {
          * Popout content
          */
         const popoutContent = () => [
-            heading("Chart Type"),
-            radioButton({
-                name: chartType.name,
-                text: "Overlapping",
-                value: "overlapping",
-                checked: is(chartType)("overlapping")
+            section({
+                heading: "Chart Type",
+                children: [
+                    radioButton({
+                        name: chartType.name,
+                        text: "Overlapping",
+                        value: "overlapping",
+                        checked: is(chartType)("overlapping")
+                    }),
+                    radioButton({
+                        name: chartType.name,
+                        text: "Stacked",
+                        value: "stacked",
+                        checked: is(chartType)("stacked")
+                    }),
+                    radioButton({
+                        name: chartType.name,
+                        text: "100% Stacked",
+                        value: "percentStacked",
+                        checked: is(chartType)("percentStacked")
+                    })
+                ]
             }),
-            radioButton({
-                name: chartType.name,
-                text: "Stacked",
-                value: "stacked",
-                checked: is(chartType)("stacked")
-            }),
-            radioButton({
-                name: chartType.name,
-                text: "100% Stacked",
-                value: "percentStacked",
-                checked: is(chartType)("percentStacked")
-            }),
-            divider(),
-            heading("Curve Type"),
-            radioButton({
-                name: curveType.name,
-                text: "Linear",
-                value: "linear",
-                checked: is(curveType)("linear")
-            }),
-            radioButton({
-                name: curveType.name,
-                text: "Rounded",
-                value: "rounded",
-                checked: is(curveType)("rounded")
+            section({
+                heading: "Curve Type",
+                children: [
+                    radioButton({
+                        name: curveType.name,
+                        text: "Linear",
+                        value: "linear",
+                        checked: is(curveType)("linear")
+                    }),
+                    radioButton({
+                        name: curveType.name,
+                        text: "Rounded",
+                        value: "rounded",
+                        checked: is(curveType)("rounded")
+                    })
+                ]
             })
         ];
 

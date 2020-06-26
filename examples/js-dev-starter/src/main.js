@@ -4,23 +4,20 @@
  * Get access to the Spotfire Mod API by providing a callback to the initialize method.
  * @param {Spotfire.Mod} mod - mod api
  */
-Spotfire.initialize(async mod => {
+Spotfire.initialize(async (mod) => {
     /**
      * Create the read function - its behavior is similar to native requestAnimationFrame
      */
-    const readerLoop = mod.reader(
+    const reader = mod.createReader(
         mod.visualization.data(),
-        mod.visualization.windowSize(),
-        mod.visualization.property("myProperty")
+        mod.windowSize(),
+        mod.property("myProperty")
     );
 
     /**
      * Initiate the read loop
      */
-    readerLoop(async function onChange(dataView, windowSize, prop) {
-        await render(dataView, windowSize, prop);
-        readerLoop(onChange);
-    });
+    reader.subscribe(render);
 
     /**
      * @param {Spotfire.DataView} dataView
@@ -28,18 +25,25 @@ Spotfire.initialize(async mod => {
      * @param {Spotfire.Property} prop
      */
     async function render(dataView, windowSize, prop) {
-
         /**
          * Get rows from dataView
          */
-        const rows = await dataView.getAllRows();
+        const rows = await dataView.allRows(() => true);
 
         /**
          * Print out to document
          */
         const container = document.querySelector("#mod-container");
-        container.innerHTML += `windowSize: ${windowSize.width}x${windowSize.height}<br/>`;
-        container.innerHTML += `should render: ${rows.length} rows<br/>`;
-        container.innerHTML += `${prop.name}: ${prop.value}`;
+
+        container.innerHTML = "";
+        printResult(`windowSize: ${windowSize.width}x${windowSize.height}`);
+        printResult(printResult(`should render: ${rows.length} rows`));
+        printResult(printResult(`${prop.name}: ${prop.value}`));
+
+        function printResult(text) {
+            let div = document.createElement("div");
+            div.textContent = text;
+            container.appendChild(div);
+        }
     }
 });

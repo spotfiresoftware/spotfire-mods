@@ -31,7 +31,6 @@
             },
             {
                 "name": "Y",
-                "allowNonAggregatingMeasures":true,
                 "mode": "continuous",
                 "placement": "left"
             }

@@ -4,17 +4,17 @@
  * Get access to the Spotfire Mod API by providing a callback to the initialize method.
  * @param {Spotfire.Mod} mod - mod api
  */
-Spotfire.initialize(async mod => {
+Spotfire.initialize(async (mod) => {
     /**
      * Create the read function - its behavior is similar to native requestAnimationFrame, except
      * it's triggered when one of the listened to values changes. We will be listening for data,
      * properties and window size changes.
      */
-    const readerLoop = mod.reader(
+    const reader = mod.createReader(
         mod.visualization.data(),
-        mod.visualization.property("orientation"),
-        mod.visualization.property("stacking"),
-        mod.visualization.windowSize()
+        mod.property("orientation"),
+        mod.property("stacking"),
+        mod.windowSize()
     );
 
     const context = mod.getRenderContext();
@@ -22,10 +22,7 @@ Spotfire.initialize(async mod => {
     /**
      * Initiate the read loop
      */
-    readerLoop(async function onChange(dataView, orientation, stacking) {
-        await render(dataView, orientation, stacking);
-        readerLoop(onChange);
-    });
+    reader.subscribe(render);
 
     /**
      * Aggregates incoming data and renders the chart
@@ -41,11 +38,10 @@ Spotfire.initialize(async mod => {
         await google.charts.load("current", { packages: ["corechart"] });
 
         /**
-         * Check for any errors. 
+         * Check for any errors.
          */
         const error = await dataView.getError();
-        if(error !== null)
-        {
+        if (error !== null) {
             /**
              * Here we should really clear the previous rendering
              * and display the message to the user.
@@ -57,19 +53,19 @@ Spotfire.initialize(async mod => {
         /**
          * Get rows from dataView
          */
-        const rows = await dataView.getAllRows();
+        const rows = await dataView.allRows();
 
         /**
          * Get the color hierarchy.
          */
-        const colorHierarchy = await dataView.getHierarchy("Color", true);
+        const colorHierarchy = await dataView.hierarchy("Color", true);
         const colorLeafNodes = await colorHierarchy.leaves();
-        const colorDomain = colorHierarchy.isEmpty ? ["All Values"] : colorLeafNodes.map(node => node.fullName());
+        const colorDomain = colorHierarchy.isEmpty ? ["All Values"] : colorLeafNodes.map((node) => node.fullName());
 
         /**
          * Get the x hierarchy.
          */
-        const xHierarchy = await dataView.getHierarchy("X", true);
+        const xHierarchy = await dataView.hierarchy("X", true);
         const xLeafNodes = await xHierarchy.leaves();
 
         /**
@@ -82,9 +78,12 @@ Spotfire.initialize(async mod => {
          * ...
          * ]
          */
-        const dataColumns = ["Colors", ...colorDomain.flatMap(color => [{ label:color, "type":"number" }, { role: "style" }])];
+        const dataColumns = [
+            "Colors",
+            ...colorDomain.flatMap((color) => [{ label: color, type: "number" }, { role: "style" }])
+        ];
 
-        let dataRows = xLeafNodes.map(leaf => {
+        let dataRows = xLeafNodes.map((leaf) => {
             /**
              * There may not be data in Spotfire for some combinations of color and x values, but the
              * above data table format requires it. So we create a row of the correct length where every
@@ -92,26 +91,26 @@ Spotfire.initialize(async mod => {
              * We have one series for each value on color: [null, "", null, ""] etc.
              */
             var valueAndColorPairs = new Array(colorLeafNodes.length).fill([0, ""]).flat();
-            
+
             /**
              * Fill in the combinations that are actually present in the data. The leafIndex in
              * the color hierarchy corresponds the the index of the series. We use that to
              * set the value and color in the array above. Combinations that do not exist in
-             * the data will retain their value (null). Note that getValue() can also return null.
+             * the data will retain their value (null). Note that value() can also return null.
              */
-            leaf.rows().forEach(r => {
-                let colorIndex = !colorHierarchy.isEmpty ? r.categorical("Color").leafIndex : 0; 
-                let yValue = r.continuous("Y").getValue();
+            leaf.rows().forEach((r) => {
+                let colorIndex = !colorHierarchy.isEmpty ? r.categorical("Color").leafIndex : 0;
+                let yValue = r.continuous("Y").value();
                 valueAndColorPairs[colorIndex * 2] = yValue;
-                valueAndColorPairs[colorIndex * 2 + 1] = r.getColor().hexCode;
+                valueAndColorPairs[colorIndex * 2 + 1] = r.color().hexCode;
             });
-            
+
             var row = [leaf.fullName(), ...valueAndColorPairs.flat()];
             return row;
         });
 
         /**
-         * Build a google data table. 
+         * Build a google data table.
          */
         let data;
         try {
@@ -123,7 +122,7 @@ Spotfire.initialize(async mod => {
         /**
          * A helper function to compare a property against a certain value
          */
-        const is = property => value => property.value == value;
+        const is = (property) => (value) => property.value() == value;
 
         /**
          * Extract styling from mod render context
@@ -193,9 +192,9 @@ Spotfire.initialize(async mod => {
          * Select a row by `x` and `color` indexes.
          */
         function selectRow(xIndex, colorIndex) {
-            rows.forEach(row => {
+            rows.forEach((row) => {
                 var rowColorIndex = !colorHierarchy.isEmpty ? row.categorical("Color").leafIndex : 0;
-                var rowXIndex = !xHierarchy.isEmpty ?  row.categorical("X").leafIndex : 0;
+                var rowXIndex = !xHierarchy.isEmpty ? row.categorical("X").leafIndex : 0;
                 if (rowXIndex == xIndex && rowColorIndex == colorIndex) {
                     row.mark();
                 }
@@ -227,7 +226,8 @@ Spotfire.initialize(async mod => {
          * Should be called when clicking on chart axes
          */
         const { popout } = mod.controls;
-        const { divider, heading, radioButton } = popout.components;
+        const { section } = popout;
+        const { radioButton } = popout.components;
 
         function showPopout(e) {
             popout.show(
@@ -246,32 +246,39 @@ Spotfire.initialize(async mod => {
          * Create popout content
          */
         const popoutContent = () => [
-            heading("Chart Type"),
-            radioButton({
-                name: stacking.name,
-                text: "Stacked bars",
-                value: "stacked",
-                checked: is(stacking)("stacked")
+            section({
+                heading: "Chart Type",
+                children: [
+                    radioButton({
+                        name: stacking.name,
+                        text: "Stacked bars",
+                        value: "stacked",
+                        checked: is(stacking)("stacked")
+                    }),
+                    radioButton({
+                        name: stacking.name,
+                        text: "Side-by-side bars",
+                        value: "side-by-side",
+                        checked: is(stacking)("side-by-side")
+                    })
+                ]
             }),
-            radioButton({
-                name: stacking.name,
-                text: "Side-by-side bars",
-                value: "side-by-side",
-                checked: is(stacking)("side-by-side")
-            }),
-            divider(),
-            heading("Orientation"),
-            radioButton({
-                name: orientation.name,
-                text: "Vertical",
-                value: "vertical",
-                checked: is(orientation)("vertical")
-            }),
-            radioButton({
-                name: orientation.name,
-                text: "Horizontal",
-                value: "horizontal",
-                checked: is(orientation)("horizontal")
+            section({
+                heading: "Orientation",
+                children: [
+                    radioButton({
+                        name: orientation.name,
+                        text: "Vertical",
+                        value: "vertical",
+                        checked: is(orientation)("vertical")
+                    }),
+                    radioButton({
+                        name: orientation.name,
+                        text: "Horizontal",
+                        value: "horizontal",
+                        checked: is(orientation)("horizontal")
+                    })
+                ]
             })
         ];
 

@@ -11,15 +11,15 @@ Spotfire.initialize(async (mod) => {
     const xScaleHeight = 20;
     const yScaleWidth = 100;
 
-    const read = mod.reader(
+    const reader = mod.createReader(
         mod.visualization.data(),
-        mod.visualization.property("y-axis-mode"),
-        mod.visualization.property("split-bars"),
+        mod.property("y-axis-mode"),
+        mod.property("split-bars"),
         mod.visualization.axis("Y"),
-        mod.visualization.windowSize()
+        mod.windowSize()
     );
 
-    read(renderBarChart, onError);
+    reader.subscribe(renderBarChart, onError);
 
     /**
      * Render the bar chart.
@@ -31,34 +31,35 @@ Spotfire.initialize(async (mod) => {
      * - No labels on the x-axis
      *
      * @param {Spotfire.DataView} dataView
-     * @param {Spotfire.Property<string>} yAxisMode
-     * @param {Spotfire.Property<boolean>} splitBars
+     * @param {Spotfire.ModProperty<string>} yAxisMode
+     * @param {Spotfire.ModProperty<boolean>} splitBars
      * @param {Spotfire.Axis} yAxis
      */
     async function renderBarChart(dataView, yAxisMode, splitBars, yAxis) {
-        
-        let error = await dataView.getError();
+        const error = await dataView.getError();
         if (error !== null) {
             onError(error);
             return;
         }
 
         // Get y-axis
-        let dataViewYAxis = await dataView.continuousAxes("Y");
-        if(dataViewYAxis == null)
-        {
+        let dataViewYAxis = await dataView.continuousAxis("Y");
+        if (dataViewYAxis == null) {
             onError("No data on y axis.");
             return;
         }
 
+        // Hide tooltip
+        mod.controls.tooltip.hide();
+
         // Get the leaf nodes for the x hierarchy. We will iterate over them to
         // render the bars.
-        let xHierarchy = await dataView.getHierarchy("X", true);
+        let xHierarchy = await dataView.hierarchy("X", true);
         let xLeaves = await xHierarchy.leaves();
-       
+
         // Figure out if we use categorical coloring, and if so retrieve the
         // number or colors. We need that to render split bars rather than stacked.
-        let colorHierarchy = await dataView.getHierarchy("Color");
+        let colorHierarchy = await dataView.hierarchy("Color");
         let categoricalColorCount = colorHierarchy ? colorHierarchy.leafCount : 0;
 
         let maxYValue = calculateMaxYValue(xLeaves, splitBars, categoricalColorCount);
@@ -67,7 +68,6 @@ Spotfire.initialize(async (mod) => {
         renderXScale(splitBars);
 
         context.signalRenderComplete();
-        read(renderBarChart);
     }
 
     /**
@@ -80,14 +80,13 @@ Spotfire.initialize(async (mod) => {
         yScaleDiv.innerHTML = "";
         xScaleDiv.innerHTML = "";
         canvasDiv.innerText = errorMessage;
-        read(renderBarChart);
     }
 
     /**
      * Render the vertical scale.
      * @param {number} max Max value on Y scale
      * @param {Spotfire.Axis} yAxis - The Y axes
-     * @param {Spotfire.Property<string>} yAxisMode - Property used to determine if the scale should be rendered in percent.
+     * @param {Spotfire.ModProperty<string>} yAxisMode - Property used to determine if the scale should be rendered in percent.
      */
     function renderYScale(max, yAxis, yAxisMode) {
         const stroke = context.styling.scales.line.stroke;
@@ -108,7 +107,7 @@ Spotfire.initialize(async (mod) => {
             return;
         }
 
-        if (yAxisMode.value === "percentage") {
+        if (yAxisMode.value() === "percentage") {
             max = 100;
         }
 
@@ -131,17 +130,17 @@ Spotfire.initialize(async (mod) => {
             e.preventDefault(); // Prevents browser native context menu from being shown.
             e.stopPropagation(); // Prevents default mod context menu to be shown.
 
-            mod.controls
-                .showContextMenu(e.clientX, e.clientY, [
+            mod.controls.contextMenu
+                .show(e.clientX, e.clientY, [
                     {
                         text: "Percentage",
-                        checked: yAxisMode.value === "percentage",
-                        enabled: yAxisMode.value !== "percentage"
+                        checked: yAxisMode.value() === "percentage",
+                        enabled: yAxisMode.value() !== "percentage"
                     },
                     {
                         text: "Numeric",
-                        checked: yAxisMode.value === "numeric",
-                        enabled: yAxisMode.value !== "numeric"
+                        checked: yAxisMode.value() === "numeric",
+                        enabled: yAxisMode.value() !== "numeric"
                     }
                 ])
                 .then((clickedItem) => {
@@ -155,7 +154,8 @@ Spotfire.initialize(async (mod) => {
 
         yScaleDiv.onclick = function (e) {
             mod.controls.tooltip.hide();
-            let c = mod.controls.popout.components;
+            let factory = mod.controls.popout.components;
+            let section = mod.controls.popout.section;
             let box = yScaleDiv.getBoundingClientRect();
 
             mod.controls.popout.show(
@@ -171,23 +171,25 @@ Spotfire.initialize(async (mod) => {
                     }
                 },
                 () => {
-                    let content = [
-                        c.heading("Scale mode"),
-                        c.radioButton({
-                            name: "mode",
-                            text: "Percentage",
-                            value: "percentage",
-                            checked: yAxisMode.value === "percentage"
-                        }),
-                        c.radioButton({
-                            name: "mode",
-                            text: "Numeric",
-                            value: "numeric",
-                            checked: yAxisMode.value !== "percentage"
+                    return [
+                        section({
+                            heading: "Scale mode",
+                            children: [
+                                factory.radioButton({
+                                    name: "mode",
+                                    text: "Percentage",
+                                    value: "percentage",
+                                    checked: yAxisMode.value() === "percentage"
+                                }),
+                                factory.radioButton({
+                                    name: "mode",
+                                    text: "Numeric",
+                                    value: "numeric",
+                                    checked: yAxisMode.value() !== "percentage"
+                                })
+                            ]
                         })
                     ];
-
-                    return content;
                 }
             );
         };
@@ -227,7 +229,8 @@ Spotfire.initialize(async (mod) => {
         }
 
         xScaleDiv.onclick = function (e) {
-            let c = mod.controls.popout.components;
+            let factory = mod.controls.popout.components;
+            let section = mod.controls.popout.section;
             let box = xScaleDiv.getBoundingClientRect();
 
             mod.controls.popout.show(
@@ -242,18 +245,22 @@ Spotfire.initialize(async (mod) => {
                 },
                 () => {
                     let content = [
-                        c.heading("Split bars"),
-                        c.radioButton({
-                            name: "mode",
-                            text: "Stacked",
-                            value: false,
-                            checked: splitBars.value === false
-                        }),
-                        c.radioButton({
-                            name: "mode",
-                            text: "Separate bars",
-                            value: true,
-                            checked: splitBars.value === true
+                        section({
+                            heading: "Split bars",
+                            children: [
+                                factory.radioButton({
+                                    name: "mode",
+                                    text: "Stacked",
+                                    value: false,
+                                    checked: splitBars.value() === false
+                                }),
+                                factory.radioButton({
+                                    name: "mode",
+                                    text: "Separate bars",
+                                    value: true,
+                                    checked: splitBars.value() === true
+                                })
+                            ]
                         })
                     ];
 
@@ -268,7 +275,7 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.DataView} dataView
      * @param {Spotfire.DataViewHierarchyNode[]} xLeafNodes
      * @param {number} maxYValue
-     * @param {Spotfire.Property<boolean>} splitBars
+     * @param {Spotfire.ModProperty<boolean>} splitBars
      */
     function renderBars(dataView, xLeafNodes, categoricalColorCount, maxYValue, splitBars) {
         canvasDiv.innerHTML = "";
@@ -294,7 +301,7 @@ Spotfire.initialize(async (mod) => {
             let fragment = document.createDocumentFragment();
             let rows = xLeafNode.rows();
 
-            if (splitBars.value && categoricalColorCount > 1) {
+            if (splitBars.value() && categoricalColorCount > 1) {
                 // Render bars side by side. We need to add one bar per color to
                 // keep all groups equally wide. So we create a sparse array where
                 // we store the rows per color index, and render a bar for each
@@ -327,19 +334,17 @@ Spotfire.initialize(async (mod) => {
             bar.style.height = Math.round((totalBarValue / maxYValue) * canvasHeight) + "px";
 
             rows.forEach((row) => {
-                /**@type {Spotfire.DataViewContinuousValue<number>} */
                 let y = row.continuous("Y");
-                if(!y.isValid())
-                {
+                if (y.value() === null) {
                     return;
                 }
 
                 let segment = createDiv("segment");
-                segment.style.height = (+y.getValue() / maxYValue) * canvasHeight + "px";
-                segment.style.backgroundColor = row.getColor().hexCode;
+                segment.style.height = (+y.value() / maxYValue) * canvasHeight + "px";
+                segment.style.backgroundColor = row.color().hexCode;
 
                 segment.onmouseover = (e) => {
-                    mod.controls.tooltip.show(xLeafNode.fullName() + ": " + y.getValue().toString());
+                    mod.controls.tooltip.show(xLeafNode.fullName() + ": " + y.formattedValue());
                 };
                 segment.onmouseout = (e) => {
                     mod.controls.tooltip.hide();
@@ -366,12 +371,12 @@ Spotfire.initialize(async (mod) => {
 /**
  * Calculate the maximum value from a hierarchy. If split bars is enabled, the single maximum value from all rows will be used.
  * @param {Spotfire.DataViewHierarchyNode[]} xLeaves
- * @param {Spotfire.Property<boolean>} splitBars
+ * @param {Spotfire.ModProperty<boolean>} splitBars
  * @param {number} categoricalColorCount
  */
 function calculateMaxYValue(xLeaves, splitBars, categoricalColorCount) {
     let maxYValue = 0;
-    if (splitBars.value && categoricalColorCount > 0) {
+    if (splitBars.value() && categoricalColorCount > 0) {
         xLeaves.forEach((node) => {
             maxYValue = Math.max(maxValue(node.rows(), "Y"), maxYValue);
         });
@@ -391,7 +396,7 @@ function calculateMaxYValue(xLeaves, splitBars, categoricalColorCount) {
  * @param {string} axis Name of Axis to use to calculate the value.
  */
 function sumValue(rows, axis) {
-    return rows.reduce((p, c) => +c.continuous(axis).getValue() + p, 0);
+    return rows.reduce((p, c) => +c.continuous(axis).value() + p, 0);
 }
 
 /**
@@ -400,7 +405,7 @@ function sumValue(rows, axis) {
  * @param {string} axis Name of Axis to use to calculate the value.
  */
 function maxValue(rows, axis) {
-    return rows.reduce((p, c) => Math.max(+c.continuous(axis).getValue(), p), 0);
+    return rows.reduce((p, c) => Math.max(+c.continuous(axis).value(), p), 0);
 }
 
 /** @returns {HTMLElement} */
