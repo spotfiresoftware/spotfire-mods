@@ -1,5 +1,13 @@
-# TIBCO LABS™ Spotfire mods
+# TIBCO LABS™ Spotfire Mods
 
-Public Spotfire mods Repo, watch the full content of the Initiative, please [visit our Labs Site via this Link](https://tibcosoftware.github.io/spotfire-mods/)
+Welcome to the public repository for Spotfire Mods.
+ 
+With Spotfire Mods, you can include custom visualizations in your Spotfire applications much faster by integrating JavaScript visualizations. Create your own visualizations that look and feel like the native Spotfire visualizations, and that leverage the built-in capabilities of Spotfire. 
+
+### To get started
+
+[Introduction and tutorials on The Spotfire Mods Labs Site](https://tibcosoftware.github.io/spotfire-mods/docs/)
+
+[Latest version of example projects]()
 
 ![Logo](https://tibcosoftware.github.io/TIBCO-LABS/about/tibcolabs-brand.png "Labs Logo")
