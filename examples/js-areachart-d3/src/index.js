@@ -107,9 +107,12 @@ const init = async (mod) => {
             context.signalRenderComplete();
 
             // Everything went well this time. Clear any error.
-            mod.clearError("catch");
+            mod.controls.errorOverlay.hide("catch");
         } catch (e) {
-            mod.showError(e.message || e || "☹️ Something went wrong, check developer console", "catch");
+            mod.controls.errorOverlay.show(
+                e.message || e || "☹️ Something went wrong, check developer console",
+                "catch"
+            );
         }
     };
 
@@ -129,31 +132,47 @@ const init = async (mod) => {
      */
     async function render({ dataView, windowSize, chartType, curveType }) {
         /**
-         * The Dataview can contain errors which will cause rowCount method to throw.
-         * The error message will be handled by the Spotfire runtime.
+         * The DataView can contain errors which will cause rowCount method to throw.
          */
-        if (await dataView.getError()) {
+        let errors = await dataView.getErrors();
+        if (errors.length > 0) {
+            // Data view contains errors. Display these and clear the chart to avoid
+            // getting a flickering effect with an old chart configuration later (TODO).
+            mod.controls.errorOverlay.show(errors, "dataView");
             return;
         }
 
+        mod.controls.errorOverlay.hide("dataView");
+
         /**
+            // Return and wait for next call to render when reading data was aborted.
+            // Last rendered data view is still valid from a users perspective since
+            // a document modification was made during an progress indication.
          * Hard abort if row count exceeds an arbitrary selected limit
          */
         const rowCount = await dataView.rowCount();
         const limit = 1250;
         if (rowCount > limit) {
-            mod.showError(`☹️ Cannot render - too many rows (rowCount: ${rowCount}, limit: ${limit}) `, "rowCount");
+            mod.controls.errorOverlay.show(
+                `☹️ Cannot render - too many rows (rowCount: ${rowCount}, limit: ${limit}) `,
+                "rowCount"
+            );
             return;
+        } else {
+            mod.controls.errorOverlay.hide("rowCount");
         }
-		else {
-			mod.clearError("rowCount");
-		}
 
         if (state.render === false) {
             return;
         }
 
         const allRows = await dataView.allRows();
+        if (allRows == null) {
+            // Return and wait for next call to render when reading data was aborted.
+            // Last rendered data view is still valid from a users perspective since
+            // a document modification was made during an progress indication.
+            return;
+        }
         const colorHierarchy = await dataView.hierarchy("Color");
         const xHierarchy = await dataView.hierarchy("X");
         const pointsTable = createTable(createRowId, createPoint)(allRows);

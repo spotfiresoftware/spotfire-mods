@@ -1,8 +1,8 @@
 /*
-* Copyright © 2020. TIBCO Software Inc.
-* This file is subject to the license terms contained
-* in the license file that is distributed with this file.
-*/
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
 
 import { findElem, maxInList } from "./util";
 import { Size } from "spotfire-api";
@@ -12,7 +12,7 @@ const visualizationElementId = "#chart_div";
 /**
  * This function loads the google gauge visualization asynchronously and returns an API with a render function.
  */
-export function googleGauge(): Promise<{ render: typeof render, element: HTMLElement }> {
+export function googleGauge(): Promise<{ render: typeof render; clear: () => void; element: HTMLElement }> {
     let chart: google.visualization.LineChart;
     let element = findElem(visualizationElementId);
 
@@ -23,6 +23,7 @@ export function googleGauge(): Promise<{ render: typeof render, element: HTMLEle
             // Resolve the promise when the charting library is loaded.
             resolve({
                 render,
+                clear,
                 element
             });
         });
@@ -46,6 +47,9 @@ export function googleGauge(): Promise<{ render: typeof render, element: HTMLEle
 
         chart.draw(dataTable, options);
     }
+
+    /** Clear the visualization */
+    function clear() {
+        render([], { width: 0, height: 0 });
+    }
 }
-
-

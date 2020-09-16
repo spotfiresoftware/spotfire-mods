@@ -1,8 +1,8 @@
 /*
-* Copyright © 2020. TIBCO Software Inc.
-* This file is subject to the license terms contained
-* in the license file that is distributed with this file.
-*/
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
 
 import { googleGauge } from "./visualization";
 // Import the Spotfire module
@@ -15,17 +15,29 @@ Spotfire.initialize(async api => {
     let context = api.getRenderContext();
 
     // Create a reader object that reacts only data and window size changes
-    let reader = api.createReader(
-        api.visualization.data(),
-        api.windowSize()
-    );
+    let reader = api.createReader(api.visualization.data(), api.windowSize());
 
     // Initialize the Google visualization
     let gauge = await googleGauge();
 
-    reader.subscribe(async function onChange(dataView, size) {
-        // Get all the dataview rows
+    reader.subscribe(async function render(dataView, size) {
+        let errors = await dataView.getErrors();
+        if (errors.length > 0) {
+            // Data view contains errors. Display these and clear the chart to avoid
+            // getting a flickering effect with an old chart configuration later.
+            api.controls.errorOverlay.show(errors, "DataView");
+            gauge.clear();
+            return;
+        }
+
+        api.controls.errorOverlay.hide("DataView");
         let rows = await dataView.allRows();
+        if (rows == null) {
+            // Return and wait for next call to render when reading data was aborted.
+            // Last rendered data view is still valid from a users perspective since
+            // a document modification was made during an progress indication.
+            return;
+        }
 
         // Transform the rows to the google visualization format.
         let data: [string, number][] = rows.map(row => [

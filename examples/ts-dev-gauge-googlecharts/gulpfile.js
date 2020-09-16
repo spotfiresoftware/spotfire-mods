@@ -1,8 +1,8 @@
 /*
-* Copyright © 2020. TIBCO Software Inc.
-* This file is subject to the license terms contained
-* in the license file that is distributed with this file.
-*/
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
 
 //@ts-check
 
@@ -28,9 +28,14 @@ const typescript = require("typescript");
 
 const liveServer = require("live-server");
 
-const manifestPath = "./static/mod-manifest.json";
+const manifestName = "mod-manifest.json";
+const manifestPath = "./static/" + manifestName;
 const buildPath = "./dist/";
 const staticFiles = "./static/**/*";
+
+// The development server tries to mimic the CSP policy used by the Spotfire runtime.
+const allowedExternalResources = new Set();
+let declaredExternalResourcesInManifest = [];
 
 const apiOptions = {
     input: "./src/main.ts",
@@ -63,7 +68,7 @@ const build = series(
 
 const dev = series(build, function startWatchers(cb) {
     rollupWatch("Mod", apiOptions);
-    watch(staticFiles, moveStaticFiles);
+    watch(staticFiles, series(moveStaticFiles, updateManifest));
     watch(manifestPath, updateManifest);
 
     const params = {
@@ -87,32 +92,43 @@ const dev = series(build, function startWatchers(cb) {
         };
     }
 
+    /**
+     * Middleware to manage caching and CSP headers.
+     * @param {any} req - request object
+     * @param {any} res - response object
+     * @param {any} next - next callback to invoke the next middleware
+     */
     function cacheRedirect(req, res, next) {
         const isCorsRequest = req.headers.origin != undefined;
         const requestFromOutsideSandbox = req.headers.origin != "null";
 
         // Prevent CORS requests from the sandboxed iframe. E.g module loading will not work in embedded mode.
         if (isCorsRequest && requestFromOutsideSandbox) {
+            allowedExternalResources.add(req.headers.origin);
+
             res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.setHeader("Access-Control-Allow-Origin", "*");
         }
+
+        // Turn off caching on everything to avoid stale CSP headers etc. in the browser.
+        // This also ensures that live server can inject its websocket snippet in .html pages it serves to the mod iframe.
+        res.setHeader("Cache-Control", "no-store");
 
         if (req.method !== "GET") {
             next();
             return;
         }
 
-        // Redirect html pages to make sure they get a non cached result with a websocket snippet.
-        if (!isCorsRequest && path.extname(req.url) === ".html") {
-            res.statusCode = 302;
-            // let url = req.url == "/" ? "/index.html" : req.url;
-            res.setHeader("Location", req.url + "?cache=" + Math.floor(Math.random() * 10000));
-            res.end();
-            return;
-        }
-
         // Set same security headers in the development server as in the Spotfire runtime.
-        res.setHeader("Content-Security-Policy", "sandbox allow-scripts");
+        res.setHeader(
+            "content-security-policy",
+            `sandbox allow-scripts; default-src 'self' 'unsafe-eval' 'unsafe-hashes' 'unsafe-inline' blob: data: ${[
+                ...allowedExternalResources.values(),
+                ...declaredExternalResourcesInManifest,
+            ].join(" ")}`
+        );
+
+        // CSP header used by older browsers where the CSP policy is not fully supported.
         res.setHeader("x-content-security-policy", "sandbox allow-scripts");
 
         next();
@@ -122,6 +138,34 @@ const dev = series(build, function startWatchers(cb) {
 
     cb();
 });
+
+
+/**
+ * Read external resources from the mod manifest placed in the root directory.
+ */
+async function readExternalResourcesFromManifest() {
+    const rootDirectoryAbsolutePath = path.resolve(buildPath);
+    const files = await readDir(rootDirectoryAbsolutePath);
+
+    if (files.find((fileName) => fileName == manifestName)) {
+        const manifestPath = path.join(rootDirectoryAbsolutePath, manifestName);
+
+        await readExternalResources();
+        fs.watch(manifestPath, {}, readExternalResources);
+
+        async function readExternalResources() {
+            let content = await readFile(manifestPath, { encoding: "utf-8" });
+
+            try {
+                let json = JSON.parse(content);
+                declaredExternalResourcesInManifest = json.externalResources || [];
+            } catch (err) {}
+        }
+    } else {
+        console.warn("Could not find a mod-manifest.json in the root directory", rootDirectoryAbsolutePath);
+    }
+}
+
 
 /** https://rollupjs.org/guide/en#rollup-rollup */
 function rollupBundle(inputOptions) {
@@ -135,7 +179,7 @@ function rollupBundle(inputOptions) {
 function rollupWatch(name, inputOptions) {
     const watcher = rollup.watch(inputOptions);
 
-    watcher.on("event", async event => {
+    watcher.on("event", async (event) => {
         switch (event.code) {
             case "START":
                 console.log(name, "Started watcher");
@@ -194,6 +238,8 @@ async function updateManifestFiles() {
     } catch (err) {
         console.error(err);
     }
+
+    await readExternalResourcesFromManifest();
 
     async function filewalker(dir) {
         let results = [];

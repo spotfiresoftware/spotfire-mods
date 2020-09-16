@@ -44,18 +44,21 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.Axis} yAxis
      */
     async function renderBarChart(dataView, yAxisMode, splitBars, yAxis) {
-        if (await dataView.getError()) {
-            // Data view errors are displayed by the Spotfire runtime.
+        let errors = await dataView.getErrors();
+        if (errors.length > 0) {
+            mod.controls.errorOverlay.show(errors, "dataView");
+            // TODO clear DOM
             return;
         }
 
-        // Get y-axis
+        mod.controls.errorOverlay.hide("dataView");
+
         let dataViewYAxis = await dataView.continuousAxis("Y");
         if (dataViewYAxis == null) {
-            mod.showError("No data on y axis.", "y");
+            mod.controls.errorOverlay.show("No data on y axis.", "y");
             return;
         } else {
-            mod.clearError("y");
+            mod.controls.errorOverlay.hide("y");
         }
 
         // Hide tooltip
@@ -64,6 +67,14 @@ Spotfire.initialize(async (mod) => {
         // Get the leaf nodes for the x hierarchy. We will iterate over them to
         // render the bars.
         let xHierarchy = await dataView.hierarchy("X");
+        if (xHierarchy == null) {
+            // Return and wait for next call to render when reading data was aborted.
+            // Last rendered data view is still valid from a users perspective since
+            // a document modification was made during an progress indication.
+            return;
+        }
+
+
         let xLeaves = (await xHierarchy.root()).leaves();
 
         // Figure out if we use categorical coloring, and if so retrieve the

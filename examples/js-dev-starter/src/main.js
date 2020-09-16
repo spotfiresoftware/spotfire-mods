@@ -33,14 +33,30 @@ Spotfire.initialize(async (mod) => {
      */
     async function render(dataView, windowSize, prop) {
         /**
-         * Get rows from dataView
-         */
-        const rows = await dataView.allRows(() => true);
-
-        /**
          * Print out to document
          */
         const container = document.querySelector("#mod-container");
+
+        let errors = await dataView.getErrors();
+        if (errors.length > 0) {
+            // Data view contains errors. Display these and clear the chart to avoid
+            // getting a flickering effect with an old chart configuration later.
+            mod.controls.errorOverlay.show(errors, "DataView");
+            container.innerHTML = "";
+            return;
+        }
+        mod.controls.errorOverlay.hide("DataView");
+
+        /**
+         * Get rows from dataView
+         */
+        const rows = await dataView.allRows();
+        if (rows == null) {
+            // Return and wait for next call to render when reading data was aborted.
+            // Last rendered data view is still valid from a users perspective since
+            // a document modification was made during an progress indication.
+            return;
+        }
 
         container.innerHTML = "";
         printResult(`windowSize: ${windowSize.width}x${windowSize.height}`);

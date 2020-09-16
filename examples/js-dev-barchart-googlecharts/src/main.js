@@ -46,21 +46,34 @@ Spotfire.initialize(async (mod) => {
         /**
          * Check for any errors.
          */
-        if (await dataView.getError()) {
+        let errors = await dataView.getErrors();
+        if (errors.length > 0) {
+            // Data view contains errors. Display these and clear the chart to avoid
+            // getting a flickering effect with an old chart configuration later (TODO).
+            mod.controls.errorOverlay.show(errors, "DataView");
             return;
         }
+        mod.controls.errorOverlay.hide("DataView");
 
         /**
          * Get rows from dataView
          */
         const rows = await dataView.allRows();
+        if (rows == null) {
+            // Return and wait for next call to render when reading data was aborted.
+            // Last rendered data view is still valid from a users perspective since
+            // a document modification was made during an progress indication.
+            return;
+        }
 
         /**
          * Get the color hierarchy.
          */
         const colorHierarchy = await dataView.hierarchy("Color");
         const colorLeafNodes = (await colorHierarchy.root()).leaves();
-        const colorDomain = colorHierarchy.isEmpty ? ["All Values"] : colorLeafNodes.map((node) => node.formattedPath());
+        const colorDomain = colorHierarchy.isEmpty
+            ? ["All Values"]
+            : colorLeafNodes.map((node) => node.formattedPath());
 
         /**
          * Get the x hierarchy.

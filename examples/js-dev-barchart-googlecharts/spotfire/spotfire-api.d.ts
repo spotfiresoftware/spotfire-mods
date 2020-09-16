@@ -193,6 +193,10 @@ export declare interface Controls {
      * Gets an object that can be used to create and show a Spotfire popout dialog.
      */
     popout: Popout;
+    /**
+     * Gets an object that can be used to show an error overlay native Spotfire style.
+     */
+    errorOverlay: ErrorOverlay;
 }
 
 /**
@@ -295,9 +299,9 @@ export declare interface DataView {
     hasExpired(): Promise<boolean>;
     /**
      * Gets any errors generated while creating the dataview.
-     * Returns null if none occurred.
+     * Returns empty array if none occurred.
      */
-    getError(): Promise<string | null>;
+    getErrors(): Promise<string[]>;
     /**
      * Gets metadata for a specific categorical axis in the {@link DataView}.
      * Categorical axes are defined in the manifest file as categorical or dual.
@@ -652,6 +656,30 @@ export declare interface DataViewRow {
 export declare type DataViewValueType = number | string | boolean | Date | Time | TimeSpan;
 
 /**
+ * Provides access to show an error overlay covering the entire Mod shown by Spotfire.
+ * @public
+ */
+export declare interface ErrorOverlay {
+    /**
+     * Show error message. Showing any error message will hide the Mods UI.
+     * @param messages - The error messages. Each message will be shown in its own paragraph.
+     * @param category - Optional error categorization. Useful if multiple error message are to be shown. Error messages will be sorted based on the category.
+     */
+    show(messages: string[], category?: string): void;
+    /**
+     * Show error message. Showing any error message will hide the Mods UI.
+     * @param messages - The error message.
+     * @param category - Optional error categorization. Useful if multiple error message are to be shown. Error messages will be sorted based on the category.
+     */
+    show(message: string, category?: string): void;
+    /**
+     * Clear the error message. If no other error messages are currently visible the Mods UI will be shown.
+     * @param category - Optional error categorization.
+     */
+    hide(category?: string): void;
+}
+
+/**
  * From readableArray, an array of Readable of some value type, extract an array of this value type.
  * @public
  */
@@ -820,17 +848,6 @@ export declare interface Mod {
      * ```
      */
     transaction(action: () => void, onComplete?: (error?: string) => void): void;
-    /**
-     * Show an error message. Showing an error message will hide the Mods UI.
-     * @param message - The error message.
-     * @param category - Optional error categorization. Useful if multiple error message are to be shown. Error messages will be sorted based on the category.
-     */
-    showError(message: string, category?: string): void;
-    /**
-     * Clear the error message. If no other error messages are currently visible the Mods UI will be shown.
-     * @param category - Optional error categorization.
-     */
-    clearError(category?: string): void;
     /**
      * Get the Mod's render context. This function should be invoked as soon as possible in the {@link initialize} callback.
      *
