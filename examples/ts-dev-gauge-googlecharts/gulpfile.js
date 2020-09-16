@@ -1,3 +1,9 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
 //@ts-check
 
 const { src, dest, task, parallel, series, watch } = require("gulp");
@@ -22,9 +28,9 @@ const typescript = require("typescript");
 
 const liveServer = require("live-server");
 
-const manifestPath = "./mod-manifest.json";
-const buildPath = "./build/";
-const staticFiles = "./static-files/**/*";
+const manifestPath = "./static/mod-manifest.json";
+const buildPath = "./dist/";
+const staticFiles = "./static/**/*";
 
 const apiOptions = {
     input: "./src/main.ts",
@@ -65,7 +71,7 @@ const dev = series(build, function startWatchers(cb) {
         noCssInject: true,
         cors: false,
         open: "/mod-manifest.json",
-        root: "./build/", // Set root directory that's being served. Defaults to cwd.
+        root: "./dist/", // Set root directory that's being served. Defaults to cwd.
         wait: 250, // Waits for all changes, before reloading. Defaults to 0 sec.
         middleware: [cacheRedirect]
     };
@@ -166,7 +172,7 @@ function compressCss() {
 }
 
 function moveStaticFiles() {
-    return src("./static-files/**/*").pipe(dest(buildPath));
+    return src("./static/**/*").pipe(dest(buildPath));
 }
 
 function moveManifest() {
@@ -174,7 +180,7 @@ function moveManifest() {
 }
 
 async function updateManifestFiles() {
-    const dir = path.join(process.cwd(), "build");
+    const dir = path.join(process.cwd(), "dist");
     const manifestName = "mod-manifest.json";
 
     let results = await filewalker(dir);

@@ -1,4 +1,13 @@
+/*
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
+
 //@ts-check
+
+// Manually import the array polyfills because the API is using functions not supported in IE11.
+import "core-js/es/array";
 
 //@ts-ignore
 import * as d3 from "d3";
@@ -15,7 +24,8 @@ import {
     is,
     stack,
     markGroup,
-    createTextLine
+    createTextLine,
+    invalidateTooltip
 } from "./extended-api.js";
 
 const Spotfire = window.Spotfire;
@@ -25,7 +35,6 @@ const Spotfire = window.Spotfire;
  */
 
 const modContainer = d3.select("#mod-container");
-const errorContainer = d3.select(".error-container");
 
 /**
  * Main svg container
@@ -65,19 +74,6 @@ const init = async (mod) => {
         state = { ...state, render: dragSelectActive != true };
     };
 
-    const showOrHideTooltip = () => {
-        const nodeList = document.querySelectorAll(":hover");
-        if (nodeList.length > 0) {
-            const lastNode = nodeList[nodeList.length - 1];
-            const tooltipValue = lastNode.getAttribute("tooltip");
-            if (tooltipValue) {
-                tooltip.show(tooltipValue);
-            } else {
-                tooltip.hide();
-            }
-        }
-    };
-
     /**
      * Create reader function which is actually a one time listener for the provided values.
      * @type {Spotfire.Reader}
@@ -100,27 +96,20 @@ const init = async (mod) => {
      */
     const onChange = async (dataView, windowSize, chartType, curveType) => {
         try {
-            showOrHideTooltip();
+            invalidateTooltip(tooltip);
 
-            const error = await dataView.getError();
-            if (error !== null) {
-                printError(error);
-            } else {
-                clearError();
-                const expired = await dataView.hasExpired();
-                if (!expired) {
-                    await render({
-                        dataView,
-                        windowSize,
-                        chartType,
-                        curveType
-                    });
-                    context.signalRenderComplete();
-                }
-            }
+            await render({
+                dataView,
+                windowSize,
+                chartType,
+                curveType
+            });
+            context.signalRenderComplete();
+
+            // Everything went well this time. Clear any error.
+            mod.clearError("catch");
         } catch (e) {
-            console.error(e);
-            printError(e.message || "☹️ Something went wrong, check developer console");
+            mod.showError(e.message || e || "☹️ Something went wrong, check developer console", "catch");
         }
     };
 
@@ -140,26 +129,37 @@ const init = async (mod) => {
      */
     async function render({ dataView, windowSize, chartType, curveType }) {
         /**
+         * The Dataview can contain errors which will cause rowCount method to throw.
+         * The error message will be handled by the Spotfire runtime.
+         */
+        if (await dataView.getError()) {
+            return;
+        }
+
+        /**
          * Hard abort if row count exceeds an arbitrary selected limit
          */
         const rowCount = await dataView.rowCount();
         const limit = 1250;
         if (rowCount > limit) {
-            printError(`☹️ Cannot render - too many rows (rowCount: ${rowCount}, limit: ${limit}) `);
+            mod.showError(`☹️ Cannot render - too many rows (rowCount: ${rowCount}, limit: ${limit}) `, "rowCount");
             return;
         }
+		else {
+			mod.clearError("rowCount");
+		}
 
         if (state.render === false) {
             return;
         }
 
         const allRows = await dataView.allRows();
-        const colorHierarchy = await dataView.hierarchy("Color", true);
-        const xHierarchy = await dataView.hierarchy("X", true);
+        const colorHierarchy = await dataView.hierarchy("Color");
+        const xHierarchy = await dataView.hierarchy("X");
         const pointsTable = createTable(createRowId, createPoint)(allRows);
-        const xGroup = await xHierarchy.leaves();
+        const xGroup = (await xHierarchy.root()).leaves();
         const xTable = createTable(createHierarchyId, createGroup)(xGroup);
-        const colorGroup = await colorHierarchy.leaves();
+        const colorGroup = (await colorHierarchy.root()).leaves();
         const colorTable = createTable(createHierarchyId, createGroup)(colorGroup);
 
         const normalize = is(chartType)("percentStacked");
@@ -337,8 +337,9 @@ const init = async (mod) => {
          * Select all area svg elements by class name and add click and hover events for marking and show/hide tooltip.
          */
         d3.selectAll(".interactive-area")
-            .on("click", function (d, i) {
-                markGroup(colorTable)(d3.select(this).attr("mod-Color"));
+            .on("click", function (d, i, e) {
+                console.log(d, i, e, this);
+                markGroup(colorTable)(d3.select(this).attr("mod-Color"))(d3.event);
             })
             .on("mouseover", function () {
                 tooltip.show(createLineHoverString({ Color: d3.select(this).attr("mod-Color") }));
@@ -351,18 +352,18 @@ const init = async (mod) => {
          * This will add rectangle selection elements to DOM.
          * The callback will check the selection bounding box against each point and mark those that intersect the box.
          */
-        addHandlersSelection({}, (box) => {
-            setState(box);
-            if (box.active) {
-            } else {
-                pointsTable.values.forEach((row) => {
-                    const xPos = xScale(row.X_ID);
-                    const yPos = is(chartType)("overlapping") ? yScale(row.Y) : yScale(row.y1);
-                    if (xPos >= box.x && xPos <= box.x + box.width && yPos >= box.y && yPos <= box.y + box.height) {
-                        row.__row.mark();
-                    }
-                });
-            }
+        addHandlersSelection((result) => {
+            setState(result);
+
+            const { x, y, width, height, ctrlKey, altKey } = result;
+
+            pointsTable.values.forEach((row) => {
+                const xPos = xScale(row.X_ID);
+                const yPos = is(chartType)("overlapping") ? yScale(row.Y) : yScale(row.y1);
+                if (xPos >= x && xPos <= x + width && yPos >= y && yPos <= y + height) {
+                    ctrlKey ? row.__row.mark("ToggleOrAdd") : row.__row.mark();
+                }
+            });
         });
 
         /**
@@ -437,7 +438,6 @@ const init = async (mod) => {
              * to create the correct curve function.
              */
             function createPathStringFromSegment(segment) {
-                
                 if (curveType.value() == "rounded") {
                     const extendedSegment = extendSegment(segment, 0, maxIndex);
                     return area.curve(curveMarked)(extendedSegment.map(selectRow));
@@ -525,7 +525,9 @@ const init = async (mod) => {
                 tooltip.hide();
             }
             function handleClick() {
-                rows.forEach((row) => row.__row.mark());
+                d3.event.ctrlKey
+                    ? rows.forEach((row) => row.__row.mark("ToggleOrAdd"))
+                    : rows.forEach((row) => row.__row.mark());
             }
         }
 
@@ -655,13 +657,13 @@ const init = async (mod) => {
             return createTextLine(colorAxisDisplayNames)(c).join(separator);
         }
 
-        function createPointHoverString({ X, Y, Color }) {
+        function createPointHoverString({ X, Y_FORMATTED, Color }) {
             const separator = "\n";
             const x = X.split(" >> ");
             const c = Color.split(" >> ");
             return [
                 createTextLine(xAxisDisplayNames)(x).join(separator),
-                createTextLine(yAxisDisplayNames)([Y]),
+                createTextLine(yAxisDisplayNames)([Y_FORMATTED]),
                 createTextLine(colorAxisDisplayNames)(c).join(separator)
             ].join(separator);
         }
@@ -817,21 +819,3 @@ const init = async (mod) => {
  * Trigger init
  */
 Spotfire.initialize(init);
-
-/**
- * Prints an error to DOM. Clears all other mod content.
- */
-function printError(msg = "") {
-    console.log(msg);
-    modContainer.classed("hidden", true);
-    errorContainer.classed("hidden", false);
-    errorContainer.html(`<p>${msg}</p>`);
-}
-
-/**
- * Clears DOM error.
- */
-function clearError() {
-    errorContainer.classed("hidden", true);
-    modContainer.classed("hidden", false);
-}

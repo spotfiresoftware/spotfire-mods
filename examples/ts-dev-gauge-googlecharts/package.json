@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "gulp dev",
         "build": "gulp build",
-        "start": "npm install && npm run dev",
+        "start": "npm run dev",
         "clean": "gulp clean",
         "test": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"} && ts-node --files --project ./tsconfig.json node_modules/jasmine/bin/jasmine --config=tests/support/jasmine.json "
     },

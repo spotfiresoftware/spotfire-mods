@@ -1,3 +1,9 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
 import { googleGauge } from "./visualization";
 // Import the Spotfire module
 import { Spotfire } from "./api";
@@ -23,8 +29,8 @@ Spotfire.initialize(async api => {
 
         // Transform the rows to the google visualization format.
         let data: [string, number][] = rows.map(row => [
-            row.categorical("Category").fullName(),
-            row.continuous("Measurement").value<number>() ?? 0
+            row.categorical("Category").formattedValue(),
+            row.continuous("Measurement").value() ?? 0
         ]);
 
         // Render the visualization using the transformed data

@@ -1,3 +1,9 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
 html,
 body,
 #mod-container {
@@ -12,22 +18,6 @@ body,
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-}
-
-svg text {
-    /* cursor: pointer; */
-}
-
-.error-container {
-    display: flex;
-    width: 100%;
-    height: 100%;
-}
-
-.error-container p {
-    margin: auto;
-    text-align: center;
-    font-size: 11px;
 }
 
 .hidden {

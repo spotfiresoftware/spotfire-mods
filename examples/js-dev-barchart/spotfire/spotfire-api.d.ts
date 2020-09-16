@@ -275,6 +275,7 @@ export declare interface DataView {
      * The full set will be the union of all mark operations performed within one transaction (see {@link Mod.transaction}).
      * All mark operations must have the same marking operation.
      * @param rows - The rows to be selected.
+     * @param operation - Optional {@link MarkingOperation}. Default value is `Replace`.
      */
     mark(rows: DataViewRow[], markingOperation?: MarkingOperation): void;
     /**
@@ -298,18 +299,20 @@ export declare interface DataView {
      */
     getError(): Promise<string | null>;
     /**
-     * Gets metadata for a specific axis in the {@link DataView}.
+     * Gets metadata for a specific categorical axis in the {@link DataView}.
      * Categorical axes are defined in the manifest file as categorical or dual.
-     * Returns null for axes with empty expressions.
-     * Returns null for dual mode axes that currently are in continuous mode.
+     * When this method fails to return a valid axis getting the corresponding call to {@link DataViewRow.categorical} will throw an error.
+     * Returns null for axes with empty expressions or for dual mode axes that currently are in continuous mode.
+     * Throws if the axis does not exist or the axes mode is continuous.
      * @param name - The axis name.
      */
     categoricalAxis(name: string): Promise<DataViewCategoricalAxis | null>;
     /**
-     * Gets metadata for a specific axis in the {@link DataView}.
+     * Gets metadata for a specific continuous axis in the {@link DataView}.
      * Continuous axes are defined in the manifest file as continuous or dual.
-     * Returns null for axes with empty expressions.
-     * Returns null for dual mode axes that currently are in categorical mode.
+     * When this method fails to return a valid axis getting the corresponding call to {@link DataViewRow.continuous} will throw an error.
+     * Returns null for axes with empty expressions or for dual mode axes that currently are in categorical mode.
+     * Throws if the axis does not exist or the axes mode is categorical.
      * @param name - The axis name.
      */
     continuousAxis(name: string): Promise<DataViewContinuousAxis | null>;
@@ -322,8 +325,8 @@ export declare interface DataView {
      * Gets a hierarchy for a categorical axis.
      *
      * If the axis has an empty expression the hierarchy will contain one single root node.
-     * If there is no categorical axis with the specified name, a null value will be resolved.
-     *
+     * Returns null for dual mode axes that currently are in continuous mode.
+     * Throws if the axis does not exist or the axes mode is continuous.
      * @param name - The name of the axis to get the hierarchy for.
      * @param populateWithRows - Optional. If set to true, all available data in the dataview will be retrieved. If set to false the populateWithRows function must be called (and awaited)  in order for the row methods to be available in the hierarchy.
      */
@@ -335,10 +338,12 @@ export declare interface DataView {
     rowCount(): Promise<number | undefined>;
     /**
      * Gets all rows from the data view as one asynchronous operation.
-     * The getAllRows function has a built in cache and can be called multiple times with the same dataView and it will return the same list of rows.
+     * The allRows function has a built in cache and can be called multiple times with the same dataView and it will return the same list of rows.
      * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns true the promise will be rejected.
+     * The default behavior is that reading will be aborted when new non-streaming update is available.
+     * @returns null if reading data was aborted, otherwise a {@link DataViewRow}[].
      */
-    allRows(abortPredicate?: AbortPredicate): Promise<DataViewRow[]>;
+    allRows(abortPredicate?: AbortPredicate): Promise<DataViewRow[] | null>;
 }
 
 /**
@@ -376,15 +381,16 @@ export declare interface DataViewCategoricalValue {
      * Gets an array representing the full path of the value in the hierarchy defined by the axis expression.
      * The first element is the top level of the hierarchy and the last element is the leaf level.
      */
-    path: DataViewCategoricalValuePathElement[];
+    value(): DataViewCategoricalValuePathElement[];
     /**
-     * Gets a string representing the full name by concatenating the name properties of the elements in the {@link DataViewCategoricalValue.path}. The root is not included.
-     * @param separator - The separator used to create the full path. The default separator is "\>\>".
+     * Gets a formatted string that can be used to display this value.
+     * This string is built by concatenating the {@link DataViewCategoricalValuePathElement.formattedValue} for each element found in the {@link DataViewCategoricalValue.value} array.
+     * @param separator - The separator used for concatenation. The default separator is " » ".
      */
-    fullName(separator?: string): string;
+    formattedValue(separator?: string): string;
     /**
      * Gets the index among the leaf nodes of the associated {@link DataViewHierarchy} of this {@link DataViewCategoricalAxis}.
-     * This can for example be used to determine the position on a scale where to render the visual element.
+     * This, for example, can be used to determine the position on a scale where to render the visual element.
      */
     leafIndex: number;
 }
@@ -395,13 +401,14 @@ export declare interface DataViewCategoricalValue {
  */
 export declare interface DataViewCategoricalValuePathElement {
     /**
-     * Gets the display name of this element.
+     * Gets a formatted string that can be used to display this value.
+     * The formatting settings in Spotfire are used to create this string.
      */
-    name: string;
+    formattedValue(): string;
     /**
      * Gets a key that uniquely identifies this element.
      *
-     * In many cases this will be the same as {@link DataViewCategoricalValuePathElement.name} or {@link DataViewCategoricalValuePathElement.value}.
+     * In many cases this will be the same as {@link DataViewCategoricalValuePathElement.formattedValue} and {@link DataViewCategoricalValuePathElement.value}.
      * However there are cases when those values can contain duplicates. For instance when working with cube data,
      * or when using formatters and display values.
      *
@@ -452,8 +459,8 @@ export declare interface DataViewContinuousValue<T extends DataViewValueType = D
      */
     value<T2 extends DataViewValueType = T>(): T2 | null;
     /**
-     * Gets a formatted string that can be used to display this value. The formatting settings in Spotfire
-     * are used to create this string.
+     * Gets a formatted string that can be used to display this value.
+     * The formatting settings in Spotfire are used to create this string.
      */
     formattedValue(): string;
 }
@@ -469,7 +476,7 @@ export declare interface DataViewHierarchy {
     name: string;
     /**
      * Gets a value indicating whether the hierarchy is empty, i.e. the axis expression is empty, or not.
-     * For convenience, an empty hierarchy will have one single node that may contain all rows in the dataview, if {@link DataViewHierarchy.populateWithRows} have been called.
+     * For convenience, an empty hierarchy will have one single node that may contain all rows in the dataview.
      */
     isEmpty: boolean;
     /**
@@ -482,16 +489,11 @@ export declare interface DataViewHierarchy {
     leafCount: number;
     /**
      *  Gets the virtual root node of the hierarchy. The level of the root node is -1. Spotfire does not usually render the root node in visualization.
+     * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns true the promise will be rejected.
+     * The default behavior is that reading will be aborted when new non-streaming update is available.
+     * @returns null if reading data was aborted, otherwise a {@link DataViewHierarchyNode}.
      */
-    root(): Promise<DataViewHierarchyNode>;
-    /**
-     * Gets all leaf nodes this hierarchy. Contains only the root node for axes with empty expression.
-     */
-    leaves(): Promise<DataViewHierarchyNode[]>;
-    /**
-     * Promise to populate the hierarchy with rows. This need to be called before accessing any row based functions on hierarchy nodes.
-     */
-    populateWithRows(): Promise<void>;
+    root(abortPredicate?: AbortPredicate): Promise<DataViewHierarchyNode | null>;
 }
 
 /**
@@ -515,18 +517,19 @@ export declare interface DataViewHierarchyLevel {
  */
 export declare interface DataViewHierarchyNode {
     /**
-     * Gets the display name of this node.
+     * Gets a formatted string that can be used to display this value.
+     * The formatting settings in Spotfire are used to create this string.
      */
-    name: string;
+    formattedValue(): string;
     /**
-     * Gets the full name of this node, including the name of the parents, root omitted.
-     * @param separator - The separator. The default separator is "\>\>".
+     * Gets the full path, top down to this node, of the formatted values. The virtual root node is omitted.
+     * @param separator - The separator. The default separator is " » ".
      */
-    fullName(separator?: string): string;
+    formattedPath(separator?: string): string;
     /**
      * Gets the key for this hierarchy node. The key is guaranteed to be unique for the node among its siblings.
      *
-     * In many cases this will be the same as {@link DataViewHierarchyNode.name} or {@link DataViewHierarchyNode.value}.
+     * In many cases this will be the same as {@link DataViewHierarchyNode.formattedValue} or {@link DataViewHierarchyNode.value}.
      * However there are cases when those values can contain duplicates. For instance when working with cube data,
      * or when using formatters and display values.
      *
@@ -559,7 +562,6 @@ export declare interface DataViewHierarchyNode {
     leafIndex?: number;
     /**
      * Marks all {@link DataViewRow}s corresponding to the sub tree of the hierarchy spanned from this node.
-     * This function will throw if {@link DataViewHierarchy.populateWithRows} has not been called.
      * See {@link DataView.mark} for more details.
      * @param operation - The marking operation.
      */
@@ -574,7 +576,6 @@ export declare interface DataViewHierarchyNode {
     leafCount(): number;
     /**
      * Computes the number of marked {@link DataViewRow}s in the sub tree of the hierarchy spanned from this node.
-     * This function will throw if {@link DataViewHierarchy.populateWithRows} has not been called.
      */
     markedRowCount(): number;
     /**
@@ -583,7 +584,6 @@ export declare interface DataViewHierarchyNode {
     level: number;
     /**
      * Computes the {@link DataViewRow}s corresponding to the sub tree of the hierarchy spanned from this node.
-     * This function will throw if {@link DataViewHierarchy.populateWithRows} has not been called.
      */
     rows(): DataViewRow[];
 }
@@ -639,34 +639,10 @@ export declare interface DataViewRow {
      * **Note** All mark operations within one {@link Mod.transaction} must have the same {@link MarkingOperation}.
      *
      * See {@link DataView.mark} for more details.
-     * @param operation - The {@link MarkingOperation} to perform. If omitted, a `Replace` is performed.
+     * @param operation - Optional {@link MarkingOperation}. Default value is `Replace`.
      */
     mark(operation?: MarkingOperation): void;
 }
-
-/**
- * Provides a way to iterate through the rows of a {@link DataView}.
- * @public
- */
-export declare interface DataViewRowIterator {
-    /**
-     * Steps this instance to the next {@link DataViewRow} of the associated {@link DataView}.
-     */
-    next(): Promise<DataViewRowIteratorResult>;
-    /**
-     * Appends the next batch of {@link DataViewRow}s of the associated {@link DataView}to the array.
-     * @returns done flag, true if all rows have been read.
-     */
-    appendNextBatch(rows: DataViewRow[]): Promise<boolean>;
-}
-
-/**
- * Represents the result of stepping a {@link DataViewRowIterator} to the next row of the associated {@link DataView}.
- * @public
- */
-export declare type DataViewRowIteratorResult = {
-    row: DataViewRow | null;
-};
 
 /**
  * Represents the type of a {@link DataView} value. The actual type that a given value has depends on the
@@ -787,7 +763,7 @@ export declare type MethodKeys<T> = {
  * Represents the entire Mod API and exposes methods for interacting with and reading data from
  * the Mod Visualization and the Spotfire document.
  *
- * Reading content from the Mod is made by using either of the methods {@link Reader.subscribe}, {@link Reader.once} or {@link Reader.read} on an instance of a {@link Reader}.
+ * Reading content from the Mod is made by using either of the methods {@link Reader.subscribe} or {@link Reader.once} on an instance of a {@link Reader}.
  * @public
  */
 export declare interface Mod {
@@ -809,7 +785,10 @@ export declare interface Mod {
      */
     windowSize(): Readable<Size>;
     /**
-     * Creates a {@link Reader} that can be used to access content specified by the {@link Readable}s parameters.
+     * Creates a {@link Reader} that can be used to access content specified by the {@link Readable} parameters.
+     * The reader is responsible for combining multiple {@link Readable}s and scheduling a callback to be invoked
+     * when one or more of the {@link Readable}s have changed.
+     * @param readables - The {@link Readable}s that will be available in the reader.
      */
     createReader<T extends ReadonlyArray<Readable>>(...readables: T): Reader<ExtractValueType<T>>;
     /**
@@ -823,20 +802,35 @@ export declare interface Mod {
      * Modifications done outside of a transaction action callback will be grouped together in an implicit transaction.
      *
      * @param action - callback with a set of modifications
+     * @param onComplete - optional callback that is called when the transaction is committed or rolled back. When there is an error argument in the callback the transaction was rolled back.
      * @example
      * ```
      * mod.transaction(() => {
      *     mod.property("X").set("new value for X");
      *     mod.property("Y").set("new value for Y");
+     * },
+     * (error) => {
+     *     if (error) {
+     *         // Show error message.
+     *     }
+     *     else {
+     *         // Handle success, e.g. re-enable action button.
+     *     }
      * });
      * ```
      */
-    transaction(action: () => void): void;
+    transaction(action: () => void, onComplete?: (error?: string) => void): void;
     /**
-     * Adds a general error handler.
-     * @param errorCallback - callback that will be invoked each time an error occurs.
+     * Show an error message. Showing an error message will hide the Mods UI.
+     * @param message - The error message.
+     * @param category - Optional error categorization. Useful if multiple error message are to be shown. Error messages will be sorted based on the category.
      */
-    onError(errorCallback: (messageCallback: string) => void): void;
+    showError(message: string, category?: string): void;
+    /**
+     * Clear the error message. If no other error messages are currently visible the Mods UI will be shown.
+     * @param category - Optional error categorization.
+     */
+    clearError(category?: string): void;
     /**
      * Get the Mod's render context. This function should be invoked as soon as possible in the {@link initialize} callback.
      *
@@ -934,8 +928,19 @@ export declare interface ModVisualization {
      */
     mainTable(): ReadableProxy<DataTable>;
     /**
+     * Sets the main {@link DataTable} in the Mod visualization.
+     * @param tableName - The name of the {@link DataTable} to be used as main table.
+     */
+    setMainTable(tableName: string): void;
+    /**
+     * Sets the main {@link DataTable} in the Mod visualization.
+     * @param table - The {@link DataTable} object to be used as main table.
+     */
+    setMainTable(table: DataTable): void;
+    /**
      * Provides access to the {@link Axis} in the Mod Visualization with the specified `name`. All axes
      * must be declared in the mod-manifest.json.
+     * @param name - The name of the {@link Axis}.
      */
     axis(name: string): ReadableProxy<Axis>;
 }
@@ -1247,7 +1252,9 @@ export declare interface Readable<T = any> extends Promise<T> {
 export declare type ReadableProxy<Node> = Readable<Node> & Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
 
 /**
- * Object containing functionality to read values from the Mod Visualization and Spotfire document.
+ * The reader is responsible for combining multiple {@link Readable}s and scheduling a callback to be invoked
+ * when one or more of the {@link Readable}s have changed. Choose one of the appropriate methods;
+ * {@link Reader.once} or {@link Reader.subscribe} that suits the needs of the Mod.
  * An instance of the reader is created by calling the {@link Mod.createReader} method.
  * @public
  */
@@ -1265,8 +1272,9 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
      *
      * @param callback - The callback function that is called every time when there is at least one new value to read.
      * The callback function will not be called until the previous callback function has returned.
+     * @param onReadError - Optional callback function that will be called if there are errors reading the readables.
      */
-    subscribe(callback: (...values: T) => void, errorCallback?: (error: string) => void): void;
+    subscribe(callback: (...values: T) => void, onReadError?: (error: string) => void): void;
     /**
      * Read the content once for the readables specified when the reader was created.
      * Any current subscription for this reader will be cancelled.
@@ -1274,23 +1282,21 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
      *
      * ```
      * let reader = mod.createReader(mod.property("CreatedBy"));
-     * reader.once((dataView) => {
-     *    console.log(await dataView.rowCount());
+     * reader.once((createdBy) => {
+     *    console.log(await createdBy.value());
      * });
      * ```
      *
-     * @param callback - The callback function that is called every time when there is at least one new value to read.
+     * @param callback - The callback function that is called once when there is at least one new value to read.
+     * @param onReadError - Optional callback function that will be called if there are errors reading the readables.
      */
-    once(callback: (...values: T) => void, errorCallback?: (error: string) => void): void;
+    once(callback: (...values: T) => void, onReadError?: (error: string) => void): void;
     /**
-     * Read all values and retrieve them as a promise.
-     * Any awaiting once or subscription will be cancelled.
-     */
-    read(): Promise<ReadonlyArray<any>>;
-    /**
-     * Checks if any of the readables have a new value available.
-     * If this function returns true, the callback in the current subscription is guaranteed to be invoked.
-     * Calling once for an expired reader also guarantees to invoke the callback function.
+     * Checks if any of the readables have a new value available. If this function returns true,
+     * the callback in the current subscription, or a new call to {@link Reader.once} is guaranteed
+     * to be invoked.
+     * The intended use of this method is to cancel rendering of the Mod if there are new values to any of the
+     * readables specified when the reader was created.
      */
     hasExpired(): Promise<boolean>;
 }
@@ -1395,6 +1401,16 @@ export declare interface SpotfireDocument {
      * @param name - The name/title of the page to set as active.
      */
     setActivePage(name: string): void;
+    /**
+     * Sets the specified index as the active page index.
+     * @param index - The index of the page to set as active.
+     */
+    setActivePage(index: number): void;
+    /**
+     * Sets the specified {@link Page} as the active page.
+     * @param page - The {@link Page} object to set as active.
+     */
+    setActivePage(page: Page): void;
 }
 
 /**

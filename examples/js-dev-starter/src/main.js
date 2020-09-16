@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
+
 //@ts-check - Get type warnings from the TypeScript language server. Remove if not wanted.
 
 /**
@@ -6,13 +12,14 @@
  */
 Spotfire.initialize(async (mod) => {
     /**
-     * Create the read function - its behavior is similar to native requestAnimationFrame
+     * Create the read function.
      */
-    const reader = mod.createReader(
-        mod.visualization.data(),
-        mod.windowSize(),
-        mod.property("myProperty")
-    );
+    const reader = mod.createReader(mod.visualization.data(), mod.windowSize(), mod.property("myProperty"));
+
+    /**
+     * Store the context.
+     */
+    const context = mod.getRenderContext();
 
     /**
      * Initiate the read loop
@@ -22,7 +29,7 @@ Spotfire.initialize(async (mod) => {
     /**
      * @param {Spotfire.DataView} dataView
      * @param {Spotfire.Size} windowSize
-     * @param {Spotfire.Property} prop
+     * @param {Spotfire.ModProperty<string>} prop
      */
     async function render(dataView, windowSize, prop) {
         /**
@@ -37,8 +44,13 @@ Spotfire.initialize(async (mod) => {
 
         container.innerHTML = "";
         printResult(`windowSize: ${windowSize.width}x${windowSize.height}`);
-        printResult(printResult(`should render: ${rows.length} rows`));
-        printResult(printResult(`${prop.name}: ${prop.value}`));
+        printResult(`should render: ${rows.length} rows`);
+        printResult(`${prop.name}: ${prop.value()}`);
+
+        /**
+         * Signal that the mod is ready for export.
+         */
+        context.signalRenderComplete();
 
         function printResult(text) {
             let div = document.createElement("div");

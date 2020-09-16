@@ -4,6 +4,7 @@
     "name": "BarChart example using googlecharts",
     "id": "basic-barchart-googlecharts",
     "icon": "icon.svg",
+    "externalResources": ["https://www.gstatic.com"],
     "properties": [
         {
             "name": "orientation",

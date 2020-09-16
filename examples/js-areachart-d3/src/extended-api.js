@@ -1,27 +1,59 @@
+/*
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
+
 //@ts-check
 
 const EMPTY = "(Empty)";
 const SEPARATOR = ":";
-export const is = (property) => (value) => property.value == value;
-export const X = (row) => row.categorical("X").fullName();
+export const is = (property) => (value) => property.value() == value;
+
+/** @param {Spotfire.DataViewRow} row */
+export const X = (row) => row.categorical("X").formattedValue();
+
+/** 
+ * @param {Spotfire.DataViewRow} row 
+ * @returns {Number}
+*/
 export const Y = (row) => row.continuous("Y").value();
+
+/** @param {Spotfire.DataViewRow} row */
+export const Y_FORMATTED = (row) => row.continuous("Y").formattedValue();
+
+/** @param {Spotfire.DataViewRow} row */
 export const Color = (row) => {
     try {
-        return row.categorical("Color").fullName();
+        return row.categorical("Color").formattedValue();
     } catch (e) {
         return EMPTY;
     }
 };
+
+/** @param {Spotfire.DataViewRow} row */
 export const marked = (row) => row.isMarked();
+
+/** @param {Spotfire.DataViewRow} row */
 export const hexCode = (row) => row.color().hexCode;
+
+/** @param {Spotfire.DataViewRow} row */
 export const mark = (row) => row.mark;
-export const getName = (node) => node.name;
+
+/** @param {Spotfire.DataViewHierarchyNode} node */
+export const getName = (node) => node.formattedValue();
+
+/** @param {Spotfire.DataViewHierarchyNode} node */
 export const getKey = (node) => node.key;
-export const markGroup = (group) => (key) => group.select(key).__node.mark();
+
+export const markGroup = (group) => (key) => ({ ctrlKey }) =>
+    ctrlKey ? group.select(key).__node.mark("ToggleOrAdd") : group.select(key).__node.mark();
+
+/** @param {Spotfire.DataViewRow} row */
 export const Path = (row) =>
     row
         .categorical("X")
-        .path.map(({ key }) => (key == null ? EMPTY : String(key)))
+        .value().map(({ key }) => (key == null ? EMPTY : String(key)))
         .join(SEPARATOR);
 
 /**
@@ -55,6 +87,7 @@ export const createPoint = (row) => {
         X: X(row),
         Color: Color(row),
         Y: Y(row),
+        Y_FORMATTED: Y_FORMATTED(row),
         marked: marked(row),
         hexCode: hexCode(row),
         mark: mark(row),
@@ -73,7 +106,7 @@ export const createPoint = (row) => {
 export const createGroup = (node) => {
     const points = node.rows().map(createRowId);
     const sum = node.rows().reduce((acc, row) => acc + Y(row), 0);
-    const name = node.fullName(SEPARATOR);
+    const name = node.formattedPath(SEPARATOR);
     const id = createHierarchyId(node);
 
     return {
@@ -144,3 +177,22 @@ export const axisDisplayName = (axis) => {
  * Merges (by index) values of 2 arrays into one line of formatted text
  */
 export const createTextLine = (arr1) => (arr2) => arr1.map((value, index) => value + ": " + arr2[index]);
+
+/**
+ * Allows consistent tooltip behavior in a streaming scenario.
+ * Checks for :hover pseudo element and extracts tooltip value saved in an attribute.
+ * Hides tooltip if empty.
+ * @param {Spotfire.Tooltip} tooltip 
+ */
+export const invalidateTooltip = (tooltip) => {
+    const nodeList = document.querySelectorAll(":hover");
+    if (nodeList.length > 0) {
+        const lastNode = nodeList[nodeList.length - 1];
+        const tooltipValue = lastNode.getAttribute("tooltip");
+        if (tooltipValue) {
+            tooltip.show(tooltipValue);
+        } else {
+            tooltip.hide();
+        }
+    }
+};

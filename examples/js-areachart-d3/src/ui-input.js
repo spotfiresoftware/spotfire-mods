@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
+
 const selectionDiv = document.createElement("div");
 selectionDiv.className = "selection";
 
@@ -10,14 +16,13 @@ document.querySelector("body").appendChild(selectionDiv);
 const clamp = (value, min, max) => Math.min(Math.max(min, value), max);
 
 let selectionPoint = { x: 0, y: 0 };
-export const addHandlersSelection = (state, callback) => {
-    const setSelectionActive = (value) => (state.dragSelectActive = value);
-
+let meta = { ctrlKey: false, altKey: false };
+export const addHandlersSelection = (callback) => {
     document.onmousedown = (e) => {
-        setSelectionActive(true);
         callback({ dragSelectActive: true });
-        const { x, y } = e;
+        const { x, y, ctrlKey, altKey } = e;
         selectionPoint = { x, y };
+        meta = { ctrlKey, altKey };
         selectionDiv.style.left = x + "px";
         selectionDiv.style.top = y + "px";
         selectionDiv.style.width = "0px";
@@ -42,7 +47,6 @@ export const addHandlersSelection = (state, callback) => {
     };
 
     const mouseup = (e) => {
-        setSelectionActive(false);
         const { x, y } = e;
         const width = Math.abs(selectionPoint.x - x);
         const height = Math.abs(selectionPoint.y - y);
@@ -55,7 +59,8 @@ export const addHandlersSelection = (state, callback) => {
                 x: x < selectionPoint.x ? x : selectionPoint.x,
                 y: y < selectionPoint.y ? y : selectionPoint.y,
                 width,
-                height
+                height,
+                ...meta
             });
         } else {
             callback({ dragSelectActive: false });

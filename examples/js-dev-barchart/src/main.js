@@ -1,3 +1,9 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
 //@ts-check - Get type warnings from the TypeScript language server. Remove if not wanted.
 
 // Get access to the Spotfire Mod API by providing a callback to the initialize method.
@@ -19,7 +25,9 @@ Spotfire.initialize(async (mod) => {
         mod.windowSize()
     );
 
-    reader.subscribe(renderBarChart, onError);
+    // This Mod does not rely on data outside the
+    // mod itself so no read errors are expected.
+    reader.subscribe(renderBarChart);
 
     /**
      * Render the bar chart.
@@ -36,17 +44,18 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.Axis} yAxis
      */
     async function renderBarChart(dataView, yAxisMode, splitBars, yAxis) {
-        const error = await dataView.getError();
-        if (error !== null) {
-            onError(error);
+        if (await dataView.getError()) {
+            // Data view errors are displayed by the Spotfire runtime.
             return;
         }
 
         // Get y-axis
         let dataViewYAxis = await dataView.continuousAxis("Y");
         if (dataViewYAxis == null) {
-            onError("No data on y axis.");
+            mod.showError("No data on y axis.", "y");
             return;
+        } else {
+            mod.clearError("y");
         }
 
         // Hide tooltip
@@ -54,8 +63,8 @@ Spotfire.initialize(async (mod) => {
 
         // Get the leaf nodes for the x hierarchy. We will iterate over them to
         // render the bars.
-        let xHierarchy = await dataView.hierarchy("X", true);
-        let xLeaves = await xHierarchy.leaves();
+        let xHierarchy = await dataView.hierarchy("X");
+        let xLeaves = (await xHierarchy.root()).leaves();
 
         // Figure out if we use categorical coloring, and if so retrieve the
         // number or colors. We need that to render split bars rather than stacked.
@@ -68,18 +77,6 @@ Spotfire.initialize(async (mod) => {
         renderXScale(splitBars);
 
         context.signalRenderComplete();
-    }
-
-    /**
-     * Error handler triggered when the read call fails, or configuration is invalid.
-     * @param {string} errorMessage
-     */
-    function onError(errorMessage) {
-        console.warn(errorMessage);
-        canvasDiv.innerHTML = "";
-        yScaleDiv.innerHTML = "";
-        xScaleDiv.innerHTML = "";
-        canvasDiv.innerText = errorMessage;
     }
 
     /**
@@ -211,7 +208,7 @@ Spotfire.initialize(async (mod) => {
 
     /**
      * Render the horizontal scale.
-     * @param {Spotfire.Property<boolean>} splitBars - Whether or not bars should be stacked or split into individual bars.
+     * @param {Spotfire.ModProperty<boolean>} splitBars - Whether or not bars should be stacked or split into individual bars.
      */
     function renderXScale(splitBars) {
         const stroke = context.styling.scales.line.stroke;
@@ -344,7 +341,7 @@ Spotfire.initialize(async (mod) => {
                 segment.style.backgroundColor = row.color().hexCode;
 
                 segment.onmouseover = (e) => {
-                    mod.controls.tooltip.show(xLeafNode.fullName() + ": " + y.formattedValue());
+                    mod.controls.tooltip.show(xLeafNode.formattedPath() + ": " + y.formattedValue());
                 };
                 segment.onmouseout = (e) => {
                     mod.controls.tooltip.hide();

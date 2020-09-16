@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
 
-    "definitions" : {
+    "definitions": {
         "axis": {
             "type": "object",
             "title": "Axis definitions",
@@ -47,7 +47,7 @@
                             "default": "0",
                             "description": "Specifies the order in which this axis will be treated when the heuristics assigns the initial expression. A higher value means it will be treated before axes with a lower value. Two axes with the same value will be treated in undefined order."
                         }
-                    }                                
+                    }
                 },
                 "dataTypes": {
                     "type": "object",
@@ -85,7 +85,7 @@
                             "default": false,
                             "description": "Specifies whether to allow expressions with Boolean data type."
                         }
-                    }                                
+                    }
                 },
                 "dropTarget": {
                     "type": "object",
@@ -135,8 +135,8 @@
                         }
                     }
                 }
-            }                                
-        }			
+            }
+        }
     },
 
     "title": "The Spotfire mod manifest schema",
@@ -179,6 +179,17 @@
             "default": "",
             "examples": ["spotfire-boilerplate-id"],
             "pattern": "^(.*)$"
+        },
+        "externalResources": {
+            "type": "array",
+            "title": "Specifies external resources loaded from the mod.",
+            "description": "Only declared external resources will work in the mod. A visualization mod with external resources cannot be exported using the web client.",
+            "items": {
+                "type": "string",
+                "examples": [
+                    "https://www.example.com"
+                ]
+            }
         },
         "properties": {
             "type": "array",
@@ -231,12 +242,12 @@
             "properties": {
                 "colorAxis": {
                     "allOf": [
-                        { "$ref": "#/definitions/axis"},
+                        { "$ref": "#/definitions/axis" },
                         {
                             "type": "object",
                             "title": "ColorAxis",
                             "description": "Specifies that the Mod shall have a color axis.",
-                            "properties":  {
+                            "properties": {
                                 "legendItem": {
                                     "type": "object",
                                     "title": "Legend Item",
@@ -249,11 +260,11 @@
                                             "enum": ["visible", "hidden"],
                                             "description": "Specifies whether to initially show or hide the item for this axis in the legend."
                                         }
-                                    }                                
+                                    }
                                 }
                             }
                         }
-                    ]       
+                    ]
                 },
                 "axes": {
                     "type": "array",
@@ -261,7 +272,7 @@
                     "description": "Specifies the axes that defines how Spotfire computes the data view consumed by the Mod.",
                     "items": {
                         "allOf": [
-                            { "$ref": "#/definitions/axis"},
+                            { "$ref": "#/definitions/axis" },
                             {
                                 "type": "object",
                                 "title": "Axis",
@@ -306,7 +317,7 @@
                                                 "title": "Title",
                                                 "description": "Specifies the title to show in the item for this axis in the legend."
                                             }
-                                        }                                
+                                        }
                                     },
                                     "propertyControl": {
                                         "type": "object",
@@ -326,7 +337,7 @@
                                                 "title": "Title",
                                                 "description": "Specifies the title of the control for this axis."
                                             }
-                                        }                                
+                                        }
                                     }
                                 }
                             }
@@ -342,7 +353,7 @@
             "default": {},
             "additionalProperties": false,
             "properties": {
-                "defaultPlacement" : {
+                "defaultPlacement": {
                     "type": "string",
                     "enum": ["left", "right"],
                     "title": "Default placement of the Legend",

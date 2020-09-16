@@ -1,7 +1,7 @@
 {
     "apiVersion": "1.0",
     "version": "1.0",
-    "name": "Simple Bar Chart",
+    "name": "Bar Chart",
     "id": "js-dev-barchart",
     "icon": "icon.svg",
     "properties": [
@@ -37,7 +37,8 @@
             {
                 "name": "Y",
                 "mode": "continuous",
-                "placement": "left"
+                "placement": "left",
+                "allowMultipleMeasures": true
             }
         ]
     },

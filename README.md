@@ -6,7 +6,7 @@ With Spotfire Mods, you can include custom visualizations in your Spotfire appli
 
 ## To get started
 
-[Introduction and tutorials on The Spotfire Mods Labs Site](https://tibcosoftware.github.io/spotfire-mods/docs/)
+[Introduction and tutorials](https://tibcosoftware.github.io/spotfire-mods/docs/)
 
 [Latest version of example projects]()
 

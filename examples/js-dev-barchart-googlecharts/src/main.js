@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
+
 //@ts-check - Get type warnings from the TypeScript language server. Remove if not wanted.
 
 /**
@@ -28,8 +34,8 @@ Spotfire.initialize(async (mod) => {
      * Aggregates incoming data and renders the chart
      *
      * @param {Spotfire.DataView} dataView
-     * @param {Spotfire.Property} orientation
-     * @param {Spotfire.Property} stacking
+     * @param {Spotfire.ModProperty<string>} orientation
+     * @param {Spotfire.ModProperty<string>} stacking
      */
     async function render(dataView, orientation, stacking) {
         /**
@@ -40,13 +46,7 @@ Spotfire.initialize(async (mod) => {
         /**
          * Check for any errors.
          */
-        const error = await dataView.getError();
-        if (error !== null) {
-            /**
-             * Here we should really clear the previous rendering
-             * and display the message to the user.
-             */
-            console.log(error);
+        if (await dataView.getError()) {
             return;
         }
 
@@ -58,15 +58,15 @@ Spotfire.initialize(async (mod) => {
         /**
          * Get the color hierarchy.
          */
-        const colorHierarchy = await dataView.hierarchy("Color", true);
-        const colorLeafNodes = await colorHierarchy.leaves();
-        const colorDomain = colorHierarchy.isEmpty ? ["All Values"] : colorLeafNodes.map((node) => node.fullName());
+        const colorHierarchy = await dataView.hierarchy("Color");
+        const colorLeafNodes = (await colorHierarchy.root()).leaves();
+        const colorDomain = colorHierarchy.isEmpty ? ["All Values"] : colorLeafNodes.map((node) => node.formattedPath());
 
         /**
          * Get the x hierarchy.
          */
-        const xHierarchy = await dataView.hierarchy("X", true);
-        const xLeafNodes = await xHierarchy.leaves();
+        const xHierarchy = await dataView.hierarchy("X");
+        const xLeafNodes = (await xHierarchy.root()).leaves();
 
         /**
          * Convert rows to a data table format expected by google chart
@@ -105,7 +105,7 @@ Spotfire.initialize(async (mod) => {
                 valueAndColorPairs[colorIndex * 2 + 1] = r.color().hexCode;
             });
 
-            var row = [leaf.fullName(), ...valueAndColorPairs.flat()];
+            var row = [leaf.formattedPath(), ...valueAndColorPairs.flat()];
             return row;
         });
 
@@ -162,7 +162,7 @@ Spotfire.initialize(async (mod) => {
         const container = document.querySelector("#mod-container");
         let chart;
         /**
-         * Create a bar or column chart depending on `orientation` propery
+         * Create a bar or column chart depending on `orientation` property
          */
         if (is(orientation)("horizontal")) {
             chart = new google.visualization.BarChart(container);
@@ -284,7 +284,7 @@ Spotfire.initialize(async (mod) => {
 
         /**
          * Popout change handler
-         * @param {Spotfire.Property} property
+         * @param {Spotfire.PopoutComponentEvent} property
          */
         function popoutChangeHandler({ name, value }) {
             name == orientation.name && orientation.set(value);
