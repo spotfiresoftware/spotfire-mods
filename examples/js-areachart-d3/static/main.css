@@ -1,0 +1,103 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
+html,
+body,
+#mod-container {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+#mod-container {
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.line-hover {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.line-hover-fill {
+    pointer-events: none;
+    stroke: #fff;
+    stroke-width: 5px;
+}
+
+.line-hover-casing {
+    pointer-events: none;
+    stroke: #333;
+    stroke-width: 7px;
+}
+
+.line-hover-bg {
+    stroke: #333;
+    stroke-opacity: 0;
+    stroke-width: 7px;
+}
+
+.selection {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    border: 1px solid #677085;
+    background-color: rgba(0, 90, 230, 0.17);
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+}
+
+.selection-bg {
+    visibility: hidden;
+    position: absolute;
+    background-color: rgba(200, 90, 230, 0);
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.x-axis-label-container {
+    position: absolute;
+    cursor: pointer;
+}
+
+.x-axis-label-container:hover > .x-axis-label-background {
+    opacity: 0.085;
+}
+
+.x-axis-label-background {
+    position: absolute;
+    height: 24px;
+    border-radius: 4px;
+    opacity: 0;
+}
+
+.x-axis-label-parent {
+    position: absolute;
+    /* pointer-events: none; */
+}
+
+.x-axis-label {
+    /* pointer-events: none; */
+    position: relative;
+    top: 4px;
+    left: -50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}

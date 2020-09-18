@@ -1,0 +1,76 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    white-space: pre-line;
+    margin: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+#border {
+    position: relative;
+    height: calc(100vh - 20px);
+    width: calc(100vw - 20px);
+}
+
+#canvas,
+#x-scale,
+#y-scale {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#canvas {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: flex-end;
+}
+
+.bar {
+    border: 1px solid transparent;
+    border-bottom-width: 0;
+    flex-shrink: 1;
+    max-width: 100px;
+    flex-grow: 1;
+    min-width: 3px;
+    border-radius: 4px 4px 0 0;
+    text-align: center;
+    overflow: hidden;
+}
+
+.bar:hover {
+    border-color: currentColor;
+}
+
+.segment {
+    width: 100%;
+    display: block;
+}
+
+#y-scale {
+    border-right: 1px solid currentColor;
+    text-align: right;
+    cursor: pointer;
+}
+
+.scale-label {
+    line-height: 10px;
+    font-size: 10px;
+    position: absolute;
+    right: 5px;
+}
+
+#x-scale {
+    border-top: 1px solid currentColor;
+}
