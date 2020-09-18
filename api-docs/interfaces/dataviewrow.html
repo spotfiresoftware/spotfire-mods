@@ -1,0 +1,320 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>DataViewRow | API Documentation</title>
+	<meta name="description" content="Documentation for API Documentation">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json"
+				data-base="..">
+				<div class="field">
+					<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+					<input id="tsd-search-field" type="text" />
+				</div>
+				<ul class="results">
+					<li class="state loading">Preparing search index...</li>
+					<li class="state failure">The search index is not available</li>
+				</ul>
+				<a href="../.." class="title"><span class="tsd-widget chevron-left"></span> Back to Main Page</a>
+				<span class="menu-separator"> | </span>
+				<a href="../index.html" class="title">API Documentation</a>
+			</div>
+			<!--
+                <div class="table-cell" id="tsd-widgets">
+                    <div id="tsd-filter">
+                        <a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+                        <div class="tsd-filter-group">
+                            <div class="tsd-select" id="tsd-filter-visibility">
+                                <span class="tsd-select-label">All</span>
+                                <ul class="tsd-select-list">
+                                    <li data-value="public">Public</li>
+                                    <li data-value="protected">Public/Protected</li>
+                                    <li data-value="private" class="selected">All</li>
+                                </ul>
+                            </div>
+
+                            <input type="checkbox" id="tsd-filter-inherited" checked />
+                            <label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+
+
+                                <input type="checkbox" id="tsd-filter-only-exported" />
+                                <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+                        </div>
+                    </div>
+
+                    <a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+                </div>
+
+                -->
+		</div>
+	</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../index.html">Globals</a>
+				</li>
+				<li>
+					<a href="dataviewrow.html">DataViewRow</a>
+				</li>
+			</ul>
+			<h1>Interface DataViewRow</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Represents a row of data in a <a href="dataview.html">DataView</a>. Each row can be thought of as a data point that the mod visualization renders.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">DataViewRow</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#categorical" class="tsd-kind-icon">categorical</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#color" class="tsd-kind-icon">color</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="dataviewrow.html#continuous" class="tsd-kind-icon">continuous</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#ismarked" class="tsd-kind-icon">is<wbr>Marked</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#mark" class="tsd-kind-icon">mark</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="categorical" class="tsd-anchor"></a>
+					<h3>categorical</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">categorical<span class="tsd-signature-symbol">(</span>axisName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="dataviewcategoricalvalue.html" class="tsd-signature-type">DataViewCategoricalValue</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tibco/labs-spotfire-mods/blob/67e85ae/mod-api/spotfire-api.d.ts#L632">mod-api/spotfire-api.d.ts:632</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets a <a href="dataviewcategoricalvalue.html">DataViewCategoricalValue</a> representing the value of the axis with the specified <code>axisName</code>.
+										This method will throw an error if there is no categorical axis by that name.
+									Use <a href="dataview.html#categoricalaxis">DataView.categoricalAxis</a> to check the current existence of a categorical value.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>axisName: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The name of the axis to get the value for.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="dataviewcategoricalvalue.html" class="tsd-signature-type">DataViewCategoricalValue</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="color" class="tsd-anchor"></a>
+					<h3>color</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="dataviewcolorinfo.html" class="tsd-signature-type">DataViewColorInfo</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tibco/labs-spotfire-mods/blob/67e85ae/mod-api/spotfire-api.d.ts#L644">mod-api/spotfire-api.d.ts:644</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the <a href="dataviewcolorinfo.html">DataViewColorInfo</a> for the row, if a color axis is defined in the mod manifest.
+									The underlying data value can be retrieved by using <a href="dataviewrow.html#categorical">DataViewRow.categorical</a>(&quot;Color&quot;) or <a href="dataviewrow.html#continuous">DataViewRow.continuous</a>(&quot;Color&quot;), depending on the mode of the color axis.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="dataviewcolorinfo.html" class="tsd-signature-type">DataViewColorInfo</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+					<a name="continuous" class="tsd-anchor"></a>
+					<h3>continuous</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">continuous&lt;T&gt;<span class="tsd-signature-symbol">(</span>axisName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="dataviewcontinuousvalue.html" class="tsd-signature-type">DataViewContinuousValue</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tibco/labs-spotfire-mods/blob/67e85ae/mod-api/spotfire-api.d.ts#L639">mod-api/spotfire-api.d.ts:639</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets a <a href="dataviewcontinuousvalue.html">DataViewContinuousValue</a> representing the value of the axis with the specified <code>axisName</code>.
+										This method will throw an error if there is no continuous axis by that name.
+									Use <a href="dataview.html#continuousaxis">DataView.continuousAxis</a> to check the current existence of a continuous value.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><a href="../index.html#dataviewvaluetype" class="tsd-signature-type">DataViewValueType</a></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>axisName: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The name of the axis to get the value for.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="dataviewcontinuousvalue.html" class="tsd-signature-type">DataViewContinuousValue</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="ismarked" class="tsd-anchor"></a>
+					<h3>is<wbr>Marked</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Marked<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tibco/labs-spotfire-mods/blob/67e85ae/mod-api/spotfire-api.d.ts#L625">mod-api/spotfire-api.d.ts:625</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets a value indicating whether this row is marked.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="mark" class="tsd-anchor"></a>
+					<h3>mark</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">mark<span class="tsd-signature-symbol">(</span>operation<span class="tsd-signature-symbol">?: </span><a href="../index.html#markingoperation" class="tsd-signature-type">MarkingOperation</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tibco/labs-spotfire-mods/blob/67e85ae/mod-api/spotfire-api.d.ts#L653">mod-api/spotfire-api.d.ts:653</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Performs the specified marking operation in the current marking.</p>
+								</div>
+								<p><strong>Note</strong> All mark operations within one <a href="mod.html#transaction">Mod.transaction</a> must have the same <a href="../index.html#markingoperation">MarkingOperation</a>.</p>
+								<p>See <a href="dataview.html#mark">DataView.mark</a> for more details.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> operation: <a href="../index.html#markingoperation" class="tsd-signature-type">MarkingOperation</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional <a href="../index.html#markingoperation">MarkingOperation</a>. Default value is <code>Replace</code>.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface">
+						<a href="dataviewrow.html" class="tsd-kind-icon">Data<wbr>View<wbr>Row</a>
+						<ul>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="dataviewrow.html#categorical" class="tsd-kind-icon">categorical</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="dataviewrow.html#color" class="tsd-kind-icon">color</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+								<a href="dataviewrow.html#continuous" class="tsd-kind-icon">continuous</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="dataviewrow.html#ismarked" class="tsd-kind-icon">is<wbr>Marked</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="dataviewrow.html#mark" class="tsd-kind-icon">mark</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

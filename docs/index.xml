@@ -1,0 +1,987 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spotfire® Mods – Spotfire® Mods Documentation</title>
+    <link>https://tibcosoftware.github.io/spotfire-mods/docs/</link>
+    <description>Recent content in Spotfire® Mods Documentation on Spotfire® Mods</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 31 Aug 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="https://tibcosoftware.github.io/spotfire-mods/docs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Bar chart mod using Google Charts</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/barchart-googlechart/</link>
+      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/barchart-googlechart/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;a-step-by-step-tutorial-on-using-spotfire-mods&#34;&gt;A step-by-step tutorial on using Spotfire Mods&lt;/h2&gt;
+&lt;p&gt;We will be using &lt;strong&gt;Spotfire API&lt;/strong&gt; and &lt;a href=&#34;https://developers.google.com/chart&#34;&gt;&lt;strong&gt;Google Charts&lt;/strong&gt;&lt;/a&gt; to create a basic bar chart.&lt;/p&gt;
+&lt;p&gt;This tutorial will cover the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Initial setup&lt;/li&gt;
+&lt;li&gt;Consuming and visualizing data&lt;/li&gt;
+&lt;li&gt;Selection/marking&lt;/li&gt;
+&lt;li&gt;Theme-ing&lt;/li&gt;
+&lt;li&gt;Controlling the mod using popout&lt;/li&gt;
+&lt;li&gt;Export to PDF&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;The full code of the result from this tutorial project (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;js-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The full version of the resulting example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;A running instance of &lt;em&gt;Spotfire&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;A code editor. It is highly recommended to use Visual Studio Code when developing a mod. The mod example includes predefined settings for VS Code that enable a default build task, intellisense in the mod manifest and intellisense in the JavaScript code.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;node.js&lt;/code&gt; installed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;1-initial-setup&#34;&gt;1. Initial setup&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Copy the &lt;code&gt;js-dev-starter&lt;/code&gt; project and rename it to something relevant, like &lt;code&gt;my-barchart-mod&lt;/code&gt;. The starter project includes a minimum amount of code for a working mod.&lt;/li&gt;
+&lt;li&gt;Open the &lt;em&gt;manifest.json&lt;/em&gt; file found in &lt;code&gt;src&lt;/code&gt; folder and set the id field to &lt;code&gt;my-barchart-mod&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Open the folder in a terminal or command line.&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;npm install&lt;/code&gt; to install dependencies.&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;npm run server&lt;/code&gt; to start the server. The provided server setup allows you to see live updates when developing a mod.&lt;/li&gt;
+&lt;li&gt;In &lt;strong&gt;Spotfire&lt;/strong&gt; go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create Visialization Mod&lt;/em&gt; and &lt;strong&gt;connect to the project&lt;/strong&gt; by following the on-screen steps (&lt;em&gt;Connect to Project &amp;gt; Development server &amp;gt; Connect&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;You should see some mod metadata on the screen, which means the mod is working.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;./images/step1.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;2-add-google-charts-library&#34;&gt;2. Add Google Charts library&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;We will be using &lt;a href=&#34;https://developers.google.com/chart/interactive/docs/gallery/barchart&#34;&gt;this&lt;/a&gt; google example&lt;/li&gt;
+&lt;li&gt;Add google chart loader script to &lt;em&gt;index.html&lt;/em&gt; (&lt;strong&gt;before main.js script&lt;/strong&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     &amp;lt;body&amp;gt;
+         &amp;lt;div id=&amp;#34;mod-container&amp;#34;&amp;gt;&amp;lt;/div&amp;gt;
+         &amp;lt;script id=&amp;#34;spotfire-loader&amp;#34;&amp;gt;var Spotfire=function(e){&amp;#34;use strict&amp;#34;;return e.initialize=function(e){var t=&amp;#34;sfTemp&amp;#34;+1e4*Math.random()+&amp;#34;Cb&amp;#34;,a=window;a[t]=e;var r={subject:&amp;#34;GetUrl&amp;#34;,callbackId:-1,...&amp;lt;/script&amp;gt;
+&lt;span style=&#34;color:#00a000&#34;&gt;+        &amp;lt;script type=&amp;#34;text/javascript&amp;#34; src=&amp;#34;https://www.gstatic.com/charts/loader.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         &amp;lt;script src=&amp;#34;main.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+     &amp;lt;/body&amp;gt;
+ &amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Add the &lt;em&gt;gstatic&lt;/em&gt; domain name as an external resource in &lt;em&gt;mod-manifest.json&lt;/em&gt;. External resources from unknown domains will be blocked from loading for security reasons.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;    &amp;#34;files&amp;#34;: [
+        &amp;#34;index.html&amp;#34;,
+        &amp;#34;main.css&amp;#34;,
+        &amp;#34;main.js&amp;#34;
+&lt;span style=&#34;color:#a40000&#34;&gt;-    ]
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    ],
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    &amp;#34;externalResources&amp;#34;: [&amp;#34;https://www.gstatic.com/&amp;#34;]
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Paste full example code into &lt;em&gt;main.js&lt;/em&gt; inside &lt;strong&gt;render&lt;/strong&gt; function&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     async function render(dataView, windowSize, prop) {
+
+        /**
+         * Check the data view for errors
+         */
+        let errors = await dataView.getErrors();
+        if (errors.length &amp;gt; 0) {
+            // Showing an error overlay will hide the mod iframe.
+            // Clear the mod content here to avoid flickering effect of
+            // an old configuration when next valid data view is received.
+            mod.controls.errorOverlay.show(errors);
+            return;
+        }
+        mod.controls.errorOverlay.hide();
+
+        /**
+         * Get rows from dataView
+         */
+        const rows = await dataView.allRows();
+        if (rows == null) {
+            // User interaction caused the data view to expire.
+            // Don&amp;#39;t clear the mod content here to avoid flickering.
+            return;
+        }
+
+&lt;span style=&#34;color:#a40000&#34;&gt;-        /**
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-         * Print out to document
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-         */
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        const container = document.querySelector(&amp;#34;#mod-container&amp;#34;);
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        container.textContent = `windowSize: ${windowSize.width}x${windowSize.height}\r\n`;
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        container.textContent += `should render: ${rows.length} rows\r\n`;
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        container.textContent += `${prop.name}: ${prop.value()}`;
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        /**
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-         * Signal that the mod is ready for export.
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-         */
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        context.signalRenderComplete();
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00a000&#34;&gt;+        google.charts.load(&amp;#34;current&amp;#34;, { packages: [&amp;#34;corechart&amp;#34;] });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        google.charts.setOnLoadCallback(drawChart);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function drawChart() {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            var data = google.visualization.arrayToDataTable([
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                [&amp;#34;Element&amp;#34;, &amp;#34;Density&amp;#34;, { role: &amp;#34;style&amp;#34; }],
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                [&amp;#34;Copper&amp;#34;, 8.94, &amp;#34;#b87333&amp;#34;],
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                [&amp;#34;Silver&amp;#34;, 10.49, &amp;#34;silver&amp;#34;],
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                [&amp;#34;Gold&amp;#34;, 19.3, &amp;#34;gold&amp;#34;],
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                [&amp;#34;Platinum&amp;#34;, 21.45, &amp;#34;color: #e5e4e2&amp;#34;]
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            ]);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            var view = new google.visualization.DataView(data);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            view.setColumns([0, 1, { calc: &amp;#34;stringify&amp;#34;, sourceColumn: 1, type: &amp;#34;string&amp;#34;, role: &amp;#34;annotation&amp;#34; }, 2]);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            var options = {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                title: &amp;#34;Density of Precious Metals, in g/cm^3&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                width: 600,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                height: 400,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                bar: { groupWidth: &amp;#34;95%&amp;#34; },
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                legend: { position: &amp;#34;none&amp;#34; },
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            };
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;barchart_values&amp;#34;));
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            chart.draw(view, options);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
+ });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Update the Bar chart container id (in  &lt;em&gt;index.html&lt;/em&gt;  our container id is &lt;em&gt;mod-container&lt;/em&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     
+            var options = {
+               title: &amp;#34;Density of Precious Metals, in g/cm^3&amp;#34;,
+               width: 600,
+               height: 400,
+               bar: { groupWidth: &amp;#34;95%&amp;#34; },
+               legend: { position: &amp;#34;none&amp;#34; },
+           };
+&lt;span style=&#34;color:#a40000&#34;&gt;-            var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;barchart_values&amp;#34;));
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;            chart.draw(view, options);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Save the changes. You should see the example working in Spotfire.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;./images/step2.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make use of &lt;em&gt;async/await&lt;/em&gt; to get rid of extra code.&lt;/li&gt;
+&lt;li&gt;Make the chart fit the screen by providing a chart area with some predefined margins.&lt;/li&gt;
+&lt;li&gt;Get rid of chart title.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-       google.charts.load(&amp;#34;current&amp;#34;, { packages: [&amp;#34;corechart&amp;#34;] });
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-       google.charts.setOnLoadCallback(drawChart);
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#a40000&#34;&gt;-       function drawChart() {
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+       await google.charts.load(&amp;#34;current&amp;#34;, { packages: [&amp;#34;corechart&amp;#34;] });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;          var data = google.visualization.arrayToDataTable([
+              [&amp;#34;Element&amp;#34;, &amp;#34;Density&amp;#34;, { role: &amp;#34;style&amp;#34; }],
+              [&amp;#34;Copper&amp;#34;, 8.94, &amp;#34;#b87333&amp;#34;],
+              [&amp;#34;Silver&amp;#34;, 10.49, &amp;#34;silver&amp;#34;],
+              [&amp;#34;Gold&amp;#34;, 19.3, &amp;#34;gold&amp;#34;],
+              [&amp;#34;Platinum&amp;#34;, 21.45, &amp;#34;color: #e5e4e2&amp;#34;]
+          ]);
+
+          var view = new google.visualization.DataView(data);
+          view.setColumns([0, 1, { calc: &amp;#34;stringify&amp;#34;, sourceColumn: 1, type: &amp;#34;string&amp;#34;, role: &amp;#34;annotation&amp;#34; }, 2]);
+
+          var options = {
+&lt;span style=&#34;color:#a40000&#34;&gt;-             title: &amp;#34;Density of Precious Metals, in g/cm^3&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-             width: 600,
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-             height: 400,
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;              bar: { groupWidth: &amp;#34;95%&amp;#34; },
+              legend: { position: &amp;#34;none&amp;#34; },
+&lt;span style=&#34;color:#00a000&#34;&gt;+             chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;          };
+          var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
+          chart.draw(view, options);
+        }
+&lt;span style=&#34;color:#a40000&#34;&gt;-     }
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id=&#34;3-consume-spotfire-data&#34;&gt;3. Consume Spotfire data&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;We create hierarchies for X and Color dimensions. These are defined in the manifest and should not be confused with actual color values (&lt;strong&gt;css-color&lt;/strong&gt; from now on to avoid confusion).&lt;/li&gt;
+&lt;li&gt;We then use this grouped data to extract column names, values and css-colors.&lt;/li&gt;
+&lt;li&gt;A google visualization expects data to be in the following format (and complains if it&amp;rsquo;s not):&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;SeriesNames&lt;/th&gt;
+&lt;th&gt;Series1&lt;/th&gt;
+&lt;th&gt;Style&lt;/th&gt;
+&lt;th&gt;Series2&lt;/th&gt;
+&lt;th&gt;Style&lt;/th&gt;
+&lt;th&gt;Series3&lt;/th&gt;
+&lt;th&gt;Style&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Category1&lt;/td&gt;
+&lt;td&gt;Value11&lt;/td&gt;
+&lt;td&gt;CssColor11&lt;/td&gt;
+&lt;td&gt;Value12&lt;/td&gt;
+&lt;td&gt;CssColor12&lt;/td&gt;
+&lt;td&gt;Value13&lt;/td&gt;
+&lt;td&gt;CssColor13&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Category2&lt;/td&gt;
+&lt;td&gt;Value21&lt;/td&gt;
+&lt;td&gt;CssColor21&lt;/td&gt;
+&lt;td&gt;Value22&lt;/td&gt;
+&lt;td&gt;CssColor22&lt;/td&gt;
+&lt;td&gt;Value23&lt;/td&gt;
+&lt;td&gt;CssColor23&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;We loop over X hierarchy to create the data table by filling a row with null values first, and then populating it with existing values at proper positions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        var data = google.visualization.arrayToDataTable([
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Element&amp;#34;, &amp;#34;Density&amp;#34;, { role: &amp;#34;style&amp;#34; }],
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Copper&amp;#34;, 8.94, &amp;#34;#b87333&amp;#34;],
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Silver&amp;#34;, 10.49, &amp;#34;silver&amp;#34;],
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Gold&amp;#34;, 19.3, &amp;#34;gold&amp;#34;],
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Platinum&amp;#34;, 21.45, &amp;#34;color: #e5e4e2&amp;#34;]
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        ]);
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;        
+&lt;span style=&#34;color:#a40000&#34;&gt;-        var view = new google.visualization.DataView(data);
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        view.setColumns([0, 1, { calc: &amp;#34;stringify&amp;#34;, sourceColumn: 1, type: &amp;#34;string&amp;#34;, role: &amp;#34;annotation&amp;#34; }, 2]);
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const ALL_VALUES = &amp;#34;All Values&amp;#34;;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorHierarchy = await dataView.hierarchy(&amp;#34;Color&amp;#34;, true);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorLeafNodes = await colorHierarchy.leaves();
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorDomain = colorHierarchy.isEmpty ? [ALL_VALUES] : colorLeafNodes.map(node =&amp;gt; node.formattedValue());
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xHierarchy = await dataView.hierarchy(&amp;#34;X&amp;#34;, true);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xLeafNodes = await xHierarchy.leaves();
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xDomain = xLeafNodes.map(node =&amp;gt; node.formattedValue());
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataColumns = [&amp;#34;Columns&amp;#34;];
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        colorDomain.forEach(value =&amp;gt; dataColumns.push(value, { role: &amp;#34;style&amp;#34; }));
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataRows = [];
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        xLeafNodes.forEach(
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            (node) =&amp;gt; {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+               let valueAndColorPairs = new Array(colorLeafNodes.length).fill([0, &amp;#34;&amp;#34;]).flat()
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+               node.rows().forEach((r) =&amp;gt; {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                   let colorIndex = !colorHierarchy.isEmpty ? r.categorical(&amp;#34;Color&amp;#34;).leafIndex : 0;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                   let yValue = r.continuous(&amp;#34;Y&amp;#34;).value();
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                   valueAndColorPairs[colorIndex * 2] = yValue;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                   valueAndColorPairs[colorIndex * 2 + 1] = r.color().hexCode;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+               });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+               const dataRow = [node.formattedPath(), valueAndColorPairs].flat();
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+               dataRows.push(dataRow)
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        );
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
+         var options = {
+             bar: { groupWidth: &amp;#34;95%&amp;#34; },
+             legend: { position: &amp;#34;none&amp;#34; },
+             chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
+         };
+         var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
+&lt;span style=&#34;color:#a40000&#34;&gt;-        chart.draw(view, options);
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        chart.draw(data, options);
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Not all combinations of &lt;em&gt;X&lt;/em&gt; and &lt;em&gt;Color&lt;/em&gt; domains will be renderable by google charts out of the box, without special treament. We will guard against this with a &lt;strong&gt;try/catch&lt;/strong&gt; block.&lt;/li&gt;
+&lt;li&gt;The full code of the &lt;code&gt;js-dev-barchart-googlecharts&lt;/code&gt; example project goes a little bit more in depth than this tutorial and covers some additional cases&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        let data;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        try {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        } catch (e) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            console.log(e);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./images/step3.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;4-selectionmarking&#34;&gt;4. Selection/marking&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Add selection/marking logic. We listen for &amp;ldquo;&lt;em&gt;select&lt;/em&gt;&amp;rdquo; event and extract X and Color values (&lt;em&gt;not css-color!&lt;/em&gt;) by index in their respective domains. The Color index is halved because we have 2 times as many columns due to styling being applied (see table above).&lt;/li&gt;
+&lt;li&gt;We loop over the rows array and mark the rows that match our selection. An obvious optimization would be to store the rows as a hash map to eliminate redundancy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;
+         var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
+         chart.draw(data, options);
+
+&lt;span style=&#34;color:#00a000&#34;&gt;+        google.visualization.events.addListener(chart, &amp;#34;select&amp;#34;, () =&amp;gt; {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const selection = chart.getSelection()[0];
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (!selection) return;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const { row, column } = selection;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const xIndex = row;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const colorIndex = (column - 1) / 2;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            selectRow({ xIndex, colorIndex });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+       });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function selectRow({ xIndex, colorIndex }) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            rows.forEach((row) =&amp;gt; {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                var rowColorIndex = !colorHierarchy.isEmpty ? row.categorical(&amp;#34;Color&amp;#34;).leafIndex : 0;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                var rowXIndex = !xHierarchy.isEmpty ? row.categorical(&amp;#34;X&amp;#34;).leafIndex : 0;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                if (rowXIndex == xIndex &amp;amp;&amp;amp; rowColorIndex == colorIndex) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    row.mark();
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
+ 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./images/step4.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;To clear all marking on background click, as native Spotfire visualizations do, we listen for &amp;ldquo;click&amp;rdquo; event and check its target id.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;        function selectRow({ x, color }) {
+            rows.forEach(row =&amp;gt; {
+                if (row.get(&amp;#34;X&amp;#34;).getValue() == x &amp;amp;&amp;amp; row.get(&amp;#34;Color&amp;#34;).getValue() == color) {
+                    row.mark();
+                }
+            });
+        }
+&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        google.visualization.events.addListener(chart, &amp;#34;click&amp;#34;, ({ targetID, x, y }) =&amp;gt; {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (targetID == &amp;#34;chartarea&amp;#34;) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                dataView.clearMarking();
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                return;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
+ });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id=&#34;5-controlling-the-mod-using-the-popout&#34;&gt;5. Controlling the mod using the popout&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;We would like to control the chart&amp;rsquo;s &lt;em&gt;orientation (horizontal/vertical)&lt;/em&gt; and &lt;em&gt;stacking (side-by-side/stacked)&lt;/em&gt;. The mods api allows us to do this via a popout menu.&lt;/li&gt;
+&lt;li&gt;First, we add them as properties to the manifest.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     &amp;#34;icon&amp;#34;: &amp;#34;icon.svg&amp;#34;,
+     &amp;#34;properties&amp;#34;: [
+         {
+&lt;span style=&#34;color:#a40000&#34;&gt;-            &amp;#34;name&amp;#34;: &amp;#34;myProperty&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            &amp;#34;name&amp;#34;: &amp;#34;orientation&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;             &amp;#34;type&amp;#34;: &amp;#34;string&amp;#34;,
+&lt;span style=&#34;color:#a40000&#34;&gt;-            &amp;#34;defaultValue&amp;#34;: &amp;#34;myValue&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            &amp;#34;defaultValue&amp;#34;: &amp;#34;vertical&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        },
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            &amp;#34;name&amp;#34;: &amp;#34;stacking&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            &amp;#34;type&amp;#34;: &amp;#34;string&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            &amp;#34;defaultValue&amp;#34;: &amp;#34;side-by-side&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         }
+     ],
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Then we add the new properties to the read loop and pass them down to the render function.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Since the manifest has changed, we will need to reconnect the development server to Spotfire for the changes to take effect&lt;/strong&gt; (&lt;em&gt;&amp;ldquo;Properties&amp;rdquo; icon (&lt;code&gt;puzzle piece&lt;/code&gt;) in the upper right of the mod screen &amp;gt; Disconnect&lt;/em&gt; &amp;gt; &lt;em&gt;Connect&lt;/em&gt;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;    /**
+     * Create the read function.
+     */
+&lt;span style=&#34;color:#a40000&#34;&gt;-    const reader = mod.createReader(mod.visualization.data(), mod.windowSize(), mod.property(&amp;#34;myProperty&amp;#34;));
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    const reader = mod.createReader(
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        mod.visualization.data(),
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        mod.windowSize(),
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        mod.property(&amp;#34;orientation&amp;#34;),
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        mod.property(&amp;#34;stacking&amp;#34;)
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    );
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
+    /**
+     * Initiate the read loop
+     */
+    reader.subscribe(render);
+
+     /**
+      * @param {Spotfire.DataView} dataView
+      * @param {Spotfire.Size} windowSize
+&lt;span style=&#34;color:#a40000&#34;&gt;-     * @param {Spotfire.ModProperty&amp;lt;string&amp;gt;} prop
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+     * @param {Spotfire.ModProperty&amp;lt;string&amp;gt;} orientation
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+     * @param {Spotfire.ModProperty&amp;lt;string&amp;gt;} stacking
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;      */
+&lt;span style=&#34;color:#a40000&#34;&gt;-    async function render(dataView, windowSize, prop) {
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    async function render(dataView, windowSize, orientation, stacking) {
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Update the background click callback to show a test popout.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;         google.visualization.events.addListener(chart, &amp;#34;click&amp;#34;, ({ targetID, x, y }) =&amp;gt; {
+             if (targetID == &amp;#34;chartarea&amp;#34;) {
+                 dataView.clearMarking();
+&lt;span style=&#34;color:#00a000&#34;&gt;+                showPopout({ x, y });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;                 return;
+             }
+         });
+
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const { popout } = mod.controls;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function showPopout(e) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            popout.show(
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    x: e.x,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    y: e.y,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    autoClose: true,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    alignment: &amp;#34;Bottom&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    onChange: popoutChangeHandler
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                },
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                popoutContent
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            );
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const { section } = popout;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const { button } = popout.components;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const popoutContent = () =&amp;gt; [
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+           section({ heading: &amp;#34;I&amp;#39;m a popout!&amp;#34;, children: [button({ text: &amp;#34;I&amp;#39;m a button&amp;#34;, name: &amp;#34;button&amp;#34; })] })
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        ];
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function popoutChangeHandler() {}
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
+ });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./images/step5.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Add a tiny helper function to check property value.&lt;/li&gt;
+&lt;li&gt;On each render we check &lt;strong&gt;stacking&lt;/strong&gt; and &lt;strong&gt;orientation&lt;/strong&gt; properties and update the chart configuration accordingly. Stacking is a simple boolean but orientation requires different classes for horizontal and vertical types of charts.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const is = property =&amp;gt; value =&amp;gt; property.value() == value;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         var options = {
+             bar: { groupWidth: &amp;#34;95%&amp;#34; },
+             legend: { position: &amp;#34;none&amp;#34; },
+&lt;span style=&#34;color:#a40000&#34;&gt;-            chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            chartArea: { left: 85, top: 20, right: 10, bottom: 40 },
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            isStacked: is(stacking)(&amp;#34;stacked&amp;#34;)
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         };
+         
+&lt;span style=&#34;color:#a40000&#34;&gt;-        var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const container = document.querySelector(&amp;#34;#mod-container&amp;#34;);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        let chart;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        if (is(orientation)(&amp;#34;horizontal&amp;#34;)) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            chart = new google.visualization.BarChart(container);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        } else {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            chart = new google.visualization.ColumnChart(container);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         chart.draw(data, options);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;To mimic native Spotfire bar chart behavior, we show a popout on X-axis click (Y-axis for horizontal orientation).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;         google.visualization.events.addListener(chart, &amp;#34;click&amp;#34;, ({ targetID, x, y }) =&amp;gt; {
+             if (targetID == &amp;#34;chartarea&amp;#34;) {
+                 dataView.clearMarking();
+&lt;span style=&#34;color:#a40000&#34;&gt;-                showPopout({ x, y });
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;                 return;
+             }
+&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (is(orientation)(&amp;#34;vertical&amp;#34;) &amp;amp;&amp;amp; targetID.indexOf(&amp;#34;hAxis&amp;#34;) != -1) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                showPopout({ x, y });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                return;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (is(orientation)(&amp;#34;horizontal&amp;#34;) &amp;amp;&amp;amp; targetID.indexOf(&amp;#34;vAxis&amp;#34;) != -1) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                showPopout({ x, y });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                return;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Create popout content from the available components.&lt;/li&gt;
+&lt;li&gt;Listen for popout changes and update property values. This will trigger a re-render and add an undoable step to the native &lt;em&gt;Undo stack&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;         const { section } = popout;
+&lt;span style=&#34;color:#a40000&#34;&gt;-        const { button } = popout.components;
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        const popoutContent = () =&amp;gt; [
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-           section({ heading: &amp;#34;I&amp;#39;m a popout!&amp;#34;, children: [button({ text: &amp;#34;I&amp;#39;m a button&amp;#34;, name: &amp;#34;button&amp;#34; })] })
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        ];
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const { radioButton } = popout.components;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const popoutContent = () =&amp;gt; [
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            section({
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                heading: &amp;#34;Chart Type&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                children: [
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    radioButton({
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        name: stacking.name,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        text: &amp;#34;Stacked bars&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        value: &amp;#34;stacked&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        checked: is(stacking)(&amp;#34;stacked&amp;#34;)
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    }),
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    radioButton({
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        name: stacking.name,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        text: &amp;#34;Side-by-side bars&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        value: &amp;#34;side-by-side&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        checked: is(stacking)(&amp;#34;side-by-side&amp;#34;)
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    })
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                ]
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }),
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            section({
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                heading: &amp;#34;Orientation&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                children: [
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    radioButton({
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        name: orientation.name,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        text: &amp;#34;Vertical&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        value: &amp;#34;vertical&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        checked: is(orientation)(&amp;#34;vertical&amp;#34;)
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    }),
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    radioButton({
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        name: orientation.name,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        text: &amp;#34;Horizontal&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        value: &amp;#34;horizontal&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                        checked: is(orientation)(&amp;#34;horizontal&amp;#34;)
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    })
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                ]
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            })
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        ];
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
+
+&lt;span style=&#34;color:#a40000&#34;&gt;-        function popoutChangeHandler() {}
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function popoutChangeHandler({ name, value }) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            name == orientation.name &amp;amp;&amp;amp; orientation.set(value);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            name == stacking.name &amp;amp;&amp;amp; stacking.set(value);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Lastly, add a pointer cursor to &lt;code&gt;svg text&lt;/code&gt; rule in &lt;em&gt;main.css&lt;/em&gt; to signal an interactive element.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;html, body, #mod-container {
+     margin: 0;
+     height: 100%;
+     overflow: hidden;
+}
+&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+svg text {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    cursor: pointer;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+}
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./images/step5-1.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;6-use-spotfire-theme-and-styling&#34;&gt;6. Use Spotfire theme and styling&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Extract style info from context&lt;/li&gt;
+&lt;li&gt;Update Options object&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const context = mod.getRenderContext();
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const styling = context.styling;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const textStyle = {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            fontSize: styling.scales.font.fontSize,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            fontName: styling.scales.font.fontFamily,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            color: styling.scales.font.color
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        };
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const baselineColor = styling.scales.line.stroke;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const gridlines = { color: &amp;#34;transparent&amp;#34; };
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#a40000&#34;&gt;-        var options = {
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            bar: { groupWidth: &amp;#34;95%&amp;#34; },
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const options = {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            bar: { groupWidth: &amp;#34;80%&amp;#34; },
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            backgroundColor: { fill: &amp;#34;transparent&amp;#34; },
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;             legend: { position: &amp;#34;none&amp;#34; },
+             chartArea: { left: 85, top: 20, right: 10, bottom: 40 },
+&lt;span style=&#34;color:#a40000&#34;&gt;-            isStacked: is(stacking)(&amp;#34;stacked&amp;#34;)
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            isStacked: is(stacking)(&amp;#34;stacked&amp;#34;),
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            hAxis: {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                textStyle,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                baselineColor,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                gridlines
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            },
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            vAxis: {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                textStyle,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                baselineColor,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                gridlines,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                minValue: 0
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         };
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;In Spotfire, change &lt;em&gt;Visualizations Theme&lt;/em&gt; to &lt;strong&gt;Dark&lt;/strong&gt; (&lt;em&gt;Visualizations &amp;gt; Canvas styling &amp;gt; Dark&lt;/em&gt;). You should see colors change according to theme.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;./images/step6.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;7-prepare-for-export&#34;&gt;7. Prepare for export&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;For export to work, we need to let Spotfire know when rendering is complete.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;        function popoutChangeHandler({ name, value }) {
+            name == orientation.name &amp;amp;&amp;amp; orientation.set(value);
+            name == stacking.name &amp;amp;&amp;amp; stacking.set(value);
+        }
+
+&lt;span style=&#34;color:#00a000&#34;&gt;+       google.visualization.events.addListener(chart, &amp;#34;ready&amp;#34;, () =&amp;gt; context.signalRenderComplete());
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;heading&#34;&gt;&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to &lt;em&gt;File &amp;gt; Export &amp;gt; Visualization to PDF&lt;/em&gt; to test the export feature&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;./images/step7.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Getting started</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/getting-started/</link>
+      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/getting-started/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;developing-a-visualization-mod&#34;&gt;Developing a visualization mod&lt;/h2&gt;
+&lt;p&gt;Spotfire® Mods is a framework to create interactive visualizations in TIBCO Spotfire®. It is based on web technologies and it runs in a sandboxed iframe.&lt;/p&gt;
+&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A running instance of Spotfire.&lt;/strong&gt;&lt;br&gt;
+This is needed to develop and test a mod. Development can be done against the installed client (TIBCO Spotfire® Analyst) or the web client (TIBCO Spotfire® Business Author).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A code editor.&lt;/strong&gt;&lt;br&gt;
+It is highly recommended to use Microsoft &lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt; (VS Code) when developing a mod. The instructions in this document assume that VS Code is used as code editor. The mod example projects that are available for developers, include predefined settings for VS Code that enable a default build task, IntelliSense in the mod manifest, and IntelliSense in the JavaScript code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Node.js installed.&lt;/strong&gt;&lt;br&gt;
+To enable live updates when developing a mod, a set of tools based on &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; are needed. The mod example specifies a set of development dependencies in its package.json file. These are installed when executing &lt;code&gt;npm install&lt;/code&gt; in the same directory as the package.json file. The install script is also executed as part of the default build task in VS Code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;sub&gt;&lt;img src=&#34;../exclamation.png&#34; style=&#34;width: 0.8em;vertical-align: baseline;&#34;&gt; &lt;/img&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.
+&lt;/sub&gt;&lt;/p&gt;
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
+&lt;h4 id=&#34;1-create-an-empty-visualization-mod-in-spotfire&#34;&gt;1. Create an empty visualization mod in Spotfire&lt;/h4&gt;
+&lt;p&gt;Open Spotfire and load some data. Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create visualization mod&lt;/em&gt;. This will create an empty mod.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./media/empty-mod.png&#34; alt=&#34;&#34; title=&#34;Empty mod.&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2-start-from-a-mod-example&#34;&gt;2. Start from a mod example&lt;/h4&gt;
+&lt;p&gt;Click &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;here&lt;/a&gt; to access the example mod projects to start the development from. Extract the zip archive locally. The extracted zip archive contains examples of mods, using the mod API in different ways.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;js-dev-barchart&lt;/strong&gt;&lt;br&gt;
+To get familiar with mod development, start with this example containing a simple bar chart. This is the example that will be used in the following sections of this getting started guide.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;js-dev-starter&lt;/strong&gt;&lt;br&gt;
+This example can be used as a starting point for any new mod.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;js-dev-starter-ie11&lt;/strong&gt;&lt;br&gt;
+This example can be used as a starting point for any new mod that is also compatible with the IE11 browser.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt;&lt;br&gt;
+This example is a basic bar chart that is built using the Google Charts library. The &lt;a href=&#34;../../tutorials/barchart-googlechart/&#34;&gt;tutorial&lt;/a&gt; covers the steps taken to create this bar chart from scratch.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ts-dev-gauge-googlecharts&lt;/strong&gt;&lt;br&gt;
+This is an example of a gauge visualization that is developed in TypeScript using the Google Charts library and bundled with Rollup.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;js-areachart-d3&lt;/strong&gt;&lt;br&gt;
+This is a more complex example built using the D3 library, where you can see how the API can be used to take advantage of a lot of features in Spotfire.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each example contains a README file with detailed instructions specific to the example.&lt;/p&gt;
+&lt;h4 id=&#34;3-start-local-development-server&#34;&gt;3. Start local development server&lt;/h4&gt;
+&lt;p&gt;To use the js-dev-barchart example, open the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
+&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool.&lt;/p&gt;
+&lt;p&gt;The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds.&lt;/p&gt;
+&lt;p&gt;Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
+&lt;h4 id=&#34;4-connect-spotfire-to-the-development-server&#34;&gt;4. Connect Spotfire to the development server&lt;/h4&gt;
+&lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the dialog that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./media/connect-to-development-server.gif&#34; alt=&#34;&#34; title=&#34;Connect to development server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If a visualization appears, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
+&lt;h4 id=&#34;5-start-editing-your-example&#34;&gt;5. Start editing your example&lt;/h4&gt;
+&lt;p&gt;Now switch over to VS Code to start editing the mod implementation.&lt;/p&gt;
+&lt;p&gt;The src folder includes HTML, CSS and JavaScript files that together form the mod implementation. It also contains a mod-manifest.json file that contains metadata about the mod. If any .html/css/js file in the src folder is changed while the development server is running, the mod will be reloaded in Spotfire.&lt;/p&gt;
+&lt;p&gt;As an example, open the main.css file and try to change the background property of body. As soon as the css file is saved, the change will appear in Spotfire.&lt;/p&gt;
+&lt;p&gt;For information about how the Spotfire Mod API is accessed, open the main.js file.&lt;/p&gt;
+&lt;h2 id=&#34;mod-example-folder-structure&#34;&gt;Mod example folder structure&lt;/h2&gt;
+&lt;p&gt;The following files and folders are part of the example:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;File&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;.vscode&lt;/td&gt;
+&lt;td&gt;Settings for VS Code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;spotfire&lt;/td&gt;
+&lt;td&gt;Files related to the mod API.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;src&lt;/td&gt;
+&lt;td&gt;Folder for the mod&amp;rsquo;s source code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;development-server.js&lt;/td&gt;
+&lt;td&gt;A node.js script that starts a development server.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;package.json&lt;/td&gt;
+&lt;td&gt;Lists the Node.js dependencies and necessary scripts.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;prettier.config.js&lt;/td&gt;
+&lt;td&gt;Configuration file for formatting with the tool prettier.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;README.md&lt;/td&gt;
+&lt;td&gt;Instructions on how to get started.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tsconfig.json&lt;/td&gt;
+&lt;td&gt;TypeScript project file. It links the &lt;code&gt;/spotfire/spotfire-api.dts&lt;/code&gt; file for IntelliSense in your code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;the-mod-manifestjson&#34;&gt;The mod-manifest.json&lt;/h2&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in a file called mod-manifest.json. It is used to give the mod a name and an id, and to define axes and their placement. It is also used to list all files used by the mod. Only files listed in the ‘files’ property will be embedded by Spotfire.&lt;/p&gt;
+&lt;p&gt;For changes in the manifest to take effect, the manifest must be reloaded manually in Spotfire. Click the puzzle icon on the title bar of the visualization mod, and then click the &lt;em&gt;Reload manifest&lt;/em&gt; button in the popup that opens.&lt;/p&gt;
+&lt;h2 id=&#34;debugging&#34;&gt;Debugging&lt;/h2&gt;
+&lt;p&gt;The mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands. 
+In Spotfire® Analyst: &lt;em&gt;Ctrl+Alt+Shift+F12&lt;/em&gt; 
+In Spotfire® Business Author: &lt;em&gt;F12&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;To find the main.js file, use the Open file command (Ctrl+P) and type the file&amp;rsquo;s name. In the opened file, it is possible to set breakpoints. It is also possible to execute code in the console.
+More information about Chrome DevTools can be found here:
+&lt;a href=&#34;https://developers.google.com/web/tools/chrome-devtools&#34;&gt;https://developers.google.com/web/tools/chrome-devtools&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;development-in-the-spotfire-web-client&#34;&gt;Development in the Spotfire Web Client&lt;/h2&gt;
+&lt;p&gt;The required browser when developing mods against the web client is Google Chrome. This is due to how browsers behave with regards to loading http content from a https context. The development server is serving files from http://127.0.0.1:8090, which according to the W3C specification is a &lt;a href=&#34;https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin&#34;&gt;potentially trustworthy origin&lt;/a&gt;. Currently only Chrome behaves correctly with regards to this. Other browser vendors are implementing support for this and might work in the future.&lt;/p&gt;
+&lt;p&gt;Note also that when developing a mod in the web client, it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the &lt;em&gt;Browse&lt;/em&gt; button will not be available in the web client.&lt;/p&gt;
+&lt;h2 id=&#34;embedding-the-mod-and-saving-to-the-library&#34;&gt;Embedding the mod and saving to the library&lt;/h2&gt;
+&lt;p&gt;When the development is done, disconnect from the server to embed the mod in the analysis.
+&lt;img src=&#34;./media/disconnect-and-embed.gif&#34; alt=&#34;&#34; title=&#34;Disconnect from development server to embed mod&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;saving-the-mod-to-the-spotfire-library&#34;&gt;Saving the mod to the Spotfire library&lt;/h3&gt;
+&lt;p&gt;When your mod has been embedded in the analysis, you can share the mod with others by saving it to the library.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Click the puzzle icon in the title bar to open the development popup.&lt;/li&gt;
+&lt;li&gt;Click &lt;em&gt;Save to library&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;In the dialog that opens, navigate to the folder where you want to save the mod, and click &lt;em&gt;Save&lt;/em&gt;.
+When the mod has been saved to the library, it is possible for others, connected to the same library, to use your mod in their analyses. The mod can also be pinned to the visualization flyout.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;faq&#34;&gt;FAQ&lt;/h2&gt;
+&lt;h3 id=&#34;how-do-i-use-types-in-javascript-files&#34;&gt;How do I use types in JavaScript files?&lt;/h3&gt;
+&lt;p&gt;Even though JavaScript lacks type support, it is possible to get a long way with the help of JSDoc comments. The TypeScript language service in Visual Studio Code can parse JSDoc type comments and provide IntelliSense when using the Spotfire mods API. The following snippet defines the variable &lt;code&gt;dataView&lt;/code&gt; as an instance of &lt;code&gt;Spotfire.DataView&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataView} */&lt;/span&gt;
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This can be useful in cases where the API allows generic types, such as a continuous value:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataViewContinuousValue} */&lt;/span&gt;
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The same would have been done in TypeScript like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;Spotfire.DataViewContinuousValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;why-dont-changes-to-the-mod-manifestjson-take-effect-in-my-analysis&#34;&gt;Why don’t changes to the mod-manifest.json take effect in my analysis?&lt;/h3&gt;
+&lt;p&gt;The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the developer server is connected, disconnected or when the &lt;em&gt;Reload manifest&lt;/em&gt; button is clicked.&lt;/p&gt;
+&lt;p&gt;When the developer server is in a connected state, Spotfire points the mod iframe&amp;rsquo;s source directly against the developer server. Any UI changes seen while the server is connected is not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt; Reload the manifest via the development popup.&lt;/p&gt;
+&lt;h3 id=&#34;why-cant-i-make-an-ajax-call-to-read-an-embedded-resource&#34;&gt;Why can&amp;rsquo;t I make an ajax call to read an embedded resource?&lt;/h3&gt;
+&lt;p&gt;A mod is executed inside a sandboxed iframe. A sandboxed iframe sets the origin header to &amp;lsquo;null&amp;rsquo; for any ajax request. This means that the server must be configured to handle Cross-Origin Resource Sharing (CORS). The server should allow &lt;code&gt;&#39;null&#39;&lt;/code&gt; or &lt;code&gt;*&lt;/code&gt; in order to serve a request made from a mod. The Spotfire runtime does not accept CORS requests and will therefore not serve any request made from a mod, even though it might be for an embedded resource in the mod itself.&lt;/p&gt;
+&lt;p&gt;Linked scripts, images and CSS files do not rely on CORS to function and can be linked to. Font files rely on CORS and can therefore not be linked to. To get a font working inside the mod a data uri can be used.&lt;/p&gt;
+&lt;h3 id=&#34;why-is-an-external-resource-not-loading-correctly-due-to-a-content-security-policy&#34;&gt;Why is an external resource not loading correctly due to a content security policy?&lt;/h3&gt;
+&lt;p&gt;Mods are covered by a strict content security policy by default. The mod is only allowed to load embedded resources and any external resource request is blocked. A mod can declare a set of external resources in the &lt;code&gt;mod-manifest.json&lt;/code&gt; to unblock these resources from being loaded.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; A visualization mod with external resources cannot be exported using the web client.&lt;/p&gt;
+&lt;h3 id=&#34;why-doesnt-live-reload-work&#34;&gt;Why doesn’t live reload work?&lt;/h3&gt;
+&lt;p&gt;If the live reload feature does not work when using the development server, try disabling the network cache in the Chrome Developer tools.
+Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then select the &lt;em&gt;Disable cache&lt;/em&gt; checkbox.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Creating SVG icons for Spotfire visualization mods</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/mod-icons/</link>
+      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/mod-icons/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;about-svg-icons&#34;&gt;About SVG icons&lt;/h2&gt;
+&lt;h3 id=&#34;what-is-an-svg-icon&#34;&gt;What is an SVG icon?&lt;/h3&gt;
+&lt;p&gt;SVG stands for Scalable Vector Graphics, and is an open standard XML-based vector image format. SVG images can be created and edited with any text editor, as well as with drawing software. All major modern web browsers have SVG rendering support.&lt;/p&gt;
+&lt;h3 id=&#34;how-do-i-create-an-svg-for-my-mod&#34;&gt;How do I create an SVG for my mod?&lt;/h3&gt;
+&lt;p&gt;There are a number of ways to create SVG icons; either you can create them in a web-based SVG editor, using a licensed program on your computer, or using a web-based design program.&lt;/p&gt;
+&lt;p&gt;One easy way to make an SVG icon is to use a web-based SVG editor, where you can create the icon directly in the web browser. Two examples of web-based editors are: &lt;a href=&#34;https://editor.method.ac/&#34;&gt;https://editor.method.ac/&lt;/a&gt; and &lt;a href=&#34;https://vectr.com/&#34;&gt;https://vectr.com/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;You can also use installed programs on your computer, such as Adobe Illustrator, Sketch, or Adobe XD. However, use of such programs might require previous knowledge to be efficient.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.figma.com/&#34;&gt;Figma&lt;/a&gt; is another alternative. This is a web-based resource to create digital design, and has a free for all license. A &lt;a href=&#34;#how-to-create-your-visualization-mod-icon-using-figma&#34;&gt;tutorial&lt;/a&gt; on how to create your own visualization mod icon using Figma can be found below.&lt;/p&gt;
+&lt;h2 id=&#34;specifications-for-the-spotfire-visualization-icons&#34;&gt;Specifications for the Spotfire Visualization icons&lt;/h2&gt;
+&lt;h3 id=&#34;sizes-of-svg-icons-in-spotfire&#34;&gt;Sizes of SVG icons in Spotfire&lt;/h3&gt;
+&lt;p&gt;The main container of SVG icons is called a viewbox. The preferred size to create an SVG icon for a visualization mod is 24x24 px. This icon is then scaled up to 32x32 px and down to 16x16 px depending on where in the UI it is placed. See examples below.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./img1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Examples in use within Spotfire:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./img2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;colors&#34;&gt;Colors&lt;/h3&gt;
+&lt;p&gt;Spotfire visualizations have icons with three distinct colors. For a consistent style, it is recommended that you use the same pattern.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./img3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;opacity&#34;&gt;Opacity&lt;/h3&gt;
+&lt;p&gt;In order to add tinted areas, you can use opacity, as seen in the example below.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./img4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;how-to-create-your-visualization-mod-icon-using-figma&#34;&gt;How to create your visualization mod icon using Figma&lt;/h2&gt;
+&lt;p&gt;This guide describes how to create your icon in Figma. Figma is an interface design application that runs in the browser. It has a free-for-all licence and all you will need is an email account. Read more and download Figma here:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.figma.com/&#34;&gt;https://www.figma.com/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Below is a tutorial on how to create an SVG icon for a donut chart.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./img5.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 1:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;./Template_24x24.fig&#34;&gt;Download&lt;/a&gt; the template file to begin:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./img6.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 2:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Follow the tutorial to create your icon:&lt;/p&gt;
+&lt;p&gt;Click &lt;a href=&#34;https://www.youtube.com/watch?v=9YmlHZ-Tx_A&#34;&gt;here&lt;/a&gt; for a video tutorial on how to create an SVG icon for your visualization mod.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Mod data views</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-data-views/</link>
+      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-data-views/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;data-view-definition-&#34;&gt;Data view definition&lt;/h2&gt;
+&lt;p&gt;A mod can create a single aggregated data view.&lt;/p&gt;
+&lt;p&gt;The data view is declared in the mod manifest. Its contents is specified as a number of axes. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.&lt;/p&gt;
+&lt;p&gt;In the simplest form, the data view definition part of a mod manifest could look like this.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {  
+    &amp;quot;axes&amp;quot;: [  
+        {
+            &amp;quot;name&amp;quot;: &amp;quot;Y&amp;quot;,  
+            &amp;quot;mode&amp;quot;: &amp;quot;continuous&amp;quot; 
+        }  
+    ]  
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This specifies that the mod will have a single continuous axis called Y, that will compute a single aggregated value, e.g. Sum(Sales). Continuous axes are typically rendered on a continuous scale.&lt;/p&gt;
+&lt;!-- ![Bar Chart 1](BarChart1.png) --&gt;
+&lt;img src=&#34;BarChart1.PNG&#34;&gt;
+&lt;p&gt;The &amp;ldquo;mode&amp;rdquo; parameter can be &amp;ldquo;continuous&amp;rdquo;, &amp;ldquo;categorical&amp;rdquo; or &amp;ldquo;dual&amp;rdquo;. Dual means that the axis supports both continuous and categorical mode and can be switched between them.&lt;/p&gt;
+&lt;p&gt;A categorical axis always splits the aggregation. The columns/expressions on the axes are used in the group by clause in the aggregated query generated for the visualization. Categorical axes are typically rendered on a categorical, or discrete, scale.&lt;/p&gt;
+&lt;p&gt;If we continue the example above we could add a categorical x-axis to the visualization.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {  
+    &amp;quot;axes&amp;quot;: [  
+        {
+            &amp;quot;name&amp;quot;: &amp;quot;X&amp;quot;,  
+            &amp;quot;mode&amp;quot;: &amp;quot;categorical&amp;quot;,  
+        },
+        {
+            &amp;quot;name&amp;quot;: &amp;quot;Y&amp;quot;,  
+            &amp;quot;mode&amp;quot;: &amp;quot;continuous&amp;quot;,  
+        }
+    ]  
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That could be rendered like this:&lt;/p&gt;
+&lt;!-- ![Bar Chart 2](BarChart2.png) --&gt;
+&lt;img src=&#34;BarChart2.PNG&#34;&gt;
+&lt;p&gt;It is always possible to add more columns to the expression on a categorical axis. This will split the aggregation further, and Spotfire usually renders this as a hierarchy.&lt;/p&gt;
+&lt;!-- ![Bar Chart 3](BarChart3.png) --&gt;
+&lt;img src=&#34;BarChart3.PNG&#34;&gt;
+&lt;h2 id=&#34;consuming-data-from-javascript-&#34;&gt;Consuming data from JavaScript&lt;/h2&gt;
+&lt;h3 id=&#34;the-data-view-object-&#34;&gt;The data view object&lt;/h3&gt;
+&lt;p&gt;On the javascript side, data is retrieved via a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.&lt;/p&gt;
+&lt;p&gt;To retrieve the value for an axis in a data row, there is a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#get&#34;&gt;get&lt;/a&gt; method that takes the axis name as argument. So to get the value for a &amp;ldquo;Y&amp;rdquo; axis you would do the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let yValue = row.get(&amp;quot;Y&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The value retrieved by the get method can be of two types depending on the mode of the axes. Either it is a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. Both these types have a &lt;strong&gt;getValue&lt;/strong&gt; function, so to list all values of a data view in csv like format, you could do this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;async function logDataView(dataView)
+{
+    // Print axes names
+    const axes = await dataView.getAxes();
+    console.log(axes.map(axis =&amp;gt; axis.name).join(&amp;quot;,&amp;quot;));
+   
+    // Print the row values.
+    const rows = await dataView.getAllRows();
+    rows.forEach(row =&amp;gt; {
+        console.log(axes.map(axis =&amp;gt; row.get(axis.name).getValue()).join(&amp;quot;,&amp;quot;));
+    });
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For the simple bar chart above showing sales per fruit, the output would be:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;X,Y
+Apples,16000
+Oranges,31000 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;dataviewcontinuousvalue-and-dataviewcategoricalvalue-&#34;&gt;DataViewContinuousValue and DataViewCategoricalValue&lt;/h3&gt;
+&lt;p&gt;A &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt; is a simple object with methods to retrieve the actual value (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getvalue&#34;&gt;getValue&lt;/a&gt;), check its validity (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#isvalid&#34;&gt;isValid&lt;/a&gt;), and to get a string representation of it (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getformattedvalue&#34;&gt;getFormattedValue&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; on the other hand is a bit more complicated. Since categorical axes form hierarchies, each &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. The &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#getvalue&#34;&gt;getValue&lt;/a&gt; function returns a string for the whole path in this case. For the third bar chart example above, the output from the logDataView function would be:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;X,Y
+Apples &amp;gt;&amp;gt; Spain,2500
+Apples &amp;gt;&amp;gt; USA,13500
+Oranges &amp;gt;&amp;gt; Spain,12000
+Oranges &amp;gt;&amp;gt; USA,19000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/categoricalvaluepathelement.html&#34;&gt;CategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
+&lt;h3 id=&#34;hierarchies-&#34;&gt;Hierarchies&lt;/h3&gt;
+&lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html#gethierarchy&#34;&gt;getHierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
+&lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root&#34;&gt;root&lt;/a&gt;), or the array of leaf nodes (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves&#34;&gt;leaves&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.&lt;/p&gt;
+&lt;p&gt;Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;async function logViaHierarchy(dataView)
+{
+    const xHierarchy = await dataView.getHierarchy(&amp;quot;X&amp;quot;, true);
+    const root = await xHierarchy.root();
+    log(root, &amp;quot;&amp;quot;);
+
+    function log(node, indent) {
+        console.log(indent + node.name);
+        indent += &amp;quot;    &amp;quot;;
+        if(node.children) {
+            node.children.forEach(node =&amp;gt; log(node, indent));
+        } 
+        else {
+            node.rows().forEach(row =&amp;gt; console.log(indent + row.get(&amp;quot;Y&amp;quot;).getValue()))
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This would produce the following output (the root has no name):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Apples
+     Spain
+         2500
+     USA
+         13500
+ Oranges
+     Spain
+         12000
+     USA
+         19000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;using-the-spotfire-color-axis-&#34;&gt;Using the Spotfire color axis&lt;/h2&gt;
+&lt;p&gt;Mods can use the same color axis as is used by the native Spotfire visualizations. You do this by specifying a &amp;ldquo;colorAxis&amp;rdquo; entry in the data view definition section of the manifest:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {
+    &amp;quot;colorAxis&amp;quot;: {
+        &amp;quot;mode&amp;quot;: &amp;quot;dual&amp;quot;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &amp;ldquo;mode&amp;rdquo; and other properties for the color axis are specified the same way as for other axes.&lt;/p&gt;
+&lt;p&gt;On the Javascript side, you access the data values for the color axis by referring to it by its name, &amp;ldquo;Color&amp;rdquo;.
+The actual color computed for each row can be retrieved via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#getcolor&#34;&gt;getColor&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
+&lt;h2 id=&#34;specifying-data-types-for-continuous-axes-&#34;&gt;Specifying data types for continuous axes&lt;/h2&gt;
+&lt;p&gt;Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
+For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow date and time data by specifying it in the manifest, in the axis section.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataTypes&amp;quot;: {
+    &amp;quot;allowDateTime&amp;quot;: true,
+    &amp;quot;allowNumeric&amp;quot;: true
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;using-multiple-measures-on-continuous-axes-&#34;&gt;Using multiple measures on continuous axes&lt;/h2&gt;
+&lt;p&gt;By default, you can only have a single measure on a continuous axis. However, Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &amp;ldquo;allowMultipleMeasures&amp;rdquo; flag to true for the axis in the manifest.&lt;/p&gt;
+&lt;p&gt;When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &amp;ldquo;(Column Names)&amp;rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.&lt;/p&gt;
+&lt;h2 id=&#34;using-non-aggregating-expressions-on-a-continuous-axis-&#34;&gt;Using non-aggregating expressions on a continuous axis&lt;/h2&gt;
+&lt;p&gt;Mod data views are always aggregated, and by default, the expressions used on them must be aggregating. To enable non-aggregating expressions, you can set the &amp;ldquo;allowNonAggregatingMeasures&amp;rdquo; flag to true for the axis in the manifest. The Spotire UIs will then add a (None) option to the aggregation methods. Note that the data view is still aggregated, so the values on the axes will be used to group by in the aggregation.&lt;/p&gt;
+&lt;h2 id=&#34;data-view-sort-order-&#34;&gt;Data view sort order&lt;/h2&gt;
+&lt;p&gt;By default, the rows in data views are ordered by the categorical axes (or more specifically by the axes that are used to group by when performing the aggregation), in the order in which they are declared. So for instance if you declare a &amp;ldquo;Column&amp;rdquo; axis followed by a &amp;ldquo;Row&amp;rdquo; axis, the data view will first be sorted by the values on the &amp;ldquo;Column&amp;rdquo; axis and then by the &amp;ldquo;Row&amp;rdquo; axis.&lt;/p&gt;
+&lt;p&gt;The color axis is currently always last.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Mod schema</title>
+      <link>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-schema/</link>
+      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-schema/</guid>
+      <description>
+        
+        
+        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;https://tibcosoftware.github.io/spotfire-mods/mod-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+&lt;script type=&#34;application/javascript&#34;&gt;
+
+    function resizeIFrameToFitContent( ) {
+        let frame = document.getElementById(&#34;schema-frame&#34;);
+        frame.height = frame.contentWindow.document.body.scrollHeight;
+    }
+    window.addEventListener(&#34;resize&#34;,resizeIFrameToFitContent);
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>
