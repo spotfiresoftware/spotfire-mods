@@ -4,7 +4,7 @@
 * in the license file that is distributed with this file.
 */
 
-import { maxInList } from "../src/visualization";
+import { maxInList } from "../src/util";
 
 it("Returns 0 when list is empty", () => {
     expect(maxInList([])).toBe(0);

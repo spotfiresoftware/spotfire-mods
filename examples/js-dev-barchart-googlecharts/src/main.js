@@ -12,6 +12,11 @@
  */
 Spotfire.initialize(async (mod) => {
     /**
+     * Load google charts library
+     */
+    await google.charts.load("current", { packages: ["corechart"] });
+
+    /**
      * Create the read function - its behavior is similar to native requestAnimationFrame, except
      * it's triggered when one of the listened to values changes. We will be listening for data,
      * properties and window size changes.
@@ -39,30 +44,25 @@ Spotfire.initialize(async (mod) => {
      */
     async function render(dataView, orientation, stacking) {
         /**
-         * Load google charts library
-         */
-        await google.charts.load("current", { packages: ["corechart"] });
-
-        /**
-         * Check for any errors.
+         * Check the data view for errors
          */
         let errors = await dataView.getErrors();
         if (errors.length > 0) {
-            // Data view contains errors. Display these and clear the chart to avoid
-            // getting a flickering effect with an old chart configuration later (TODO).
-            mod.controls.errorOverlay.show(errors, "DataView");
+            // Showing an error overlay will hide the mod iframe.
+            // Clear the mod content here to avoid flickering effect of
+            // an old configuration when next valid data view is received.
+            mod.controls.errorOverlay.show(errors);
             return;
         }
-        mod.controls.errorOverlay.hide("DataView");
+        mod.controls.errorOverlay.hide();
 
         /**
          * Get rows from dataView
          */
         const rows = await dataView.allRows();
         if (rows == null) {
-            // Return and wait for next call to render when reading data was aborted.
-            // Last rendered data view is still valid from a users perspective since
-            // a document modification was made during an progress indication.
+            // User interaction caused the data view to expire.
+            // Don't clear the mod content here to avoid flickering.
             return;
         }
 

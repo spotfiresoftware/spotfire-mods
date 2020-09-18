@@ -147,7 +147,7 @@ const init = async (mod) => {
         /**
             // Return and wait for next call to render when reading data was aborted.
             // Last rendered data view is still valid from a users perspective since
-            // a document modification was made during an progress indication.
+            // a document modification was made during a progress indication.
          * Hard abort if row count exceeds an arbitrary selected limit
          */
         const rowCount = await dataView.rowCount();
@@ -170,7 +170,7 @@ const init = async (mod) => {
         if (allRows == null) {
             // Return and wait for next call to render when reading data was aborted.
             // Last rendered data view is still valid from a users perspective since
-            // a document modification was made during an progress indication.
+            // a document modification was made during a progress indication.
             return;
         }
         const colorHierarchy = await dataView.hierarchy("Color");

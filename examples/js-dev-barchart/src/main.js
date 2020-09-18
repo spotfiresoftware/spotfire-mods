@@ -1,8 +1,8 @@
 /*
-* Copyright © 2020. TIBCO Software Inc.
-* This file is subject to the license terms contained
-* in the license file that is distributed with this file.
-*/
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
 
 //@ts-check - Get type warnings from the TypeScript language server. Remove if not wanted.
 
@@ -27,7 +27,7 @@ Spotfire.initialize(async (mod) => {
 
     // This Mod does not rely on data outside the
     // mod itself so no read errors are expected.
-    reader.subscribe(renderBarChart);
+    reader.subscribe(render);
 
     /**
      * Render the bar chart.
@@ -43,7 +43,10 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.ModProperty<boolean>} splitBars
      * @param {Spotfire.Axis} yAxis
      */
-    async function renderBarChart(dataView, yAxisMode, splitBars, yAxis) {
+    async function render(dataView, yAxisMode, splitBars, yAxis) {
+        /**
+         * Check for any errors.
+         */
         let errors = await dataView.getErrors();
         if (errors.length > 0) {
             mod.controls.errorOverlay.show(errors, "dataView");
@@ -52,6 +55,17 @@ Spotfire.initialize(async (mod) => {
         }
 
         mod.controls.errorOverlay.hide("dataView");
+
+        // Get the leaf nodes for the x hierarchy. We will iterate over them to
+        // render the bars.
+        let xHierarchy = await dataView.hierarchy("X");
+        let xRoot = await xHierarchy.root();
+        if (xRoot == null) {
+            // Return and wait for next call to render when reading data was aborted.
+            // Last rendered data view is still valid from a users perspective since
+            // a document modification was made during a progress indication.
+            return;
+        }
 
         let dataViewYAxis = await dataView.continuousAxis("Y");
         if (dataViewYAxis == null) {
@@ -64,18 +78,7 @@ Spotfire.initialize(async (mod) => {
         // Hide tooltip
         mod.controls.tooltip.hide();
 
-        // Get the leaf nodes for the x hierarchy. We will iterate over them to
-        // render the bars.
-        let xHierarchy = await dataView.hierarchy("X");
-        if (xHierarchy == null) {
-            // Return and wait for next call to render when reading data was aborted.
-            // Last rendered data view is still valid from a users perspective since
-            // a document modification was made during an progress indication.
-            return;
-        }
-
-
-        let xLeaves = (await xHierarchy.root()).leaves();
+        let xLeaves = xRoot.leaves();
 
         // Figure out if we use categorical coloring, and if so retrieve the
         // number or colors. We need that to render split bars rather than stacked.

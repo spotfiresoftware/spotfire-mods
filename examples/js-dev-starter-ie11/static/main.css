@@ -4,8 +4,11 @@
 * in the license file that is distributed with this file.
 */
 
-html, body, #mod-container {
+body{
     margin: 0;
-    height: 100%;
-    overflow: auto;
+    overflow: hidden;
+}
+
+#mod-container {
+    white-space: pre;
 }
