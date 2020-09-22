@@ -39,10 +39,14 @@ Spotfire.initialize(async api => {
             return;
         }
 
+        // Check for empty axis expression before.
+        var hasCategory = await dataView.categoricalAxis("Category") != null;
+        var hasMeasurement = await dataView.continuousAxis("Measurement") != null;
+
         // Transform the rows to the google visualization format.
         let data: [string, number][] = rows.map(row => [
-            row.categorical("Category").formattedValue(),
-            row.continuous("Measurement").value() ?? 0
+            hasCategory ? row.categorical("Category").formattedValue() : "", 
+            hasMeasurement ? row.continuous("Measurement").value() ?? 0 : 0
         ]);
 
         // Render the visualization using the transformed data

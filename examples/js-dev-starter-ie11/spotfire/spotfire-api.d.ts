@@ -924,10 +924,6 @@ export declare interface ModPropertyValue<T extends ModPropertyDataType = ModPro
      * Gets the value held by this instance;
      */
     value<T2 extends T>(): T2 | null;
-    /**
-     * Get the Spotfire internal data type of the property.
-     */
-    dataType: DataType;
 }
 
 /**
