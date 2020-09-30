@@ -337,9 +337,8 @@ export declare interface DataView {
      * Returns null for dual mode axes that currently are in continuous mode.
      * Throws if the axis does not exist or the axes mode is continuous.
      * @param name - The name of the axis to get the hierarchy for.
-     * @param populateWithRows - Optional. If set to true, all available data in the dataview will be retrieved. If set to false the populateWithRows function must be called (and awaited)  in order for the row methods to be available in the hierarchy.
      */
-    hierarchy(name: string, populateWithRows?: boolean): Promise<DataViewHierarchy | null>;
+    hierarchy(name: string): Promise<DataViewHierarchy | null>;
     /**
      * Gets the total number of rows of the {@link DataView} without actually getting all the rows. Use this function to determine whether or not the mod will be able to handle the amount of data rows.
      * When there are errors in the mod configuration there will be no rows available and this method will return undefined.

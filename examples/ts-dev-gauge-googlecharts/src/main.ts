@@ -40,8 +40,8 @@ Spotfire.initialize(async api => {
         }
 
         // Check for empty axis expression before.
-        var hasCategory = await dataView.categoricalAxis("Category") != null;
-        var hasMeasurement = await dataView.continuousAxis("Measurement") != null;
+        let hasCategory = await dataView.categoricalAxis("Category") != null;
+        let hasMeasurement = await dataView.continuousAxis("Measurement") != null;
 
         // Transform the rows to the google visualization format.
         let data: [string, number][] = rows.map(row => [

@@ -33,6 +33,12 @@ const manifestPath = "./static/" + manifestName;
 const buildPath = "./dist/";
 const staticFiles = "./static/**/*";
 
+// Rollup fails to parse the source under certain circumstances.
+if (path.resolve(".").indexOf("(") >= 0) {
+    console.error("The working directory contains invalid character '('");
+    process.exit(1);
+  }
+  
 // The development server tries to mimic the CSP policy used by the Spotfire runtime.
 const allowedExternalResources = new Set();
 let declaredExternalResourcesInManifest = [];
