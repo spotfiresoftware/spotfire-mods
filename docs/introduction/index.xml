@@ -154,7 +154,7 @@ When the mod has been saved to the library, it is possible for others, connected
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataViewContinuousValue} */&lt;/span&gt;
 &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The same would have been done in TypeScript like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;Spotfire.DataViewContinuousValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;Spotfire.DataViewContinuousValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;why-dont-changes-to-the-mod-manifestjson-take-effect-in-my-analysis&#34;&gt;Why don’t changes to the mod-manifest.json take effect in my analysis?&lt;/h3&gt;
 &lt;p&gt;The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the developer server is connected, disconnected or when the &lt;em&gt;Reload manifest&lt;/em&gt; button is clicked.&lt;/p&gt;
 &lt;p&gt;When the developer server is in a connected state, Spotfire points the mod iframe&amp;rsquo;s source directly against the developer server. Any UI changes seen while the server is connected is not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.&lt;/p&gt;
@@ -181,7 +181,7 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
       <description>
         
         
-        &lt;h2 id=&#34;data-view-definition-&#34;&gt;Data view definition&lt;/h2&gt;
+        &lt;h2 id=&#34;data-view-definition&#34;&gt;Data view definition&lt;/h2&gt;
 &lt;p&gt;A mod can create a single aggregated data view.&lt;/p&gt;
 &lt;p&gt;The data view is declared in the mod manifest. Its contents is specified as a number of axes. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.&lt;/p&gt;
 &lt;p&gt;In the simplest form, the data view definition part of a mod manifest could look like this.&lt;/p&gt;
@@ -219,8 +219,8 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 &lt;p&gt;It is always possible to add more columns to the expression on a categorical axis. This will split the aggregation further, and Spotfire usually renders this as a hierarchy.&lt;/p&gt;
 &lt;!-- ![Bar Chart 3](BarChart3.png) --&gt;
 &lt;img src=&#34;BarChart3.PNG&#34;&gt;
-&lt;h2 id=&#34;consuming-data-from-javascript-&#34;&gt;Consuming data from JavaScript&lt;/h2&gt;
-&lt;h3 id=&#34;the-data-view-object-&#34;&gt;The data view object&lt;/h3&gt;
+&lt;h2 id=&#34;consuming-data-from-javascript&#34;&gt;Consuming data from JavaScript&lt;/h2&gt;
+&lt;h3 id=&#34;the-data-view-object&#34;&gt;The data view object&lt;/h3&gt;
 &lt;p&gt;On the javascript side, data is retrieved via a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.&lt;/p&gt;
 &lt;p&gt;To retrieve the value for an axis in a data row, there is a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#get&#34;&gt;get&lt;/a&gt; method that takes the axis name as argument. So to get the value for a &amp;ldquo;Y&amp;rdquo; axis you would do the following:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;let yValue = row.get(&amp;quot;Y&amp;quot;);
@@ -244,7 +244,7 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 Apples,16000
 Oranges,31000 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;dataviewcontinuousvalue-and-dataviewcategoricalvalue-&#34;&gt;DataViewContinuousValue and DataViewCategoricalValue&lt;/h3&gt;
+&lt;h3 id=&#34;dataviewcontinuousvalue-and-dataviewcategoricalvalue&#34;&gt;DataViewContinuousValue and DataViewCategoricalValue&lt;/h3&gt;
 &lt;p&gt;A &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt; is a simple object with methods to retrieve the actual value (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getvalue&#34;&gt;getValue&lt;/a&gt;), check its validity (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#isvalid&#34;&gt;isValid&lt;/a&gt;), and to get a string representation of it (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getformattedvalue&#34;&gt;getFormattedValue&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;A &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; on the other hand is a bit more complicated. Since categorical axes form hierarchies, each &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. The &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#getvalue&#34;&gt;getValue&lt;/a&gt; function returns a string for the whole path in this case. For the third bar chart example above, the output from the logDataView function would be:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;X,Y
@@ -254,7 +254,7 @@ Oranges &amp;gt;&amp;gt; Spain,12000
 Oranges &amp;gt;&amp;gt; USA,19000
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/categoricalvaluepathelement.html&#34;&gt;CategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
-&lt;h3 id=&#34;hierarchies-&#34;&gt;Hierarchies&lt;/h3&gt;
+&lt;h3 id=&#34;hierarchies&#34;&gt;Hierarchies&lt;/h3&gt;
 &lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html#gethierarchy&#34;&gt;getHierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
 &lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root&#34;&gt;root&lt;/a&gt;), or the array of leaf nodes (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves&#34;&gt;leaves&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.&lt;/p&gt;
 &lt;p&gt;Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:&lt;/p&gt;
@@ -288,7 +288,7 @@ Oranges &amp;gt;&amp;gt; USA,19000
      USA
          19000
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;using-the-spotfire-color-axis-&#34;&gt;Using the Spotfire color axis&lt;/h2&gt;
+&lt;h2 id=&#34;using-the-spotfire-color-axis&#34;&gt;Using the Spotfire color axis&lt;/h2&gt;
 &lt;p&gt;Mods can use the same color axis as is used by the native Spotfire visualizations. You do this by specifying a &amp;ldquo;colorAxis&amp;rdquo; entry in the data view definition section of the manifest:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {
     &amp;quot;colorAxis&amp;quot;: {
@@ -298,7 +298,7 @@ Oranges &amp;gt;&amp;gt; USA,19000
 &lt;p&gt;The &amp;ldquo;mode&amp;rdquo; and other properties for the color axis are specified the same way as for other axes.&lt;/p&gt;
 &lt;p&gt;On the Javascript side, you access the data values for the color axis by referring to it by its name, &amp;ldquo;Color&amp;rdquo;.
 The actual color computed for each row can be retrieved via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#getcolor&#34;&gt;getColor&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
-&lt;h2 id=&#34;specifying-data-types-for-continuous-axes-&#34;&gt;Specifying data types for continuous axes&lt;/h2&gt;
+&lt;h2 id=&#34;specifying-data-types-for-continuous-axes&#34;&gt;Specifying data types for continuous axes&lt;/h2&gt;
 &lt;p&gt;Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
 For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow date and time data by specifying it in the manifest, in the axis section.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;quot;dataTypes&amp;quot;: {
@@ -306,12 +306,12 @@ For continuous axes it is possible to specify what data types should be supporte
     &amp;quot;allowNumeric&amp;quot;: true
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;using-multiple-measures-on-continuous-axes-&#34;&gt;Using multiple measures on continuous axes&lt;/h2&gt;
+&lt;h2 id=&#34;using-multiple-measures-on-continuous-axes&#34;&gt;Using multiple measures on continuous axes&lt;/h2&gt;
 &lt;p&gt;By default, you can only have a single measure on a continuous axis. However, Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &amp;ldquo;allowMultipleMeasures&amp;rdquo; flag to true for the axis in the manifest.&lt;/p&gt;
 &lt;p&gt;When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &amp;ldquo;(Column Names)&amp;rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.&lt;/p&gt;
-&lt;h2 id=&#34;using-non-aggregating-expressions-on-a-continuous-axis-&#34;&gt;Using non-aggregating expressions on a continuous axis&lt;/h2&gt;
+&lt;h2 id=&#34;using-non-aggregating-expressions-on-a-continuous-axis&#34;&gt;Using non-aggregating expressions on a continuous axis&lt;/h2&gt;
 &lt;p&gt;Mod data views are always aggregated, and by default, the expressions used on them must be aggregating. To enable non-aggregating expressions, you can set the &amp;ldquo;allowNonAggregatingMeasures&amp;rdquo; flag to true for the axis in the manifest. The Spotire UIs will then add a (None) option to the aggregation methods. Note that the data view is still aggregated, so the values on the axes will be used to group by in the aggregation.&lt;/p&gt;
-&lt;h2 id=&#34;data-view-sort-order-&#34;&gt;Data view sort order&lt;/h2&gt;
+&lt;h2 id=&#34;data-view-sort-order&#34;&gt;Data view sort order&lt;/h2&gt;
 &lt;p&gt;By default, the rows in data views are ordered by the categorical axes (or more specifically by the axes that are used to group by when performing the aggregation), in the order in which they are declared. So for instance if you declare a &amp;ldquo;Column&amp;rdquo; axis followed by a &amp;ldquo;Row&amp;rdquo; axis, the data view will first be sorted by the values on the &amp;ldquo;Column&amp;rdquo; axis and then by the &amp;ldquo;Row&amp;rdquo; axis.&lt;/p&gt;
 &lt;p&gt;The color axis is currently always last.&lt;/p&gt;
 

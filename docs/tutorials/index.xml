@@ -249,14 +249,15 @@
 &lt;span style=&#34;color:#a40000&#34;&gt;-        var view = new google.visualization.DataView(data);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        view.setColumns([0, 1, { calc: &amp;#34;stringify&amp;#34;, sourceColumn: 1, type: &amp;#34;string&amp;#34;, role: &amp;#34;annotation&amp;#34; }, 2]);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#00a000&#34;&gt;+        const ALL_VALUES = &amp;#34;All Values&amp;#34;;
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorHierarchy = await dataView.hierarchy(&amp;#34;Color&amp;#34;, true);
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorLeafNodes = await colorHierarchy.leaves();
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorDomain = colorHierarchy.isEmpty ? [ALL_VALUES] : colorLeafNodes.map(node =&amp;gt; node.formattedValue());
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xHierarchy = await dataView.hierarchy(&amp;#34;X&amp;#34;, true);
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xLeafNodes = await xHierarchy.leaves();
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorHierarchy = await dataView.hierarchy(&amp;#34;Color&amp;#34;);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorLeafNodes = (await colorHierarchy.root()).leaves();
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorDomain = colorHierarchy.isEmpty ? [&amp;#34;All Values&amp;#34;] : colorLeafNodes.map((node) =&amp;gt; node.formattedPath());
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const xHierarchy = await dataView.hierarchy(&amp;#34;X&amp;#34;);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xLeafNodes = (await xHierarchy.root()).leaves();
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xDomain = xLeafNodes.map(node =&amp;gt; node.formattedValue());
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataColumns = [&amp;#34;Columns&amp;#34;];
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataColumns = [&amp;#34;Columns&amp;#34;];
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        colorDomain.forEach(value =&amp;gt; dataColumns.push(value, { role: &amp;#34;style&amp;#34; }));
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataRows = [];

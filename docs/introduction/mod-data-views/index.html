@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.71.1" />
+<meta name="generator" content="Hugo 0.76.3" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -30,13 +30,14 @@
 <meta itemprop="name" content="Mod data views">
 <meta itemprop="description" content="This document gives an introduction to the mod data views.
 ">
-<meta itemprop="datePublished" content="2020-08-31T00:00:00&#43;00:00" />
-<meta itemprop="dateModified" content="2020-08-31T00:00:00&#43;00:00" />
+<meta itemprop="datePublished" content="2020-08-31T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-08-31T00:00:00+00:00" />
 <meta itemprop="wordCount" content="1256">
 
 
 
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Mod data views"/>
 <meta name="twitter:description" content="This document gives an introduction to the mod data views.
 "/>
@@ -45,8 +46,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.aabcf1d3cc169be87a18222bd1ebe6a23aba07428bf19a80b3bcbc67877c4394.css" as="style">
-<link href="/spotfire-mods/scss/main.min.aabcf1d3cc169be87a18222bd1ebe6a23aba07428bf19a80b3bcbc67877c4394.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" as="style">
+<link href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -253,19 +254,19 @@
 
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#data-view-definition-">Data view definition</a></li>
-    <li><a href="#consuming-data-from-javascript-">Consuming data from JavaScript</a>
+    <li><a href="#data-view-definition">Data view definition</a></li>
+    <li><a href="#consuming-data-from-javascript">Consuming data from JavaScript</a>
       <ul>
-        <li><a href="#the-data-view-object-">The data view object</a></li>
-        <li><a href="#dataviewcontinuousvalue-and-dataviewcategoricalvalue-">DataViewContinuousValue and DataViewCategoricalValue</a></li>
-        <li><a href="#hierarchies-">Hierarchies</a></li>
+        <li><a href="#the-data-view-object">The data view object</a></li>
+        <li><a href="#dataviewcontinuousvalue-and-dataviewcategoricalvalue">DataViewContinuousValue and DataViewCategoricalValue</a></li>
+        <li><a href="#hierarchies">Hierarchies</a></li>
       </ul>
     </li>
-    <li><a href="#using-the-spotfire-color-axis-">Using the Spotfire color axis</a></li>
-    <li><a href="#specifying-data-types-for-continuous-axes-">Specifying data types for continuous axes</a></li>
-    <li><a href="#using-multiple-measures-on-continuous-axes-">Using multiple measures on continuous axes</a></li>
-    <li><a href="#using-non-aggregating-expressions-on-a-continuous-axis-">Using non-aggregating expressions on a continuous axis</a></li>
-    <li><a href="#data-view-sort-order-">Data view sort order</a></li>
+    <li><a href="#using-the-spotfire-color-axis">Using the Spotfire color axis</a></li>
+    <li><a href="#specifying-data-types-for-continuous-axes">Specifying data types for continuous axes</a></li>
+    <li><a href="#using-multiple-measures-on-continuous-axes">Using multiple measures on continuous axes</a></li>
+    <li><a href="#using-non-aggregating-expressions-on-a-continuous-axis">Using non-aggregating expressions on a continuous axis</a></li>
+    <li><a href="#data-view-sort-order">Data view sort order</a></li>
   </ul>
 </nav>
 
@@ -316,7 +317,7 @@
 <div class="td-content">
 	<h1>Mod data views</h1>
 	<div class="lead">This document gives an introduction to the mod data views.</div>
-	<h2 id="data-view-definition-">Data view definition</h2>
+	<h2 id="data-view-definition">Data view definition</h2>
 <p>A mod can create a single aggregated data view.</p>
 <p>The data view is declared in the mod manifest. Its contents is specified as a number of axes. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.</p>
 <p>In the simplest form, the data view definition part of a mod manifest could look like this.</p>
@@ -354,8 +355,8 @@
 <p>It is always possible to add more columns to the expression on a categorical axis. This will split the aggregation further, and Spotfire usually renders this as a hierarchy.</p>
 <!-- ![Bar Chart 3](BarChart3.png) -->
 <img src="BarChart3.PNG">
-<h2 id="consuming-data-from-javascript-">Consuming data from JavaScript</h2>
-<h3 id="the-data-view-object-">The data view object</h3>
+<h2 id="consuming-data-from-javascript">Consuming data from JavaScript</h2>
+<h3 id="the-data-view-object">The data view object</h3>
 <p>On the javascript side, data is retrieved via a <a href="/spotfire-mods/api-docs/interfaces/dataview.html">DataView</a> object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.</p>
 <p>To retrieve the value for an axis in a data row, there is a <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#get">get</a> method that takes the axis name as argument. So to get the value for a &ldquo;Y&rdquo; axis you would do the following:</p>
 <pre><code>let yValue = row.get(&quot;Y&quot;);
@@ -379,7 +380,7 @@
 Apples,16000
 Oranges,31000 
 </code></pre>
-<h3 id="dataviewcontinuousvalue-and-dataviewcategoricalvalue-">DataViewContinuousValue and DataViewCategoricalValue</h3>
+<h3 id="dataviewcontinuousvalue-and-dataviewcategoricalvalue">DataViewContinuousValue and DataViewCategoricalValue</h3>
 <p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a> is a simple object with methods to retrieve the actual value (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getvalue">getValue</a>), check its validity (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#isvalid">isValid</a>), and to get a string representation of it (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getformattedvalue">getFormattedValue</a>).</p>
 <p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> on the other hand is a bit more complicated. Since categorical axes form hierarchies, each <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. The <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#getvalue">getValue</a> function returns a string for the whole path in this case. For the third bar chart example above, the output from the logDataView function would be:</p>
 <pre><code>X,Y
@@ -389,7 +390,7 @@ Oranges &gt;&gt; Spain,12000
 Oranges &gt;&gt; USA,19000
 </code></pre>
 <p>If, on the other hand, you want to access all parts of the path this can be done via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path">path</a> property that returns an array of <a href="/spotfire-mods/api-docs/interfaces/categoricalvaluepathelement.html">CategoricalValuePathElement</a> objects. There is also a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex">leafIndex</a> property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.</p>
-<h3 id="hierarchies-">Hierarchies</h3>
+<h3 id="hierarchies">Hierarchies</h3>
 <p>Another way to access the data in the data view is to go via hierarchies. These are represented by <a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html">DataViewHierarchy</a> objects that can be retrieved for all categorical axes. Either via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy">hierarchy</a> property on the axis you get via getAxis, or via the <a href="/spotfire-mods/api-docs/interfaces/dataview.html#gethierarchy">getHierarchy</a> function on the data view.</p>
 <p>The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (<a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root">root</a>), or the array of leaf nodes (<a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves">leaves</a>). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.</p>
 <p>Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:</p>
@@ -423,7 +424,7 @@ Oranges &gt;&gt; USA,19000
      USA
          19000
 </code></pre>
-<h2 id="using-the-spotfire-color-axis-">Using the Spotfire color axis</h2>
+<h2 id="using-the-spotfire-color-axis">Using the Spotfire color axis</h2>
 <p>Mods can use the same color axis as is used by the native Spotfire visualizations. You do this by specifying a &ldquo;colorAxis&rdquo; entry in the data view definition section of the manifest:</p>
 <pre><code>&quot;dataViewDefinition&quot;: {
     &quot;colorAxis&quot;: {
@@ -433,7 +434,7 @@ Oranges &gt;&gt; USA,19000
 <p>The &ldquo;mode&rdquo; and other properties for the color axis are specified the same way as for other axes.</p>
 <p>On the Javascript side, you access the data values for the color axis by referring to it by its name, &ldquo;Color&rdquo;.
 The actual color computed for each row can be retrieved via the <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#getcolor">getColor</a> function on a row. It returns an object with the color hexcode.</p>
-<h2 id="specifying-data-types-for-continuous-axes-">Specifying data types for continuous axes</h2>
+<h2 id="specifying-data-types-for-continuous-axes">Specifying data types for continuous axes</h2>
 <p>Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
 For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow date and time data by specifying it in the manifest, in the axis section.</p>
 <pre><code>&quot;dataTypes&quot;: {
@@ -441,12 +442,12 @@ For continuous axes it is possible to specify what data types should be supporte
     &quot;allowNumeric&quot;: true
 }
 </code></pre>
-<h2 id="using-multiple-measures-on-continuous-axes-">Using multiple measures on continuous axes</h2>
+<h2 id="using-multiple-measures-on-continuous-axes">Using multiple measures on continuous axes</h2>
 <p>By default, you can only have a single measure on a continuous axis. However, Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &ldquo;allowMultipleMeasures&rdquo; flag to true for the axis in the manifest.</p>
 <p>When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &ldquo;(Column Names)&rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.</p>
-<h2 id="using-non-aggregating-expressions-on-a-continuous-axis-">Using non-aggregating expressions on a continuous axis</h2>
+<h2 id="using-non-aggregating-expressions-on-a-continuous-axis">Using non-aggregating expressions on a continuous axis</h2>
 <p>Mod data views are always aggregated, and by default, the expressions used on them must be aggregating. To enable non-aggregating expressions, you can set the &ldquo;allowNonAggregatingMeasures&rdquo; flag to true for the axis in the manifest. The Spotire UIs will then add a (None) option to the aggregation methods. Note that the data view is still aggregated, so the values on the axes will be used to group by in the aggregation.</p>
-<h2 id="data-view-sort-order-">Data view sort order</h2>
+<h2 id="data-view-sort-order">Data view sort order</h2>
 <p>By default, the rows in data views are ordered by the categorical axes (or more specifically by the axes that are used to group by when performing the aggregation), in the order in which they are declared. So for instance if you declare a &ldquo;Column&rdquo; axis followed by a &ldquo;Row&rdquo; axis, the data view will first be sorted by the values on the &ldquo;Column&rdquo; axis and then by the &ldquo;Row&rdquo; axis.</p>
 <p>The color axis is currently always last.</p>
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.71.1" />
+<meta name="generator" content="Hugo 0.76.3" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -30,13 +30,14 @@
 <meta itemprop="name" content="Bar chart mod using Google Charts">
 <meta itemprop="description" content="This tutorial shows how to create a basic bar chart using Google Charts and the Spotfire API.
 ">
-<meta itemprop="datePublished" content="2020-08-31T00:00:00&#43;00:00" />
-<meta itemprop="dateModified" content="2020-08-31T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="2454">
+<meta itemprop="datePublished" content="2020-08-31T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-08-31T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2447">
 
 
 
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Bar chart mod using Google Charts"/>
 <meta name="twitter:description" content="This tutorial shows how to create a basic bar chart using Google Charts and the Spotfire API.
 "/>
@@ -45,8 +46,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.aabcf1d3cc169be87a18222bd1ebe6a23aba07428bf19a80b3bcbc67877c4394.css" as="style">
-<link href="/spotfire-mods/scss/main.min.aabcf1d3cc169be87a18222bd1ebe6a23aba07428bf19a80b3bcbc67877c4394.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" as="style">
+<link href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -541,14 +542,15 @@
 <span style="color:#a40000">-        var view = new google.visualization.DataView(data);
 </span><span style="color:#a40000">-        view.setColumns([0, 1, { calc: &#34;stringify&#34;, sourceColumn: 1, type: &#34;string&#34;, role: &#34;annotation&#34; }, 2]);
 </span><span style="color:#a40000"></span>
-<span style="color:#00a000">+        const ALL_VALUES = &#34;All Values&#34;;
-</span><span style="color:#00a000">+        const colorHierarchy = await dataView.hierarchy(&#34;Color&#34;, true);
-</span><span style="color:#00a000">+        const colorLeafNodes = await colorHierarchy.leaves();
-</span><span style="color:#00a000">+        const colorDomain = colorHierarchy.isEmpty ? [ALL_VALUES] : colorLeafNodes.map(node =&gt; node.formattedValue());
-</span><span style="color:#00a000">+        const xHierarchy = await dataView.hierarchy(&#34;X&#34;, true);
-</span><span style="color:#00a000">+        const xLeafNodes = await xHierarchy.leaves();
+<span style="color:#00a000">+        const colorHierarchy = await dataView.hierarchy(&#34;Color&#34;);
+</span><span style="color:#00a000">+        const colorLeafNodes = (await colorHierarchy.root()).leaves();
+</span><span style="color:#00a000">+        const colorDomain = colorHierarchy.isEmpty ? [&#34;All Values&#34;] : colorLeafNodes.map((node) =&gt; node.formattedPath());
+</span><span style="color:#00a000"></span>
+<span style="color:#00a000">+        const xHierarchy = await dataView.hierarchy(&#34;X&#34;);
+</span><span style="color:#00a000">+        const xLeafNodes = (await xHierarchy.root()).leaves();
 </span><span style="color:#00a000">+        const xDomain = xLeafNodes.map(node =&gt; node.formattedValue());
-</span><span style="color:#00a000">+        const dataColumns = [&#34;Columns&#34;];
+</span><span style="color:#00a000"></span>
+<span style="color:#00a000">+        const dataColumns = [&#34;Columns&#34;];
 </span><span style="color:#00a000">+        colorDomain.forEach(value =&gt; dataColumns.push(value, { role: &#34;style&#34; }));
 </span><span style="color:#00a000">+
 </span><span style="color:#00a000">+        const dataRows = [];

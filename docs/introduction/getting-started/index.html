@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.71.1" />
+<meta name="generator" content="Hugo 0.76.3" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -30,13 +30,14 @@
 <meta itemprop="name" content="Getting started">
 <meta itemprop="description" content="The following guide describes the steps needed to get a mod running in development mode, inside TIBCO Spotfire®.
 ">
-<meta itemprop="datePublished" content="2020-08-31T00:00:00&#43;00:00" />
-<meta itemprop="dateModified" content="2020-08-31T00:00:00&#43;00:00" />
+<meta itemprop="datePublished" content="2020-08-31T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-08-31T00:00:00+00:00" />
 <meta itemprop="wordCount" content="1783">
 
 
 
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Getting started"/>
 <meta name="twitter:description" content="The following guide describes the steps needed to get a mod running in development mode, inside TIBCO Spotfire®.
 "/>
@@ -45,8 +46,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.aabcf1d3cc169be87a18222bd1ebe6a23aba07428bf19a80b3bcbc67877c4394.css" as="style">
-<link href="/spotfire-mods/scss/main.min.aabcf1d3cc169be87a18222bd1ebe6a23aba07428bf19a80b3bcbc67877c4394.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" as="style">
+<link href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -462,7 +463,7 @@ When the mod has been saved to the library, it is possible for others, connected
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#8f5902;font-style:italic">/** @type {Spotfire.DataViewContinuousValue} */</span>
 <span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">y</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">get</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><p>The same would have been done in TypeScript like this:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">y</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">get</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">Spotfire.DataViewContinuousValue</span><span style="color:#000;font-weight:bold">&gt;(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">y</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#204a87;font-weight:bold">get</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">Spotfire.DataViewContinuousValue</span><span style="color:#000;font-weight:bold">&gt;(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><h3 id="why-dont-changes-to-the-mod-manifestjson-take-effect-in-my-analysis">Why don’t changes to the mod-manifest.json take effect in my analysis?</h3>
 <p>The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the developer server is connected, disconnected or when the <em>Reload manifest</em> button is clicked.</p>
 <p>When the developer server is in a connected state, Spotfire points the mod iframe&rsquo;s source directly against the developer server. Any UI changes seen while the server is connected is not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.</p>
