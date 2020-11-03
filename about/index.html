@@ -142,7 +142,7 @@
     <div class="row">
       <div class="col-12">
         <div class="text-center">
-          <h1 class="display-1 mt-0 mt-md-5 pb-4 text-shadows">Spotfire® Mods by TIBCO LABS™</h1>
+          <h1 class="display-1 mt-0 mt-md-5 pb-4 text-shadows">TIBCO Spotfire® Mods</h1>
           
           <div class="pt-3 lead">
             <p class="lead mt-5 text-shadows">
@@ -164,8 +164,8 @@
 <section class="row td-box td-box--1 position-relative td-box--gradient td-box--height-auto">
 	<div class="container text-center td-arrow-down">
 		<span class="h4 mb-0">
-			<h3 id="more-details-about-this-initiative-here-tibco-labs-spotfire-modshttpscommunitytibcocomwikitibco-labstm-spotfire-mods-wiki-on">More Details about this Initiative here <a href="https://community.tibco.com/wiki/tibco-labstm-spotfire-mods">TIBCO LABS™ Spotfire® Mods</a> Wiki, on</h3>
-<p><a href="https://community.tibco.com/wiki/tibco-labstm-spotfire-mods"><img src="TIBCO-Community.svg" width="50%"></img></a>
+			<h3 id="more-details-can-be-found-here-tibco-spotfire-mods-wikihttpscommunitytibcocomwikitibco-spotfirer-mods-on">More Details can be found here <a href="https://community.tibco.com/wiki/tibco-spotfirer-mods">TIBCO Spotfire® Mods Wiki</a>, on</h3>
+<p><a href="https://community.tibco.com/wiki/tibco-spotfirer-mods"><img src="TIBCO-Community.svg" width="50%"></img></a>
 		</span>
 	</div>
 </section>
@@ -182,21 +182,55 @@
 		<div class="row ">
 			<div class="row mx-md-n5">
   <div class="col py-5 px-md-5  col-example">
-    <a href="https://tibcosoftware.github.io/TIBCO-LABS/" target="_blank">TIBCO LABS™</a> is a program designed to provide customers and partners with a mechanism for actively participating in TIBCO’s history of innovation.
-  <br><br>
-  TIBCO has always been at the forefront of innovation, and TIBCO LABS™ allows participants to share in this history by collaboratively building solutions to today’s challenging problems, previewing new capabilities, and accessing emerging technologies in areas such as blockchain, AI / ML and IoT. 
-  <br><br>
-  Through TIBCO LABS™, customers and partners can gain insight into TIBCO’s innovation activities, participate in shaping the form of these activities in the years to come, and benefit from TIBCO’s leadership position in integration and analytics.
-  <br><br><br>
-<p><a href="https://tibcosoftware.github.io/TIBCO-LABS/" target="_blank"><img src="tibcolabs-brand.png" width="300px"></img></a></p>
-</div>
-  <div class="col py-5 px-md-5 bordered col-example">
-    <a href="https://tibcosoftware.github.io/TIBCO-LABS/" target="_blank"><img src="TIBCO-Labs-final.png" width="300px"></img></a>
-  </div>
-</div>
-<div class="mx-auto mt-5">
-<p><a class="btn btn-link text-info" href="#td-block-3"><i class="fa fa-chevron-circle-down" style="font-size: 400%"></i></a></p>
-</div>
+    You can now build new visualization types, called visualization mods, and use them in Spotfire like
+    any other visualization. A Spotfire visualization mod is a lightweight, shareable, and reusable visualization component that is
+    built with web technologies such as JavaScript and HTML and runs in a sandboxed iframe. By connecting to any Spotfire data source and integrating with data science and other built-in Spotfire capabilities, you can create highly customized analytic applications directly within the Spotfire environment.
+    <br><br>
+    <em>Developing visualization mods</em><br><br>
+    Developers have access to the Spotfire Mods API, which grants access to the Spotfire data and other
+    functionality. It is based on TypeScript, which enables syntax highlighting and code completion in the
+    editor. You can integrate any third-party JavaScript libraries with your mod to handle the graphics or
+    help speed up the development.<br><br>
+    <em>Using visualization mods</em><br><br>
+    Spotfire visualization mods look, feel, and behave like native Spotfire visualizations, and can be used
+    without any knowledge of how they were implemented.
+    A visualization mod is highly configurable to be reused in different analyses with different data. The
+    configuration of a mod’s data view and appearance is done with drag-drop or direct manipulation
+    with built-in UIs. The user has access to the standard axis selectors supporting the full Spotfire
+    expression language. Mod-specific settings can be exposed through a popup panel or using a custom
+    UI. Standard visualization properties, such as settings for data, appearance, colors, and subsets are
+    available as well.
+    A visualization mod is automatically responsive to events that occur in other parts of Spotfire, for
+    example, filtering, marking, highlighting. Built-in Spotfire capabilities such as actions on marked data,
+    exporting to PDF, maximizing the visualization view, creating details visualizations, and changing the
+    visual theme, work as usual.<br><br>
+    <em>Sharing and accessing visualization mods</em><br><br>
+    To share a mod with others, you can embed it in a Spotfire analysis and share the analysis, or save the
+    mod itself to the Spotfire library, where others who have the right permissions can find it by browsing
+    or searching for it from the Visualizations flyout. You can also share a separate .mod file via email, file
+    shares, or public websites, such as the TIBCO Community. On <a href="https://community.tibco.com/exchange">TIBCO Community Exchange</a>, several
+    visualization mods are available for download.
+    Saving visualization mods to the Spotfire library allows users to pin mods to the Visualizations flyout.
+    A pinned mod is available to be used in other analyses and the mod will be included as an option
+    whenever you select visualization type. Pinning mods to the visualization flyout can also be centrally
+    managed. An administrator can specify a collection of mods that the users will have access to. Another
+    benefit of sharing a visualization mod in the Spotfire library is that you will get automatic version
+    handling of the mod. By default, if a visualization mod is re-saved to the Spotfire library, all instances
+    of the visualization mod are updated in all analyses, where it is used.
+    To deploy a visualization mod into the Spotfire environment, you can drag and drop a .mod file to
+    your open analysis session. An administrator can deploy and share a mod to a group of users.<br><br>
+    <em>Trust framework for visualization mods</em><br><br>
+    Running a mod involves code execution. Therefore, a concept of code trust has been introduced in the
+    Spotfire environment. This code trust includes three different options:<br><br>
+    <ul><li>a user can trust a specific version of a mod.</li>
+    <li>a specific mod can be trusted because it is signed, using cryptographic signatures, by a specific
+    Spotfire user.</li>
+    <li>a specific mod can be trusted because it is signed by a certificate issued by a trusted certificate
+    authority.</li></ul><br><br>
+    When a mod has been signed, any further changes to the mod code will change the hash sum of the
+    mod and there will be a mismatch with what was signed, so any attempts to change the code by a
+    third party should be detectable. See <a href="https://docs.tibco.com/pub/spotfire_server/11.0.0/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html">Trusting custom content in the Spotfire environment</a> for more
+    information about trust in general.
 
 		</div>
 	</div>
