@@ -741,7 +741,9 @@ declare interface GeneralStylingInfo {
  *  console.log("Mod API loaded.");
  * });
  * ```
- * [[include:initialize.md]]
+ * The initialize method will invoke the provided callback with an instance of the mod API, to be used by the mod developer.
+ *
+ * The initialize method needs to be invoked in order for the mod to function. Even if the mod only displays static content, the API must be initialized in order for events and export to work.
  * @public
  * @param onLoaded - Callback that is called when the mod API is initialized and ready to be interacted with.
  */

@@ -1,0 +1,16 @@
+{
+    "name": "spotfire-mod-example",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "start": "npm install && npm run server",
+        "server": "node development-server.js src"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "live-server": "^1.2.1"
+    },
+    "dependencies": {}
+}
