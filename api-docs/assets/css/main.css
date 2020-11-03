@@ -1649,7 +1649,8 @@ ul.tsd-descriptions > li > :last-child > :last-child > :last-child,
 }
 body {
   background: #fdfdfd;
-  font-family: "Segoe UI", sans-serif;
+  /* Modification */
+  /* font-family: "Segoe UI", sans-serif; */
   font-size: 16px;
   color: #222;
 }

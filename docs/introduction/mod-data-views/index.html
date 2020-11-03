@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.76.3" />
+<meta name="generator" content="Hugo 0.76.4" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -24,7 +24,7 @@
 <meta property="og:description" content="This document gives an introduction to the mod data views.
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-data-views/" />
+<meta property="og:url" content="/spotfire-mods/docs/introduction/mod-data-views/" />
 <meta property="article:published_time" content="2020-08-31T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-08-31T00:00:00+00:00" /><meta property="og:site_name" content="Spotfire® Mods" />
 <meta itemprop="name" content="Mod data views">
@@ -32,7 +32,7 @@
 ">
 <meta itemprop="datePublished" content="2020-08-31T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-08-31T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1256">
+<meta itemprop="wordCount" content="1470">
 
 
 
@@ -46,8 +46,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" as="style">
-<link href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.f65fb073031055804c13d4f6275830a56bde1bdc062beb5d6fa32e7cc446d812.css" as="style">
+<link href="/spotfire-mods/scss/main.min.f65fb073031055804c13d4f6275830a56bde1bdc062beb5d6fa32e7cc446d812.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -87,6 +87,16 @@
 				
 				
 				<a class="nav-link active" href="/spotfire-mods/docs/" ><span class="active">Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/spotfire-mods/overview/" ><span>API Overview</span></a>
 			</li>
 			
 			<li class="nav-item mr-4 mb-2 mb-lg-0">
@@ -167,6 +177,12 @@
       
       
       <a class="td-sidebar-link td-sidebar-link__page  active" id="m-spotfire-modsdocsintroductionmod-data-views" href="/spotfire-mods/docs/introduction/mod-data-views/">Mod data views</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsintroductionapi-overview" href="/spotfire-mods/docs/introduction/api-overview/">API overview</a>
       
       
       
@@ -260,12 +276,13 @@
         <li><a href="#the-data-view-object">The data view object</a></li>
         <li><a href="#dataviewcontinuousvalue-and-dataviewcategoricalvalue">DataViewContinuousValue and DataViewCategoricalValue</a></li>
         <li><a href="#hierarchies">Hierarchies</a></li>
+        <li><a href="#data-type-mapping">Data type mapping</a></li>
       </ul>
     </li>
-    <li><a href="#using-the-spotfire-color-axis">Using the Spotfire color axis</a></li>
     <li><a href="#specifying-data-types-for-continuous-axes">Specifying data types for continuous axes</a></li>
+    <li><a href="#using-the-spotfire-color-axis">Using the Spotfire color axis</a></li>
     <li><a href="#using-multiple-measures-on-continuous-axes">Using multiple measures on continuous axes</a></li>
-    <li><a href="#using-non-aggregating-expressions-on-a-continuous-axis">Using non-aggregating expressions on a continuous axis</a></li>
+    <li><a href="#using-non-aggregating-expressions-on-a-continuous-axes">Using non-aggregating expressions on a continuous axes</a></li>
     <li><a href="#data-view-sort-order">Data view sort order</a></li>
   </ul>
 </nav>
@@ -288,21 +305,21 @@
 
 
 <li class="breadcrumb-item" >
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/">Documentation</a>
+	<a href="/spotfire-mods/docs/">Documentation</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item" >
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/introduction/">Introduction</a>
+	<a href="/spotfire-mods/docs/introduction/">Introduction</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-data-views/">Mod data views</a>
+	<a href="/spotfire-mods/docs/introduction/mod-data-views/">Mod data views</a>
 </li>
 
 	</ol>
@@ -312,7 +329,7 @@
 
 
 
-<p class="-text-primary pt-3 h6" >Reading time: 5 minutes and 45 seconds.</p>
+<p class="-text-primary pt-3 h6" >Reading time: 6 minutes and 45 seconds.</p>
 <p>
 <div class="td-content">
 	<h1>Mod data views</h1>
@@ -335,7 +352,7 @@
 <img src="BarChart1.PNG">
 <p>The &ldquo;mode&rdquo; parameter can be &ldquo;continuous&rdquo;, &ldquo;categorical&rdquo; or &ldquo;dual&rdquo;. Dual means that the axis supports both continuous and categorical mode and can be switched between them.</p>
 <p>A categorical axis always splits the aggregation. The columns/expressions on the axes are used in the group by clause in the aggregated query generated for the visualization. Categorical axes are typically rendered on a categorical, or discrete, scale.</p>
-<p>If we continue the example above we could add a categorical x-axis to the visualization.</p>
+<p>If we continue the example above we could add a categorical x axis to the visualization.</p>
 <pre><code>&quot;dataViewDefinition&quot;: {  
     &quot;axes&quot;: [  
         {
@@ -357,21 +374,29 @@
 <img src="BarChart3.PNG">
 <h2 id="consuming-data-from-javascript">Consuming data from JavaScript</h2>
 <h3 id="the-data-view-object">The data view object</h3>
-<p>On the javascript side, data is retrieved via a <a href="/spotfire-mods/api-docs/interfaces/dataview.html">DataView</a> object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.</p>
-<p>To retrieve the value for an axis in a data row, there is a <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#get">get</a> method that takes the axis name as argument. So to get the value for a &ldquo;Y&rdquo; axis you would do the following:</p>
-<pre><code>let yValue = row.get(&quot;Y&quot;);
+<p>On the javascript side data is retrieved via a <a href="/spotfire-mods/api-docs/interfaces/dataview.html">DataView</a> object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.</p>
+<p>There are two different ways to retrieve the values for Depending on what type of axis is being queried</p>
+<p>There are methods available to retrieve the value for an axis in a data row based on the type of that axis. These are <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#continuous">continuous</a> for continuous axes and <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#categorical">categorical</a> for categorical axes</p>
+<p>There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#continuous">continuous</a> method for continous axes and a  <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#categorical">categorical</a> method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:</p>
+<pre><code>let yValue = row.continuous(&quot;Y&quot;);
 </code></pre>
-<p>The value retrieved by the get method can be of two types depending on the mode of the axes. Either it is a <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a>, or it is a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a>. Both these types have a <strong>getValue</strong> function, so to list all values of a data view in csv like format, you could do this:</p>
+<p>The value retrieved by these methods can be of two types depending on which one is called. Either it is a <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a>, or it is a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a>. To list all values of a data view in csv like format, you could do this:</p>
 <pre><code>async function logDataView(dataView)
 {
     // Print axes names
-    const axes = await dataView.getAxes();
+    const axes = await dataView.axes();
     console.log(axes.map(axis =&gt; axis.name).join(&quot;,&quot;));
    
     // Print the row values.
-    const rows = await dataView.getAllRows();
+    const rows = await dataView.allRows();
     rows.forEach(row =&gt; {
-        console.log(axes.map(axis =&gt; row.get(axis.name).getValue()).join(&quot;,&quot;));
+        console.log(axes.map(axis =&gt; {
+            if(axis.isCategorical){
+               return row.categorical(axis.name).fullName()
+            }                
+            return row.continuous(axis.name).value()
+        }).join(&quot;,&quot;));
+        
     });
 }
 </code></pre>
@@ -381,22 +406,22 @@ Apples,16000
 Oranges,31000 
 </code></pre>
 <h3 id="dataviewcontinuousvalue-and-dataviewcategoricalvalue">DataViewContinuousValue and DataViewCategoricalValue</h3>
-<p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a> is a simple object with methods to retrieve the actual value (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getvalue">getValue</a>), check its validity (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#isvalid">isValid</a>), and to get a string representation of it (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getformattedvalue">getFormattedValue</a>).</p>
-<p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> on the other hand is a bit more complicated. Since categorical axes form hierarchies, each <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. The <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#getvalue">getValue</a> function returns a string for the whole path in this case. For the third bar chart example above, the output from the logDataView function would be:</p>
+<p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a> is a simple object with methods to retrieve the actual value (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#value">value</a>), and to get a string representation of it (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#formattedvalue">formattedValue</a>).</p>
+<p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> on the other hand is a bit more complicated. Since categorical axes form hierarchies, each <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> is made up from parts describing the path in the hierarchy. However, a Mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example above, the output from the logDataView function would be:</p>
 <pre><code>X,Y
 Apples &gt;&gt; Spain,2500
 Apples &gt;&gt; USA,13500
 Oranges &gt;&gt; Spain,12000
 Oranges &gt;&gt; USA,19000
 </code></pre>
-<p>If, on the other hand, you want to access all parts of the path this can be done via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path">path</a> property that returns an array of <a href="/spotfire-mods/api-docs/interfaces/categoricalvaluepathelement.html">CategoricalValuePathElement</a> objects. There is also a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex">leafIndex</a> property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.</p>
+<p>If, on the other hand, you want to access all parts of the path this can be done via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path">path</a> property that returns an array of <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvaluepathelement.html">DataViewCategoricalValuePathElement</a> objects. There is also a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex">leafIndex</a> property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.</p>
 <h3 id="hierarchies">Hierarchies</h3>
-<p>Another way to access the data in the data view is to go via hierarchies. These are represented by <a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html">DataViewHierarchy</a> objects that can be retrieved for all categorical axes. Either via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy">hierarchy</a> property on the axis you get via getAxis, or via the <a href="/spotfire-mods/api-docs/interfaces/dataview.html#gethierarchy">getHierarchy</a> function on the data view.</p>
+<p>Another way to access the data in the data view is to go via hierarchies. These are represented by <a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html">DataViewHierarchy</a> objects that can be retrieved for all categorical axes. Either via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy">hierarchy</a> property on the axis you get via getAxis, or via the <a href="/spotfire-mods/api-docs/interfaces/dataview.html#hierarchy">hierarchy</a> function on the data view.</p>
 <p>The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (<a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root">root</a>), or the array of leaf nodes (<a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves">leaves</a>). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.</p>
 <p>Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:</p>
 <pre><code>async function logViaHierarchy(dataView)
 {
-    const xHierarchy = await dataView.getHierarchy(&quot;X&quot;, true);
+    const xHierarchy = await dataView.hierarchy(&quot;X&quot;, true);
     const root = await xHierarchy.root();
     log(root, &quot;&quot;);
 
@@ -407,7 +432,7 @@ Oranges &gt;&gt; USA,19000
             node.children.forEach(node =&gt; log(node, indent));
         } 
         else {
-            node.rows().forEach(row =&gt; console.log(indent + row.get(&quot;Y&quot;).getValue()))
+            node.rows().forEach(row =&gt; console.log(indent + row.continuous(&quot;Y&quot;).value()))
         }
     }
 }
@@ -424,6 +449,76 @@ Oranges &gt;&gt; USA,19000
      USA
          19000
 </code></pre>
+<h3 id="data-type-mapping">Data type mapping</h3>
+<p>Columns and expressions in Spotfire can have a number of different data types. When reading data in JavaScript these types are mapped to corresponding JavaScript types as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Spotfire data type</th>
+<th>JavaScript data type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integer</td>
+<td>number</td>
+</tr>
+<tr>
+<td>LongInteger</td>
+<td>number</td>
+</tr>
+<tr>
+<td>Real</td>
+<td>number</td>
+</tr>
+<tr>
+<td>SingleReal</td>
+<td>number</td>
+</tr>
+<tr>
+<td>Currency</td>
+<td>number</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>Date</td>
+</tr>
+<tr>
+<td>DateTime</td>
+<td>Date</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>Custom object <a href="/spotfire-mods/api-docs/interfaces/time.html">Time</a></td>
+</tr>
+<tr>
+<td>TimeSpan</td>
+<td>Custom objecet <a href="/spotfire-mods/api-docs/interfaces/timespan.html">TimeSpan</a></td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>String</td>
+<td>string</td>
+</tr>
+<tr>
+<td>Binary</td>
+<td>Not supported</td>
+</tr>
+</tbody>
+</table>
+<p>Note that some types may have a higher precision in Spotfire than can be represented by the native JavaScript types. For instance the JavaScript Date type has a precision of 1 millisecond, while Spotfire internally has a precision of 100 nanoseconds. The numeric data types LongInteger and Currency, as well as the TimeSpan data type, may also suffer from precision loss.</p>
+<h2 id="specifying-data-types-for-continuous-axes">Specifying data types for continuous axes</h2>
+<p>Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
+For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow additional data types by specifying it in the axis section of the manifest. For instance to support date and time data, you would specify the following:</p>
+<pre><code>&quot;dataTypes&quot;: {
+    &quot;allowDateTime&quot;: true,
+    &quot;allowNumeric&quot;: true
+}
+</code></pre>
+<p>In addition to these two flags, there are also flags to turn on support for strings, booleans and time spans.</p>
 <h2 id="using-the-spotfire-color-axis">Using the Spotfire color axis</h2>
 <p>Mods can use the same color axis as is used by the native Spotfire visualizations. You do this by specifying a &ldquo;colorAxis&rdquo; entry in the data view definition section of the manifest:</p>
 <pre><code>&quot;dataViewDefinition&quot;: {
@@ -432,21 +527,13 @@ Oranges &gt;&gt; USA,19000
     }
 </code></pre>
 <p>The &ldquo;mode&rdquo; and other properties for the color axis are specified the same way as for other axes.</p>
-<p>On the Javascript side, you access the data values for the color axis by referring to it by its name, &ldquo;Color&rdquo;.
-The actual color computed for each row can be retrieved via the <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#getcolor">getColor</a> function on a row. It returns an object with the color hexcode.</p>
-<h2 id="specifying-data-types-for-continuous-axes">Specifying data types for continuous axes</h2>
-<p>Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
-For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow date and time data by specifying it in the manifest, in the axis section.</p>
-<pre><code>&quot;dataTypes&quot;: {
-    &quot;allowDateTime&quot;: true,
-    &quot;allowNumeric&quot;: true
-}
-</code></pre>
+<p>On the Javascript side you access the data values for the color axis by referring to it by its name, &ldquo;Color&rdquo;.
+The actual color computed for each row can be retrieved via the <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#color">color</a> function on a row. It returns an object with the color hexcode.</p>
 <h2 id="using-multiple-measures-on-continuous-axes">Using multiple measures on continuous axes</h2>
-<p>By default, you can only have a single measure on a continuous axis. However, Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &ldquo;allowMultipleMeasures&rdquo; flag to true for the axis in the manifest.</p>
+<p>By default you can only have a single measure on a continuous axis. However Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &ldquo;allowMultipleMeasures&rdquo; flag to true for the axis in the manifest.</p>
 <p>When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &ldquo;(Column Names)&rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.</p>
-<h2 id="using-non-aggregating-expressions-on-a-continuous-axis">Using non-aggregating expressions on a continuous axis</h2>
-<p>Mod data views are always aggregated, and by default, the expressions used on them must be aggregating. To enable non-aggregating expressions, you can set the &ldquo;allowNonAggregatingMeasures&rdquo; flag to true for the axis in the manifest. The Spotire UIs will then add a (None) option to the aggregation methods. Note that the data view is still aggregated, so the values on the axes will be used to group by in the aggregation.</p>
+<h2 id="using-non-aggregating-expressions-on-a-continuous-axes">Using non-aggregating expressions on a continuous axes</h2>
+<p>Mod data views are always aggregated, and by default the expressions used on them must be aggregating. To enable non-aggregating expressions, you can set the &ldquo;allowNonAggregatingMeasures&rdquo; flag to true for the axis in the manifest. The Spotire UIs will then add a (None) option to the aggregation methods. Note that the data view is still aggregated, so the values on the axes will be used to group by in the aggregation.</p>
 <h2 id="data-view-sort-order">Data view sort order</h2>
 <p>By default, the rows in data views are ordered by the categorical axes (or more specifically by the axes that are used to group by when performing the aggregation), in the order in which they are declared. So for instance if you declare a &ldquo;Column&rdquo; axis followed by a &ldquo;Row&rdquo; axis, the data view will first be sorted by the values on the &ldquo;Column&rdquo; axis and then by the &ldquo;Row&rdquo; axis.</p>
 <p>The color axis is currently always last.</p>
@@ -522,7 +609,7 @@ For continuous axes it is possible to specify what data types should be supporte
         </div>
       </div>
       
-<footer class="bg-dark py-5 row d-print-none">
+<footer class="bg-dark py-4 row d-print-none">
   <div class="container-fluid mx-sm-5">
     <div class="row">
       <div class="col-6 col-sm-4 text-xs-center order-sm-2">
@@ -605,7 +692,7 @@ For continuous axes it is possible to specify what data types should be supporte
 
 
 
-<script src="/spotfire-mods/js/main.min.165bc5ad433d1ec9e83a82ce0a7d7a6b92ad63b4295056a39d1fbe79e739c73b.js" integrity="sha256-FlvFrUM9HsnoOoLOCn16a5KtY7QpUFajnR&#43;&#43;eec5xzs=" crossorigin="anonymous"></script>
+<script src="/spotfire-mods/js/main.min.4b091be8201409280a59a43f13b4428c78a1c4a3cf7db2d7a7150fa33b6b3475.js" data-integrity="sha256-Swkb6CAUCSgKWaQ/E7RCjHihxKPPfbLXpxUPoztrNHU=" crossorigin="anonymous"></script>
 
 
 

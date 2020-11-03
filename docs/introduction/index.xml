@@ -1,12 +1,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Spotfire® Mods – Introduction</title>
-    <link>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/</link>
+    <link>/spotfire-mods/docs/introduction/</link>
     <description>Recent content in Introduction on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Mon, 31 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	  <atom:link href="https://tibcosoftware.github.io/spotfire-mods/docs/introduction/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/spotfire-mods/docs/introduction/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -16,10 +16,10 @@
     
     <item>
       <title>Docs: Getting started</title>
-      <link>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/getting-started/</link>
+      <link>/spotfire-mods/docs/introduction/getting-started/</link>
       <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/getting-started/</guid>
+      <guid>/spotfire-mods/docs/introduction/getting-started/</guid>
       <description>
         
         
@@ -29,7 +29,7 @@
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;A running instance of Spotfire.&lt;/strong&gt;&lt;br&gt;
-This is needed to develop and test a mod. Development can be done against the installed client (TIBCO Spotfire® Analyst) or the web client (TIBCO Spotfire® Business Author).&lt;/p&gt;
+This is needed to develop and test a mod. Development can be done against the installed client (TIBCO Spotfire® Analyst) or the web client (TIBCO Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. See &lt;a href=&#34;#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below for more details.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;A code editor.&lt;/strong&gt;&lt;br&gt;
@@ -37,7 +37,7 @@ It is highly recommended to use Microsoft &lt;a href=&#34;https://code.visualstu
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;Node.js installed.&lt;/strong&gt;&lt;br&gt;
-To enable live updates when developing a mod, a set of tools based on &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; are needed. The mod example specifies a set of development dependencies in its package.json file. These are installed when executing &lt;code&gt;npm install&lt;/code&gt; in the same directory as the package.json file. The install script is also executed as part of the default build task in VS Code.&lt;/p&gt;
+To enable live updates when developing a mod, a set of tools based on &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; is needed. The mod example specifies a set of development dependencies in its package.json file. These are installed when executing &lt;code&gt;npm install&lt;/code&gt; in the same directory as the package.json file. The install script is also executed as part of the default build task in VS Code.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;sub&gt;&lt;img src=&#34;../exclamation.png&#34; style=&#34;width: 0.8em;vertical-align: baseline;&#34;&gt; &lt;/img&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.
@@ -65,11 +65,9 @@ This is a more complex example built using the D3 library, where you can see how
 &lt;p&gt;Each example contains a README file with detailed instructions specific to the example.&lt;/p&gt;
 &lt;h4 id=&#34;3-start-local-development-server&#34;&gt;3. Start local development server&lt;/h4&gt;
 &lt;p&gt;To use the js-dev-barchart example, open the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
-&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool.&lt;/p&gt;
-&lt;p&gt;The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds.&lt;/p&gt;
-&lt;p&gt;Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
+&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
 &lt;h4 id=&#34;4-connect-spotfire-to-the-development-server&#34;&gt;4. Connect Spotfire to the development server&lt;/h4&gt;
-&lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the dialog that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
+&lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the pop-up that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;./media/connect-to-development-server.gif&#34; alt=&#34;&#34; title=&#34;Connect to development server&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If a visualization appears, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
 &lt;h4 id=&#34;5-start-editing-your-example&#34;&gt;5. Start editing your example&lt;/h4&gt;
@@ -121,18 +119,18 @@ This is a more complex example built using the D3 library, where you can see how
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id=&#34;the-mod-manifestjson&#34;&gt;The mod-manifest.json&lt;/h2&gt;
+&lt;h2 id=&#34;the-mod-manifestjson-file&#34;&gt;The mod-manifest.json file&lt;/h2&gt;
 &lt;p&gt;All metadata that concerns the mod is defined in a file called mod-manifest.json. It is used to give the mod a name and an id, and to define axes and their placement. It is also used to list all files used by the mod. Only files listed in the ‘files’ property will be embedded by Spotfire.&lt;/p&gt;
 &lt;p&gt;For changes in the manifest to take effect, the manifest must be reloaded manually in Spotfire. Click the puzzle icon on the title bar of the visualization mod, and then click the &lt;em&gt;Reload manifest&lt;/em&gt; button in the popup that opens.&lt;/p&gt;
 &lt;h2 id=&#34;debugging&#34;&gt;Debugging&lt;/h2&gt;
-&lt;p&gt;The mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands. 
-In Spotfire® Analyst: &lt;em&gt;Ctrl+Alt+Shift+F12&lt;/em&gt; 
+&lt;p&gt;The mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands.
+In Spotfire® Analyst: &lt;em&gt;Ctrl+Alt+Shift+F12&lt;/em&gt;
 In Spotfire® Business Author: &lt;em&gt;F12&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;To find the main.js file, use the Open file command (Ctrl+P) and type the file&amp;rsquo;s name. In the opened file, it is possible to set breakpoints. It is also possible to execute code in the console.
 More information about Chrome DevTools can be found here:
 &lt;a href=&#34;https://developers.google.com/web/tools/chrome-devtools&#34;&gt;https://developers.google.com/web/tools/chrome-devtools&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;development-in-the-spotfire-web-client&#34;&gt;Development in the Spotfire Web Client&lt;/h2&gt;
-&lt;p&gt;The required browser when developing mods against the web client is Google Chrome. This is due to how browsers behave with regards to loading http content from a https context. The development server is serving files from http://127.0.0.1:8090, which according to the W3C specification is a &lt;a href=&#34;https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin&#34;&gt;potentially trustworthy origin&lt;/a&gt;. Currently only Chrome behaves correctly with regards to this. Other browser vendors are implementing support for this and might work in the future.&lt;/p&gt;
+&lt;h2 id=&#34;development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/h2&gt;
+&lt;p&gt;The required browser when developing mods against the web client is Google Chrome. This is due to how browsers behave with regards to loading http content from a https context. The development server is serving files from &lt;a href=&#34;http://127.0.0.1:8090&#34;&gt;http://127.0.0.1:8090&lt;/a&gt;, which according to the W3C specification is a &lt;a href=&#34;https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin&#34;&gt;potentially trustworthy origin&lt;/a&gt;. Currently only Chrome behaves correctly with regards to this. Other browser vendors are implementing support for this and might work in the future.&lt;/p&gt;
 &lt;p&gt;Note also that when developing a mod in the web client, it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the &lt;em&gt;Browse&lt;/em&gt; button will not be available in the web client.&lt;/p&gt;
 &lt;h2 id=&#34;embedding-the-mod-and-saving-to-the-library&#34;&gt;Embedding the mod and saving to the library&lt;/h2&gt;
 &lt;p&gt;When the development is done, disconnect from the server to embed the mod in the analysis.
@@ -151,13 +149,13 @@ When the mod has been saved to the library, it is possible for others, connected
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataView} */&lt;/span&gt;
 &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This can be useful in cases where the API allows generic types, such as a continuous value:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataViewContinuousValue} */&lt;/span&gt;
-&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/**@type {Spotfire.DataViewContinuousValue&amp;lt;number&amp;gt;} */&lt;/span&gt;
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The same would have been done in TypeScript like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;Spotfire.DataViewContinuousValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;why-dont-changes-to-the-mod-manifestjson-take-effect-in-my-analysis&#34;&gt;Why don’t changes to the mod-manifest.json take effect in my analysis?&lt;/h3&gt;
-&lt;p&gt;The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the developer server is connected, disconnected or when the &lt;em&gt;Reload manifest&lt;/em&gt; button is clicked.&lt;/p&gt;
-&lt;p&gt;When the developer server is in a connected state, Spotfire points the mod iframe&amp;rsquo;s source directly against the developer server. Any UI changes seen while the server is connected is not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;why-dont-changes-to-the-mod-manifestjson-file-take-effect-in-my-analysis&#34;&gt;Why don’t changes to the mod-manifest.json file take effect in my analysis?&lt;/h3&gt;
+&lt;p&gt;The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the development server is connected, disconnected or when the &lt;em&gt;Reload manifest&lt;/em&gt; button is clicked.&lt;/p&gt;
+&lt;p&gt;When the development server is in a connected state, Spotfire points the mod iframe&amp;rsquo;s source directly against the development server. Any UI changes seen while the server is connected are not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt; Reload the manifest via the development popup.&lt;/p&gt;
 &lt;h3 id=&#34;why-cant-i-make-an-ajax-call-to-read-an-embedded-resource&#34;&gt;Why can&amp;rsquo;t I make an ajax call to read an embedded resource?&lt;/h3&gt;
 &lt;p&gt;A mod is executed inside a sandboxed iframe. A sandboxed iframe sets the origin header to &amp;lsquo;null&amp;rsquo; for any ajax request. This means that the server must be configured to handle Cross-Origin Resource Sharing (CORS). The server should allow &lt;code&gt;&#39;null&#39;&lt;/code&gt; or &lt;code&gt;*&lt;/code&gt; in order to serve a request made from a mod. The Spotfire runtime does not accept CORS requests and will therefore not serve any request made from a mod, even though it might be for an embedded resource in the mod itself.&lt;/p&gt;
@@ -174,10 +172,10 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
     
     <item>
       <title>Docs: Mod data views</title>
-      <link>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-data-views/</link>
+      <link>/spotfire-mods/docs/introduction/mod-data-views/</link>
       <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-data-views/</guid>
+      <guid>/spotfire-mods/docs/introduction/mod-data-views/</guid>
       <description>
         
         
@@ -199,7 +197,7 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 &lt;img src=&#34;BarChart1.PNG&#34;&gt;
 &lt;p&gt;The &amp;ldquo;mode&amp;rdquo; parameter can be &amp;ldquo;continuous&amp;rdquo;, &amp;ldquo;categorical&amp;rdquo; or &amp;ldquo;dual&amp;rdquo;. Dual means that the axis supports both continuous and categorical mode and can be switched between them.&lt;/p&gt;
 &lt;p&gt;A categorical axis always splits the aggregation. The columns/expressions on the axes are used in the group by clause in the aggregated query generated for the visualization. Categorical axes are typically rendered on a categorical, or discrete, scale.&lt;/p&gt;
-&lt;p&gt;If we continue the example above we could add a categorical x-axis to the visualization.&lt;/p&gt;
+&lt;p&gt;If we continue the example above we could add a categorical x axis to the visualization.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {  
     &amp;quot;axes&amp;quot;: [  
         {
@@ -221,21 +219,29 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 &lt;img src=&#34;BarChart3.PNG&#34;&gt;
 &lt;h2 id=&#34;consuming-data-from-javascript&#34;&gt;Consuming data from JavaScript&lt;/h2&gt;
 &lt;h3 id=&#34;the-data-view-object&#34;&gt;The data view object&lt;/h3&gt;
-&lt;p&gt;On the javascript side, data is retrieved via a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.&lt;/p&gt;
-&lt;p&gt;To retrieve the value for an axis in a data row, there is a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#get&#34;&gt;get&lt;/a&gt; method that takes the axis name as argument. So to get the value for a &amp;ldquo;Y&amp;rdquo; axis you would do the following:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;let yValue = row.get(&amp;quot;Y&amp;quot;);
+&lt;p&gt;On the javascript side data is retrieved via a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.&lt;/p&gt;
+&lt;p&gt;There are two different ways to retrieve the values for Depending on what type of axis is being queried&lt;/p&gt;
+&lt;p&gt;There are methods available to retrieve the value for an axis in a data row based on the type of that axis. These are &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#continuous&#34;&gt;continuous&lt;/a&gt; for continuous axes and &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#categorical&#34;&gt;categorical&lt;/a&gt; for categorical axes&lt;/p&gt;
+&lt;p&gt;There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#continuous&#34;&gt;continuous&lt;/a&gt; method for continous axes and a  &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#categorical&#34;&gt;categorical&lt;/a&gt; method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let yValue = row.continuous(&amp;quot;Y&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The value retrieved by the get method can be of two types depending on the mode of the axes. Either it is a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. Both these types have a &lt;strong&gt;getValue&lt;/strong&gt; function, so to list all values of a data view in csv like format, you could do this:&lt;/p&gt;
+&lt;p&gt;The value retrieved by these methods can be of two types depending on which one is called. Either it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. To list all values of a data view in csv like format, you could do this:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;async function logDataView(dataView)
 {
     // Print axes names
-    const axes = await dataView.getAxes();
+    const axes = await dataView.axes();
     console.log(axes.map(axis =&amp;gt; axis.name).join(&amp;quot;,&amp;quot;));
    
     // Print the row values.
-    const rows = await dataView.getAllRows();
+    const rows = await dataView.allRows();
     rows.forEach(row =&amp;gt; {
-        console.log(axes.map(axis =&amp;gt; row.get(axis.name).getValue()).join(&amp;quot;,&amp;quot;));
+        console.log(axes.map(axis =&amp;gt; {
+            if(axis.isCategorical){
+               return row.categorical(axis.name).fullName()
+            }                
+            return row.continuous(axis.name).value()
+        }).join(&amp;quot;,&amp;quot;));
+        
     });
 }
 &lt;/code&gt;&lt;/pre&gt;
@@ -245,22 +251,22 @@ Apples,16000
 Oranges,31000 
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id=&#34;dataviewcontinuousvalue-and-dataviewcategoricalvalue&#34;&gt;DataViewContinuousValue and DataViewCategoricalValue&lt;/h3&gt;
-&lt;p&gt;A &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt; is a simple object with methods to retrieve the actual value (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getvalue&#34;&gt;getValue&lt;/a&gt;), check its validity (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#isvalid&#34;&gt;isValid&lt;/a&gt;), and to get a string representation of it (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#getformattedvalue&#34;&gt;getFormattedValue&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;A &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; on the other hand is a bit more complicated. Since categorical axes form hierarchies, each &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. The &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#getvalue&#34;&gt;getValue&lt;/a&gt; function returns a string for the whole path in this case. For the third bar chart example above, the output from the logDataView function would be:&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt; is a simple object with methods to retrieve the actual value (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#value&#34;&gt;value&lt;/a&gt;), and to get a string representation of it (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#formattedvalue&#34;&gt;formattedValue&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; on the other hand is a bit more complicated. Since categorical axes form hierarchies, each &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; is made up from parts describing the path in the hierarchy. However, a Mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example above, the output from the logDataView function would be:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;X,Y
 Apples &amp;gt;&amp;gt; Spain,2500
 Apples &amp;gt;&amp;gt; USA,13500
 Oranges &amp;gt;&amp;gt; Spain,12000
 Oranges &amp;gt;&amp;gt; USA,19000
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/categoricalvaluepathelement.html&#34;&gt;CategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
+&lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvaluepathelement.html&#34;&gt;DataViewCategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
 &lt;h3 id=&#34;hierarchies&#34;&gt;Hierarchies&lt;/h3&gt;
-&lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html#gethierarchy&#34;&gt;getHierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
-&lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root&#34;&gt;root&lt;/a&gt;), or the array of leaf nodes (&lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves&#34;&gt;leaves&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.&lt;/p&gt;
+&lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
+&lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root&#34;&gt;root&lt;/a&gt;), or the array of leaf nodes (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves&#34;&gt;leaves&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.&lt;/p&gt;
 &lt;p&gt;Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;async function logViaHierarchy(dataView)
 {
-    const xHierarchy = await dataView.getHierarchy(&amp;quot;X&amp;quot;, true);
+    const xHierarchy = await dataView.hierarchy(&amp;quot;X&amp;quot;, true);
     const root = await xHierarchy.root();
     log(root, &amp;quot;&amp;quot;);
 
@@ -271,7 +277,7 @@ Oranges &amp;gt;&amp;gt; USA,19000
             node.children.forEach(node =&amp;gt; log(node, indent));
         } 
         else {
-            node.rows().forEach(row =&amp;gt; console.log(indent + row.get(&amp;quot;Y&amp;quot;).getValue()))
+            node.rows().forEach(row =&amp;gt; console.log(indent + row.continuous(&amp;quot;Y&amp;quot;).value()))
         }
     }
 }
@@ -288,6 +294,76 @@ Oranges &amp;gt;&amp;gt; USA,19000
      USA
          19000
 &lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;data-type-mapping&#34;&gt;Data type mapping&lt;/h3&gt;
+&lt;p&gt;Columns and expressions in Spotfire can have a number of different data types. When reading data in JavaScript these types are mapped to corresponding JavaScript types as follows:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Spotfire data type&lt;/th&gt;
+&lt;th&gt;JavaScript data type&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Integer&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LongInteger&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Real&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SingleReal&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Currency&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Date&lt;/td&gt;
+&lt;td&gt;Date&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;DateTime&lt;/td&gt;
+&lt;td&gt;Date&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Time&lt;/td&gt;
+&lt;td&gt;Custom object &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/time.html&#34;&gt;Time&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;TimeSpan&lt;/td&gt;
+&lt;td&gt;Custom objecet &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/timespan.html&#34;&gt;TimeSpan&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Boolean&lt;/td&gt;
+&lt;td&gt;boolean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;String&lt;/td&gt;
+&lt;td&gt;string&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Binary&lt;/td&gt;
+&lt;td&gt;Not supported&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Note that some types may have a higher precision in Spotfire than can be represented by the native JavaScript types. For instance the JavaScript Date type has a precision of 1 millisecond, while Spotfire internally has a precision of 100 nanoseconds. The numeric data types LongInteger and Currency, as well as the TimeSpan data type, may also suffer from precision loss.&lt;/p&gt;
+&lt;h2 id=&#34;specifying-data-types-for-continuous-axes&#34;&gt;Specifying data types for continuous axes&lt;/h2&gt;
+&lt;p&gt;Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
+For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow additional data types by specifying it in the axis section of the manifest. For instance to support date and time data, you would specify the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataTypes&amp;quot;: {
+    &amp;quot;allowDateTime&amp;quot;: true,
+    &amp;quot;allowNumeric&amp;quot;: true
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In addition to these two flags, there are also flags to turn on support for strings, booleans and time spans.&lt;/p&gt;
 &lt;h2 id=&#34;using-the-spotfire-color-axis&#34;&gt;Using the Spotfire color axis&lt;/h2&gt;
 &lt;p&gt;Mods can use the same color axis as is used by the native Spotfire visualizations. You do this by specifying a &amp;ldquo;colorAxis&amp;rdquo; entry in the data view definition section of the manifest:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {
@@ -296,21 +372,13 @@ Oranges &amp;gt;&amp;gt; USA,19000
     }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The &amp;ldquo;mode&amp;rdquo; and other properties for the color axis are specified the same way as for other axes.&lt;/p&gt;
-&lt;p&gt;On the Javascript side, you access the data values for the color axis by referring to it by its name, &amp;ldquo;Color&amp;rdquo;.
-The actual color computed for each row can be retrieved via the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#getcolor&#34;&gt;getColor&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
-&lt;h2 id=&#34;specifying-data-types-for-continuous-axes&#34;&gt;Specifying data types for continuous axes&lt;/h2&gt;
-&lt;p&gt;Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
-For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow date and time data by specifying it in the manifest, in the axis section.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;quot;dataTypes&amp;quot;: {
-    &amp;quot;allowDateTime&amp;quot;: true,
-    &amp;quot;allowNumeric&amp;quot;: true
-}
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;On the Javascript side you access the data values for the color axis by referring to it by its name, &amp;ldquo;Color&amp;rdquo;.
+The actual color computed for each row can be retrieved via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#color&#34;&gt;color&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
 &lt;h2 id=&#34;using-multiple-measures-on-continuous-axes&#34;&gt;Using multiple measures on continuous axes&lt;/h2&gt;
-&lt;p&gt;By default, you can only have a single measure on a continuous axis. However, Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &amp;ldquo;allowMultipleMeasures&amp;rdquo; flag to true for the axis in the manifest.&lt;/p&gt;
+&lt;p&gt;By default you can only have a single measure on a continuous axis. However Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &amp;ldquo;allowMultipleMeasures&amp;rdquo; flag to true for the axis in the manifest.&lt;/p&gt;
 &lt;p&gt;When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &amp;ldquo;(Column Names)&amp;rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.&lt;/p&gt;
-&lt;h2 id=&#34;using-non-aggregating-expressions-on-a-continuous-axis&#34;&gt;Using non-aggregating expressions on a continuous axis&lt;/h2&gt;
-&lt;p&gt;Mod data views are always aggregated, and by default, the expressions used on them must be aggregating. To enable non-aggregating expressions, you can set the &amp;ldquo;allowNonAggregatingMeasures&amp;rdquo; flag to true for the axis in the manifest. The Spotire UIs will then add a (None) option to the aggregation methods. Note that the data view is still aggregated, so the values on the axes will be used to group by in the aggregation.&lt;/p&gt;
+&lt;h2 id=&#34;using-non-aggregating-expressions-on-a-continuous-axes&#34;&gt;Using non-aggregating expressions on a continuous axes&lt;/h2&gt;
+&lt;p&gt;Mod data views are always aggregated, and by default the expressions used on them must be aggregating. To enable non-aggregating expressions, you can set the &amp;ldquo;allowNonAggregatingMeasures&amp;rdquo; flag to true for the axis in the manifest. The Spotire UIs will then add a (None) option to the aggregation methods. Note that the data view is still aggregated, so the values on the axes will be used to group by in the aggregation.&lt;/p&gt;
 &lt;h2 id=&#34;data-view-sort-order&#34;&gt;Data view sort order&lt;/h2&gt;
 &lt;p&gt;By default, the rows in data views are ordered by the categorical axes (or more specifically by the axes that are used to group by when performing the aggregation), in the order in which they are declared. So for instance if you declare a &amp;ldquo;Column&amp;rdquo; axis followed by a &amp;ldquo;Row&amp;rdquo; axis, the data view will first be sorted by the values on the &amp;ldquo;Column&amp;rdquo; axis and then by the &amp;ldquo;Row&amp;rdquo; axis.&lt;/p&gt;
 &lt;p&gt;The color axis is currently always last.&lt;/p&gt;
@@ -319,15 +387,61 @@ For continuous axes it is possible to specify what data types should be supporte
     </item>
     
     <item>
-      <title>Docs: Mod schema</title>
-      <link>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-schema/</link>
-      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      <title>Docs: API overview</title>
+      <link>/spotfire-mods/docs/introduction/api-overview/</link>
+      <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-schema/</guid>
+      <guid>/spotfire-mods/docs/introduction/api-overview/</guid>
       <description>
         
         
-        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;https://tibcosoftware.github.io/spotfire-mods/mod-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; aims to provide developers with a hierarchical overview of the Spotfire Mods API. It&amp;rsquo;s an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The visualization is a simplified view of the API. While the Mod API relies heavily on asynchronous behavior via Promises, the visualization only displays the interfaces defined in the &lt;em&gt;spotfire-api.d.ts&lt;/em&gt; file. There are some advanced types available in the declaration file that are not displayed in the hierarchy visualization. The advanced types describe some of the more intricate functionality in the API.&lt;/p&gt;
+
+&lt;script&gt;
+
+&lt;/script&gt;
+
+&lt;iframe width=&#34;100%&#34; style=&#34;height:65vh;&#34; src=&#34;/spotfire-mods/spotfire-mods/api-overview/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+&lt;script&gt;
+    
+
+    
+    
+    
+
+    
+       
+    
+    
+    
+    
+
+    
+
+    
+        
+    
+    
+    
+    
+        
+    
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Mod schema</title>
+      <link>/spotfire-mods/docs/introduction/mod-schema/</link>
+      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/introduction/mod-schema/</guid>
+      <description>
+        
+        
+        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/spotfire-mods/mod-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
 &lt;script type=&#34;application/javascript&#34;&gt;
 
     function resizeIFrameToFitContent( ) {

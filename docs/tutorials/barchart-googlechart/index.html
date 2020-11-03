@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.76.3" />
+<meta name="generator" content="Hugo 0.76.4" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -24,7 +24,7 @@
 <meta property="og:description" content="This tutorial shows how to create a basic bar chart using Google Charts and the Spotfire API.
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/barchart-googlechart/" />
+<meta property="og:url" content="/spotfire-mods/docs/tutorials/barchart-googlechart/" />
 <meta property="article:published_time" content="2020-08-31T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-08-31T00:00:00+00:00" /><meta property="og:site_name" content="Spotfire® Mods" />
 <meta itemprop="name" content="Bar chart mod using Google Charts">
@@ -46,8 +46,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" as="style">
-<link href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.f65fb073031055804c13d4f6275830a56bde1bdc062beb5d6fa32e7cc446d812.css" as="style">
+<link href="/spotfire-mods/scss/main.min.f65fb073031055804c13d4f6275830a56bde1bdc062beb5d6fa32e7cc446d812.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -87,6 +87,16 @@
 				
 				
 				<a class="nav-link active" href="/spotfire-mods/docs/" ><span class="active">Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/spotfire-mods/overview/" ><span>API Overview</span></a>
 			</li>
 			
 			<li class="nav-item mr-4 mb-2 mb-lg-0">
@@ -167,6 +177,12 @@
       
       
       <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsintroductionmod-data-views" href="/spotfire-mods/docs/introduction/mod-data-views/">Mod data views</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsintroductionapi-overview" href="/spotfire-mods/docs/introduction/api-overview/">API overview</a>
       
       
       
@@ -287,21 +303,21 @@
 
 
 <li class="breadcrumb-item" >
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/">Documentation</a>
+	<a href="/spotfire-mods/docs/">Documentation</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item" >
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/">Tutorials</a>
+	<a href="/spotfire-mods/docs/tutorials/">Tutorials</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/barchart-googlechart/">Bar chart mod using Google Charts</a>
+	<a href="/spotfire-mods/docs/tutorials/barchart-googlechart/">Bar chart mod using Google Charts</a>
 </li>
 
 	</ol>
@@ -343,7 +359,7 @@
 <li>Open the folder in a terminal or command line.</li>
 <li>Run <code>npm install</code> to install dependencies.</li>
 <li>Run <code>npm run server</code> to start the server. The provided server setup allows you to see live updates when developing a mod.</li>
-<li>In <strong>Spotfire</strong> go to <em>Tools &gt; Development &gt; Create Visialization Mod</em> and <strong>connect to the project</strong> by following the on-screen steps (<em>Connect to Project &gt; Development server &gt; Connect</em>)</li>
+<li>In <strong>Spotfire</strong> go to <em>Tools &gt; Development &gt; Create visualization mod</em> and <strong>connect to the project</strong> by following the on-screen steps (<em>Connect to Project &gt; Development server &gt; Connect</em>)</li>
 <li>You should see some mod metadata on the screen, which means the mod is working.</li>
 </ul>
 <p><img src="./images/step1.PNG" alt=""></p>
@@ -438,9 +454,9 @@
 </span><span style="color:#00a000"></span>     }
  });
 </code></pre></div><ul>
-<li>Update the Bar chart container id (in  <em>index.html</em>  our container id is <em>mod-container</em>)</li>
+<li>Update the bar chart container id (in  <em>index.html</em>  our container id is <em>mod-container</em>)</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">     
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">
             var options = {
                title: &#34;Density of Precious Metals, in g/cm^3&#34;,
                width: 600,
@@ -538,7 +554,7 @@
 </span><span style="color:#a40000">-            [&#34;Gold&#34;, 19.3, &#34;gold&#34;],
 </span><span style="color:#a40000">-            [&#34;Platinum&#34;, 21.45, &#34;color: #e5e4e2&#34;]
 </span><span style="color:#a40000">-        ]);
-</span><span style="color:#a40000"></span>        
+</span><span style="color:#a40000"></span>
 <span style="color:#a40000">-        var view = new google.visualization.DataView(data);
 </span><span style="color:#a40000">-        view.setColumns([0, 1, { calc: &#34;stringify&#34;, sourceColumn: 1, type: &#34;string&#34;, role: &#34;annotation&#34; }, 2]);
 </span><span style="color:#a40000"></span>
@@ -579,7 +595,7 @@
 <span style="color:#a40000">-        chart.draw(view, options);
 </span><span style="color:#a40000"></span><span style="color:#00a000">+        chart.draw(data, options);
 </span></code></pre></div><ul>
-<li>Not all combinations of <em>X</em> and <em>Color</em> domains will be renderable by google charts out of the box, without special treament. We will guard against this with a <strong>try/catch</strong> block.</li>
+<li>Not all combinations of <em>X</em> and <em>Color</em> domains will be renderable by google charts out of the box, without special treatment. We will guard against this with a <strong>try/catch</strong> block.</li>
 <li>The full code of the <code>js-dev-barchart-googlecharts</code> example project goes a little bit more in depth than this tutorial and covers some additional cases</li>
 </ul>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#a40000">-        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
@@ -621,7 +637,7 @@
 </span><span style="color:#00a000">+            });
 </span><span style="color:#00a000">+        }
 </span><span style="color:#00a000"></span>     }
- 
+
 </code></pre></div><p><img src="./images/step4.PNG" alt=""></p>
 <ul>
 <li>To clear all marking on background click, as native Spotfire visualizations do, we listen for &ldquo;click&rdquo; event and check its target id.</li>
@@ -744,7 +760,7 @@
 </span><span style="color:#a40000"></span><span style="color:#00a000">+            chartArea: { left: 85, top: 20, right: 10, bottom: 40 },
 </span><span style="color:#00a000">+            isStacked: is(stacking)(&#34;stacked&#34;)
 </span><span style="color:#00a000"></span>         };
-         
+
 <span style="color:#a40000">-        var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
 </span><span style="color:#a40000"></span><span style="color:#00a000">+
 </span><span style="color:#00a000">+        const container = document.querySelector(&#34;#mod-container&#34;);
@@ -898,8 +914,7 @@
         }
 
 <span style="color:#00a000">+       google.visualization.events.addListener(chart, &#34;ready&#34;, () =&gt; context.signalRenderComplete());
-</span></code></pre></div><h1 id="heading"></h1>
-<ul>
+</span></code></pre></div><ul>
 <li>Go to <em>File &gt; Export &gt; Visualization to PDF</em> to test the export feature</li>
 </ul>
 <p><img src="./images/step7.PNG" alt=""></p>
@@ -975,7 +990,7 @@
         </div>
       </div>
       
-<footer class="bg-dark py-5 row d-print-none">
+<footer class="bg-dark py-4 row d-print-none">
   <div class="container-fluid mx-sm-5">
     <div class="row">
       <div class="col-6 col-sm-4 text-xs-center order-sm-2">
@@ -1058,7 +1073,7 @@
 
 
 
-<script src="/spotfire-mods/js/main.min.165bc5ad433d1ec9e83a82ce0a7d7a6b92ad63b4295056a39d1fbe79e739c73b.js" integrity="sha256-FlvFrUM9HsnoOoLOCn16a5KtY7QpUFajnR&#43;&#43;eec5xzs=" crossorigin="anonymous"></script>
+<script src="/spotfire-mods/js/main.min.4b091be8201409280a59a43f13b4428c78a1c4a3cf7db2d7a7150fa33b6b3475.js" data-integrity="sha256-Swkb6CAUCSgKWaQ/E7RCjHihxKPPfbLXpxUPoztrNHU=" crossorigin="anonymous"></script>
 
 
 

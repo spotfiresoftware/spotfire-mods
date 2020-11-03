@@ -1,12 +1,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Spotfire® Mods – Tutorials</title>
-    <link>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/</link>
+    <link>/spotfire-mods/docs/tutorials/</link>
     <description>Recent content in Tutorials on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Mon, 31 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	  <atom:link href="https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/spotfire-mods/docs/tutorials/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -16,10 +16,10 @@
     
     <item>
       <title>Docs: Bar chart mod using Google Charts</title>
-      <link>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/barchart-googlechart/</link>
+      <link>/spotfire-mods/docs/tutorials/barchart-googlechart/</link>
       <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/barchart-googlechart/</guid>
+      <guid>/spotfire-mods/docs/tutorials/barchart-googlechart/</guid>
       <description>
         
         
@@ -50,7 +50,7 @@
 &lt;li&gt;Open the folder in a terminal or command line.&lt;/li&gt;
 &lt;li&gt;Run &lt;code&gt;npm install&lt;/code&gt; to install dependencies.&lt;/li&gt;
 &lt;li&gt;Run &lt;code&gt;npm run server&lt;/code&gt; to start the server. The provided server setup allows you to see live updates when developing a mod.&lt;/li&gt;
-&lt;li&gt;In &lt;strong&gt;Spotfire&lt;/strong&gt; go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create Visialization Mod&lt;/em&gt; and &lt;strong&gt;connect to the project&lt;/strong&gt; by following the on-screen steps (&lt;em&gt;Connect to Project &amp;gt; Development server &amp;gt; Connect&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;In &lt;strong&gt;Spotfire&lt;/strong&gt; go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create visualization mod&lt;/em&gt; and &lt;strong&gt;connect to the project&lt;/strong&gt; by following the on-screen steps (&lt;em&gt;Connect to Project &amp;gt; Development server &amp;gt; Connect&lt;/em&gt;)&lt;/li&gt;
 &lt;li&gt;You should see some mod metadata on the screen, which means the mod is working.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;./images/step1.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
@@ -145,9 +145,9 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
  });
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Update the Bar chart container id (in  &lt;em&gt;index.html&lt;/em&gt;  our container id is &lt;em&gt;mod-container&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;Update the bar chart container id (in  &lt;em&gt;index.html&lt;/em&gt;  our container id is &lt;em&gt;mod-container&lt;/em&gt;)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;
             var options = {
                title: &amp;#34;Density of Precious Metals, in g/cm^3&amp;#34;,
                width: 600,
@@ -245,7 +245,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Gold&amp;#34;, 19.3, &amp;#34;gold&amp;#34;],
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Platinum&amp;#34;, 21.45, &amp;#34;color: #e5e4e2&amp;#34;]
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        ]);
-&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;        
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
 &lt;span style=&#34;color:#a40000&#34;&gt;-        var view = new google.visualization.DataView(data);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        view.setColumns([0, 1, { calc: &amp;#34;stringify&amp;#34;, sourceColumn: 1, type: &amp;#34;string&amp;#34;, role: &amp;#34;annotation&amp;#34; }, 2]);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
@@ -286,7 +286,7 @@
 &lt;span style=&#34;color:#a40000&#34;&gt;-        chart.draw(view, options);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        chart.draw(data, options);
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Not all combinations of &lt;em&gt;X&lt;/em&gt; and &lt;em&gt;Color&lt;/em&gt; domains will be renderable by google charts out of the box, without special treament. We will guard against this with a &lt;strong&gt;try/catch&lt;/strong&gt; block.&lt;/li&gt;
+&lt;li&gt;Not all combinations of &lt;em&gt;X&lt;/em&gt; and &lt;em&gt;Color&lt;/em&gt; domains will be renderable by google charts out of the box, without special treatment. We will guard against this with a &lt;strong&gt;try/catch&lt;/strong&gt; block.&lt;/li&gt;
 &lt;li&gt;The full code of the &lt;code&gt;js-dev-barchart-googlecharts&lt;/code&gt; example project goes a little bit more in depth than this tutorial and covers some additional cases&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
@@ -328,7 +328,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            });
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
- 
+
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./images/step4.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;To clear all marking on background click, as native Spotfire visualizations do, we listen for &amp;ldquo;click&amp;rdquo; event and check its target id.&lt;/li&gt;
@@ -451,7 +451,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            chartArea: { left: 85, top: 20, right: 10, bottom: 40 },
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            isStacked: is(stacking)(&amp;#34;stacked&amp;#34;)
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         };
-         
+
 &lt;span style=&#34;color:#a40000&#34;&gt;-        var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const container = document.querySelector(&amp;#34;#mod-container&amp;#34;);
@@ -605,8 +605,7 @@
         }
 
 &lt;span style=&#34;color:#00a000&#34;&gt;+       google.visualization.events.addListener(chart, &amp;#34;ready&amp;#34;, () =&amp;gt; context.signalRenderComplete());
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;heading&#34;&gt;&lt;/h1&gt;
-&lt;ul&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;Go to &lt;em&gt;File &amp;gt; Export &amp;gt; Visualization to PDF&lt;/em&gt; to test the export feature&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;./images/step7.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
@@ -616,10 +615,10 @@
     
     <item>
       <title>Docs: Creating SVG icons for Spotfire visualization mods</title>
-      <link>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/mod-icons/</link>
+      <link>/spotfire-mods/docs/tutorials/mod-icons/</link>
       <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/mod-icons/</guid>
+      <guid>/spotfire-mods/docs/tutorials/mod-icons/</guid>
       <description>
         
         

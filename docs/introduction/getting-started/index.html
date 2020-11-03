@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.76.3" />
+<meta name="generator" content="Hugo 0.76.4" />
 
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
@@ -24,7 +24,7 @@
 <meta property="og:description" content="The following guide describes the steps needed to get a mod running in development mode, inside TIBCO Spotfire®.
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://tibcosoftware.github.io/spotfire-mods/docs/introduction/getting-started/" />
+<meta property="og:url" content="/spotfire-mods/docs/introduction/getting-started/" />
 <meta property="article:published_time" content="2020-08-31T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-08-31T00:00:00+00:00" /><meta property="og:site_name" content="Spotfire® Mods" />
 <meta itemprop="name" content="Getting started">
@@ -32,7 +32,7 @@
 ">
 <meta itemprop="datePublished" content="2020-08-31T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-08-31T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1783">
+<meta itemprop="wordCount" content="1801">
 
 
 
@@ -46,8 +46,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" as="style">
-<link href="/spotfire-mods/scss/main.min.630a99675349b7415be0452f012b6aae9b8bb3765b6f2de5c0724a51042534af.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.f65fb073031055804c13d4f6275830a56bde1bdc062beb5d6fa32e7cc446d812.css" as="style">
+<link href="/spotfire-mods/scss/main.min.f65fb073031055804c13d4f6275830a56bde1bdc062beb5d6fa32e7cc446d812.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -87,6 +87,16 @@
 				
 				
 				<a class="nav-link active" href="/spotfire-mods/docs/" ><span class="active">Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/spotfire-mods/overview/" ><span>API Overview</span></a>
 			</li>
 			
 			<li class="nav-item mr-4 mb-2 mb-lg-0">
@@ -167,6 +177,12 @@
       
       
       <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsintroductionmod-data-views" href="/spotfire-mods/docs/introduction/mod-data-views/">Mod data views</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsintroductionapi-overview" href="/spotfire-mods/docs/introduction/api-overview/">API overview</a>
       
       
       
@@ -265,9 +281,9 @@
       </ul>
     </li>
     <li><a href="#mod-example-folder-structure">Mod example folder structure</a></li>
-    <li><a href="#the-mod-manifestjson">The mod-manifest.json</a></li>
+    <li><a href="#the-mod-manifestjson-file">The mod-manifest.json file</a></li>
     <li><a href="#debugging">Debugging</a></li>
-    <li><a href="#development-in-the-spotfire-web-client">Development in the Spotfire Web Client</a></li>
+    <li><a href="#development-in-web-client">Development in the Spotfire web client</a></li>
     <li><a href="#embedding-the-mod-and-saving-to-the-library">Embedding the mod and saving to the library</a>
       <ul>
         <li><a href="#saving-the-mod-to-the-spotfire-library">Saving the mod to the Spotfire library</a></li>
@@ -276,7 +292,7 @@
     <li><a href="#faq">FAQ</a>
       <ul>
         <li><a href="#how-do-i-use-types-in-javascript-files">How do I use types in JavaScript files?</a></li>
-        <li><a href="#why-dont-changes-to-the-mod-manifestjson-take-effect-in-my-analysis">Why don’t changes to the mod-manifest.json take effect in my analysis?</a></li>
+        <li><a href="#why-dont-changes-to-the-mod-manifestjson-file-take-effect-in-my-analysis">Why don’t changes to the mod-manifest.json file take effect in my analysis?</a></li>
         <li><a href="#why-cant-i-make-an-ajax-call-to-read-an-embedded-resource">Why can&rsquo;t I make an ajax call to read an embedded resource?</a></li>
         <li><a href="#why-is-an-external-resource-not-loading-correctly-due-to-a-content-security-policy">Why is an external resource not loading correctly due to a content security policy?</a></li>
         <li><a href="#why-doesnt-live-reload-work">Why doesn’t live reload work?</a></li>
@@ -303,21 +319,21 @@
 
 
 <li class="breadcrumb-item" >
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/">Documentation</a>
+	<a href="/spotfire-mods/docs/">Documentation</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item" >
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/introduction/">Introduction</a>
+	<a href="/spotfire-mods/docs/introduction/">Introduction</a>
 </li>
 
 
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="https://tibcosoftware.github.io/spotfire-mods/docs/introduction/getting-started/">Getting started</a>
+	<a href="/spotfire-mods/docs/introduction/getting-started/">Getting started</a>
 </li>
 
 	</ol>
@@ -338,7 +354,7 @@
 <ul>
 <li>
 <p><strong>A running instance of Spotfire.</strong><br>
-This is needed to develop and test a mod. Development can be done against the installed client (TIBCO Spotfire® Analyst) or the web client (TIBCO Spotfire® Business Author).</p>
+This is needed to develop and test a mod. Development can be done against the installed client (TIBCO Spotfire® Analyst) or the web client (TIBCO Spotfire® Business Author) using the <a href="https://www.google.com/chrome">Google Chrome</a> web browser. See <a href="#development-in-web-client">Development in the Spotfire web client</a> below for more details.</p>
 </li>
 <li>
 <p><strong>A code editor.</strong><br>
@@ -346,7 +362,7 @@ It is highly recommended to use Microsoft <a href="https://code.visualstudio.com
 </li>
 <li>
 <p><strong>Node.js installed.</strong><br>
-To enable live updates when developing a mod, a set of tools based on <a href="https://nodejs.org/en/download/">Node.js</a> are needed. The mod example specifies a set of development dependencies in its package.json file. These are installed when executing <code>npm install</code> in the same directory as the package.json file. The install script is also executed as part of the default build task in VS Code.</p>
+To enable live updates when developing a mod, a set of tools based on <a href="https://nodejs.org/en/download/">Node.js</a> is needed. The mod example specifies a set of development dependencies in its package.json file. These are installed when executing <code>npm install</code> in the same directory as the package.json file. The install script is also executed as part of the default build task in VS Code.</p>
 </li>
 </ul>
 <p><sub><img src="../exclamation.png" style="width: 0.8em;vertical-align: baseline;"> </img>Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.
@@ -374,11 +390,9 @@ This is a more complex example built using the D3 library, where you can see how
 <p>Each example contains a README file with detailed instructions specific to the example.</p>
 <h4 id="3-start-local-development-server">3. Start local development server</h4>
 <p>To use the js-dev-barchart example, open the <code>js-dev-barchart</code> folder in VS Code. Select <em>Terminal &gt; Run Build Task</em>. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.</p>
-<p>If you are not using the VS Code editor you can start the development server by navigating to the <code>js-dev-barchart</code> folder in a command line tool.</p>
-<p>The first time you are building this example, type <code>npm install</code> and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds.</p>
-<p>Type <code>npm run server</code> and press Enter. This will start a local web server and open the mod manifest in your web browser.</p>
+<p>If you are not using the VS Code editor you can start the development server by navigating to the <code>js-dev-barchart</code> folder in a command line tool. The first time you are building this example, type <code>npm install</code> and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type <code>npm run server</code> and press Enter. This will start a local web server and open the mod manifest in your web browser.</p>
 <h4 id="4-connect-spotfire-to-the-development-server">4. Connect Spotfire to the development server</h4>
-<p>Switch over to Spotfire and click the <em>Connect to project</em> button. In the dialog that opens, click <em>Development server</em>. Make sure the displayed URL matches the launched URL in your browser, and then click the <em>Connect</em> button. This will make Spotfire navigate to your local server and serve files from your src folder.</p>
+<p>Switch over to Spotfire and click the <em>Connect to project</em> button. In the pop-up that opens, click <em>Development server</em>. Make sure the displayed URL matches the launched URL in your browser, and then click the <em>Connect</em> button. This will make Spotfire navigate to your local server and serve files from your src folder.</p>
 <p><img src="./media/connect-to-development-server.gif" alt="" title="Connect to development server"></p>
 <p>If a visualization appears, it means that Spotfire has successfully connected to the development server.</p>
 <h4 id="5-start-editing-your-example">5. Start editing your example</h4>
@@ -430,18 +444,18 @@ This is a more complex example built using the D3 library, where you can see how
 </tr>
 </tbody>
 </table>
-<h2 id="the-mod-manifestjson">The mod-manifest.json</h2>
+<h2 id="the-mod-manifestjson-file">The mod-manifest.json file</h2>
 <p>All metadata that concerns the mod is defined in a file called mod-manifest.json. It is used to give the mod a name and an id, and to define axes and their placement. It is also used to list all files used by the mod. Only files listed in the ‘files’ property will be embedded by Spotfire.</p>
 <p>For changes in the manifest to take effect, the manifest must be reloaded manually in Spotfire. Click the puzzle icon on the title bar of the visualization mod, and then click the <em>Reload manifest</em> button in the popup that opens.</p>
 <h2 id="debugging">Debugging</h2>
-<p>The mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands. 
-In Spotfire® Analyst: <em>Ctrl+Alt+Shift+F12</em> 
+<p>The mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands.
+In Spotfire® Analyst: <em>Ctrl+Alt+Shift+F12</em>
 In Spotfire® Business Author: <em>F12</em></p>
 <p>To find the main.js file, use the Open file command (Ctrl+P) and type the file&rsquo;s name. In the opened file, it is possible to set breakpoints. It is also possible to execute code in the console.
 More information about Chrome DevTools can be found here:
 <a href="https://developers.google.com/web/tools/chrome-devtools">https://developers.google.com/web/tools/chrome-devtools</a></p>
-<h2 id="development-in-the-spotfire-web-client">Development in the Spotfire Web Client</h2>
-<p>The required browser when developing mods against the web client is Google Chrome. This is due to how browsers behave with regards to loading http content from a https context. The development server is serving files from http://127.0.0.1:8090, which according to the W3C specification is a <a href="https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin">potentially trustworthy origin</a>. Currently only Chrome behaves correctly with regards to this. Other browser vendors are implementing support for this and might work in the future.</p>
+<h2 id="development-in-web-client">Development in the Spotfire web client</h2>
+<p>The required browser when developing mods against the web client is Google Chrome. This is due to how browsers behave with regards to loading http content from a https context. The development server is serving files from <a href="http://127.0.0.1:8090">http://127.0.0.1:8090</a>, which according to the W3C specification is a <a href="https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin">potentially trustworthy origin</a>. Currently only Chrome behaves correctly with regards to this. Other browser vendors are implementing support for this and might work in the future.</p>
 <p>Note also that when developing a mod in the web client, it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the <em>Browse</em> button will not be available in the web client.</p>
 <h2 id="embedding-the-mod-and-saving-to-the-library">Embedding the mod and saving to the library</h2>
 <p>When the development is done, disconnect from the server to embed the mod in the analysis.
@@ -460,13 +474,13 @@ When the mod has been saved to the library, it is possible for others, connected
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#8f5902;font-style:italic">/** @type {Spotfire.DataView} */</span>
 <span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">;</span>
 </code></pre></div><p>This can be useful in cases where the API allows generic types, such as a continuous value:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#8f5902;font-style:italic">/** @type {Spotfire.DataViewContinuousValue} */</span>
-<span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">y</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">get</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#8f5902;font-style:italic">/**@type {Spotfire.DataViewContinuousValue&lt;number&gt;} */</span>
+<span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">y</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><p>The same would have been done in TypeScript like this:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">y</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#204a87;font-weight:bold">get</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">Spotfire.DataViewContinuousValue</span><span style="color:#000;font-weight:bold">&gt;(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
-</code></pre></div><h3 id="why-dont-changes-to-the-mod-manifestjson-take-effect-in-my-analysis">Why don’t changes to the mod-manifest.json take effect in my analysis?</h3>
-<p>The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the developer server is connected, disconnected or when the <em>Reload manifest</em> button is clicked.</p>
-<p>When the developer server is in a connected state, Spotfire points the mod iframe&rsquo;s source directly against the developer server. Any UI changes seen while the server is connected is not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">y</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">number</span><span style="color:#000;font-weight:bold">&gt;(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
+</code></pre></div><h3 id="why-dont-changes-to-the-mod-manifestjson-file-take-effect-in-my-analysis">Why don’t changes to the mod-manifest.json file take effect in my analysis?</h3>
+<p>The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the development server is connected, disconnected or when the <em>Reload manifest</em> button is clicked.</p>
+<p>When the development server is in a connected state, Spotfire points the mod iframe&rsquo;s source directly against the development server. Any UI changes seen while the server is connected are not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.</p>
 <p><strong>Solution:</strong> Reload the manifest via the development popup.</p>
 <h3 id="why-cant-i-make-an-ajax-call-to-read-an-embedded-resource">Why can&rsquo;t I make an ajax call to read an embedded resource?</h3>
 <p>A mod is executed inside a sandboxed iframe. A sandboxed iframe sets the origin header to &lsquo;null&rsquo; for any ajax request. This means that the server must be configured to handle Cross-Origin Resource Sharing (CORS). The server should allow <code>'null'</code> or <code>*</code> in order to serve a request made from a mod. The Spotfire runtime does not accept CORS requests and will therefore not serve any request made from a mod, even though it might be for an embedded resource in the mod itself.</p>
@@ -549,7 +563,7 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
         </div>
       </div>
       
-<footer class="bg-dark py-5 row d-print-none">
+<footer class="bg-dark py-4 row d-print-none">
   <div class="container-fluid mx-sm-5">
     <div class="row">
       <div class="col-6 col-sm-4 text-xs-center order-sm-2">
@@ -632,7 +646,7 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 
 
 
-<script src="/spotfire-mods/js/main.min.165bc5ad433d1ec9e83a82ce0a7d7a6b92ad63b4295056a39d1fbe79e739c73b.js" integrity="sha256-FlvFrUM9HsnoOoLOCn16a5KtY7QpUFajnR&#43;&#43;eec5xzs=" crossorigin="anonymous"></script>
+<script src="/spotfire-mods/js/main.min.4b091be8201409280a59a43f13b4428c78a1c4a3cf7db2d7a7150fa33b6b3475.js" data-integrity="sha256-Swkb6CAUCSgKWaQ/E7RCjHihxKPPfbLXpxUPoztrNHU=" crossorigin="anonymous"></script>
 
 
 

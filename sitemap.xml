@@ -3,60 +3,69 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/barchart-googlechart/</loc>
+    <loc>/spotfire-mods/docs/tutorials/barchart-googlechart/</loc>
     <lastmod>2020-08-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/getting-started/</loc>
+    <loc>/spotfire-mods/docs/introduction/getting-started/</loc>
     <lastmod>2020-08-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/</loc>
+    <loc>/spotfire-mods/docs/introduction/</loc>
     <lastmod>2020-08-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/</loc>
+    <loc>/spotfire-mods/docs/tutorials/</loc>
     <lastmod>2020-08-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/docs/tutorials/mod-icons/</loc>
+    <loc>/spotfire-mods/docs/tutorials/mod-icons/</loc>
     <lastmod>2020-08-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-data-views/</loc>
+    <loc>/spotfire-mods/docs/introduction/mod-data-views/</loc>
     <lastmod>2020-08-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/docs/</loc>
+    <loc>/spotfire-mods/docs/</loc>
+    <lastmod>2020-10-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/spotfire-mods/docs/introduction/api-overview/</loc>
+    <lastmod>2020-10-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/spotfire-mods/</loc>
+    <lastmod>2020-10-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/spotfire-mods/docs/introduction/mod-schema/</loc>
     <lastmod>2020-08-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <loc>/spotfire-mods/index.json</loc>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/docs/introduction/mod-schema/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <loc>/spotfire-mods/about/</loc>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/index.json</loc>
+    <loc>/spotfire-mods/overview/</loc>
   </url>
   
   <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/about/</loc>
-  </url>
-  
-  <url>
-    <loc>https://tibcosoftware.github.io/spotfire-mods/search/</loc>
+    <loc>/spotfire-mods/search/</loc>
   </url>
   
 </urlset>

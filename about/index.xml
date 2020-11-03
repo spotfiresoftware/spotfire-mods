@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Spotfire® Mods – About Spotfire Mods</title>
-    <link>https://tibcosoftware.github.io/spotfire-mods/about/</link>
+    <link>/spotfire-mods/about/</link>
     <description>Recent content in About Spotfire Mods on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="https://tibcosoftware.github.io/spotfire-mods/about/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/spotfire-mods/about/index.xml" rel="self" type="application/rss+xml" />
     
     
       
