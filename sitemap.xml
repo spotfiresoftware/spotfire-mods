@@ -3,53 +3,63 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/spotfire-mods/docs/using-the-api/api-overview/</loc>
+    <lastmod>2020-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/spotfire-mods/docs/tutorials/barchart-googlechart/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <lastmod>2020-11-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/spotfire-mods/docs/introduction/getting-started/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <loc>/spotfire-mods/docs/getting-started/</loc>
+    <lastmod>2020-11-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/spotfire-mods/docs/introduction/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <loc>/spotfire-mods/docs/using-the-api/</loc>
+    <lastmod>2020-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/spotfire-mods/docs/using-the-api/api-docs/</loc>
+    <lastmod>2020-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/spotfire-mods/docs/using-the-api/mod-data-views/</loc>
+    <lastmod>2020-11-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/spotfire-mods/docs/tutorials/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <lastmod>2020-11-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/spotfire-mods/docs/tutorials/mod-icons/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <lastmod>2020-11-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/spotfire-mods/docs/introduction/mod-data-views/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <loc>/spotfire-mods/docs/using-the-api/mod-schema/</loc>
+    <lastmod>2020-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/spotfire-mods/docs/using-the-api/working-with-readables/</loc>
+    <lastmod>2020-11-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/spotfire-mods/docs/</loc>
-    <lastmod>2020-10-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/spotfire-mods/docs/introduction/api-overview/</loc>
-    <lastmod>2020-10-15T00:00:00+00:00</lastmod>
+    <lastmod>2020-11-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/spotfire-mods/</loc>
-    <lastmod>2020-10-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/spotfire-mods/docs/introduction/mod-schema/</loc>
-    <lastmod>2020-08-31T00:00:00+00:00</lastmod>
+    <lastmod>2020-11-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>

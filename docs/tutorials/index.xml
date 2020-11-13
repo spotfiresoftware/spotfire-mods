@@ -4,7 +4,7 @@
     <link>/spotfire-mods/docs/tutorials/</link>
     <description>Recent content in Tutorials on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 31 Aug 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 06 Nov 2020 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/tutorials/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,9 @@
     
     
     <item>
-      <title>Docs: Bar chart mod using Google Charts</title>
+      <title>Docs: Create a bar chart using Google Charts</title>
       <link>/spotfire-mods/docs/tutorials/barchart-googlechart/</link>
-      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/tutorials/barchart-googlechart/</guid>
       <description>
@@ -614,23 +614,22 @@
     </item>
     
     <item>
-      <title>Docs: Creating SVG icons for Spotfire visualization mods</title>
+      <title>Docs: Create an icon for your visualization mod</title>
       <link>/spotfire-mods/docs/tutorials/mod-icons/</link>
-      <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/tutorials/mod-icons/</guid>
       <description>
         
         
-        &lt;h2 id=&#34;about-svg-icons&#34;&gt;About SVG icons&lt;/h2&gt;
-&lt;h3 id=&#34;what-is-an-svg-icon&#34;&gt;What is an SVG icon?&lt;/h3&gt;
+        &lt;h2 id=&#34;what-is-an-svg-icon&#34;&gt;What is an SVG icon?&lt;/h2&gt;
 &lt;p&gt;SVG stands for Scalable Vector Graphics, and is an open standard XML-based vector image format. SVG images can be created and edited with any text editor, as well as with drawing software. All major modern web browsers have SVG rendering support.&lt;/p&gt;
-&lt;h3 id=&#34;how-do-i-create-an-svg-for-my-mod&#34;&gt;How do I create an SVG for my mod?&lt;/h3&gt;
+&lt;h2 id=&#34;how-do-i-create-an-svg-for-my-mod&#34;&gt;How do I create an SVG for my mod?&lt;/h2&gt;
 &lt;p&gt;There are a number of ways to create SVG icons; either you can create them in a web-based SVG editor, using a licensed program on your computer, or using a web-based design program.&lt;/p&gt;
 &lt;p&gt;One easy way to make an SVG icon is to use a web-based SVG editor, where you can create the icon directly in the web browser. Two examples of web-based editors are: &lt;a href=&#34;https://editor.method.ac/&#34;&gt;https://editor.method.ac/&lt;/a&gt; and &lt;a href=&#34;https://vectr.com/&#34;&gt;https://vectr.com/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;You can also use installed programs on your computer, such as Adobe Illustrator, Sketch, or Adobe XD. However, use of such programs might require previous knowledge to be efficient.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.figma.com/&#34;&gt;Figma&lt;/a&gt; is another alternative. This is a web-based resource to create digital design, and has a free for all license. A &lt;a href=&#34;#how-to-create-your-visualization-mod-icon-using-figma&#34;&gt;tutorial&lt;/a&gt; on how to create your own visualization mod icon using Figma can be found below.&lt;/p&gt;
-&lt;h2 id=&#34;specifications-for-the-spotfire-visualization-icons&#34;&gt;Specifications for the Spotfire Visualization icons&lt;/h2&gt;
+&lt;h2 id=&#34;specifications-for-the-spotfire-visualization-icons&#34;&gt;Specifications for the Spotfire visualization icons&lt;/h2&gt;
 &lt;h3 id=&#34;sizes-of-svg-icons-in-spotfire&#34;&gt;Sizes of SVG icons in Spotfire&lt;/h3&gt;
 &lt;p&gt;The main container of SVG icons is called a viewbox. The preferred size to create an SVG icon for a visualization mod is 24x24 px. This icon is then scaled up to 32x32 px and down to 16x16 px depending on where in the UI it is placed. See examples below.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;./img1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;

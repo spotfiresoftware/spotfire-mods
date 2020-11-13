@@ -11,15 +11,24 @@
 
     var interfaceName = title.split("Interface ")[1];
 
+    let div = document.createElement("div");
+
+    let span = document.createElement("span");
+    span.innerHTML = "Display in ";
+
     let link = document.createElement("a");
     link.classList.add("overview-link");
-    link.innerHTML = svg;
+    link.innerHTML = "API overview";
     link.title = "Display " + interfaceName + " in the API overview."
     link.href = "/spotfire-mods/overview/#" + interfaceName.split("<")[0];
 
-    insertAfter(link, titleElem);
+    div.appendChild(span);
+    insertAfter(link, span);
+    insertAfter(div,titleElem);
 
     function insertAfter(newNode, referenceNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
+
+
 })();

@@ -1,0 +1,593 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spotfire® Mods – Using the API</title>
+    <link>/spotfire-mods/docs/using-the-api/</link>
+    <description>Recent content in Using the API on Spotfire® Mods</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 06 Nov 2020 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/spotfire-mods/docs/using-the-api/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: API overview</title>
+      <link>/spotfire-mods/docs/using-the-api/api-overview/</link>
+      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/using-the-api/api-overview/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; is an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The visualization is a simplified view of the API. While the Mod API relies heavily on asynchronous behavior via Promises, the visualization only displays the interfaces defined in the &lt;em&gt;spotfire-api.d.ts&lt;/em&gt; file. There are some advanced types available in the declaration file that are not displayed in the hierarchy visualization. The advanced types describe some of the more intricate functionality in the API.&lt;/p&gt;
+
+&lt;script&gt;
+
+&lt;/script&gt;
+
+&lt;iframe width=&#34;100%&#34; style=&#34;height:65vh;&#34; src=&#34;/spotfire-mods/spotfire-mods/api-overview/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+&lt;script&gt;
+    
+
+    
+    
+    
+
+    
+       
+    
+    
+    
+    
+
+    
+
+    
+        
+    
+    
+    
+    
+        
+    
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: API documentation</title>
+      <link>/spotfire-mods/docs/using-the-api/api-docs/</link>
+      <pubDate>Fri, 13 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/using-the-api/api-docs/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The API documentation can be found &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Mod data views</title>
+      <link>/spotfire-mods/docs/using-the-api/mod-data-views/</link>
+      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/using-the-api/mod-data-views/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;data-view-definition&#34;&gt;Data view definition&lt;/h2&gt;
+&lt;p&gt;A mod can create a single aggregated data view.&lt;/p&gt;
+&lt;p&gt;The data view is declared in the mod manifest. Its content is specified as a number of axes. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.&lt;/p&gt;
+&lt;p&gt;In the simplest form, the data view definition part of a mod manifest could look like this.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {  
+    &amp;quot;axes&amp;quot;: [  
+        {
+            &amp;quot;name&amp;quot;: &amp;quot;Y&amp;quot;,  
+            &amp;quot;mode&amp;quot;: &amp;quot;continuous&amp;quot; 
+        }  
+    ]  
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This specifies that the mod will have a single continuous axis called Y, that will compute a single aggregated value, e.g. Sum(Sales). Continuous axes are typically rendered on a continuous scale.&lt;/p&gt;
+&lt;!-- ![Bar Chart 1](BarChart1.png) --&gt;
+&lt;img src=&#34;BarChart1.PNG&#34;&gt;
+&lt;p&gt;The &amp;ldquo;mode&amp;rdquo; parameter can be &amp;ldquo;continuous&amp;rdquo;, &amp;ldquo;categorical&amp;rdquo; or &amp;ldquo;dual&amp;rdquo;. Dual means that the axis supports both continuous and categorical mode and can be switched between them.&lt;/p&gt;
+&lt;p&gt;A categorical axis always splits the aggregation. The columns/expressions on the axes are used in the group by clause in the aggregated query generated for the visualization. Categorical axes are typically rendered on a categorical, or discrete, scale.&lt;/p&gt;
+&lt;p&gt;If we continue the example above we could add a categorical x axis to the visualization.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {  
+    &amp;quot;axes&amp;quot;: [  
+        {
+            &amp;quot;name&amp;quot;: &amp;quot;X&amp;quot;,  
+            &amp;quot;mode&amp;quot;: &amp;quot;categorical&amp;quot;,  
+        },
+        {
+            &amp;quot;name&amp;quot;: &amp;quot;Y&amp;quot;,  
+            &amp;quot;mode&amp;quot;: &amp;quot;continuous&amp;quot;,  
+        }
+    ]  
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That could be rendered like this:&lt;/p&gt;
+&lt;!-- ![Bar Chart 2](BarChart2.png) --&gt;
+&lt;img src=&#34;BarChart2.PNG&#34;&gt;
+&lt;p&gt;It is always possible to add more columns to the expression on a categorical axis. This will split the aggregation further, and Spotfire usually renders this as a hierarchy.&lt;/p&gt;
+&lt;!-- ![Bar Chart 3](BarChart3.png) --&gt;
+&lt;img src=&#34;BarChart3.PNG&#34;&gt;
+&lt;h2 id=&#34;consuming-data-from-javascript&#34;&gt;Consuming data from JavaScript&lt;/h2&gt;
+&lt;h3 id=&#34;the-data-view-object&#34;&gt;The data view object&lt;/h3&gt;
+&lt;p&gt;On the javascript side data is retrieved via a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.&lt;/p&gt;
+&lt;p&gt;There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#continuous&#34;&gt;continuous&lt;/a&gt; method for continuous axes and a  &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#categorical&#34;&gt;categorical&lt;/a&gt; method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let yValue = row.continuous(&amp;quot;Y&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The value retrieved by these methods can be of two types depending on which one is called. Either it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. To list all values of a data view in csv like format, you could do this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;async function logDataView(dataView)
+{
+    // Print axes names
+    const axes = await dataView.axes();
+    console.log(axes.map(axis =&amp;gt; axis.name).join(&amp;quot;,&amp;quot;));
+   
+    // Print the row values.
+    const rows = await dataView.allRows();
+    rows.forEach(row =&amp;gt; {
+        console.log(axes.map(axis =&amp;gt; {
+            if(axis.isCategorical){
+               return row.categorical(axis.name).fullName()
+            }                
+            return row.continuous(axis.name).value()
+        }).join(&amp;quot;,&amp;quot;));
+        
+    });
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For the simple bar chart above showing sales per fruit, the output would be:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;X,Y
+Apples,16000
+Oranges,31000 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;dataviewcontinuousvalue-and-dataviewcategoricalvalue&#34;&gt;DataViewContinuousValue and DataViewCategoricalValue&lt;/h3&gt;
+&lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt; is a simple object with methods to retrieve the actual value (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#value&#34;&gt;value&lt;/a&gt;), and to get a string representation of it (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#formattedvalue&#34;&gt;formattedValue&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; on the other hand is a bit more complicated. Since categorical axes form hierarchies, each &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example above, the output from the logDataView function would be:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;X,Y
+Apples &amp;gt;&amp;gt; Spain,2500
+Apples &amp;gt;&amp;gt; USA,13500
+Oranges &amp;gt;&amp;gt; Spain,12000
+Oranges &amp;gt;&amp;gt; USA,19000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvaluepathelement.html&#34;&gt;DataViewCategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
+&lt;h3 id=&#34;hierarchies&#34;&gt;Hierarchies&lt;/h3&gt;
+&lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
+&lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root&#34;&gt;root&lt;/a&gt;), or the array of leaf nodes (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves&#34;&gt;leaves&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.&lt;/p&gt;
+&lt;p&gt;Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;async function logViaHierarchy(dataView)
+{
+    const xHierarchy = await dataView.hierarchy(&amp;quot;X&amp;quot;, true);
+    const root = await xHierarchy.root();
+    log(root, &amp;quot;&amp;quot;);
+
+    function log(node, indent) {
+        console.log(indent + node.name);
+        indent += &amp;quot;    &amp;quot;;
+        if(node.children) {
+            node.children.forEach(node =&amp;gt; log(node, indent));
+        } 
+        else {
+            node.rows().forEach(row =&amp;gt; console.log(indent + row.continuous(&amp;quot;Y&amp;quot;).value()))
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This would produce the following output (the root has no name):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Apples
+     Spain
+         2500
+     USA
+         13500
+ Oranges
+     Spain
+         12000
+     USA
+         19000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;data-type-mapping&#34;&gt;Data type mapping&lt;/h3&gt;
+&lt;p&gt;Columns and expressions in Spotfire can have a number of different data types. When reading data in JavaScript these types are mapped to corresponding JavaScript types as follows:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Spotfire data type&lt;/th&gt;
+&lt;th&gt;JavaScript data type&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Integer&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LongInteger&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Real&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SingleReal&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Currency&lt;/td&gt;
+&lt;td&gt;number&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Date&lt;/td&gt;
+&lt;td&gt;Date&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;DateTime&lt;/td&gt;
+&lt;td&gt;Date&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Time&lt;/td&gt;
+&lt;td&gt;Custom object &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/time.html&#34;&gt;Time&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;TimeSpan&lt;/td&gt;
+&lt;td&gt;Custom objecet &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/timespan.html&#34;&gt;TimeSpan&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Boolean&lt;/td&gt;
+&lt;td&gt;boolean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;String&lt;/td&gt;
+&lt;td&gt;string&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Binary&lt;/td&gt;
+&lt;td&gt;Not supported&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Note that some types may have a higher precision in Spotfire than can be represented by the native JavaScript types. For instance the JavaScript Date type has a precision of 1 millisecond, while Spotfire internally has a precision of 100 nanoseconds. The numeric data types LongInteger and Currency, as well as the TimeSpan data type, may also suffer from precision loss.&lt;/p&gt;
+&lt;h2 id=&#34;specifying-data-types-for-continuous-axes&#34;&gt;Specifying data types for continuous axes&lt;/h2&gt;
+&lt;p&gt;Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
+For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow additional data types by specifying it in the axis section of the manifest. For instance to support date and time data, you would specify the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataTypes&amp;quot;: {
+    &amp;quot;allowDateTime&amp;quot;: true,
+    &amp;quot;allowNumeric&amp;quot;: true
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In addition to these two flags, there are also flags to turn on support for strings, booleans and time spans.&lt;/p&gt;
+&lt;h2 id=&#34;using-the-spotfire-color-axis&#34;&gt;Using the Spotfire color axis&lt;/h2&gt;
+&lt;p&gt;Mods can use the same color axis as is used by the native Spotfire visualizations. You do this by specifying a &amp;ldquo;colorAxis&amp;rdquo; entry in the data view definition section of the manifest:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {
+    &amp;quot;colorAxis&amp;quot;: {
+        &amp;quot;mode&amp;quot;: &amp;quot;dual&amp;quot;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &amp;ldquo;mode&amp;rdquo; and other properties for the color axis are specified the same way as for other axes.&lt;/p&gt;
+&lt;p&gt;On the Javascript side you access the data values for the color axis by referring to it by its name, &amp;ldquo;Color&amp;rdquo;.
+The actual color computed for each row can be retrieved via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#color&#34;&gt;color&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
+&lt;h2 id=&#34;using-multiple-measures-on-continuous-axes&#34;&gt;Using multiple measures on continuous axes&lt;/h2&gt;
+&lt;p&gt;By default you can only have a single measure on a continuous axis. However Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &amp;ldquo;allowMultipleMeasures&amp;rdquo; flag to true for the axis in the manifest.&lt;/p&gt;
+&lt;p&gt;When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &amp;ldquo;(Column Names)&amp;rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.&lt;/p&gt;
+&lt;h2 id=&#34;using-non-aggregating-expressions-on-a-continuous-axes&#34;&gt;Using non-aggregating expressions on a continuous axes&lt;/h2&gt;
+&lt;p&gt;Mod data views are always aggregated, and by default the expressions used on them must be aggregating. To enable non-aggregating expressions, you can set the &amp;ldquo;allowNonAggregatingMeasures&amp;rdquo; flag to true for the axis in the manifest. The Spotire UIs will then add a (None) option to the aggregation methods. Note that the data view is still aggregated, so the values on the axes will be used to group by in the aggregation.&lt;/p&gt;
+&lt;h2 id=&#34;data-view-sort-order&#34;&gt;Data view sort order&lt;/h2&gt;
+&lt;p&gt;By default, the rows in data views are ordered by the categorical axes (or more specifically by the axes that are used to group by when performing the aggregation), in the order in which they are declared. So for instance if you declare a &amp;ldquo;Column&amp;rdquo; axis followed by a &amp;ldquo;Row&amp;rdquo; axis, the data view will first be sorted by the values on the &amp;ldquo;Column&amp;rdquo; axis and then by the &amp;ldquo;Row&amp;rdquo; axis.&lt;/p&gt;
+&lt;p&gt;The color axis is currently always last.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Mod schema</title>
+      <link>/spotfire-mods/docs/using-the-api/mod-schema/</link>
+      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/using-the-api/mod-schema/</guid>
+      <description>
+        
+        
+        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/spotfire-mods/mod-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+&lt;script type=&#34;application/javascript&#34;&gt;
+
+    function resizeIFrameToFitContent( ) {
+        let frame = document.getElementById(&#34;schema-frame&#34;);
+        frame.height = frame.contentWindow.document.body.scrollHeight;
+    }
+    window.addEventListener(&#34;resize&#34;,resizeIFrameToFitContent);
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Working with Mod readers</title>
+      <link>/spotfire-mods/docs/using-the-api/working-with-readables/</link>
+      <pubDate>Fri, 13 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/using-the-api/working-with-readables/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The Spotfire Mod API exposes a set of &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview/#Readable&#34;&gt;Readables&lt;/a&gt;, such as the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;&lt;code&gt;DataView&lt;/code&gt;&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/analysisproperty.html&#34;&gt;&lt;code&gt;properties&lt;/code&gt;&lt;/a&gt;. These can be consumed by a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/reader.html&#34;&gt;Reader&lt;/a&gt; in order to read their values and subscribe to changes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;),&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;!-- managing state, the callback will always be invoked with the latest up to date state. --&gt;
+&lt;p&gt;The aim of a &lt;code&gt;reader&lt;/code&gt; is to simplify the synchronization of reading related values. An example is a visualization that depends on the window&amp;rsquo;s &lt;code&gt;size&lt;/code&gt; and the the &lt;code&gt;dataview&lt;/code&gt;. When one of the two changes, the visualization needs to be redrawn. The &lt;code&gt;reader&lt;/code&gt; fetches new values and keep unchanged values in memory.&lt;/p&gt;
+&lt;p&gt;The API exposes readables for the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;Data&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/modproperty.html&#34;&gt;Properties&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/analysisproperty.html&#34;&gt;Document Properties&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/page.html&#34;&gt;Pages&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/size.html&#34;&gt;Window size&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/axis.html&#34;&gt;Axes&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/datatable.html&#34;&gt;Tables&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/column.html&#34;&gt;Columns&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;methods&#34;&gt;Methods&lt;/h3&gt;
+&lt;p&gt;A &lt;code&gt;reader&lt;/code&gt; has three methods; &lt;code&gt;subscribe&lt;/code&gt;, &lt;code&gt;once&lt;/code&gt; and &lt;code&gt;hasExpired&lt;/code&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;subscribecallback&#34;&gt;&lt;code&gt;subscribe(callback)&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;Subscribe will be the most common way to work with &lt;code&gt;readables&lt;/code&gt;. It sets up a subscription to new changes of the &lt;code&gt;readables&lt;/code&gt; provided to the &lt;code&gt;reader&lt;/code&gt;. When one or more &lt;code&gt;readables&lt;/code&gt; gets updated on the server, the &lt;code&gt;reader&lt;/code&gt; fetch all new values and invoke the provided &lt;code&gt;callback&lt;/code&gt; with updated values.&lt;/p&gt;
+&lt;p&gt;The reader will only allow one subscribe callback to be active at a time. This means that the callback will finish executing before a new callback is scheduled. The following example shows how the &lt;code&gt;callback&lt;/code&gt; will not be invoked again until its returning &lt;code&gt;promise&lt;/code&gt; has settled. Even if the &lt;code&gt;dataView&lt;/code&gt; is changed by marking or filtering. After the &lt;code&gt;callback&lt;/code&gt; has finished executing, the &lt;code&gt;callback&lt;/code&gt; is invoked again if there are any changed values. The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/reader.html#hasexpired&#34;&gt;&lt;code&gt;hasExpired&lt;/code&gt;&lt;/a&gt; method can be used to check whether any &lt;code&gt;readables&lt;/code&gt; have been invalidated while the &lt;code&gt;callback&lt;/code&gt; has been executing.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;Spotfire&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;initialize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;visualization&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+
+    &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;render&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+            &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Subscribe callback invoked, &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;allRows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;length&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34; rows. Start 3 seconds sleep.&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;sleep&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3000&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+            &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Render callback finished.&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Has the reader while the callback was executed: &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hasExpired&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;sleep&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;ms&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;Promise&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;((&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;setTimeout&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;ms&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(...&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;messages&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createElement&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;textContent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;messages&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;body&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;appendChild&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;scrollIntoView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./subscribe.gif&#34; alt=&#34;Demonstration of subscribe callback&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;oncecallback&#34;&gt;&lt;code&gt;once(callback)&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;When a developer wants to control the pace of updates, the &lt;code&gt;once&lt;/code&gt; method can be used to wait for changes. &lt;code&gt;Once&lt;/code&gt; will invoke its provided &lt;code&gt;callback&lt;/code&gt; a single time, when one or more of the provided &lt;code&gt;readables&lt;/code&gt; have changed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;Spotfire&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;initialize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;loopsRunning&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;count&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;visualization&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+
+    &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;once&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;render&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;loopsRunning&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;++&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;id&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;++&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;count&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;allRows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+            &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Render callback invoked with id: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;. Currently &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;loopsRunning&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34; loops active.&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;schedule once() again and start 3 seconds sleep.&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+        &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;once&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;render&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;sleep&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3000&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Render callback finished with id:&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+        &lt;span style=&#34;color:#000&#34;&gt;loopsRunning&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;--&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;sleep&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;ms&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;Promise&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;((&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;setTimeout&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;ms&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(...&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;messages&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createElement&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;textContent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;messages&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;body&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;appendChild&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;scrollIntoView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./once.gif&#34; alt=&#34;Demonstration of once callback&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;hasexpired&#34;&gt;&lt;code&gt;hasExpired()&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;reader&lt;/code&gt; keeps track of whether its readables are up to date or not. The &lt;code&gt;hasExpired&lt;/code&gt; method can be invoked if you want to check whether all fetched values are up to date. This can be useful if your rendering loop takes a long time to complete and you want to quickly respond to changes.&lt;/p&gt;
+&lt;p&gt;The following example shows how a &lt;code&gt;reader&lt;/code&gt; becomes expired after a mod property has been modified.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;
+&lt;span style=&#34;color:#000&#34;&gt;Spotfire&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;initialize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+
+    &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;once&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;render&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Render callback invoked &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+
+        &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;transaction&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(()&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;set&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;next value&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;Math&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;random&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;())&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Transaction complete. Reader has expired: &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hasExpired&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;())&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;})&lt;/span&gt;
+
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;End of callback. Reader has expired: &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hasExpired&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;())&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(...&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;messages&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createElement&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;textContent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;messages&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;body&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;appendChild&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;scrollIntoView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example the slow render loop is synthesized through a set of &lt;code&gt;sleep&lt;/code&gt;s. Each time the mod is clicked, a mod property is updated and trigger a render loop. Since &lt;code&gt;subscribe&lt;/code&gt; will only invoke the callback after it has finished, the &lt;code&gt;hasExpired&lt;/code&gt; method can be used to trigger an early return of the render callback.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;Spotfire&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;initialize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;body&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;onclick&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Set new value for myProperty &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;set&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;next value&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;Math&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;random&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;};&lt;/span&gt;
+
+    &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;slowRender&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Slow render started &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;sleep&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3000&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hasExpired&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;())&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Reader has expired, return early to enter new loop&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;sleep&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3000&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+        &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;End of slow rendering&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;sleep&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;ms&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;Promise&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;((&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;setTimeout&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;res&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;ms&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(...&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;messages&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createElement&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;textContent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;messages&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87&#34;&gt;document&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;body&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;appendChild&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;div&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;scrollIntoView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;guidance-on-how-to-use-readers&#34;&gt;Guidance on how to use readers&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If two or more &lt;code&gt;readables&lt;/code&gt; depend on each other, they should be part of the same &lt;code&gt;reader&lt;/code&gt;. Separating &lt;code&gt;readers&lt;/code&gt; from a performance concern is often a pre-optimization. The &lt;code&gt;reader&lt;/code&gt; is keeping unchanged values in memory and only changed values are fetched. If there is a performance concern it can be better to check &lt;a href=&#34;#knowing-what-changed&#34;&gt;which value has changed&lt;/a&gt; through reference equality with the previous value.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you need an initial setup, this can be done in a &lt;code&gt;once&lt;/code&gt; &lt;code&gt;callback&lt;/code&gt;, followed by setting up a &lt;code&gt;subscribe&lt;/code&gt; &lt;code&gt;callback&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use &lt;code&gt;hasExpired()&lt;/code&gt; when your render loop takes a long time, in order to respond quicker to changes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;separating-initial-setup-from-updates&#34;&gt;Separating initial setup from updates&lt;/h2&gt;
+&lt;p&gt;If a mod needs some initial setup before starting to listen for changes, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/reader.html#once&#34;&gt;reader.once&lt;/a&gt; can be used used with a setup callback.&lt;/p&gt;
+&lt;p&gt;A reader will only trigger a new callback if any of its Readables has changed since it was last part of a reader callback. That means we can separate the setup from upcoming updates without triggering unnecessary callbacks.&lt;/p&gt;
+&lt;p&gt;In the following example, there are three Readables. They are first read together in an initial once callback as a setup for the mod. They are afterwards separated into two readers, one for the property and one for the rendering loop. Neither of the subscription callbacks will be invoked immediately. Instead they will wait until one of the readables change.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;Spotfire&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;initialize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;setupReader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;visualization&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(),&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(),&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+    &lt;span style=&#34;color:#000&#34;&gt;setupReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;once&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;((&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dv&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;size&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;All initial values are read&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dv&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;size&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;propertyReader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;propertyReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;((&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;myProperty&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Property has changed to&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;myProperty&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;renderReader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;visualization&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(),&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;renderReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;render&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+                &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Render&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+                &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;allRows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;length&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+                &lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;
+            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+
+        &lt;span style=&#34;color:#000&#34;&gt;setTimeout&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(()&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;set&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;New value&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;Math&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;random&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()),&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2000&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A readable can only be part of one reader at a time. subscribe and once will not invoke the callback until the readable changes&lt;/p&gt;
+&lt;h2 id=&#34;knowing-what-changed&#34;&gt;Knowing what changed&lt;/h2&gt;
+&lt;p&gt;Sometimes you want to know what changed inside of a subscribe callback, often in order to improve the performance of the mod.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reference equality&lt;/li&gt;
+&lt;li&gt;Unchanged values are reused.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;. It might be an unnecessary sub optimization to check for changes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt; * Wrap a reader with an additional method called `hasChanged`.
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt; * It allows you to check whether a value is new or unchanged since the last time the subscribe loop was called.
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt; * @function
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt; * @template A
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt; * @param {A} reader
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt; * @returns {A &amp;amp; {hasValueChanged(value: any):boolean}}
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;readerWithChangeChecker&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;previousValues&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[];&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;currentValues&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[];&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;compareWithPreviousValues&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;cb&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;compareWithPreviousValues&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(...&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;values&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;previousValues&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;currentValues&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;currentValues&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;values&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;cb&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(...&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;values&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;};&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;...&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;cb&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// @ts-ignore
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;            &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;compareWithPreviousValues&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;cb&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;hasValueChanged&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;previousValues&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;indexOf&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;};&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;readerWithChangeChecker&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;visualization&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(),&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(),&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+&lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataview&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;size&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Dataview&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hasValueChanged&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataview&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;size&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hasValueChanged&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;size&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;property&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hasValueChanged&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataview&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;allRows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;setTimeout&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(()&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;prop&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;set&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;New value&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;Math&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;random&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()),&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2000&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;readables&#34;&gt;Readables&lt;/h2&gt;
+&lt;p&gt;Every set of data that can be consumed through the Mod API is encapsulated in a Readable. A Readable can be seen as a Promise combined with an identifier. In contrast to &lt;code&gt;Promises&lt;/code&gt;, which are eager, &lt;code&gt;Readables&lt;/code&gt; are lazy. It is lazy because it does not immediately start fetching its promised value. It only fetches the value it encapsulates if it is awaited or the &lt;code&gt;then&lt;/code&gt; method is invoked.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;Spotfire&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;initialize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// This does not fetch any value from the server
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;myPropertyReadable&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// This fetches the latest value from the server.
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;myProperty&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;readableproxy&#34;&gt;ReadableProxy&lt;/h3&gt;
+&lt;p&gt;If a value has synchronous methods, e.g a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/modproperty.html#set&#34;&gt;mod property&lt;/a&gt;, a ReadableProxy will be returned from the API instead of a Readable. The &lt;code&gt;ReadableProxy&lt;/code&gt; is a &lt;code&gt;Readable&lt;/code&gt; augmented with all synchronous methods of the encapsulated value, without the need to await the encapuslated value. This means a property can be set, without knowing its value.&lt;/p&gt;
+&lt;!-- When the encapsulated value of a Readable has a set of methods, the API returns a ReadableProxy instead.  --&gt;
+&lt;p&gt;In the following example the mod property &lt;code&gt;myProperty&lt;/code&gt; is modified without awaiting its encapsulated value.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;Spotfire&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;initialize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;set&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;new value&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ReadableProxy&lt;/code&gt; augment a &lt;code&gt;Readable/Promise&lt;/code&gt; with additional methods.&lt;/li&gt;
+&lt;li&gt;Methods are accessible without awaiting the &lt;code&gt;Readable&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Value can be awaited. Will always fetch the latest up to date value.&lt;/li&gt;
+&lt;li&gt;Modifications should be done on user interaction, not directly in a &lt;code&gt;reader&lt;/code&gt; callback.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

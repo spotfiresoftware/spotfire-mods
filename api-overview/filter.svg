@@ -1,10 +1,10 @@
 <svg width="0" height="0">
   <defs>
-    <filter id="shadow3" width="150%" height="150%">
-      <feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />
+    <filter id="shadow3" width="200%" height="200%">
+      <feOffset result="offOut" in="SourceGraphic" dx="0" dy="3" />
      <feColorMatrix result="matrixOut" in="offOut" type="matrix"
-      values="0.16 0 0 0 0 0 0.16 0 0 0 0 0 0.16 0 0 0 0 0 1 0" />
-      <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="1" />
+      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" />
+      <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="2" />
             <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
     </filter>
   </defs></svg>
