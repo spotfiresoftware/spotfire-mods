@@ -36,7 +36,9 @@
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;The full code of the result from this tutorial project (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;js-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;The full version of the resulting example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
-&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;h3 id=&#34;dataset&#34;&gt;Dataset&lt;/h3&gt;
+&lt;p&gt;The dataset used in this tutorial can be found &lt;a href=&#34;heroes.txt&#34;&gt;here&lt;/a&gt;. It is a reduced version of this &lt;a href=&#34;https://www.kaggle.com/claudiodavi/superhero-set&#34;&gt;dataset&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;A running instance of &lt;em&gt;Spotfire&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;A code editor. It is highly recommended to use Visual Studio Code when developing a mod. The mod example includes predefined settings for VS Code that enable a default build task, intellisense in the mod manifest and intellisense in the JavaScript code.&lt;/li&gt;
