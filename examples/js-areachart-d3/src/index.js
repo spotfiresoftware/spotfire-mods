@@ -16,9 +16,7 @@ import { addHandlersSelection } from "./ui-input.js";
 
 import {
     createTable,
-    createRowId,
     createPoint,
-    createHierarchyId,
     createGroup,
     axisDisplayName,
     is,
@@ -29,6 +27,7 @@ import {
 } from "./extended-api.js";
 
 const Spotfire = window.Spotfire;
+const DEBUG = false;
 
 /**
  * Prepare some dom elements that will persist  throughout mod lifecycle
@@ -113,6 +112,9 @@ const init = async (mod) => {
                 e.message || e || "☹️ Something went wrong, check developer console",
                 "catch"
             );
+            if(DEBUG){
+                throw e;
+            }
         }
     };
 
@@ -175,11 +177,11 @@ const init = async (mod) => {
         }
         const colorHierarchy = await dataView.hierarchy("Color");
         const xHierarchy = await dataView.hierarchy("X");
-        const pointsTable = createTable(createRowId, createPoint)(allRows);
+        const pointsTable = createTable(createPoint)(allRows);
         const xGroup = (await xHierarchy.root()).leaves();
-        const xTable = createTable(createHierarchyId, createGroup)(xGroup);
+        const xTable = createTable(createGroup)(xGroup);
         const colorGroup = (await colorHierarchy.root()).leaves();
-        const colorTable = createTable(createHierarchyId, createGroup)(colorGroup);
+        const colorTable = createTable(createGroup)(colorGroup);
 
         const normalize = is(chartType)("percentStacked");
         const stacked = normalize || is(chartType)("stacked");
@@ -356,12 +358,11 @@ const init = async (mod) => {
          * Select all area svg elements by class name and add click and hover events for marking and show/hide tooltip.
          */
         d3.selectAll(".interactive-area")
-            .on("click", function (d, i, e) {
-                console.log(d, i, e, this);
-                markGroup(colorTable)(d3.select(this).attr("mod-Color"))(d3.event);
+            .on("click", function ({id}) {
+                markGroup(colorTable)(id)(d3.event);
             })
-            .on("mouseover", function () {
-                tooltip.show(createLineHoverString({ Color: d3.select(this).attr("mod-Color") }));
+            .on("mouseover", function ({formattedValues}) {
+                tooltip.show( createLineHoverString(formattedValues));
             })
             .on("mouseout", function () {
                 tooltip.hide();
@@ -404,7 +405,7 @@ const init = async (mod) => {
         /**
          * Draws unmarked area.
          */
-        function drawUnmarkedArea(parent, { name, rows, unmarkedColor }) {
+        function drawUnmarkedArea(parent, { rows, unmarkedColor, id, formattedValues }) {
             const opacity = unmarkedColor === "black" ? 0 : fillOpacity;
 
             parent
@@ -413,8 +414,7 @@ const init = async (mod) => {
                 .attr("fill", unmarkedColor)
                 .attr("fill-opacity", opacity)
                 .attr("d", area.curve(curveUnmarked)(rows))
-                .attr("mod-Color", name)
-                .attr("tooltip", createLineHoverString({ Color: name }));
+                .datum({id,formattedValues})
         }
 
         /**
@@ -500,7 +500,7 @@ const init = async (mod) => {
          * Draws hover line.
          */
         function drawHoverLine(parent, group) {
-            const { rows, name } = group;
+            const { rows,formattedValues } = group;
 
             const d = line.curve(curveUnmarked)(rows);
             const hoverGroup = parent.append("g");
@@ -509,10 +509,11 @@ const init = async (mod) => {
                 .append("path")
                 .attr("class", "line-hover line-hover-bg")
                 .attr("d", d)
+                .datum(formattedValues)
                 .on("mouseover", handleMouseOver)
                 .on("mouseout", handleMouseOut)
                 .on("click", handleClick);
-
+              
             drawHoverCircles(hoverGroup, group);
 
             hoverGroup
@@ -529,14 +530,14 @@ const init = async (mod) => {
             drawMarkedLine(g, group);
             drawMarkedCircles(g, group);
 
-            function handleMouseOver() {
+            function handleMouseOver(data) {
                 g.attr("visibility", "visible");
-                tooltip.show(createLineHoverString({ Color: name }));
+                tooltip.show(createLineHoverString(data));
             }
 
-            function handleMouseOverPoint(d) {
+            function handleMouseOverPoint(data) {
                 g.attr("visibility", "visible");
-                tooltip.show(createPointHoverString(d));
+                tooltip.show(createPointHoverString(data));
             }
 
             function handleMouseOut() {
@@ -654,7 +655,7 @@ const init = async (mod) => {
          *
          * TODO: find proper function name.
          */
-        function createTempGroup_placeholder({ points, name = "", sum = 0 }) {
+        function createTempGroup_placeholder({ points, name = "", sum = 0, id, formattedValues }) {
             const rows = points.map(pointsTable.select);
             const rowsMarked = rows.filter((row) => row.marked);
             const rowsUnmarked = rows.filter((row) => !row.marked);
@@ -662,28 +663,25 @@ const init = async (mod) => {
             const unmarkedColor = (rowsUnmarked.length && rowsUnmarked[0]).hexCode || "black";
             const markedSegments = createMarkedSegments(rows);
 
+
             /**
              * TODO: find proper condition; rename flag;
              */
             const dangerousFlag = rows.length == 1;
 
-            return { name, rows, markedColor, unmarkedColor, dangerousFlag, markedSegments, sum };
+            return { name, rows, markedColor, unmarkedColor, dangerousFlag, markedSegments, sum, id, formattedValues };
         }
 
-        function createLineHoverString({ Color }) {
-            const separator = "\n";
-            const c = Color.split(":");
-            return createTextLine(colorAxisDisplayNames)(c).join(separator);
+        function createLineHoverString(formattedValues) {
+            return createTextLine(colorAxisDisplayNames)(formattedValues).join("\n");
         }
 
-        function createPointHoverString({ X, Y_FORMATTED, Color }) {
+        function createPointHoverString({ X_PATH, Y_FORMATTED, COLOR_PATH }) {
             const separator = "\n";
-            const x = X.split(" >> ");
-            const c = Color.split(" >> ");
             return [
-                createTextLine(xAxisDisplayNames)(x).join(separator),
+                createTextLine(xAxisDisplayNames)(X_PATH).join(separator),
                 createTextLine(yAxisDisplayNames)([Y_FORMATTED]),
-                createTextLine(colorAxisDisplayNames)(c).join(separator)
+                createTextLine(colorAxisDisplayNames)(COLOR_PATH).join(separator)
             ].join(separator);
         }
 

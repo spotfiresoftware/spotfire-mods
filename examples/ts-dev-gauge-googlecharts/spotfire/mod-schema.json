@@ -52,7 +52,7 @@
                 "dataTypes": {
                     "type": "object",
                     "title": "Supported Data Types",
-                    "description": "Specifies which data types that this axis supports when in continuous mode. These settings affect which kinds of expressions that Spotfire will consider valid for this axis.",
+                    "description": "Specifies which data types that this axis should support. These settings affect which expressions that Spotfire will consider valid for this axis.",
                     "additionalProperties": false,
                     "properties": {
                         "allowNumeric": {
@@ -97,7 +97,7 @@
                         "icon": {
                             "type": "string",
                             "title": "The drop target icon",
-                            "description": "Specifies which, from a selection of built in icons, to use as the drop target.",
+                            "description": "Specifies which, from a selection of built-in icons, to use as the drop target.",
                             "enum": [
                                 "XAxis",
                                 "YAxis",
@@ -370,7 +370,7 @@
         "files": {
             "type": "array",
             "title": "The files stored in the mod",
-            "description": "All files of a mod will be saved into Spotfire. The files array lists all files so that Spotfire can save them.\nThis list is auto generated when starting the project.",
+            "description": "All files of a mod will be saved into Spotfire. The files array lists all files so that Spotfire can save them.",
             "items": {
                 "type": "string",
                 "title": "The Items Schema",

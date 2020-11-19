@@ -152,6 +152,7 @@ Spotfire.initialize(async (mod) => {
 
         /**
          * Prepare options object taking into account the spotfire theme and mod properties
+         * @type {google.visualization.BarChartOptions}
          */
         const options = {
             backgroundColor: { fill: "transparent" },

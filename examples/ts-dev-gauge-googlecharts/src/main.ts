@@ -10,12 +10,12 @@ import { Spotfire } from "./api";
 // Import needed types
 
 // Starting point for every mod
-Spotfire.initialize(async api => {
+Spotfire.initialize(async mod => {
     // Used later to inform Spotfire that the render is complete
-    let context = api.getRenderContext();
+    let context = mod.getRenderContext();
 
     // Create a reader object that reacts only data and window size changes
-    let reader = api.createReader(api.visualization.data(), api.windowSize());
+    let reader = mod.createReader(mod.visualization.data(), mod.windowSize());
 
     // Initialize the Google visualization
     let gauge = await googleGauge();
@@ -25,12 +25,12 @@ Spotfire.initialize(async api => {
         if (errors.length > 0) {
             // Data view contains errors. Display these and clear the chart to avoid
             // getting a flickering effect with an old chart configuration later.
-            api.controls.errorOverlay.show(errors, "DataView");
+            mod.controls.errorOverlay.show(errors, "DataView");
             gauge.clear();
             return;
         }
 
-        api.controls.errorOverlay.hide("DataView");
+        mod.controls.errorOverlay.hide("DataView");
         let rows = await dataView.allRows();
         if (rows == null) {
             // Return and wait for next call to render when reading data was aborted.

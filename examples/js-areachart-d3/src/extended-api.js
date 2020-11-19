@@ -7,70 +7,102 @@
 //@ts-check
 
 const EMPTY = "(Empty)";
-const SEPARATOR = ":";
+const SEPARATOR = String.fromCharCode(32, 187, 32);
+const NULL_REPLACEMENT = "null";
+const NOT_NULL_PREFIX = "key:";
+
 export const is = (property) => (value) => property.value() == value;
 
 /** @param {Spotfire.DataViewRow} row */
-export const X = (row) => row.categorical("X").formattedValue();
+export const X = (row) => row.categorical("X").formattedValue(SEPARATOR);
 
-/** 
- * @param {Spotfire.DataViewRow} row 
+/**
+ * @param {Spotfire.DataViewRow} row
  * @returns {Number}
-*/
-export const Y = (row) => row.continuous("Y").value();
+ */
+const Y = (row) => row.continuous("Y").value();
 
 /** @param {Spotfire.DataViewRow} row */
-export const Y_FORMATTED = (row) => row.continuous("Y").formattedValue();
+const Y_FORMATTED = (row) => row.continuous("Y").formattedValue();
 
 /** @param {Spotfire.DataViewRow} row */
-export const Color = (row) => {
+const Color = (row) => {
     try {
-        return row.categorical("Color").formattedValue();
+        return row.categorical("Color").formattedValue(SEPARATOR);
     } catch (e) {
         return EMPTY;
     }
 };
 
 /** @param {Spotfire.DataViewRow} row */
-export const marked = (row) => row.isMarked();
+const marked = (row) => row.isMarked();
 
 /** @param {Spotfire.DataViewRow} row */
-export const hexCode = (row) => row.color().hexCode;
+const hexCode = (row) => row.color().hexCode;
 
 /** @param {Spotfire.DataViewRow} row */
-export const mark = (row) => row.mark;
+const mark = (row) => row.mark;
 
-/** @param {Spotfire.DataViewHierarchyNode} node */
-export const getName = (node) => node.formattedValue();
-
-/** @param {Spotfire.DataViewHierarchyNode} node */
-export const getKey = (node) => node.key;
+const buildKey = (key) => key == null ? NULL_REPLACEMENT : NOT_NULL_PREFIX + key;
 
 export const markGroup = (group) => (key) => ({ ctrlKey }) =>
     ctrlKey ? group.select(key).__node.mark("ToggleOrAdd") : group.select(key).__node.mark();
 
-/** @param {Spotfire.DataViewRow} row */
-export const Path = (row) =>
-    row
-        .categorical("X")
-        .value().map(({ key }) => (key == null ? EMPTY : String(key)))
-        .join(SEPARATOR);
+    
+/** @param {Spotfire.DataViewHierarchyNode} node */
+const Formatted_Values = (node) => {
 
+    if(!node || node.level < 0){
+        return []
+    }
+
+    return Formatted_Values(node.parent).concat([node.formattedValue()])
+};
+
+/**
+ * Create the id of the hierarchy node.
+ * Using node.leafIndex is not stable on updates, meaning it is not possible to use if adding transitions.
+ * The id must be in sync with the X_ID implementation.
+ *  @param {Spotfire.DataViewHierarchyNode} node
+ */
+const Leaf_ID = (node) => {
+    const nodeId = buildKey(node.key);
+    return node.level > 0 ? Leaf_ID(node.parent) + SEPARATOR + nodeId : nodeId;
+};
+
+/**
+ *  @param {Spotfire.DataViewRow} row
+ */
+const X_ID = (row) => {
+    return row
+        .categorical("X")
+        .value()
+        .map((v) => buildKey(v.key))
+        .join(SEPARATOR);
+};
+
+/**
+ *  @param {Spotfire.DataViewRow} row
+ */
+const Color_ID = (row) => {
+    try {
+        return row
+        .categorical("Color")
+        .value()
+        .map((v) => buildKey(v.key))
+        .join(SEPARATOR);
+        //return row.categorical("Color").leafIndex;
+    } catch {
+        // The color axis has an empty expression
+        return -1;
+    }
+};
 /**
  *
  * @param {Spotfire.DataViewRow} row
  */
-export const createRowId = (row) => Path(row) + SEPARATOR + Color(row);
-
-/**
- *
- * @param {Spotfire.DataViewHierarchyNode} node
- */
-export const createHierarchyId = (node) => {
-    if (node.parent != undefined && node.level >= 0) {
-        const parentId = createHierarchyId(node.parent);
-        return parentId.length ? parentId + SEPARATOR + node.key : node.key;
-    } else return node.key;
+const createRowId = (row) => {
+    return X_ID(row) + SEPARATOR + Color_ID(row);
 };
 
 /**
@@ -83,9 +115,11 @@ export const createPoint = (row) => {
     return {
         __row: row,
         id: createRowId(row),
-        X_ID: Path(row),
+        X_ID: X_ID(row),
         X: X(row),
+        X_PATH: row.categorical("X").value().map(v => v.key),
         Color: Color(row),
+        COLOR_PATH: row.categorical("Color").value().map(v => v.key),
         Y: Y(row),
         Y_FORMATTED: Y_FORMATTED(row),
         marked: marked(row),
@@ -107,14 +141,15 @@ export const createGroup = (node) => {
     const points = node.rows().map(createRowId);
     const sum = node.rows().reduce((acc, row) => acc + Y(row), 0);
     const name = node.formattedPath(SEPARATOR);
-    const id = createHierarchyId(node);
+    const formattedValues  = Formatted_Values(node);
+    const id = Leaf_ID(node);
 
     return {
         __node: node,
         id,
-        name,
+        name: name,
+        formattedValues: formattedValues,
         key: node.key,
-        // mark: node.mark,
         points,
         sum
     };
@@ -144,13 +179,13 @@ export const stack = (pointsTable) => (xTable) => (normalize = false) => {
 
 /**
  * Creates a hash table from hierarchy nodes.
- * Requires an ID function (idFn) - creates 'node' id; and a create function (createFn) - creates a new object from 'node'
+ * Requires a create function (createFn) - creates a new object from 'node'. This object should have a unique id property.
  */
-export const createTable = (idFn, createFn) => (nodes) => {
+export const createTable = (createFn) => (nodesOrRows) => {
     const byKey = {};
-    nodes.forEach((node) => {
-        const id = idFn(node);
-        byKey[id] = createFn(node);
+    nodesOrRows.forEach((nodeOrRow) => {
+        const entity = createFn(nodeOrRow);
+        byKey[entity.id] = createFn(nodeOrRow);
     });
 
     const select = (key) => byKey[key];

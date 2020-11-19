@@ -5,7 +5,7 @@
  */
 
 //@ts-check  - Get type warnings from the TypeScript language server. Remove if not wanted.
-Spotfire.initialize(function (api) {
+Spotfire.initialize(function (mod) {
     "use strict";
 
     // Store svg element into which all rendering is performed.
@@ -16,10 +16,10 @@ Spotfire.initialize(function (api) {
     const labelCtx = canvas.getContext("2d");
 
     // Get the render context used to signal render completion.
-    const renderCtx = api.getRenderContext();
+    const renderCtx = mod.getRenderContext();
 
     // Setup reader/rendering loop
-    const reader = api.createReader(api.visualization.data(), api.windowSize());
+    const reader = mod.createReader(mod.visualization.data(), mod.windowSize());
     reader.subscribe(async (dataView, size) => {
         // Do the actual rendering
         await render(dataView, size);
@@ -150,10 +150,10 @@ Spotfire.initialize(function (api) {
     function bailout(messages) {
         clear();
         if (messages) {
-            api.controls.errorOverlay.show(messages);
+            mod.controls.errorOverlay.show(messages);
         }
         else {
-            api.controls.errorOverlay.hide();
+            mod.controls.errorOverlay.hide();
         }
     }
     
@@ -164,7 +164,7 @@ Spotfire.initialize(function (api) {
      */
     async function render(dataView, size) {
         // Clear any open tooltips
-        api.controls.tooltip.hide();
+        mod.controls.tooltip.hide();
 
         // Check for data view errors
         const errors = await dataView.getErrors();
@@ -244,7 +244,7 @@ Spotfire.initialize(function (api) {
 
         // Clear previous rendering, and hide any open error overlay.
         clear();
-        api.controls.errorOverlay.hide();
+        mod.controls.errorOverlay.hide();
 
         // Render the circles
         const circles = svg
@@ -285,15 +285,15 @@ Spotfire.initialize(function (api) {
             const sfNode = e.data;
             if (sfNode.children) {
                 // Hide tooltip for non leaf nodes.
-                api.controls.tooltip.hide();
+                mod.controls.tooltip.hide();
             } else {
                 const size = sizeAxis !== null ? getRow(sfNode).continuous("Size").formattedValue() : "";
-                api.controls.tooltip.show(sfNode.formattedPath() + "\r\n" + size);
+                mod.controls.tooltip.show(sfNode.formattedPath() + "\r\n" + size);
             }
         });
 
         circles.on("mouseleave", () => {
-            api.controls.tooltip.hide();
+            mod.controls.tooltip.hide();
         });
     }
 });
