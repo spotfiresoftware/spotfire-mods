@@ -27,11 +27,7 @@ const Y_FORMATTED = (row) => row.continuous("Y").formattedValue();
 
 /** @param {Spotfire.DataViewRow} row */
 const Color = (row) => {
-    try {
         return row.categorical("Color").formattedValue(SEPARATOR);
-    } catch (e) {
-        return EMPTY;
-    }
 };
 
 /** @param {Spotfire.DataViewRow} row */
@@ -91,10 +87,9 @@ const Color_ID = (row) => {
         .value()
         .map((v) => buildKey(v.key))
         .join(SEPARATOR);
-        //return row.categorical("Color").leafIndex;
     } catch {
         // The color axis has an empty expression
-        return -1;
+        return "";
     }
 };
 /**
@@ -111,15 +106,15 @@ const createRowId = (row) => {
  *
  * @param {Spotfire.DataViewRow} row
  */
-export const createPoint = (row) => {
+export const createPoint = (row, hasX, hasColor) => {
     return {
         __row: row,
         id: createRowId(row),
-        X_ID: X_ID(row),
-        X: X(row),
-        X_PATH: row.categorical("X").value().map(v => v.key),
-        Color: Color(row),
-        COLOR_PATH: row.categorical("Color").value().map(v => v.key),
+        X_ID: hasX ? X_ID(row) : EMPTY,
+        X: hasX ? X(row) : EMPTY,
+        X_PATH: hasX ? row.categorical("X").value().map(v => v.key): [],
+        Color: hasColor ? Color(row) : EMPTY,
+        COLOR_PATH: hasColor ? row.categorical("Color").value().map(v => v.key): [],
         Y: Y(row),
         Y_FORMATTED: Y_FORMATTED(row),
         marked: marked(row),
@@ -181,11 +176,11 @@ export const stack = (pointsTable) => (xTable) => (normalize = false) => {
  * Creates a hash table from hierarchy nodes.
  * Requires a create function (createFn) - creates a new object from 'node'. This object should have a unique id property.
  */
-export const createTable = (createFn) => (nodesOrRows) => {
+export const createTable = (createFn) => (nodesOrRows,hasX, hasColor) => {
     const byKey = {};
     nodesOrRows.forEach((nodeOrRow) => {
-        const entity = createFn(nodeOrRow);
-        byKey[entity.id] = createFn(nodeOrRow);
+        const entity = createFn(nodeOrRow, hasX, hasColor);
+        byKey[entity.id] = entity;
     });
 
     const select = (key) => byKey[key];

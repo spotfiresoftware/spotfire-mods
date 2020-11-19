@@ -177,11 +177,11 @@ const init = async (mod) => {
         }
         const colorHierarchy = await dataView.hierarchy("Color");
         const xHierarchy = await dataView.hierarchy("X");
-        const pointsTable = createTable(createPoint)(allRows);
+        const pointsTable = createTable(createPoint)(allRows, !xHierarchy.isEmpty, !colorHierarchy.isEmpty);
         const xGroup = (await xHierarchy.root()).leaves();
-        const xTable = createTable(createGroup)(xGroup);
+        const xTable = createTable(createGroup)(xGroup, !xHierarchy.isEmpty, !colorHierarchy.isEmpty);
         const colorGroup = (await colorHierarchy.root()).leaves();
-        const colorTable = createTable(createGroup)(colorGroup);
+        const colorTable = createTable(createGroup)(colorGroup, !xHierarchy.isEmpty, !colorHierarchy.isEmpty);
 
         const normalize = is(chartType)("percentStacked");
         const stacked = normalize || is(chartType)("stacked");
@@ -194,14 +194,6 @@ const init = async (mod) => {
         const xAxisDisplayNames = axisDisplayName(xAxisMeta);
         const yAxisDisplayNames = axisDisplayName(yAxisMeta);
         const colorAxisDisplayNames = axisDisplayName(colorAxisMeta);
-
-        // console.log("xGroup", xGroup);
-        // console.log("xTable", xTable);
-        // console.log("colorHierarchy", colorHierarchy);
-        // console.log("colorGroup", colorGroup);
-        // console.log("colorTable", colorTable);
-        // console.log("pointsTable", pointsTable);
-        // console.log("xAxisDisplayNames", xAxisDisplayNames);
 
         const margin = { top: 20, right: 40, bottom: 40, left: 80 };
 
