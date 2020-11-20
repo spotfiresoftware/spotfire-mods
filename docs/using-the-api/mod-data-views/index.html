@@ -25,7 +25,7 @@
 ">
 <meta itemprop="datePublished" content="2020-11-06T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-11-06T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1418">
+<meta itemprop="wordCount" content="1417">
 
 
 
@@ -410,7 +410,7 @@ Oranges,31000
 </code></pre>
 <h3 id="dataviewcontinuousvalue-and-dataviewcategoricalvalue">DataViewContinuousValue and DataViewCategoricalValue</h3>
 <p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a> is a simple object with methods to retrieve the actual value (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#value">value</a>), and to get a string representation of it (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#formattedvalue">formattedValue</a>).</p>
-<p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> on the other hand is a bit more complicated. Since categorical axes form hierarchies, each <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example above, the output from the logDataView function would be:</p>
+<p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> on the other hand is a bit more complicated. Since categorical axes form hierarchies, each <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example, the output from the logDataView function would be:</p>
 <pre><code>X,Y
 Apples &gt;&gt; Spain,2500
 Apples &gt;&gt; USA,13500
