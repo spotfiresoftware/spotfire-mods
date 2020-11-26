@@ -25,37 +25,7 @@
         
         &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; is an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The visualization is a simplified view of the API. While the Mod API relies heavily on asynchronous behavior via Promises, the visualization only displays the interfaces defined in the &lt;em&gt;spotfire-api.d.ts&lt;/em&gt; file. There are some advanced types available in the declaration file that are not displayed in the hierarchy visualization. The advanced types describe some of the more intricate functionality in the API.&lt;/p&gt;
-
-&lt;script&gt;
-
-&lt;/script&gt;
-
-&lt;iframe width=&#34;100%&#34; style=&#34;height:65vh;&#34; src=&#34;/spotfire-mods/spotfire-mods/api-overview/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
-&lt;script&gt;
-    
-
-    
-    
-    
-
-    
-       
-    
-    
-    
-    
-
-    
-
-    
-        
-    
-    
-    
-    
-        
-    
-&lt;/script&gt;
+&lt;p&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;&lt;img src=&#34;api-overview.png&#34; alt=&#34;API Overview&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 
       </description>
     </item>
@@ -846,7 +816,8 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
       <description>
         
         
-        &lt;p&gt;The API documentation can be found &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;API documentation&lt;/a&gt; lists all interfaces, type aliases, and functions in the API. It contains a short introduction and describes how to use them. From each interface you can also find a direct link to the &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; to get a hierarchical perspective.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;&lt;img src=&#34;api-documentation.png&#34; alt=&#34;API Documentation&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 
       </description>
     </item>
@@ -864,116 +835,105 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 &lt;p&gt;A mod can create a single aggregated data view.&lt;/p&gt;
 &lt;p&gt;The data view is declared in the mod manifest. Its content is specified as a number of axes. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.&lt;/p&gt;
 &lt;p&gt;In the simplest form, the data view definition part of a mod manifest could look like this.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {  
-    &amp;quot;axes&amp;quot;: [  
-        {
-            &amp;quot;name&amp;quot;: &amp;quot;Y&amp;quot;,  
-            &amp;quot;mode&amp;quot;: &amp;quot;continuous&amp;quot; 
-        }  
-    ]  
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This specifies that the mod will have a single continuous axis called Y, that will compute a single aggregated value, e.g. Sum(Sales). Continuous axes are typically rendered on a continuous scale.&lt;/p&gt;
-&lt;!-- ![Bar Chart 1](BarChart1.png) --&gt;
-&lt;img src=&#34;BarChart1.PNG&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dataViewDefinition&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;  
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;axes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;  
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;continuous&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;  
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;  
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This specifies that the mod will have a single continuous axis called Y, that will compute a single aggregated value, e.g. Sum(Sales). Continuous axes are typically rendered on a continuous scale.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;BarChart1.PNG&#34; alt=&#34;Bar Chart 1&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The &amp;ldquo;mode&amp;rdquo; parameter can be &amp;ldquo;continuous&amp;rdquo;, &amp;ldquo;categorical&amp;rdquo; or &amp;ldquo;dual&amp;rdquo;. Dual means that the axis supports both continuous and categorical mode and can be switched between them.&lt;/p&gt;
 &lt;p&gt;A categorical axis always splits the aggregation. The columns/expressions on the axes are used in the group by clause in the aggregated query generated for the visualization. Categorical axes are typically rendered on a categorical, or discrete, scale.&lt;/p&gt;
 &lt;p&gt;If we continue the example above we could add a categorical x axis to the visualization.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {  
-    &amp;quot;axes&amp;quot;: [  
-        {
-            &amp;quot;name&amp;quot;: &amp;quot;X&amp;quot;,  
-            &amp;quot;mode&amp;quot;: &amp;quot;categorical&amp;quot;,  
-        },
-        {
-            &amp;quot;name&amp;quot;: &amp;quot;Y&amp;quot;,  
-            &amp;quot;mode&amp;quot;: &amp;quot;continuous&amp;quot;,  
-        }
-    ]  
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;That could be rendered like this:&lt;/p&gt;
-&lt;!-- ![Bar Chart 2](BarChart2.png) --&gt;
-&lt;img src=&#34;BarChart2.PNG&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dataViewDefinition&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;  
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;axes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;  
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;categorical&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;continuous&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;  
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That could be rendered like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;BarChart2.PNG&#34; alt=&#34;Bar Chart 2&#34;&gt;&lt;/p&gt;
 &lt;p&gt;It is always possible to add more columns to the expression on a categorical axis. This will split the aggregation further, and Spotfire usually renders this as a hierarchy.&lt;/p&gt;
-&lt;!-- ![Bar Chart 3](BarChart3.png) --&gt;
-&lt;img src=&#34;BarChart3.PNG&#34;&gt;
+&lt;p&gt;&lt;img src=&#34;BarChart3.PNG&#34; alt=&#34;Bar Chart 3&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;consuming-data-from-javascript&#34;&gt;Consuming data from JavaScript&lt;/h2&gt;
 &lt;h3 id=&#34;the-data-view-object&#34;&gt;The data view object&lt;/h3&gt;
-&lt;p&gt;On the javascript side data is retrieved via a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.&lt;/p&gt;
+&lt;p&gt;On the javascript side data is retrieved via a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to &lt;code&gt;await&lt;/code&gt; their result.&lt;/p&gt;
 &lt;p&gt;There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#continuous&#34;&gt;continuous&lt;/a&gt; method for continuous axes and a  &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#categorical&#34;&gt;categorical&lt;/a&gt; method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;let yValue = row.continuous(&amp;quot;Y&amp;quot;);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The value retrieved by these methods can be of two types depending on which one is called. Either it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. To list all values of a data view in csv like format, you could do this:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;async function logDataView(dataView)
-{
-    // Print axes names
-    const axes = await dataView.axes();
-    console.log(axes.map(axis =&amp;gt; axis.name).join(&amp;quot;,&amp;quot;));
-   
-    // Print the row values.
-    const rows = await dataView.allRows();
-    rows.forEach(row =&amp;gt; {
-        console.log(axes.map(axis =&amp;gt; {
-            if(axis.isCategorical){
-               return row.categorical(axis.name).fullName()
-            }                
-            return row.continuous(axis.name).value()
-        }).join(&amp;quot;,&amp;quot;));
-        
-    });
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;For the simple bar chart above showing sales per fruit, the output would be:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;X,Y
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;yValue&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The value retrieved by these methods can be of two types depending on which one is called. Either it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. To list all values of a data view in csv like format, you could do this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;logDataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Print axes names
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+
+    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Print the row values.
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;allRows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;forEach&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;isCategorical&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;){&lt;/span&gt;
+                &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;categorical&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;formattedValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;
+            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the simple bar chart above showing sales per fruit, the output would be:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-csv&#34; data-lang=&#34;csv&#34;&gt;X,Y
 Apples,16000
-Oranges,31000 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;dataviewcontinuousvalue-and-dataviewcategoricalvalue&#34;&gt;DataViewContinuousValue and DataViewCategoricalValue&lt;/h3&gt;
+Oranges,31000
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;dataviewcontinuousvalue-and-dataviewcategoricalvalue&#34;&gt;DataViewContinuousValue and DataViewCategoricalValue&lt;/h3&gt;
 &lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt; is a simple object with methods to retrieve the actual value (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#value&#34;&gt;value&lt;/a&gt;), and to get a string representation of it (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#formattedvalue&#34;&gt;formattedValue&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; on the other hand is a bit more complicated. Since categorical axes form hierarchies, each &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example, the output from the logDataView function would be:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;X,Y
+&lt;pre&gt;&lt;code class=&#34;language-csv&#34; data-lang=&#34;csv&#34;&gt;X,Y
 Apples &amp;gt;&amp;gt; Spain,2500
 Apples &amp;gt;&amp;gt; USA,13500
 Oranges &amp;gt;&amp;gt; Spain,12000
 Oranges &amp;gt;&amp;gt; USA,19000
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvaluepathelement.html&#34;&gt;DataViewCategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvaluepathelement.html&#34;&gt;DataViewCategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
 &lt;h3 id=&#34;hierarchies&#34;&gt;Hierarchies&lt;/h3&gt;
 &lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataview.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
-&lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root&#34;&gt;root&lt;/a&gt;), or the array of leaf nodes (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves&#34;&gt;leaves&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.&lt;/p&gt;
+&lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and a method to retrieve the root of the tree (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root&#34;&gt;root&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaf nodes retrieved from the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewhierarchynode.html#leaves&#34;&gt;&lt;code&gt;leaves&lt;/code&gt;&lt;/a&gt; method on the root object.&lt;/p&gt;
 &lt;p&gt;Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;async function logViaHierarchy(dataView)
-{
-    const xHierarchy = await dataView.hierarchy(&amp;quot;X&amp;quot;, true);
-    const root = await xHierarchy.root();
-    log(root, &amp;quot;&amp;quot;);
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;logViaHierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xHierarchy&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xHierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;root&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+    &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;root&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
 
-    function log(node, indent) {
-        console.log(indent + node.name);
-        indent += &amp;quot;    &amp;quot;;
-        if(node.children) {
-            node.children.forEach(node =&amp;gt; log(node, indent));
-        } 
-        else {
-            node.rows().forEach(row =&amp;gt; console.log(indent + row.continuous(&amp;quot;Y&amp;quot;).value()))
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This would produce the following output (the root has no name):&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Apples
-     Spain
-         2500
-     USA
-         13500
- Oranges
-     Spain
-         12000
-     USA
-         19000
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;data-type-mapping&#34;&gt;Data type mapping&lt;/h3&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;formattedValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
+        &lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;    &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;children&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;children&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;forEach&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;forEach&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()))&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This would produce the following output (the root has no name):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-log&#34; data-lang=&#34;log&#34;&gt;    Apples
+         Spain
+             2500
+         USA
+             13500
+     Oranges
+         Spain
+             12000
+         USA
+             19000
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;data-type-mapping&#34;&gt;Data type mapping&lt;/h3&gt;
 &lt;p&gt;Columns and expressions in Spotfire can have a number of different data types. When reading data in JavaScript these types are mapped to corresponding JavaScript types as follows:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1037,20 +997,18 @@ Oranges &amp;gt;&amp;gt; USA,19000
 &lt;h2 id=&#34;specifying-data-types-for-continuous-axes&#34;&gt;Specifying data types for continuous axes&lt;/h2&gt;
 &lt;p&gt;Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
 For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow additional data types by specifying it in the axis section of the manifest. For instance to support date and time data, you would specify the following:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;quot;dataTypes&amp;quot;: {
-    &amp;quot;allowDateTime&amp;quot;: true,
-    &amp;quot;allowNumeric&amp;quot;: true
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;In addition to these two flags, there are also flags to turn on support for strings, booleans and time spans.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dataTypes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;allowDateTime&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;allowNumeric&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In addition to these two flags, there are also flags to turn on support for strings, booleans and time spans.&lt;/p&gt;
 &lt;h2 id=&#34;using-the-spotfire-color-axis&#34;&gt;Using the Spotfire color axis&lt;/h2&gt;
 &lt;p&gt;Mods can use the same color axis as is used by the native Spotfire visualizations. You do this by specifying a &amp;ldquo;colorAxis&amp;rdquo; entry in the data view definition section of the manifest:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;quot;dataViewDefinition&amp;quot;: {
-    &amp;quot;colorAxis&amp;quot;: {
-        &amp;quot;mode&amp;quot;: &amp;quot;dual&amp;quot;
-    }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The &amp;ldquo;mode&amp;rdquo; and other properties for the color axis are specified the same way as for other axes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dataViewDefinition&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;colorAxis&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dual&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &amp;ldquo;mode&amp;rdquo; and other properties for the color axis are specified the same way as for other axes.&lt;/p&gt;
 &lt;p&gt;On the Javascript side you access the data values for the color axis by referring to it by its name, &amp;ldquo;Color&amp;rdquo;.
 The actual color computed for each row can be retrieved via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/dataviewrow.html#color&#34;&gt;color&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
 &lt;h2 id=&#34;using-multiple-measures-on-continuous-axes&#34;&gt;Using multiple measures on continuous axes&lt;/h2&gt;

@@ -25,7 +25,7 @@
 ">
 <meta itemprop="datePublished" content="2020-11-06T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-11-06T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1417">
+<meta itemprop="wordCount" content="1420">
 
 
 
@@ -343,116 +343,105 @@
 <p>A mod can create a single aggregated data view.</p>
 <p>The data view is declared in the mod manifest. Its content is specified as a number of axes. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.</p>
 <p>In the simplest form, the data view definition part of a mod manifest could look like this.</p>
-<pre><code>&quot;dataViewDefinition&quot;: {  
-    &quot;axes&quot;: [  
-        {
-            &quot;name&quot;: &quot;Y&quot;,  
-            &quot;mode&quot;: &quot;continuous&quot; 
-        }  
-    ]  
-}
-</code></pre>
-<p>This specifies that the mod will have a single continuous axis called Y, that will compute a single aggregated value, e.g. Sum(Sales). Continuous axes are typically rendered on a continuous scale.</p>
-<!-- ![Bar Chart 1](BarChart1.png) -->
-<img src="BarChart1.PNG">
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#4e9a06">&#34;dataViewDefinition&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">{</span>  
+    <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>  
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">,</span>  
+            <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;continuous&#34;</span>
+        <span style="color:#000;font-weight:bold">}</span>  
+    <span style="color:#000;font-weight:bold">]</span>  
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p>This specifies that the mod will have a single continuous axis called Y, that will compute a single aggregated value, e.g. Sum(Sales). Continuous axes are typically rendered on a continuous scale.</p>
+<p><img src="BarChart1.PNG" alt="Bar Chart 1"></p>
 <p>The &ldquo;mode&rdquo; parameter can be &ldquo;continuous&rdquo;, &ldquo;categorical&rdquo; or &ldquo;dual&rdquo;. Dual means that the axis supports both continuous and categorical mode and can be switched between them.</p>
 <p>A categorical axis always splits the aggregation. The columns/expressions on the axes are used in the group by clause in the aggregated query generated for the visualization. Categorical axes are typically rendered on a categorical, or discrete, scale.</p>
 <p>If we continue the example above we could add a categorical x axis to the visualization.</p>
-<pre><code>&quot;dataViewDefinition&quot;: {  
-    &quot;axes&quot;: [  
-        {
-            &quot;name&quot;: &quot;X&quot;,  
-            &quot;mode&quot;: &quot;categorical&quot;,  
-        },
-        {
-            &quot;name&quot;: &quot;Y&quot;,  
-            &quot;mode&quot;: &quot;continuous&quot;,  
-        }
-    ]  
-}
-</code></pre>
-<p>That could be rendered like this:</p>
-<!-- ![Bar Chart 2](BarChart2.png) -->
-<img src="BarChart2.PNG">
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#4e9a06">&#34;dataViewDefinition&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">{</span>  
+    <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>  
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">,</span>  
+            <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span><span style="color:#000;font-weight:bold">,</span>  
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">,</span>  
+            <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;continuous&#34;</span><span style="color:#000;font-weight:bold">,</span>  
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">]</span>  
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p>That could be rendered like this:</p>
+<p><img src="BarChart2.PNG" alt="Bar Chart 2"></p>
 <p>It is always possible to add more columns to the expression on a categorical axis. This will split the aggregation further, and Spotfire usually renders this as a hierarchy.</p>
-<!-- ![Bar Chart 3](BarChart3.png) -->
-<img src="BarChart3.PNG">
+<p><img src="BarChart3.PNG" alt="Bar Chart 3"></p>
 <h2 id="consuming-data-from-javascript">Consuming data from JavaScript</h2>
 <h3 id="the-data-view-object">The data view object</h3>
-<p>On the javascript side data is retrieved via a <a href="/spotfire-mods/api-docs/interfaces/dataview.html">DataView</a> object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to await their result.</p>
+<p>On the javascript side data is retrieved via a <a href="/spotfire-mods/api-docs/interfaces/dataview.html">DataView</a> object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to <code>await</code> their result.</p>
 <p>There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#continuous">continuous</a> method for continuous axes and a  <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#categorical">categorical</a> method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:</p>
-<pre><code>let yValue = row.continuous(&quot;Y&quot;);
-</code></pre>
-<p>The value retrieved by these methods can be of two types depending on which one is called. Either it is a <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a>, or it is a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a>. To list all values of a data view in csv like format, you could do this:</p>
-<pre><code>async function logDataView(dataView)
-{
-    // Print axes names
-    const axes = await dataView.axes();
-    console.log(axes.map(axis =&gt; axis.name).join(&quot;,&quot;));
-   
-    // Print the row values.
-    const rows = await dataView.allRows();
-    rows.forEach(row =&gt; {
-        console.log(axes.map(axis =&gt; {
-            if(axis.isCategorical){
-               return row.categorical(axis.name).fullName()
-            }                
-            return row.continuous(axis.name).value()
-        }).join(&quot;,&quot;));
-        
-    });
-}
-</code></pre>
-<p>For the simple bar chart above showing sales per fruit, the output would be:</p>
-<pre><code>X,Y
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">yValue</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
+</code></pre></div><p>The value retrieved by these methods can be of two types depending on which one is called. Either it is a <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a>, or it is a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a>. To list all values of a data view in csv like format, you could do this:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">logDataView</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#8f5902;font-style:italic">// Print axes names
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">axes</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">axes</span><span style="color:#000;font-weight:bold">();</span>
+    <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axes</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">map</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">join</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;,&#34;</span><span style="color:#000;font-weight:bold">));</span>
+
+    <span style="color:#8f5902;font-style:italic">// Print the row values.
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">rows</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">allRows</span><span style="color:#000;font-weight:bold">();</span>
+    <span style="color:#000">rows</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">forEach</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">row</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axes</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">map</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">if</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">isCategorical</span><span style="color:#000;font-weight:bold">){</span>
+                <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">categorical</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">formattedValue</span><span style="color:#000;font-weight:bold">()</span>
+            <span style="color:#000;font-weight:bold">}</span>
+            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">()</span>
+        <span style="color:#000;font-weight:bold">}).</span><span style="color:#000">join</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;,&#34;</span><span style="color:#000;font-weight:bold">));</span>
+
+    <span style="color:#000;font-weight:bold">});</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p>For the simple bar chart above showing sales per fruit, the output would be:</p>
+<pre><code class="language-csv" data-lang="csv">X,Y
 Apples,16000
-Oranges,31000 
-</code></pre>
-<h3 id="dataviewcontinuousvalue-and-dataviewcategoricalvalue">DataViewContinuousValue and DataViewCategoricalValue</h3>
+Oranges,31000
+</code></pre><h3 id="dataviewcontinuousvalue-and-dataviewcategoricalvalue">DataViewContinuousValue and DataViewCategoricalValue</h3>
 <p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html">DataViewContinuousValue</a> is a simple object with methods to retrieve the actual value (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#value">value</a>), and to get a string representation of it (<a href="/spotfire-mods/api-docs/interfaces/dataviewcontinuousvalue.html#formattedvalue">formattedValue</a>).</p>
 <p>A <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> on the other hand is a bit more complicated. Since categorical axes form hierarchies, each <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html">DataViewCategoricalValue</a> is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example, the output from the logDataView function would be:</p>
-<pre><code>X,Y
+<pre><code class="language-csv" data-lang="csv">X,Y
 Apples &gt;&gt; Spain,2500
 Apples &gt;&gt; USA,13500
 Oranges &gt;&gt; Spain,12000
 Oranges &gt;&gt; USA,19000
-</code></pre>
-<p>If, on the other hand, you want to access all parts of the path this can be done via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path">path</a> property that returns an array of <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvaluepathelement.html">DataViewCategoricalValuePathElement</a> objects. There is also a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex">leafIndex</a> property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.</p>
+</code></pre><p>If, on the other hand, you want to access all parts of the path this can be done via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#path">path</a> property that returns an array of <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvaluepathelement.html">DataViewCategoricalValuePathElement</a> objects. There is also a <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalvalue.html#leafindex">leafIndex</a> property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.</p>
 <h3 id="hierarchies">Hierarchies</h3>
 <p>Another way to access the data in the data view is to go via hierarchies. These are represented by <a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html">DataViewHierarchy</a> objects that can be retrieved for all categorical axes. Either via the <a href="/spotfire-mods/api-docs/interfaces/dataviewcategoricalaxis.html#hierarchy">hierarchy</a> property on the axis you get via getAxis, or via the <a href="/spotfire-mods/api-docs/interfaces/dataview.html#hierarchy">hierarchy</a> function on the data view.</p>
-<p>The hierarchy is a tree structure with some metadata about the levels, and methods to retrieve the root of the tree (<a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root">root</a>), or the array of leaf nodes (<a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#leaves">leaves</a>). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaves.</p>
+<p>The hierarchy is a tree structure with some metadata about the levels, and a method to retrieve the root of the tree (<a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchy.html#root">root</a>). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaf nodes retrieved from the <a href="/spotfire-mods/api-docs/interfaces/dataviewhierarchynode.html#leaves"><code>leaves</code></a> method on the root object.</p>
 <p>Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:</p>
-<pre><code>async function logViaHierarchy(dataView)
-{
-    const xHierarchy = await dataView.hierarchy(&quot;X&quot;, true);
-    const root = await xHierarchy.root();
-    log(root, &quot;&quot;);
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">logViaHierarchy</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">xHierarchy</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">hierarchy</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">root</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">xHierarchy</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">root</span><span style="color:#000;font-weight:bold">();</span>
+    <span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">root</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;&#34;</span><span style="color:#000;font-weight:bold">);</span>
 
-    function log(node, indent) {
-        console.log(indent + node.name);
-        indent += &quot;    &quot;;
-        if(node.children) {
-            node.children.forEach(node =&gt; log(node, indent));
-        } 
-        else {
-            node.rows().forEach(row =&gt; console.log(indent + row.continuous(&quot;Y&quot;).value()))
-        }
-    }
-}
-</code></pre>
-<p>This would produce the following output (the root has no name):</p>
-<pre><code>Apples
-     Spain
-         2500
-     USA
-         13500
- Oranges
-     Spain
-         12000
-     USA
-         19000
-</code></pre>
-<h3 id="data-type-mapping">Data type mapping</h3>
+    <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">indent</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">indent</span> <span style="color:#ce5c00;font-weight:bold">+</span> <span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">formattedValue</span><span style="color:#000;font-weight:bold">());</span>
+        <span style="color:#000">indent</span> <span style="color:#ce5c00;font-weight:bold">+=</span> <span style="color:#4e9a06">&#34;    &#34;</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#204a87;font-weight:bold">if</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">children</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">children</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">forEach</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">indent</span><span style="color:#000;font-weight:bold">));</span>
+        <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#204a87;font-weight:bold">else</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">rows</span><span style="color:#000;font-weight:bold">().</span><span style="color:#000">forEach</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">row</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">indent</span> <span style="color:#ce5c00;font-weight:bold">+</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">()))</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p>This would produce the following output (the root has no name):</p>
+<pre><code class="language-log" data-lang="log">    Apples
+         Spain
+             2500
+         USA
+             13500
+     Oranges
+         Spain
+             12000
+         USA
+             19000
+</code></pre><h3 id="data-type-mapping">Data type mapping</h3>
 <p>Columns and expressions in Spotfire can have a number of different data types. When reading data in JavaScript these types are mapped to corresponding JavaScript types as follows:</p>
 <table>
 <thead>
@@ -516,20 +505,18 @@ Oranges &gt;&gt; USA,19000
 <h2 id="specifying-data-types-for-continuous-axes">Specifying data types for continuous axes</h2>
 <p>Categorical axes basically treat all data types the same way. The data is ordered and its string representation is used.
 For continuous axes it is possible to specify what data types should be supported. By default, they allow only numeric data. You may also choose to allow additional data types by specifying it in the axis section of the manifest. For instance to support date and time data, you would specify the following:</p>
-<pre><code>&quot;dataTypes&quot;: {
-    &quot;allowDateTime&quot;: true,
-    &quot;allowNumeric&quot;: true
-}
-</code></pre>
-<p>In addition to these two flags, there are also flags to turn on support for strings, booleans and time spans.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#4e9a06">&#34;dataTypes&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">&#34;allowDateTime&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#204a87;font-weight:bold">true</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;allowNumeric&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#204a87;font-weight:bold">true</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p>In addition to these two flags, there are also flags to turn on support for strings, booleans and time spans.</p>
 <h2 id="using-the-spotfire-color-axis">Using the Spotfire color axis</h2>
 <p>Mods can use the same color axis as is used by the native Spotfire visualizations. You do this by specifying a &ldquo;colorAxis&rdquo; entry in the data view definition section of the manifest:</p>
-<pre><code>&quot;dataViewDefinition&quot;: {
-    &quot;colorAxis&quot;: {
-        &quot;mode&quot;: &quot;dual&quot;
-    }
-</code></pre>
-<p>The &ldquo;mode&rdquo; and other properties for the color axis are specified the same way as for other axes.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#4e9a06">&#34;dataViewDefinition&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">&#34;colorAxis&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;dual&#34;</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p>The &ldquo;mode&rdquo; and other properties for the color axis are specified the same way as for other axes.</p>
 <p>On the Javascript side you access the data values for the color axis by referring to it by its name, &ldquo;Color&rdquo;.
 The actual color computed for each row can be retrieved via the <a href="/spotfire-mods/api-docs/interfaces/dataviewrow.html#color">color</a> function on a row. It returns an object with the color hexcode.</p>
 <h2 id="using-multiple-measures-on-continuous-axes">Using multiple measures on continuous axes</h2>
