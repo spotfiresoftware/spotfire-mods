@@ -722,7 +722,7 @@ export declare interface FontInfo {
  * Represents the general styling information that applies to the Mod Visualization.
  * @public
  */
-declare interface GeneralStylingInfo {
+export declare interface GeneralStylingInfo {
     /**
      * Gets and object describing the font that shall be used by the Mod Visualization.
      */
@@ -753,7 +753,7 @@ export declare function initialize(onLoaded: OnLoadCallback): void;
  * Represents the styling information that applies to scale lines in the Mod Visualization.
  * @public
  */
-declare interface LineStylingInfo {
+export declare interface LineStylingInfo {
     /**
      * Gets the stroke to use for scale lines. This value is valid a CSS color or the value `"none"`.
      */
@@ -1355,7 +1355,7 @@ export declare interface RenderContext {
  * Represents the styling information that applies to scales in the Mod Visualization.
  * @public
  */
-declare interface ScaleStylingInfo {
+export declare interface ScaleStylingInfo {
     /**
      * Gets and object describing the font that shall be used in the scales of the Mod Visualization.
      */
@@ -1452,7 +1452,7 @@ export declare interface StylingInfo {
  * Represents the styling information that applies to scale ticks in the Mod Visualization.
  * @public
  */
-declare interface TickStylingInfo {
+export declare interface TickStylingInfo {
     /**
      * Gets the stroke to use for scale ticks. This value is valid a CSS color or the value `"none"`.
      */
