@@ -14,15 +14,15 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@babel/core": "^7.10.4",
-        "@babel/plugin-transform-runtime": "^7.10.4",
-        "@babel/preset-env": "^7.10.4",
-        "babel-loader": "^8.1.0",
-        "copy-webpack-plugin": "^6.0.3",
-        "core-js": "^3.6.5",
+        "@babel/core": "^7.12.10",
+        "@babel/plugin-transform-runtime": "^7.12.10",
+        "@babel/preset-env": "^7.12.11",
+        "babel-loader": "^8.2.2",
+        "copy-webpack-plugin": "^6.4.1",
+        "core-js": "^3.8.3",
         "live-server": "^1.2.1",
         "regenerator-runtime": "^0.13.5",
-        "webpack": "^4.43.0",
+        "webpack": "^4.46.0",
         "webpack-cli": "^3.3.12"
     },
     "dependencies": {}
