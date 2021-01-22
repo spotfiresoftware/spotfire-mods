@@ -128,6 +128,8 @@
                             <input type="checkbox" id="tsd-filter-inherited" checked />
                             <label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 
+                                <input type="checkbox" id="tsd-filter-externals" checked />
+                                <label class="tsd-widget" for="tsd-filter-externals">Externals</label>
 
                                 <input type="checkbox" id="tsd-filter-only-exported" />
                                 <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
@@ -145,7 +147,7 @@
 	<div class="container">
 		<ul class="tsd-breadcrumb">
 			<li>
-				<a href="../globals.html">Globals</a>
+				<a href="../modules.html">Globals</a>
 			</li>
 			<li>
 				<a href="dataviewhierarchy.html">DataViewHierarchy</a>
@@ -231,7 +233,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="levels" class="tsd-anchor"></a>
 					<h3>levels</h3>
-					<div class="tsd-signature tsd-kind-icon">levels<span class="tsd-signature-symbol">:</span> <a href="dataviewhierarchylevel.html" class="tsd-signature-type">DataViewHierarchyLevel</a><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">levels<span class="tsd-signature-symbol">:</span> <a href="dataviewhierarchylevel.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewHierarchyLevel</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in spotfire-api.d.ts:493</li>
@@ -265,7 +267,7 @@
 					<a name="root" class="tsd-anchor"></a>
 					<h3>root</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">root<span class="tsd-signature-symbol">(</span>abortPredicate<span class="tsd-signature-symbol">?: </span><a href="../globals.html#abortpredicate" class="tsd-signature-type">AbortPredicate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="readable.html#promise" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="dataviewhierarchynode.html" class="tsd-signature-type">DataViewHierarchyNode</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">root<span class="tsd-signature-symbol">(</span>abortPredicate<span class="tsd-signature-symbol">?: </span><a href="../modules.html#abortpredicate" class="tsd-signature-type" data-tsd-kind="Type alias">AbortPredicate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="dataviewhierarchynode.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewHierarchyNode</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -282,14 +284,14 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> abortPredicate: <a href="../globals.html#abortpredicate" class="tsd-signature-type">AbortPredicate</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> abortPredicate: <a href="../modules.html#abortpredicate" class="tsd-signature-type" data-tsd-kind="Type alias">AbortPredicate</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns true the promise will be rejected.
 										The default behavior is that reading will be aborted when new non-streaming update is available.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="readable.html#promise" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="dataviewhierarchynode.html" class="tsd-signature-type">DataViewHierarchyNode</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="dataviewhierarchynode.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewHierarchyNode</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>null if reading data was aborted, otherwise a <a href="dataviewhierarchynode.html">DataViewHierarchyNode</a>.</p>
 						</li>
 					</ul>
@@ -299,8 +301,8 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
 					</li>
 				</ul>
 			</nav>
@@ -349,6 +351,7 @@
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/hideProject.js"></script>
 <script src="../assets/js/overview.js"></script>
 <script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>

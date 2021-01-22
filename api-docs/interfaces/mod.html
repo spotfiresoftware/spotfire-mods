@@ -128,6 +128,8 @@
                             <input type="checkbox" id="tsd-filter-inherited" checked />
                             <label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 
+                                <input type="checkbox" id="tsd-filter-externals" checked />
+                                <label class="tsd-widget" for="tsd-filter-externals">Externals</label>
 
                                 <input type="checkbox" id="tsd-filter-only-exported" />
                                 <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
@@ -145,7 +147,7 @@
 	<div class="container">
 		<ul class="tsd-breadcrumb">
 			<li>
-				<a href="../globals.html">Globals</a>
+				<a href="../modules.html">Globals</a>
 			</li>
 			<li>
 				<a href="mod.html">Mod</a>
@@ -206,7 +208,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="controls" class="tsd-anchor"></a>
 					<h3>controls</h3>
-					<div class="tsd-signature tsd-kind-icon">controls<span class="tsd-signature-symbol">:</span> <a href="controls.html" class="tsd-signature-type">Controls</a></div>
+					<div class="tsd-signature tsd-kind-icon">controls<span class="tsd-signature-symbol">:</span> <a href="controls.html" class="tsd-signature-type" data-tsd-kind="Interface">Controls</a></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in spotfire-api.d.ts:831</li>
@@ -221,7 +223,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="document" class="tsd-anchor"></a>
 					<h3>document</h3>
-					<div class="tsd-signature tsd-kind-icon">document<span class="tsd-signature-symbol">:</span> <a href="spotfiredocument.html" class="tsd-signature-type">SpotfireDocument</a></div>
+					<div class="tsd-signature tsd-kind-icon">document<span class="tsd-signature-symbol">:</span> <a href="spotfiredocument.html" class="tsd-signature-type" data-tsd-kind="Interface">SpotfireDocument</a></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in spotfire-api.d.ts:807</li>
@@ -236,7 +238,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="metadata" class="tsd-anchor"></a>
 					<h3>metadata</h3>
-					<div class="tsd-signature tsd-kind-icon">metadata<span class="tsd-signature-symbol">:</span> <a href="modmetadata.html" class="tsd-signature-type">ModMetadata</a></div>
+					<div class="tsd-signature tsd-kind-icon">metadata<span class="tsd-signature-symbol">:</span> <a href="modmetadata.html" class="tsd-signature-type" data-tsd-kind="Interface">ModMetadata</a></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in spotfire-api.d.ts:870</li>
@@ -251,7 +253,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="visualization" class="tsd-anchor"></a>
 					<h3>visualization</h3>
-					<div class="tsd-signature tsd-kind-icon">visualization<span class="tsd-signature-symbol">:</span> <a href="modvisualization.html" class="tsd-signature-type">ModVisualization</a></div>
+					<div class="tsd-signature tsd-kind-icon">visualization<span class="tsd-signature-symbol">:</span> <a href="modvisualization.html" class="tsd-signature-type" data-tsd-kind="Interface">ModVisualization</a></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in spotfire-api.d.ts:811</li>
@@ -270,7 +272,7 @@
 					<a name="createreader" class="tsd-anchor"></a>
 					<h3>create<wbr>Reader</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Reader&lt;T&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>readables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="reader.html" class="tsd-signature-type">Reader</a><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#extractvaluetype" class="tsd-signature-type">ExtractValueType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Reader&lt;T&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>readables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="reader.html" class="tsd-signature-type" data-tsd-kind="Interface">Reader</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#extractvaluetype" class="tsd-signature-type" data-tsd-kind="Type alias">ExtractValueType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -289,7 +291,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="readable.html" class="tsd-signature-type">Readable</a><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">readonly </span><a href="readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -301,7 +303,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="reader.html" class="tsd-signature-type">Reader</a><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#extractvaluetype" class="tsd-signature-type">ExtractValueType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="reader.html" class="tsd-signature-type" data-tsd-kind="Interface">Reader</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#extractvaluetype" class="tsd-signature-type" data-tsd-kind="Type alias">ExtractValueType</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -309,7 +311,7 @@
 					<a name="getrendercontext" class="tsd-anchor"></a>
 					<h3>get<wbr>Render<wbr>Context</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Render<wbr>Context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="rendercontext.html" class="tsd-signature-type">RenderContext</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Render<wbr>Context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="rendercontext.html" class="tsd-signature-type" data-tsd-kind="Interface">RenderContext</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -320,14 +322,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get the Mod&#39;s render context. This function should be invoked as soon as possible in the <a href="../globals.html#initialize">initialize</a> callback.</p>
+									<p>Get the Mod&#39;s render context. This function should be invoked as soon as possible in the <a href="../modules.html#initialize">initialize</a> callback.</p>
 								</div>
-								<p>If this method is called in the <a href="../globals.html#initialize">initialize</a> callback, Spotfire will wait for the Mod to finish rendering during
+								<p>If this method is called in the <a href="../modules.html#initialize">initialize</a> callback, Spotfire will wait for the Mod to finish rendering during
 								an export. The export will be made once the <a href="rendercontext.html#signalrendercomplete">RenderContext.signalRenderComplete</a> method has been called.</p>
-								<p>If this method is not called in the <a href="../globals.html#initialize">initialize</a> callback, Spotfire will <em>not</em> wait for the Mod to finish rendering during
+								<p>If this method is not called in the <a href="../modules.html#initialize">initialize</a> callback, Spotfire will <em>not</em> wait for the Mod to finish rendering during
 								an export. Instead, the Mod will be automatically exported after one second.</p>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="rendercontext.html" class="tsd-signature-type">RenderContext</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="rendercontext.html" class="tsd-signature-type" data-tsd-kind="Interface">RenderContext</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -335,7 +337,7 @@
 					<a name="property" class="tsd-anchor"></a>
 					<h3>property</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">property&lt;T&gt;<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../globals.html#readableproxy" class="tsd-signature-type">ReadableProxy</a><span class="tsd-signature-symbol">&lt;</span><a href="modproperty.html" class="tsd-signature-type">ModProperty</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">property&lt;T&gt;<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#readableproxy" class="tsd-signature-type" data-tsd-kind="Type alias">ReadableProxy</a><span class="tsd-signature-symbol">&lt;</span><a href="modproperty.html" class="tsd-signature-type" data-tsd-kind="Interface">ModProperty</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -352,7 +354,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="../globals.html#modpropertydatatype" class="tsd-signature-type">ModPropertyDataType</a></h4>
+									<h4>T<span class="tsd-signature-symbol">: </span><a href="../modules.html#modpropertydatatype" class="tsd-signature-type" data-tsd-kind="Type alias">ModPropertyDataType</a></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -361,7 +363,7 @@
 									<h5>name: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../globals.html#readableproxy" class="tsd-signature-type">ReadableProxy</a><span class="tsd-signature-symbol">&lt;</span><a href="modproperty.html" class="tsd-signature-type">ModProperty</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#readableproxy" class="tsd-signature-type" data-tsd-kind="Type alias">ReadableProxy</a><span class="tsd-signature-symbol">&lt;</span><a href="modproperty.html" class="tsd-signature-type" data-tsd-kind="Interface">ModProperty</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -386,18 +388,19 @@
 								Modifications done outside of a transaction action callback will be grouped together in an implicit transaction.</p>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
-									<dd><pre><code>mod.transaction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    mod.property(<span class="hljs-string">&quot;X&quot;</span>).set(<span class="hljs-string">&quot;new value for X&quot;</span>);
-    mod.property(<span class="hljs-string">&quot;Y&quot;</span>).set(<span class="hljs-string">&quot;new value for Y&quot;</span>);
-},
-<span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_in">error</span>)</span> =&gt;</span> {
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">error</span>) {
-        // Show <span class="hljs-built_in">error</span> message.
-    }
-    <span class="hljs-keyword">else</span> {
-        // Handle success, e.g. re-enable action button.
-    }
-});</code></pre>
+									<dd><pre><code><span style="color: #001080">mod</span><span style="color: #000000">.</span><span style="color: #795E26">transaction</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">mod</span><span style="color: #000000">.</span><span style="color: #795E26">property</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;X&quot;</span><span style="color: #000000">).</span><span style="color: #795E26">set</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;new value for X&quot;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #001080">mod</span><span style="color: #000000">.</span><span style="color: #795E26">property</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Y&quot;</span><span style="color: #000000">).</span><span style="color: #795E26">set</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;new value for Y&quot;</span><span style="color: #000000">);</span>
+<span style="color: #000000">},</span>
+<span style="color: #000000">(</span><span style="color: #001080">error</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">error</span><span style="color: #000000">) {</span>
+<span style="color: #000000">        </span><span style="color: #008000">// Show error message.</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">else</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #008000">// Handle success, e.g. re-enable action button.</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">});</span>
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -454,7 +457,7 @@
 					<a name="windowsize" class="tsd-anchor"></a>
 					<h3>window<wbr>Size</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">window<wbr>Size<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="readable.html" class="tsd-signature-type">Readable</a><span class="tsd-signature-symbol">&lt;</span><a href="size.html" class="tsd-signature-type">Size</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">window<wbr>Size<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><a href="size.html" class="tsd-signature-type" data-tsd-kind="Interface">Size</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -469,7 +472,7 @@
 									is rendered. That is, the size of the iframe created for the Mod in the Spotfire UI.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="readable.html" class="tsd-signature-type">Readable</a><span class="tsd-signature-symbol">&lt;</span><a href="size.html" class="tsd-signature-type">Size</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><a href="size.html" class="tsd-signature-type" data-tsd-kind="Interface">Size</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -478,8 +481,8 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
 					</li>
 				</ul>
 			</nav>
@@ -540,6 +543,7 @@
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/hideProject.js"></script>
 <script src="../assets/js/overview.js"></script>
 <script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>

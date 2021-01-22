@@ -128,6 +128,8 @@
                             <input type="checkbox" id="tsd-filter-inherited" checked />
                             <label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 
+                                <input type="checkbox" id="tsd-filter-externals" checked />
+                                <label class="tsd-widget" for="tsd-filter-externals">Externals</label>
 
                                 <input type="checkbox" id="tsd-filter-only-exported" />
                                 <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
@@ -145,7 +147,7 @@
 	<div class="container">
 		<ul class="tsd-breadcrumb">
 			<li>
-				<a href="../globals.html">Globals</a>
+				<a href="../modules.html">Globals</a>
 			</li>
 			<li>
 				<a href="reader.html">Reader</a>
@@ -205,7 +207,7 @@
 					<a name="hasexpired" class="tsd-anchor"></a>
 					<h3>has<wbr>Expired</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">has<wbr>Expired<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="readable.html#promise" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">has<wbr>Expired<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -223,7 +225,7 @@
 									readables specified when the reader was created.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="readable.html#promise" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -248,10 +250,11 @@
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
 									<dd><p>Read content of a mod property once.</p>
-										<pre><code>let reader = mod.createReader(mod.property(<span class="hljs-string">&quot;CreatedBy&quot;</span>));
-reader.once(<span class="hljs-function"><span class="hljs-params">(createdBy)</span> =&gt;</span> {
-   <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">await</span> createdBy.value());
-});</code></pre>
+										<pre><code><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">reader</span><span style="color: #000000"> = </span><span style="color: #001080">mod</span><span style="color: #000000">.</span><span style="color: #795E26">createReader</span><span style="color: #000000">(</span><span style="color: #001080">mod</span><span style="color: #000000">.</span><span style="color: #795E26">property</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;CreatedBy&quot;</span><span style="color: #000000">));</span>
+<span style="color: #001080">reader</span><span style="color: #000000">.</span><span style="color: #795E26">once</span><span style="color: #000000">((</span><span style="color: #001080">createdBy</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">   </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">createdBy</span><span style="color: #000000">.</span><span style="color: #795E26">value</span><span style="color: #000000">());</span>
+<span style="color: #000000">});</span>
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -330,10 +333,11 @@ reader.once(<span class="hljs-function"><span class="hljs-params">(createdBy)</s
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
 									<dd><p>Subscribe to changes in the <a href="dataview.html">DataView</a>.</p>
-										<pre><code><span class="hljs-keyword">let</span> reader = <span class="hljs-keyword">mod</span>.create<span class="hljs-constructor">Reader(<span class="hljs-params">mod</span>.<span class="hljs-params">visualization</span>.<span class="hljs-params">data</span>()</span>);
-reader.subscribe((dataView) =&gt; {
-   console.log(await dataView.row<span class="hljs-constructor">Count()</span>);
-});</code></pre>
+										<pre><code><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">reader</span><span style="color: #000000"> = </span><span style="color: #001080">mod</span><span style="color: #000000">.</span><span style="color: #795E26">createReader</span><span style="color: #000000">(</span><span style="color: #001080">mod</span><span style="color: #000000">.</span><span style="color: #001080">visualization</span><span style="color: #000000">.</span><span style="color: #795E26">data</span><span style="color: #000000">());</span>
+<span style="color: #001080">reader</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">((</span><span style="color: #001080">dataView</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">   </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">dataView</span><span style="color: #000000">.</span><span style="color: #795E26">rowCount</span><span style="color: #000000">());</span>
+<span style="color: #000000">});</span>
+</code></pre>
 									</dd>
 								</dl>
 							</div>
@@ -398,8 +402,8 @@ reader.subscribe((dataView) =&gt; {
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
 					</li>
 				</ul>
 			</nav>
@@ -442,6 +446,7 @@ reader.subscribe((dataView) =&gt; {
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/hideProject.js"></script>
 <script src="../assets/js/overview.js"></script>
 <script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>

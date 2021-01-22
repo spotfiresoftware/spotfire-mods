@@ -30,8 +30,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.002a4b146793b48502e3e6ee464a39e140b691ea15a1a6ce1b20845d015c91c7.css" as="style">
-<link href="/spotfire-mods/scss/main.min.002a4b146793b48502e3e6ee464a39e140b691ea15a1a6ce1b20845d015c91c7.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.4c0876a5047f52f890950d4c0e413f53fa251e7d913cd2e6f0bf3cd510821323.css" as="style">
+<link href="/spotfire-mods/scss/main.min.4c0876a5047f52f890950d4c0e413f53fa251e7d913cd2e6f0bf3cd510821323.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -164,7 +164,7 @@
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2020 TIBCO Software Inc. All Rights Reserved</small>
+        <small class="text-white">&copy; 2021 TIBCO Software Inc. All Rights Reserved</small>
         <small class="ml-1"><a href="https://www.tibco.com/company/terms-of-use" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>
