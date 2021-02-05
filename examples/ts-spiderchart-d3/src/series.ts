@@ -1,4 +1,3 @@
-import { color } from "d3";
 import { DataViewHierarchyNode, DataViewRow, MarkingOperation } from "spotfire-api";
 
 export interface Serie {
@@ -94,7 +93,7 @@ export function buildColorSeries(
             Y_Formatted: "-",
             index: serie.index,
             marked: false,
-            color: null,
+            color: "",
             virtual: true
         };
     }

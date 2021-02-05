@@ -155,7 +155,7 @@
         "apiVersion": {
             "type": "string",
             "title": "Mod API version.",
-            "description": "Specifies the version of the Mod JavaScript API used by the code of this Mod.",
+            "description": "Specifies the version of the Mod JavaScript API used by the code of this Mod. Set the lowest possible version number that the Mod requires to ensure best possible backward compatibility with older Spotfire systems. Using a newer API version than specified will result in runtime errors, even if the current Spotfire system includes that API.",
             "default": "1.0",
             "examples": ["1.0"],
             "pattern": "^(.*)$"
@@ -377,8 +377,6 @@
                 "default": "",
                 "examples": [
                     "index.html",
-                    "spotfire/spotfire-api.d.ts",
-                    "spotfire/spotfire-api.js",
                     "main.css",
                     "main.js"
                 ],

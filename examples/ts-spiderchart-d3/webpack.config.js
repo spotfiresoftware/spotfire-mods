@@ -22,5 +22,9 @@ module.exports = {
         extensions: [".tsx", ".ts", ".js"]
     },
     plugins: [new webpack.NamedModulesPlugin(), new CopyPlugin({ patterns: [{ from: "static" }] })],
-    devtool: "inline-source-map"
+    devtool: "inline-source-map",
+    performance: {
+        maxEntrypointSize: 800000,
+        maxAssetSize: 800000
+    }
 };

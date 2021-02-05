@@ -5,7 +5,11 @@ import { AxisPart, DataView, DataViewHierarchyNode, Mod, ModProperty } from "spo
 var events = require("events");
 
 const Spotfire = window.Spotfire;
-const DEBUG = false;
+const DEBUG = true;
+
+export interface RenderState {
+    preventRender: boolean;
+}
 
 Spotfire.initialize(async mod => {
     const context = mod.getRenderContext();
@@ -25,7 +29,7 @@ Spotfire.initialize(async mod => {
     /**
      * Create a persistent state used by the rendering code
      */
-    const state = {};
+    const state: RenderState = { preventRender: false };
 
     /**
      * Creates a function that is part of the main read-render loop.
@@ -153,7 +157,13 @@ async function buildData(mod: Mod, dataView: DataView): Promise<Data | null> {
         clearMarking: dataView.clearMarking,
         yDomain: { min: minValue, max: maxValue },
         xScale: xAxisData,
-        series: buildColorSeries(colorLeaves, xHierarchyLeaves, !xHierarchy.isEmpty, createPointTooltip, minValue)
+        series: buildColorSeries(
+            colorLeaves,
+            xHierarchyLeaves,
+            !(xHierarchy?.isEmpty ?? true),
+            createPointTooltip,
+            minValue
+        )
     };
 
     function createPointTooltip(point: Point) {

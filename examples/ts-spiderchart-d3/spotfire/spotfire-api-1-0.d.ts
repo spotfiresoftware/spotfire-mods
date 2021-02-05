@@ -1,8 +1,8 @@
 /*
-* Copyright © 2020. TIBCO Software Inc.
-* This file is subject to the license terms contained
-* in the license file that is distributed with this file.
-*/
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
 export as namespace Spotfire;
 
 /**
@@ -16,7 +16,8 @@ export declare type AbortPredicate = (currentRowCount: number) => boolean;
  * These can be either document properties, data table properties or data column properties.
  * @public
  */
-export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType> extends AnalysisPropertyValue<T> {
+export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>
+    extends AnalysisPropertyValue<T> {
     /**
      * Set the value of this instance.
      * @param value - The value to set.
@@ -250,7 +251,19 @@ export declare interface DataType {
     /**
      * Gets the name of this DataType.
      */
-    name: "String" | "Integer" | "LongInteger" | "Real" | "SingleReal" | "Currency" | "Boolean" | "Date" | "DateTime" | "Time" | "TimeSpan" | "Binary";
+    name:
+        | "String"
+        | "Integer"
+        | "LongInteger"
+        | "Real"
+        | "SingleReal"
+        | "Currency"
+        | "Boolean"
+        | "Date"
+        | "DateTime"
+        | "Time"
+        | "TimeSpan"
+        | "Binary";
     /**
      * Gets a value indicating whether the data type is numeric or not, that is,
      * Integer, Currency, Real, LongInteger, or SingleReal.
@@ -688,7 +701,9 @@ export declare interface ErrorOverlay {
  * @public
  */
 export declare type ExtractValueType<readableArray extends ReadonlyArray<Readable<any>>> = {
-    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType> ? readableNameType : never;
+    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType>
+        ? readableNameType
+        : never;
 };
 
 /**
@@ -722,7 +737,7 @@ export declare interface FontInfo {
  * Represents the general styling information that applies to the Mod Visualization.
  * @public
  */
-declare interface GeneralStylingInfo {
+export declare interface GeneralStylingInfo {
     /**
      * Gets and object describing the font that shall be used by the Mod Visualization.
      */
@@ -753,7 +768,7 @@ export declare function initialize(onLoaded: OnLoadCallback): void;
  * Represents the styling information that applies to scale lines in the Mod Visualization.
  * @public
  */
-declare interface LineStylingInfo {
+export declare interface LineStylingInfo {
     /**
      * Gets the stroke to use for scale lines. This value is valid a CSS color or the value `"none"`.
      */
@@ -1268,7 +1283,8 @@ export declare interface Readable<T = any> extends Promise<T> {
  * A full node will be created by using a {@link Reader}.
  * @public
  */
-export declare type ReadableProxy<Node> = Readable<Node> & Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
+export declare type ReadableProxy<Node> = Readable<Node> &
+    Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
 
 /**
  * The reader is responsible for combining multiple {@link Readable}s and scheduling a callback to be invoked
@@ -1355,7 +1371,7 @@ export declare interface RenderContext {
  * Represents the styling information that applies to scales in the Mod Visualization.
  * @public
  */
-declare interface ScaleStylingInfo {
+export declare interface ScaleStylingInfo {
     /**
      * Gets and object describing the font that shall be used in the scales of the Mod Visualization.
      */
@@ -1406,7 +1422,9 @@ export declare interface SpotfireDocument {
     /**
      * Provides access to the `Document Property` with the specified `name` in the Spotfire Document.
      */
-    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(name: string): ReadableProxy<AnalysisProperty<T>>;
+    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(
+        name: string
+    ): ReadableProxy<AnalysisProperty<T>>;
     /**
      * Provides access to the {@link Page}s in the Spotfire document.
      */
@@ -1452,7 +1470,7 @@ export declare interface StylingInfo {
  * Represents the styling information that applies to scale ticks in the Mod Visualization.
  * @public
  */
-declare interface TickStylingInfo {
+export declare interface TickStylingInfo {
     /**
      * Gets the stroke to use for scale ticks. This value is valid a CSS color or the value `"none"`.
      */
@@ -1526,4 +1544,4 @@ export declare interface Tooltip {
     hide(): void;
 }
 
-export { }
+export {};

@@ -2,10 +2,11 @@
 import * as d3 from "d3";
 import { FontInfo, Size, Tooltip } from "spotfire-api";
 import { overlap } from "./helper";
+import { RenderState } from "./index";
 import { Serie, Point } from "./series";
 
 type D3_SELECTION = d3.Selection<SVGGElement, unknown, HTMLElement, any>;
-type D3_SERIE_SELECTION = d3.Selection<SVGGElement, Serie, SVGGElement, unknown>;
+type D3_SERIE_SELECTION = d3.Selection<SVGGElement, Serie, SVGGElement | null, unknown>;
 
 /**
  * Main svg container
@@ -65,7 +66,7 @@ export interface Data {
 
 /**
  * Renders the chart.
- * @param {Object} state
+ * @param {RenderState} state
  * @param {Spotfire.DataView} dataView - dataView
  * @param {Spotfire.Size} windowSize - windowSize
  * @param {Partial<Options>} config - config
@@ -74,7 +75,7 @@ export interface Data {
  * @param {any} popoutClosedEventEmitter - popoutClosedEventEmitter
  */
 export async function render(
-    state,
+    state: RenderState,
     data: Data,
     windowSize: Size,
     config: Partial<Options>,
@@ -90,7 +91,7 @@ export async function render(
         return;
     }
 
-    const onSelection = ({ dragSelectActive }) => {
+    const onSelection = (dragSelectActive: boolean) => {
         state.preventRender = dragSelectActive;
     };
 
@@ -226,7 +227,7 @@ export async function render(
         }
         drawBlobsOutline(svgRadarBlobs);
         drawYAxisLabels(svgChart);
-        svgRadarBlobs.each(function (this: SVGPathElement, d) {
+        svgRadarBlobs.each(function (this, d) {
             drawHoverLine(d3.select(this), radarLine(d.points), colorForSerie(d));
         });
         drawBlobsCircles(svgRadarBlobs);
@@ -365,7 +366,7 @@ export async function render(
             .append("g")
             .attr("transform", function (_d, i) {
                 if (!cfg.xLabelsRotation) {
-                    return;
+                    return null;
                 }
                 let centerAngle = angleSlice * i - Math.PI / 2;
                 let x2 = radius * Math.cos(centerAngle);
@@ -398,7 +399,7 @@ export async function render(
             })
             .attr("y", function (_d: string, i: number) {
                 if (cfg.xLabelsRotation) {
-                    return;
+                    return null;
                 }
                 let y2 = radius * Math.sin(angleSlice * i - Math.PI / 2);
                 let yPadding = (cfg.labelOffset * y2) / radius;
@@ -408,7 +409,7 @@ export async function render(
             .attr("transform", function (_d, i) {
                 let x2 = radius * Math.cos(angleSlice * i - Math.PI / 2);
                 if (!cfg.xLabelsRotation || x2 >= 0) {
-                    return;
+                    return null;
                 }
                 return "scale(-1, -1) rotate(180, " + d3.select(this).attr("x") + ", 0)";
             })
@@ -422,7 +423,7 @@ export async function render(
             })
             .on("mouseout", () => tooltip.hide());
 
-        let previousElement = undefined;
+        let previousElement:d3.Selection<HTMLElement | null, unknown, null, undefined> | null;
 
         if (cfg.xLabelsRotation) {
             xLabels
@@ -432,9 +433,14 @@ export async function render(
                 })
                 .each(function () {
                     let currentElement = d3.select(this);
+                    let currentNode = currentElement.node();
+                    let svgNode = svg.node();
+                    if (!currentNode || !svgNode) {
+                        return;
+                    }
                     let currentText = currentElement.text();
-                    let currentElementBoundingRect = currentElement.node().getBoundingClientRect();
-                    const svgElementBoundingRect = svg.node().getBoundingClientRect();
+                    let currentElementBoundingRect = currentNode.getBoundingClientRect();
+                    const svgElementBoundingRect = svgNode.getBoundingClientRect();
 
                     while (
                         currentElementBoundingRect.top < svgElementBoundingRect.top ||
@@ -448,7 +454,7 @@ export async function render(
 
                         currentText = currentText.slice(0, -1);
                         currentElement.text(currentText + "...");
-                        currentElementBoundingRect = currentElement.node().getBoundingClientRect();
+                        currentElementBoundingRect = currentNode.getBoundingClientRect();
                     }
                 });
         } else {
@@ -459,15 +465,22 @@ export async function render(
                 })
                 .each(function () {
                     let currentElement = d3.select(this);
-                    let currentElementParent = d3.select(this.parentNode);
+                    let currentElementParent = d3.select(this.parentElement);
                     let currentText = currentElement.text();
-
-                    if (previousElement) {
-                        var previousText = previousElement.text();
-
-                        var currentElementBoundingRect = currentElement.node().getBoundingClientRect();
-                        var previousElemenetBoundingRect = previousElement.node().getBoundingClientRect();
-                        const svgElementBoundingRect = svg.node().getBoundingClientRect();
+                    let currentNode = currentElement.node();
+                    let previousNode = previousElement?.node();
+                    var previousText = previousElement?.text();
+                    let svgNode = svg.node();
+                    
+                    if (!currentNode || !svgNode ) {
+                        return;
+                    }
+                    
+                    if (previousNode) {
+                        
+                        var currentElementBoundingRect = currentNode.getBoundingClientRect();
+                        var previousElemenetBoundingRect = previousNode.getBoundingClientRect();
+                        const svgElementBoundingRect = svgNode.getBoundingClientRect();
 
                         while (
                             overlap(currentElementBoundingRect, previousElemenetBoundingRect) ||
@@ -476,7 +489,7 @@ export async function render(
                             currentElementBoundingRect.bottom > svgElementBoundingRect.bottom ||
                             currentElementBoundingRect.left < svgElementBoundingRect.left
                         ) {
-                            if (currentText.length <= 1 && previousText.length <= 1) {
+                            if (currentText.length <= 1 && previousText!.length <= 1) {
                                 previousElement = currentElementParent;
                                 return;
                             }
@@ -488,17 +501,17 @@ export async function render(
                                     currentText = currentText.slice(0, -1);
                                 }
                                 currentElement.text(currentText + "...");
-                                currentElementBoundingRect = currentElement.node().getBoundingClientRect();
+                                currentElementBoundingRect = currentNode.getBoundingClientRect();
                             }
 
-                            if (previousText.length > 1) {
-                                if (previousText.slice(-3) === "...") {
-                                    previousText = previousText.slice(0, -4);
+                            if (previousText!.length > 1) {
+                                if (previousText!.slice(-3) === "...") {
+                                    previousText = previousText!.slice(0, -4);
                                 } else {
-                                    previousText = previousText.slice(0, -1);
+                                    previousText = previousText!.slice(0, -1);
                                 }
-                                previousElement.text(previousText + "...");
-                                previousElemenetBoundingRect = previousElement.node().getBoundingClientRect();
+                                previousElement!.text(previousText + "...");
+                                previousElemenetBoundingRect = previousNode.getBoundingClientRect();
                             }
                         }
                     }
@@ -604,7 +617,10 @@ export async function render(
     /**
      * Draws hover line.
      */
-    function drawHoverLine(parent: D3_SERIE_SELECTION, hoverLinePath: string, hoverLinePathColor: string) {
+    function drawHoverLine(parent: D3_SERIE_SELECTION, hoverLinePath: string | null, hoverLinePathColor: string) {
+        if (!hoverLinePath) {
+            return;
+        }
         const hoverGroup = parent.append("g");
 
         hoverGroup
@@ -689,7 +705,7 @@ export async function render(
         };
 
         svg.on("mousedown", function (this) {
-            onSelection({ dragSelectActive: true });
+            onSelection(true);
             if (d3.event.which === 3) {
                 return;
             }
@@ -706,7 +722,7 @@ export async function render(
                 });
         });
         svg.on("mouseup", function (this) {
-            onSelection({ dragSelectActive: false });
+            onSelection(false);
         });
     }
 
