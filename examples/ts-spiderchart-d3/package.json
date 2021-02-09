@@ -8,8 +8,7 @@
         "build": "webpack --mode production",
         "build-watch": "webpack --watch",
         "start": "npm run build-watch",
-        "test": "jest --watchAll",
-        "stest": "ts-jest tests/boxFitting.test.ts"
+        "test": "jest --watchAll"
     },
     "author": "cnicolet, dhategan, valexand",
     "license": "ISC",
