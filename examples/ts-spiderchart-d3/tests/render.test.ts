@@ -5,11 +5,13 @@ describe("Render functions", () => {
     let points: Point[];
     let emptySerie: Serie;
 
+    const tooltip = () => "";
+    const mark = () => {};
     beforeAll(() => {
         points = [
             {
-                tooltip: undefined,
-                mark: undefined,
+                tooltip: tooltip,
+                mark: mark,
                 xIndex: 0,
                 Y: 0,
                 Y_Formatted: "0",
@@ -19,8 +21,8 @@ describe("Render functions", () => {
                 virtual: false
             },
             {
-                tooltip: undefined,
-                mark: undefined,
+                tooltip: tooltip,
+                mark: mark,
                 xIndex: 0,
                 Y: 0,
                 Y_Formatted: "0",
@@ -30,8 +32,8 @@ describe("Render functions", () => {
                 virtual: false
             },
             {
-                tooltip: undefined,
-                mark: undefined,
+                tooltip: tooltip,
+                mark: mark,
                 xIndex: 0,
                 Y: 0,
                 Y_Formatted: "0",
@@ -41,8 +43,8 @@ describe("Render functions", () => {
                 virtual: true
             },
             {
-                tooltip: undefined,
-                mark: undefined,
+                tooltip: tooltip,
+                mark: mark,
                 xIndex: 0,
                 Y: 0,
                 Y_Formatted: "0",
@@ -52,8 +54,8 @@ describe("Render functions", () => {
                 virtual: false
             },
             {
-                tooltip: undefined,
-                mark: undefined,
+                tooltip: tooltip,
+                mark: mark,
                 xIndex: 0,
                 Y: 0,
                 Y_Formatted: "0",
@@ -63,8 +65,8 @@ describe("Render functions", () => {
                 virtual: false
             },
             {
-                tooltip: undefined,
-                mark: undefined,
+                tooltip: tooltip,
+                mark: mark,
                 xIndex: 0,
                 Y: 0,
                 Y_Formatted: "0",
@@ -76,10 +78,10 @@ describe("Render functions", () => {
         ];
 
         emptySerie = {
-            mark: undefined,
+            mark: () => {},
             index: 0,
             sum: 0,
-            points: undefined
+            points: []
         };
     });
 
