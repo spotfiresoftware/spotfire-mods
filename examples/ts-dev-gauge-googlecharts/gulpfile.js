@@ -76,6 +76,7 @@ const dev = series(build, function startWatchers(cb) {
     rollupWatch("Mod", apiOptions);
     watch(staticFiles, series(moveStaticFiles, updateManifest));
     watch(manifestPath, updateManifest);
+    readExternalResourcesFromManifest();
 
     const params = {
         port: 8090,
@@ -244,8 +245,6 @@ async function updateManifestFiles() {
     } catch (err) {
         console.error(err);
     }
-
-    await readExternalResourcesFromManifest();
 
     async function filewalker(dir) {
         let results = [];
