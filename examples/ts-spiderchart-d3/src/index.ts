@@ -36,7 +36,7 @@ Spotfire.initialize(async mod => {
      * It checks for valid data and will print errors in case of bad data or bad renders.
      * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
      */
-    reader.subscribe(onChange);
+    reader.subscribe(generalErrorHandler(mod)(onChange));
 
     /**
      * The function that is part of the main read-render loop.
@@ -57,88 +57,108 @@ Spotfire.initialize(async mod => {
         yAxisNormalization: ModProperty<boolean>,
         enableColorFill: ModProperty<boolean>
     ) {
-        try {
-            const errors = await dataView.getErrors();
-            if (errors.length > 0) {
-                mod.controls.errorOverlay.show(errors, "DataView");
-                return;
-            }
-            mod.controls.errorOverlay.hide("DataView");
+        let data = await buildData(mod, dataView);
 
-            /**
-             * Hard abort if row count exceeds an arbitrary selected limit
-             */
-            const rowCount = await dataView.rowCount();
-            const limit = 20000;
-            if (rowCount && rowCount > limit) {
-                mod.controls.errorOverlay.show(
-                    `☹️ Cannot render - too many rows (rowCount: ${rowCount}, limit: ${limit}) `
-                );
-                return;
-            }
+        var popoutClosedEventEmitter = new events.EventEmitter();
 
-            let data = await buildData(mod, dataView);
-            if (data == null) {
-                return;
-            }
-
-            var popoutClosedEventEmitter = new events.EventEmitter();
-
-            const config: Partial<Options> = {
-                curveType: curveType.value()!,
-                xLabelsRotation: xLabelsRotation.value()!,
-                yAxisNormalization: yAxisNormalization.value()!,
-                enableColorFill: enableColorFill.value()!,
-                onLabelClick: createLabelPopout(
-                    mod.controls,
-                    curveType,
-                    xLabelsRotation,
-                    yAxisNormalization,
-                    enableColorFill,
-                    popoutClosedEventEmitter
-                )
-            };
-
-            await render(
-                state,
-                data,
-                windowSize,
-                config,
-                {
-                    scales: context.styling.scales.font,
-                    stroke: context.styling.scales.line.stroke
-                },
-                mod.controls.tooltip,
+        const config: Partial<Options> = {
+            curveType: curveType.value()!,
+            xLabelsRotation: xLabelsRotation.value()!,
+            yAxisNormalization: yAxisNormalization.value()!,
+            enableColorFill: enableColorFill.value()!,
+            onLabelClick: createLabelPopout(
+                mod.controls,
+                curveType,
+                xLabelsRotation,
+                yAxisNormalization,
+                enableColorFill,
                 popoutClosedEventEmitter
-            );
+            )
+        };
 
-            context.signalRenderComplete();
+        await render(
+            state,
+            data,
+            windowSize,
+            config,
+            {
+                scales: context.styling.scales.font,
+                stroke: context.styling.scales.line.stroke
+            },
+            mod.controls.tooltip,
+            popoutClosedEventEmitter
+        );
 
-            mod.controls.errorOverlay.hide("General");
-        } catch (e) {
-            mod.controls.errorOverlay.show(
-                e.message || e || "☹️ Something went wrong, check developer console",
-                "General"
-            );
-            if (DEBUG) {
-                throw e;
-            }
-        }
+        context.signalRenderComplete();
     }
 });
+
+/**
+ * subscribe callback wrapper with general error handling, row count check and an early return when the data has become invalid while fetching it.
+ *
+ * The only requirement is that the dataview is the first argument.
+ * @param mod - The mod API, used to show error messages.
+ * @param rowLimit - Optional row limit.
+ */
+export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...args: any) => any>(
+    mod: Spotfire.Mod,
+    rowLimit = 2000
+): (a: T) => T {
+    return function (callback: T) {
+        return async function callbackWrapper(dataView: Spotfire.DataView, ...args: any) {
+            try {
+                const errors = await dataView.getErrors();
+                if (errors.length > 0) {
+                    mod.controls.errorOverlay.show(errors, "DataView");
+                    return;
+                }
+                mod.controls.errorOverlay.hide("DataView");
+
+                /**
+                 * Hard abort if row count exceeds an arbitrary selected limit
+                 */
+                const rowCount = await dataView.rowCount();
+                if (rowCount && rowCount > rowLimit) {
+                    mod.controls.errorOverlay.show(
+                        `☹️ Cannot render - too many rows (rowCount: ${rowCount}, limit: ${rowLimit}) `,
+                        "General"
+                    );
+                    return;
+                }
+
+                /**
+                 * User interaction while rows were fetched. Return early and respond to next subscribe callback.
+                 */
+                const allRows = await dataView.allRows();
+                if (allRows == null) {
+                    return;
+                }
+
+                await callback(dataView, ...args);
+
+                mod.controls.errorOverlay.hide("General");
+            } catch (e) {
+                mod.controls.errorOverlay.show(
+                    e.message || e || "☹️ Something went wrong, check developer console",
+                    "General"
+                );
+                if (DEBUG) {
+                    throw e;
+                }
+            }
+        } as T;
+    };
+}
 
 /**
  * Construct a data format suitable for consumption in d3.
  * @param mod The Mod API object
  * @param dataView The mod's DataView
  */
-async function buildData(mod: Mod, dataView: DataView): Promise<Data | null> {
+async function buildData(mod: Mod, dataView: DataView): Promise<Data> {
     const allRows = await dataView.allRows();
-    if (allRows == null) {
-        return null;
-    }
 
-    const allYValues: Array<number> = allRows.map(row => row.continuous<number>("Y").value() || 0);
+    const allYValues: Array<number> = allRows!.map(row => row.continuous<number>("Y").value() || 0);
     const maxValue = Math.max(...allYValues);
     const minValue = Math.min(0, ...allYValues);
 
