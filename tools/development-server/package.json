@@ -1,0 +1,31 @@
+{
+    "name": "@tibcosoftware/mods-server",
+    "version": "0.0.4",
+    "description": "Development server for TIBCO Spotfire(R) Mods",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TIBCOSoftware/spotfire-mods.git"
+      },
+    "homepage": "https://github.com/TIBCOSoftware/spotfire-mods",
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "main": "development-server.js",
+    "bin": {
+        "mods-server": "./development-server.js"
+    },
+    "keywords": [
+        "TIBCO",
+        "Spotfire",
+        "Mods"
+    ],
+    "author": "TIBCO Spotfire",
+    "license": "BSD-3-Clause",
+    "dependencies": {
+        "live-server": "^1.2.1"
+    },
+    "devDependencies": {
+        "@types/live-server": "^1.2.0",
+        "@types/node": "^14.14.31"
+    }
+}
