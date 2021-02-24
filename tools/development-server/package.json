@@ -1,6 +1,6 @@
 {
     "name": "@tibcosoftware/mods-server",
-    "version": "0.0.4",
+    "version": "1.0.0",
     "description": "Development server for TIBCO Spotfire(R) Mods",
     "repository": {
         "type": "git",
@@ -19,6 +19,7 @@
         "Spotfire",
         "Mods"
     ],
+    "readme": "README.md",
     "author": "TIBCO Spotfire",
     "license": "BSD-3-Clause",
     "dependencies": {
