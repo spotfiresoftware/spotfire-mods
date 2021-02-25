@@ -1,5 +1,5 @@
 {
-    "name": "@tibcosoftware/mods-server",
+    "name": "@tibcosoftware/mods-dev-server",
     "version": "1.0.0",
     "description": "Development server for TIBCO Spotfire(R) Mods",
     "repository": {
@@ -12,7 +12,7 @@
     },
     "main": "development-server.js",
     "bin": {
-        "mods-server": "./development-server.js"
+        "mods-dev-server": "./development-server.js"
     },
     "keywords": [
         "TIBCO",
