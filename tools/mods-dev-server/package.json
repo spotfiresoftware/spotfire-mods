@@ -19,7 +19,6 @@
         "Spotfire",
         "Mods"
     ],
-    "readme": "README.md",
     "author": "TIBCO Spotfire",
     "license": "BSD-3-Clause",
     "dependencies": {
