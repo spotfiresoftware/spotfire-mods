@@ -20,7 +20,7 @@
         "gulp-terser": "^1.2.0",
         "jasmine": "^3.4.0",
         "jasmine-core": "^3.4.0",
-        "live-server": "^1.2.1",
+        "@tibcosoftware/mods-dev-server": "^1.0.0",
         "prettier": "^1.19.1",
         "rimraf": "^3.0.0",
         "rollup": "^1.21.3",
