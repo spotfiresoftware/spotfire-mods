@@ -15,6 +15,6 @@ mods-dev-server src
 How to use from node:
 
 ```javascript
-const modsDevServer = require("@tibco/mods-dev-server");
+const modsDevServer = require("@tibco/spotfire-mods-dev-server");
 modsDevServer.start({root: "./dist"});
 ```

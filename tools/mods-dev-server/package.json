@@ -1,5 +1,5 @@
 {
-    "name": "@tibco/mods-dev-server",
+    "name": "@tibco/spotfire-mods-dev-server",
     "version": "1.0.0",
     "description": "Development server for TIBCO Spotfire(R) Mods",
     "repository": {
