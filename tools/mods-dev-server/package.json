@@ -1,11 +1,11 @@
 {
-    "name": "@tibcosoftware/mods-dev-server",
+    "name": "@tibco/mods-dev-server",
     "version": "1.0.0",
     "description": "Development server for TIBCO Spotfire(R) Mods",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/TIBCOSoftware/spotfire-mods.git"
-      },
+    },
     "homepage": "https://github.com/TIBCOSoftware/spotfire-mods",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com"
