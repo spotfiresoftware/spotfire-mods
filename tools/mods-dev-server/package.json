@@ -7,9 +7,6 @@
         "url": "git+https://github.com/TIBCOSoftware/spotfire-mods.git"
     },
     "homepage": "https://github.com/TIBCOSoftware/spotfire-mods",
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
-    },
     "main": "development-server.js",
     "bin": {
         "mods-dev-server": "./development-server.js"
