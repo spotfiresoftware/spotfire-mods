@@ -26,7 +26,7 @@ const rollup = require("rollup");
 const typescriptPlugin = require("rollup-plugin-typescript2");
 const typescript = require("typescript");
 
-const modsDevServer = require("@tibcosoftware/mods-dev-server");
+const modsDevServer = require("@tibco/spotfire-mods-dev-server");
 
 const manifestName = "mod-manifest.json";
 const manifestPath = "./static/" + manifestName;
