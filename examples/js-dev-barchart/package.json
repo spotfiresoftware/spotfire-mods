@@ -10,8 +10,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@tibco/spotfire-mods-dev-server": "^1.0.0",
-        "@tibcosoftware/mods-dev-server": "^1.0.0"
+        "@tibco/spotfire-mods-dev-server": "^1.0.0"
     },
     "dependencies": {}
 }
