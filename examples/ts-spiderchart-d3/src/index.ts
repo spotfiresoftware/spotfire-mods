@@ -217,7 +217,7 @@ async function buildData(mod: Mod, dataView: DataView): Promise<Data> {
     }
 
     function getFormattedValues(node: DataViewHierarchyNode) {
-        let values = [];
+        let values: string[] = [];
         while (node.parent) {
             values.push(node.formattedValue());
             node = node.parent;

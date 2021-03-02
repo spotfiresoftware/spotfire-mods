@@ -4,13 +4,13 @@
     "description": "",
     "scripts": {
         "start": "npm install && npm run server",
-        "server": "node development-server.js src"
+        "server": "mods-dev-server src"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "live-server": "^1.2.1"
+        "@tibco/spotfire-mods-dev-server": "^1.0.0"
     },
     "dependencies": {}
 }
