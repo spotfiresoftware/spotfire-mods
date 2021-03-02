@@ -9,7 +9,7 @@ The development server is based on the [live-server](https://www.npmjs.com/packa
 Invoke the following command from a `package.json` script to start the server:
 
 ```bash
-mods-dev-server src
+mods-dev-server <source folder name>
 ```
 
 How to use from node:
