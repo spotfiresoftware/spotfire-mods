@@ -73,7 +73,8 @@ Spotfire.initialize(async mod => {
                 yAxisNormalization,
                 enableColorFill,
                 popoutClosedEventEmitter
-            )
+            ),
+            labelOffset: context.styling.scales.font.fontSize * 2
         };
 
         await render(
