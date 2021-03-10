@@ -6,7 +6,7 @@
 
 //@ts-check
 
-/** 
+/**
  * @param {Spotfire.DataViewHierarchyNode} node
  * @returns {string[]}
  */

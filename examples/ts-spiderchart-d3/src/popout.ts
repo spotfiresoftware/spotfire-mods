@@ -73,7 +73,7 @@ export function createLabelPopout(
                 y: y,
                 autoClose: true,
                 alignment: "Bottom",
-                onChange: event => {
+                onChange: (event) => {
                     const { name, value } = event;
                     name == curveType.name && curveType.set(value);
                     name == xLabelsRotation.name && xLabelsRotation.set(value);

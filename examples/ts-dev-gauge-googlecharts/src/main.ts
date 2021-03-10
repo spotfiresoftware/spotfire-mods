@@ -10,7 +10,7 @@ import { Spotfire } from "./api";
 // Import needed types
 
 // Starting point for every mod
-Spotfire.initialize(async mod => {
+Spotfire.initialize(async (mod) => {
     // Used later to inform Spotfire that the render is complete
     let context = mod.getRenderContext();
 
@@ -40,12 +40,12 @@ Spotfire.initialize(async mod => {
         }
 
         // Check for empty axis expression before.
-        let hasCategory = await dataView.categoricalAxis("Category") != null;
-        let hasMeasurement = await dataView.continuousAxis("Measurement") != null;
+        let hasCategory = (await dataView.categoricalAxis("Category")) != null;
+        let hasMeasurement = (await dataView.continuousAxis("Measurement")) != null;
 
         // Transform the rows to the google visualization format.
-        let data: [string, number][] = rows.map(row => [
-            hasCategory ? row.categorical("Category").formattedValue() : "", 
+        let data: [string, number][] = rows.map((row) => [
+            hasCategory ? row.categorical("Category").formattedValue() : "",
             hasMeasurement ? row.continuous("Measurement").value() ?? 0 : 0
         ]);
 

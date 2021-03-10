@@ -161,8 +161,8 @@ export async function render(
      */
     colorSeries.sort((a, b) => b.sum - a.sum);
     if (cfg.yAxisNormalization) {
-        colorSeries.forEach(i =>
-            i.points.forEach(j => (j.Y = ((j.Y - data.yDomain.min) / (data.yDomain.max - data.yDomain.min)) * 100))
+        colorSeries.forEach((i) =>
+            i.points.forEach((j) => (j.Y = ((j.Y - data.yDomain.min) / (data.yDomain.max - data.yDomain.min)) * 100))
         );
     }
 
@@ -310,7 +310,7 @@ export async function render(
                     ? (d * 100) / cfg.levels + "%"
                     : Math.floor(yScale.invert((d * radius) / cfg.levels) * 100) / 100;
             })
-            .on("mouseover", d => {
+            .on("mouseover", (d) => {
                 colorSeries.length === 0
                     ? tooltip.hide()
                     : cfg.yAxisNormalization
@@ -418,12 +418,12 @@ export async function render(
             .style("font-family", styling.scales.fontFamily)
             .style("font-size", styling.scales.fontSize + "px")
 
-            .on("mouseover", d => {
+            .on("mouseover", (d) => {
                 tooltip.show(d);
             })
             .on("mouseout", () => tooltip.hide());
 
-        let previousElement:d3.Selection<HTMLElement | null, unknown, null, undefined> | null;
+        let previousElement: d3.Selection<HTMLElement | null, unknown, null, undefined> | null;
 
         if (cfg.xLabelsRotation) {
             xLabels
@@ -471,13 +471,12 @@ export async function render(
                     let previousNode = previousElement?.node();
                     var previousText = previousElement?.text();
                     let svgNode = svg.node();
-                    
-                    if (!currentNode || !svgNode ) {
+
+                    if (!currentNode || !svgNode) {
                         return;
                     }
-                    
+
                     if (previousNode) {
-                        
                         var currentElementBoundingRect = currentNode.getBoundingClientRect();
                         var previousElemenetBoundingRect = previousNode.getBoundingClientRect();
                         const svgElementBoundingRect = svgNode.getBoundingClientRect();
@@ -586,7 +585,7 @@ export async function render(
         svgRadarBlobs
             .selectAll(".radar-circle")
             .data(function (d) {
-                return d.points.filter(p => !p.virtual);
+                return d.points.filter((p) => !p.virtual);
             })
             .enter()
             .append("circle")
@@ -744,13 +743,13 @@ export function colorForSerie(serie: Serie) {
         return "transparent";
     }
 
-    let firstMarkedPoint = serie.points.find(p => p.marked);
+    let firstMarkedPoint = serie.points.find((p) => p.marked);
 
     if (firstMarkedPoint) {
         return firstMarkedPoint.color;
     }
 
-    let firstRealPoint = serie.points.find(p => !p.virtual);
+    let firstRealPoint = serie.points.find((p) => !p.virtual);
 
     if (firstRealPoint) {
         return firstRealPoint.color;

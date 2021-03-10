@@ -16,7 +16,7 @@ export function googleGauge(): Promise<{ render: typeof render; clear: () => voi
     let chart: google.visualization.LineChart;
     let element = findElem(visualizationElementId);
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         google.charts.load("current", { packages: ["gauge"] });
         google.charts.setOnLoadCallback(() => {
             chart = new (google.visualization as any).Gauge(element);

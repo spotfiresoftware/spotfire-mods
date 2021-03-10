@@ -15,7 +15,7 @@ describe("Helper functions", () => {
             width: 0,
             x: 0,
             y: 0,
-            toJSON: () => "",
+            toJSON: () => ""
         }));
 
         secondArea.getBoundingClientRect = jest.fn(() => ({
@@ -27,7 +27,7 @@ describe("Helper functions", () => {
             width: 0,
             x: 0,
             y: 0,
-            toJSON: () => "",
+            toJSON: () => ""
         }));
 
         thirdArea.getBoundingClientRect = jest.fn(() => ({
@@ -39,7 +39,7 @@ describe("Helper functions", () => {
             width: 0,
             x: 0,
             y: 0,
-            toJSON: () => "",
+            toJSON: () => ""
         }));
 
         expect(overlap(firstArea.getBoundingClientRect(), secondArea.getBoundingClientRect())).toBeTruthy();

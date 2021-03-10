@@ -4,7 +4,7 @@
  * in the license file that is distributed with this file.
  */
 
- //@ts-check
+//@ts-check
 
 /**
  * Creating JSDoc type definitions may provide code completion and
@@ -29,7 +29,7 @@
  */
 
 /**
- * Builds color series used for rendering. 
+ * Builds color series used for rendering.
  * This is the only method that reads data from the Mod API.
  * @param {Spotfire.DataViewHierarchyNode[]} colorLeaves
  * @param {Spotfire.DataViewHierarchyNode[]} xLeaves
@@ -44,7 +44,7 @@ export function buildColorSeries(colorLeaves, xLeaves, hasX, hasY, stackMode, ga
         let val = hasY ? row.continuous("Y").value() : null;
         return typeof val == "number" ? val : null;
     }
-        
+
     let colorSeries = colorLeaves.map((colorLeaf) => ({
         colorIndex: colorLeaf.leafIndex,
         sum: colorLeaf.rows().reduce((sum, row) => sum + value(row), 0),
@@ -75,22 +75,18 @@ export function buildColorSeries(colorLeaves, xLeaves, hasX, hasY, stackMode, ga
                 const leftPoint = serie.points[pointIndex - 1];
                 const rightPoint = serie.points[pointIndex];
                 if (rightPoint.xIndex - leftPoint.xIndex > 1) {
-                    serie.points.splice(
-                        pointIndex,
-                        0,
-                        {
-                            mark: () => {},
-                            xIndex: leftPoint.xIndex + 1,
-                            Y: null,
-                            Y_Formatted: "-",
-                            y0: null,
-                            y1: null,
-                            colorIndex: serie.colorIndex,
-                            marked: allMarked,
-                            color: !leftPoint.marked ? leftPoint.color : rightPoint.color,
-                            gapFilled: true
-                        }
-                    );
+                    serie.points.splice(pointIndex, 0, {
+                        mark: () => {},
+                        xIndex: leftPoint.xIndex + 1,
+                        Y: null,
+                        Y_Formatted: "-",
+                        y0: null,
+                        y1: null,
+                        colorIndex: serie.colorIndex,
+                        marked: allMarked,
+                        color: !leftPoint.marked ? leftPoint.color : rightPoint.color,
+                        gapFilled: true
+                    });
                 }
             }
         } else {
