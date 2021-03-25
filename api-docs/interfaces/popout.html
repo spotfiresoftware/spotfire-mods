@@ -9,6 +9,7 @@
 	<link rel="icon"  href="/spotfire-mods/favicons/favicon.ico" >
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<link rel="stylesheet" href="../assets/css/overrides.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <div id="nav-wrapper">
@@ -100,18 +101,17 @@
 		<div class="tsd-page-toolbar">
 			<div class="container">
 				<div class="table-wrap">
-					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json"
-					data-base="..">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
 					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-				</div>
-				<!--
+					<!--
                 <div class="table-cell" id="tsd-widgets">
                     <div id="tsd-filter">
                         <a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
@@ -130,220 +130,216 @@
 
                                 <input type="checkbox" id="tsd-filter-externals" checked />
                                 <label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-
-                                <input type="checkbox" id="tsd-filter-only-exported" />
-                                <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
                         </div>
                     </div>
 
                     <a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
                 </div>
-
                 -->
+				</div>
 			</div>
 		</div>
-</div>
-<div class="tsd-page-title">
-	<div class="container">
-		<ul class="tsd-breadcrumb">
-			<li>
-				<a href="../modules.html">Globals</a>
-			</li>
-			<li>
-				<a href="popout.html">Popout</a>
-			</li>
-		</ul>
-		<h1>Interface Popout</h1>
-	</div>
-</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Represents an object that can be used to create and show a Spotfire popout dialog.</p>
-					</div>
-				</div>
-			</section>
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
+		<div class="tsd-page-title">
+			<div class="container">
+				<ul class="tsd-breadcrumb">
 					<li>
-						<span class="target">Popout</span>
+						<a href="../modules.html">API Documentation</a>
+					</li>
+					<li>
+						<a href="popout.html">Popout</a>
 					</li>
 				</ul>
-			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="popout.html#components" class="tsd-kind-icon">components</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Methods</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="popout.html#section" class="tsd-kind-icon">section</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="popout.html#show" class="tsd-kind-icon">show</a></li>
-							</ul>
-						</section>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="components" class="tsd-anchor"></a>
-					<h3>components</h3>
-					<div class="tsd-signature tsd-kind-icon">components<span class="tsd-signature-symbol">:</span> <a href="popoutcomponentfactory.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutComponentFactory</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:1046</li>
-						</ul>
-					</aside>
+				<h1>Interface Popout</h1>
+			</div>
+		</div>
+	</header>
+	<div class="container container-main">
+		<div class="row">
+			<div class="col-8 col-content">
+				<section class="tsd-panel tsd-comment">
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p> Gets an object with methods that create <a href="popoutcomponent.html">PopoutComponent</a>s.</p>
+							<p>Represents an object that can be used to create and show a Spotfire popout dialog.</p>
 						</div>
 					</div>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="section" class="tsd-anchor"></a>
-					<h3>section</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">section<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="popoutsectionoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSectionOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in spotfire-api-1-0.d.ts:1042</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Creates a section that contains a heading and components.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>options: <a href="popoutsectionoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSectionOptions</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Specifies the heading and the components.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a></h4>
+				<section class="tsd-panel tsd-hierarchy">
+					<h3>Hierarchy</h3>
+					<ul class="tsd-hierarchy">
+						<li>
+							<span class="target">Popout</span>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="show" class="tsd-anchor"></a>
-					<h3>show</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">show<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="popoutoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutOptions</a>, components<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="popoutdialog.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutDialog</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in spotfire-api-1-0.d.ts:1037</li>
+				<section class="tsd-panel-group tsd-index-group">
+					<h2>Index</h2>
+					<section class="tsd-panel tsd-index-panel">
+						<div class="tsd-index-content">
+							<section class="tsd-index-section ">
+								<h3>Properties</h3>
+								<ul class="tsd-index-list">
+									<li class="tsd-kind-property tsd-parent-kind-interface"><a href="popout.html#components" class="tsd-kind-icon">components</a></li>
 								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Shows a pop out dialog as specified by the <code>options</code> and <code>controls</code>.</p>
-								</div>
+							</section>
+							<section class="tsd-index-section ">
+								<h3>Methods</h3>
+								<ul class="tsd-index-list">
+									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="popout.html#section" class="tsd-kind-icon">section</a></li>
+									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="popout.html#show" class="tsd-kind-icon">show</a></li>
+								</ul>
+							</section>
+						</div>
+					</section>
+				</section>
+				<section class="tsd-panel-group tsd-member-group ">
+					<h2>Properties</h2>
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+						<a name="components" class="tsd-anchor"></a>
+						<h3>components</h3>
+						<div class="tsd-signature tsd-kind-icon">components<span class="tsd-signature-symbol">:</span> <a href="popoutcomponentfactory.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutComponentFactory</a></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:1046</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p> Gets an object with methods that create <a href="popoutcomponent.html">PopoutComponent</a>s.</p>
 							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>options: <a href="popoutoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutOptions</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Specifies where and how to show the pop out dialog.</p>
-									</div>
-								</li>
-								<li>
-									<h5>components: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a><span class="tsd-signature-symbol">[]</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>A callback that shall produce the array of components that the
-											pop out will show. If the pop out is shown with <a href="popoutoptions.html#autoclose">PopoutOptions.autoClose</a> set to <code>false</code>
-											this callback will be invoked every time the user has interacted with one of the <a href="popoutcomponent.html">PopoutComponent</a>s
-										so that the pop out can be re-rendered to show the result of the interaction.</p>
-									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a><span class="tsd-signature-symbol">[]</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-returns-title">Returns <a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a><span class="tsd-signature-symbol">[]</span></h4>
-												</li>
-											</ul>
-										</li>
+						</div>
+					</section>
+				</section>
+				<section class="tsd-panel-group tsd-member-group ">
+					<h2>Methods</h2>
+					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+						<a name="section" class="tsd-anchor"></a>
+						<h3>section</h3>
+						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+							<li class="tsd-signature tsd-kind-icon">section<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="popoutsectionoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSectionOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in spotfire-api-1-0.d.ts:1042</li>
 									</ul>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="popoutdialog.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutDialog</a></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="../modules.html">Exports</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface">
-						<a href="popout.html" class="tsd-kind-icon">Popout</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="popout.html#components" class="tsd-kind-icon">components</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="popout.html#section" class="tsd-kind-icon">section</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="popout.html#show" class="tsd-kind-icon">show</a>
+								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Creates a section that contains a heading and components.</p>
+									</div>
+								</div>
+								<h4 class="tsd-parameters-title">Parameters</h4>
+								<ul class="tsd-parameters">
+									<li>
+										<h5>options: <a href="popoutsectionoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSectionOptions</a></h5>
+										<div class="tsd-comment tsd-typography">
+											<p>Specifies the heading and the components.</p>
+										</div>
+									</li>
+								</ul>
+								<h4 class="tsd-returns-title">Returns <a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a></h4>
 							</li>
 						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
-				</ul>
-			</nav>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+						<a name="show" class="tsd-anchor"></a>
+						<h3>show</h3>
+						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+							<li class="tsd-signature tsd-kind-icon">show<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="popoutoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutOptions</a>, components<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="popoutdialog.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutDialog</a></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in spotfire-api-1-0.d.ts:1037</li>
+									</ul>
+								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Shows a pop out dialog as specified by the <code>options</code> and <code>controls</code>.</p>
+									</div>
+								</div>
+								<h4 class="tsd-parameters-title">Parameters</h4>
+								<ul class="tsd-parameters">
+									<li>
+										<h5>options: <a href="popoutoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutOptions</a></h5>
+										<div class="tsd-comment tsd-typography">
+											<p>Specifies where and how to show the pop out dialog.</p>
+										</div>
+									</li>
+									<li>
+										<h5>components: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a><span class="tsd-signature-symbol">[]</span></h5>
+										<div class="tsd-comment tsd-typography">
+											<p>A callback that shall produce the array of components that the
+												pop out will show. If the pop out is shown with <a href="popoutoptions.html#autoclose">PopoutOptions.autoClose</a> set to <code>false</code>
+												this callback will be invoked every time the user has interacted with one of the <a href="popoutcomponent.html">PopoutComponent</a>s
+											so that the pop out can be re-rendered to show the result of the interaction.</p>
+										</div>
+										<ul class="tsd-parameters">
+											<li class="tsd-parameter-signature">
+												<ul class="tsd-signatures tsd-kind-type-literal">
+													<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a><span class="tsd-signature-symbol">[]</span></li>
+												</ul>
+												<ul class="tsd-descriptions">
+													<li class="tsd-description">
+														<h4 class="tsd-returns-title">Returns <a href="popoutsection.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutSection</a><span class="tsd-signature-symbol">[]</span></h4>
+													</li>
+												</ul>
+											</li>
+										</ul>
+									</li>
+								</ul>
+								<h4 class="tsd-returns-title">Returns <a href="popoutdialog.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutDialog</a></h4>
+							</li>
+						</ul>
+					</section>
+				</section>
+			</div>
+			<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+				<nav class="tsd-navigation primary">
+					<ul>
+						<li class=" ">
+							<a href="../modules.html">Exports</a>
+						</li>
+					</ul>
+				</nav>
+				<nav class="tsd-navigation secondary menu-sticky">
+					<ul class="before-current">
+					</ul>
+					<ul class="current">
+						<li class="current tsd-kind-interface">
+							<a href="popout.html" class="tsd-kind-icon">Popout</a>
+							<ul>
+								<li class=" tsd-kind-property tsd-parent-kind-interface">
+									<a href="popout.html#components" class="tsd-kind-icon">components</a>
+								</li>
+								<li class=" tsd-kind-method tsd-parent-kind-interface">
+									<a href="popout.html#section" class="tsd-kind-icon">section</a>
+								</li>
+								<li class=" tsd-kind-method tsd-parent-kind-interface">
+									<a href="popout.html#show" class="tsd-kind-icon">show</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="after-current">
+					</ul>
+				</nav>
+			</div>
 		</div>
 	</div>
-</div>
-<footer>
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
+	<footer>
+		<div class="container">
+			<h2>Legend</h2>
+			<div class="tsd-legend-group">
+				<ul class="tsd-legend">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				</ul>
+			</div>
 		</div>
-	</div>
-</footer>
+	</footer>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>

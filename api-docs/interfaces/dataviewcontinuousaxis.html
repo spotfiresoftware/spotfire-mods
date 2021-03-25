@@ -9,6 +9,7 @@
 	<link rel="icon"  href="/spotfire-mods/favicons/favicon.ico" >
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<link rel="stylesheet" href="../assets/css/overrides.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <div id="nav-wrapper">
@@ -100,18 +101,17 @@
 		<div class="tsd-page-toolbar">
 			<div class="container">
 				<div class="table-wrap">
-					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json"
-					data-base="..">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
 					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-				</div>
-				<!--
+					<!--
                 <div class="table-cell" id="tsd-widgets">
                     <div id="tsd-filter">
                         <a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
@@ -130,166 +130,162 @@
 
                                 <input type="checkbox" id="tsd-filter-externals" checked />
                                 <label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-
-                                <input type="checkbox" id="tsd-filter-only-exported" />
-                                <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
                         </div>
                     </div>
 
                     <a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
                 </div>
-
                 -->
+				</div>
 			</div>
 		</div>
-</div>
-<div class="tsd-page-title">
-	<div class="container">
-		<ul class="tsd-breadcrumb">
-			<li>
-				<a href="../modules.html">Globals</a>
-			</li>
-			<li>
-				<a href="dataviewcontinuousaxis.html">DataViewContinuousAxis</a>
-			</li>
-		</ul>
-		<h1>Interface DataViewContinuousAxis</h1>
-	</div>
-</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Represents metadata computed for continuous <a href="axis.html">Axis</a>.</p>
-					</div>
-				</div>
-			</section>
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
+		<div class="tsd-page-title">
+			<div class="container">
+				<ul class="tsd-breadcrumb">
 					<li>
-						<a href="dataviewaxis.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewAxis</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">DataViewContinuousAxis</span>
-							</li>
-						</ul>
+						<a href="../modules.html">API Documentation</a>
+					</li>
+					<li>
+						<a href="dataviewcontinuousaxis.html">DataViewContinuousAxis</a>
 					</li>
 				</ul>
-			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dataviewcontinuousaxis.html#datatype" class="tsd-kind-icon">data<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dataviewcontinuousaxis.html#iscategorical" class="tsd-kind-icon">is<wbr>Categorical</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dataviewcontinuousaxis.html#name" class="tsd-kind-icon">name</a></li>
+				<h1>Interface DataViewContinuousAxis</h1>
+			</div>
+		</div>
+	</header>
+	<div class="container container-main">
+		<div class="row">
+			<div class="col-8 col-content">
+				<section class="tsd-panel tsd-comment">
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Represents metadata computed for continuous <a href="axis.html">Axis</a>.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-hierarchy">
+					<h3>Hierarchy</h3>
+					<ul class="tsd-hierarchy">
+						<li>
+							<a href="dataviewaxis.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewAxis</a>
+							<ul class="tsd-hierarchy">
+								<li>
+									<span class="target">DataViewContinuousAxis</span>
+								</li>
 							</ul>
-						</section>
-					</div>
+						</li>
+					</ul>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="datatype" class="tsd-anchor"></a>
-					<h3>data<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">data<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="datatype.html" class="tsd-signature-type" data-tsd-kind="Interface">DataType</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:467</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Gets the data type of the values computed by this axis.</p>
+				<section class="tsd-panel-group tsd-index-group">
+					<h2>Index</h2>
+					<section class="tsd-panel tsd-index-panel">
+						<div class="tsd-index-content">
+							<section class="tsd-index-section ">
+								<h3>Properties</h3>
+								<ul class="tsd-index-list">
+									<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dataviewcontinuousaxis.html#datatype" class="tsd-kind-icon">data<wbr>Type</a></li>
+									<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dataviewcontinuousaxis.html#iscategorical" class="tsd-kind-icon">is<wbr>Categorical</a></li>
+									<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="dataviewcontinuousaxis.html#name" class="tsd-kind-icon">name</a></li>
+								</ul>
+							</section>
 						</div>
-					</div>
+					</section>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="iscategorical" class="tsd-anchor"></a>
-					<h3>is<wbr>Categorical</h3>
-					<div class="tsd-signature tsd-kind-icon">is<wbr>Categorical<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="dataviewaxis.html">DataViewAxis</a>.<a href="dataviewaxis.html#iscategorical">isCategorical</a></p>
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:382</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Gets a value indicating whether this axis is an instance of <a href="dataviewcontinuousaxis.html">DataViewContinuousAxis</a> or <a href="dataviewcategoricalaxis.html">DataViewCategoricalAxis</a> .</p>
+				<section class="tsd-panel-group tsd-member-group ">
+					<h2>Properties</h2>
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+						<a name="datatype" class="tsd-anchor"></a>
+						<h3>data<wbr>Type</h3>
+						<div class="tsd-signature tsd-kind-icon">data<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="datatype.html" class="tsd-signature-type" data-tsd-kind="Interface">DataType</a></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:467</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Gets the data type of the values computed by this axis.</p>
+							</div>
 						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="name" class="tsd-anchor"></a>
-					<h3>name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="dataviewaxis.html">DataViewAxis</a>.<a href="dataviewaxis.html#name">name</a></p>
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:378</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Gets the name of this axis.</p>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+						<a name="iscategorical" class="tsd-anchor"></a>
+						<h3>is<wbr>Categorical</h3>
+						<div class="tsd-signature tsd-kind-icon">is<wbr>Categorical<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="dataviewaxis.html">DataViewAxis</a>.<a href="dataviewaxis.html#iscategorical">isCategorical</a></p>
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:382</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Gets a value indicating whether this axis is an instance of <a href="dataviewcontinuousaxis.html">DataViewContinuousAxis</a> or <a href="dataviewcategoricalaxis.html">DataViewCategoricalAxis</a> .</p>
+							</div>
 						</div>
-					</div>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+						<a name="name" class="tsd-anchor"></a>
+						<h3>name</h3>
+						<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="dataviewaxis.html">DataViewAxis</a>.<a href="dataviewaxis.html#name">name</a></p>
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:378</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Gets the name of this axis.</p>
+							</div>
+						</div>
+					</section>
 				</section>
-			</section>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="../modules.html">Exports</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface">
-						<a href="dataviewcontinuousaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Axis</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="dataviewcontinuousaxis.html#datatype" class="tsd-kind-icon">data<wbr>Type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="dataviewcontinuousaxis.html#iscategorical" class="tsd-kind-icon">is<wbr>Categorical</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="dataviewcontinuousaxis.html#name" class="tsd-kind-icon">name</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
-				</ul>
-			</nav>
+			</div>
+			<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+				<nav class="tsd-navigation primary">
+					<ul>
+						<li class=" ">
+							<a href="../modules.html">Exports</a>
+						</li>
+					</ul>
+				</nav>
+				<nav class="tsd-navigation secondary menu-sticky">
+					<ul class="before-current">
+					</ul>
+					<ul class="current">
+						<li class="current tsd-kind-interface">
+							<a href="dataviewcontinuousaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Axis</a>
+							<ul>
+								<li class=" tsd-kind-property tsd-parent-kind-interface">
+									<a href="dataviewcontinuousaxis.html#datatype" class="tsd-kind-icon">data<wbr>Type</a>
+								</li>
+								<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+									<a href="dataviewcontinuousaxis.html#iscategorical" class="tsd-kind-icon">is<wbr>Categorical</a>
+								</li>
+								<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+									<a href="dataviewcontinuousaxis.html#name" class="tsd-kind-icon">name</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="after-current">
+					</ul>
+				</nav>
+			</div>
 		</div>
 	</div>
-</div>
-<footer>
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
+	<footer>
+		<div class="container">
+			<h2>Legend</h2>
+			<div class="tsd-legend-group">
+				<ul class="tsd-legend">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				</ul>
+			</div>
 		</div>
-	</div>
-</footer>
+	</footer>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>

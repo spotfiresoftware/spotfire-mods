@@ -9,6 +9,7 @@
 	<link rel="icon"  href="/spotfire-mods/favicons/favicon.ico" >
 	<link rel="stylesheet" href="assets/css/main.css">
 	<link rel="stylesheet" href="assets/css/overrides.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <div id="nav-wrapper">
@@ -100,18 +101,17 @@
 		<div class="tsd-page-toolbar">
 			<div class="container">
 				<div class="table-wrap">
-					<div class="table-cell" id="tsd-search" data-index="assets/js/search.json"
-					data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
+					<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
 					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-				</div>
-				<!--
+					<!--
                 <div class="table-cell" id="tsd-widgets">
                     <div id="tsd-filter">
                         <a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
@@ -130,246 +130,237 @@
 
                                 <input type="checkbox" id="tsd-filter-externals" checked />
                                 <label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-
-                                <input type="checkbox" id="tsd-filter-only-exported" />
-                                <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
                         </div>
                     </div>
 
                     <a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
                 </div>
-
                 -->
+				</div>
 			</div>
 		</div>
-</div>
-<div class="tsd-page-title">
-	<div class="container">
-		<ul class="tsd-breadcrumb">
-			<li>
-				<a href="modules.html">Globals</a>
-			</li>
-		</ul>
-		<h1>Project API Documentation</h1>
-	</div>
-</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Interfaces</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/analysisproperty.html" class="tsd-kind-icon">Analysis<wbr>Property</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/analysispropertyvalue.html" class="tsd-kind-icon">Analysis<wbr>Property<wbr>Value</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/axis.html" class="tsd-kind-icon">Axis</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/axispart.html" class="tsd-kind-icon">Axis<wbr>Part</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/axisvalues.html" class="tsd-kind-icon">Axis<wbr>Values</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/column.html" class="tsd-kind-icon">Column</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/columnvalues.html" class="tsd-kind-icon">Column<wbr>Values</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/contextmenu.html" class="tsd-kind-icon">Context<wbr>Menu</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/contextmenuitem.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Item</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/controls.html" class="tsd-kind-icon">Controls</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/datatable.html" class="tsd-kind-icon">Data<wbr>Table</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/datatablevalues.html" class="tsd-kind-icon">Data<wbr>Table<wbr>Values</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/datatype.html" class="tsd-kind-icon">Data<wbr>Type</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataview.html" class="tsd-kind-icon">Data<wbr>View</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Axis</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewcategoricalaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Axis</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewcategoricalvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewcategoricalvaluepathelement.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value<wbr>Path<wbr>Element</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewcolorinfo.html" class="tsd-kind-icon">Data<wbr>View<wbr>Color<wbr>Info</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewcontinuousaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Axis</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/dataviewcontinuousvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Value</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewhierarchy.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewhierarchylevel.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy<wbr>Level</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewhierarchynode.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy<wbr>Node</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewproxymethods.html" class="tsd-kind-icon">Data<wbr>View<wbr>Proxy<wbr>Methods</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/dataviewrow.html" class="tsd-kind-icon">Data<wbr>View<wbr>Row</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/erroroverlay.html" class="tsd-kind-icon">Error<wbr>Overlay</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/fontinfo.html" class="tsd-kind-icon">Font<wbr>Info</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/generalstylinginfo.html" class="tsd-kind-icon">General<wbr>Styling<wbr>Info</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/linestylinginfo.html" class="tsd-kind-icon">Line<wbr>Styling<wbr>Info</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/markinginfo.html" class="tsd-kind-icon">Marking<wbr>Info</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/mod.html" class="tsd-kind-icon">Mod</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/modmetadata.html" class="tsd-kind-icon">Mod<wbr>Metadata</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/modproperty.html" class="tsd-kind-icon">Mod<wbr>Property</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/modpropertyvalue.html" class="tsd-kind-icon">Mod<wbr>Property<wbr>Value</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/modvisualization.html" class="tsd-kind-icon">Mod<wbr>Visualization</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/page.html" class="tsd-kind-icon">Page</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/pagevalues.html" class="tsd-kind-icon">Page<wbr>Values</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popout.html" class="tsd-kind-icon">Popout</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutbuttonoptions.html" class="tsd-kind-icon">Popout<wbr>Button<wbr>Options</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutcheckboxoptions.html" class="tsd-kind-icon">Popout<wbr>Checkbox<wbr>Options</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutcomponent.html" class="tsd-kind-icon">Popout<wbr>Component</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutcomponentevent.html" class="tsd-kind-icon">Popout<wbr>Component<wbr>Event</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutcomponentfactory.html" class="tsd-kind-icon">Popout<wbr>Component<wbr>Factory</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutdialog.html" class="tsd-kind-icon">Popout<wbr>Dialog</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutoptions.html" class="tsd-kind-icon">Popout<wbr>Options</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutradiobuttonoptions.html" class="tsd-kind-icon">Popout<wbr>Radio<wbr>Button<wbr>Options</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutsection.html" class="tsd-kind-icon">Popout<wbr>Section</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/popoutsectionoptions.html" class="tsd-kind-icon">Popout<wbr>Section<wbr>Options</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/progress.html" class="tsd-kind-icon">Progress</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/readable.html" class="tsd-kind-icon">Readable</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/reader.html" class="tsd-kind-icon">Reader</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/rendercontext.html" class="tsd-kind-icon">Render<wbr>Context</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/scalestylinginfo.html" class="tsd-kind-icon">Scale<wbr>Styling<wbr>Info</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/size.html" class="tsd-kind-icon">Size</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/spotfiredocument.html" class="tsd-kind-icon">Spotfire<wbr>Document</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/stylinginfo.html" class="tsd-kind-icon">Styling<wbr>Info</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/tickstylinginfo.html" class="tsd-kind-icon">Tick<wbr>Styling<wbr>Info</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/time.html" class="tsd-kind-icon">Time</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/timespan.html" class="tsd-kind-icon">Time<wbr>Span</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/tooltip.html" class="tsd-kind-icon">Tooltip</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Type aliases</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias"><a href="modules.html#abortpredicate" class="tsd-kind-icon">Abort<wbr>Predicate</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#analysispropertydatatype" class="tsd-kind-icon">Analysis<wbr>Property<wbr>Data<wbr>Type</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#dataviewproxy" class="tsd-kind-icon">Data<wbr>View<wbr>Proxy</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#dataviewvaluetype" class="tsd-kind-icon">Data<wbr>View<wbr>Value<wbr>Type</a></li>
-								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#extractvaluetype" class="tsd-kind-icon">Extract<wbr>Value<wbr>Type</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#markingoperation" class="tsd-kind-icon">Marking<wbr>Operation</a></li>
-								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#methodkeys" class="tsd-kind-icon">Method<wbr>Keys</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#modpropertydatatype" class="tsd-kind-icon">Mod<wbr>Property<wbr>Data<wbr>Type</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#omittedreadableproxymethods" class="tsd-kind-icon">Omitted<wbr>Readable<wbr>Proxy<wbr>Methods</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#onloadcallback" class="tsd-kind-icon">On<wbr>Load<wbr>Callback</a></li>
-								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#readableproxy" class="tsd-kind-icon">Readable<wbr>Proxy</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Functions</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-function"><a href="modules.html#initialize" class="tsd-kind-icon">initialize</a></li>
-							</ul>
-						</section>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Type aliases</h2>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="abortpredicate" class="tsd-anchor"></a>
-					<h3>Abort<wbr>Predicate</h3>
-					<div class="tsd-signature tsd-kind-icon">Abort<wbr>Predicate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>currentRowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:12</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Predicate to determine if a current read operation for <a href="interfaces/dataview.html#allrows">DataView.allRows</a> should be aborted when there is new, non-streaming, data available. If this predicate returns true the <a href="interfaces/dataview.html#allrows">DataView.allRows</a> promise will be rejected and no rows will be returned.</p>
+		<div class="tsd-page-title">
+			<div class="container">
+				<h1>API Documentation</h1>
+			</div>
+		</div>
+	</header>
+	<div class="container container-main">
+		<div class="row">
+			<div class="col-8 col-content">
+				<section class="tsd-panel-group tsd-index-group">
+					<h2>Index</h2>
+					<section class="tsd-panel tsd-index-panel">
+						<div class="tsd-index-content">
+							<section class="tsd-index-section ">
+								<h3>Interfaces</h3>
+								<ul class="tsd-index-list">
+									<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/analysisproperty.html" class="tsd-kind-icon">Analysis<wbr>Property</a></li>
+									<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/analysispropertyvalue.html" class="tsd-kind-icon">Analysis<wbr>Property<wbr>Value</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/axis.html" class="tsd-kind-icon">Axis</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/axispart.html" class="tsd-kind-icon">Axis<wbr>Part</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/axisvalues.html" class="tsd-kind-icon">Axis<wbr>Values</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/column.html" class="tsd-kind-icon">Column</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/columnvalues.html" class="tsd-kind-icon">Column<wbr>Values</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/contextmenu.html" class="tsd-kind-icon">Context<wbr>Menu</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/contextmenuitem.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Item</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/controls.html" class="tsd-kind-icon">Controls</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/datatable.html" class="tsd-kind-icon">Data<wbr>Table</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/datatablevalues.html" class="tsd-kind-icon">Data<wbr>Table<wbr>Values</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/datatype.html" class="tsd-kind-icon">Data<wbr>Type</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataview.html" class="tsd-kind-icon">Data<wbr>View</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Axis</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewcategoricalaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Axis</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewcategoricalvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewcategoricalvaluepathelement.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value<wbr>Path<wbr>Element</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewcolorinfo.html" class="tsd-kind-icon">Data<wbr>View<wbr>Color<wbr>Info</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewcontinuousaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Axis</a></li>
+									<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/dataviewcontinuousvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Value</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewhierarchy.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewhierarchylevel.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy<wbr>Level</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewhierarchynode.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy<wbr>Node</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewproxymethods.html" class="tsd-kind-icon">Data<wbr>View<wbr>Proxy<wbr>Methods</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/dataviewrow.html" class="tsd-kind-icon">Data<wbr>View<wbr>Row</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/erroroverlay.html" class="tsd-kind-icon">Error<wbr>Overlay</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/fontinfo.html" class="tsd-kind-icon">Font<wbr>Info</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/generalstylinginfo.html" class="tsd-kind-icon">General<wbr>Styling<wbr>Info</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/linestylinginfo.html" class="tsd-kind-icon">Line<wbr>Styling<wbr>Info</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/markinginfo.html" class="tsd-kind-icon">Marking<wbr>Info</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/mod.html" class="tsd-kind-icon">Mod</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/modmetadata.html" class="tsd-kind-icon">Mod<wbr>Metadata</a></li>
+									<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/modproperty.html" class="tsd-kind-icon">Mod<wbr>Property</a></li>
+									<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/modpropertyvalue.html" class="tsd-kind-icon">Mod<wbr>Property<wbr>Value</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/modvisualization.html" class="tsd-kind-icon">Mod<wbr>Visualization</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/page.html" class="tsd-kind-icon">Page</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/pagevalues.html" class="tsd-kind-icon">Page<wbr>Values</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popout.html" class="tsd-kind-icon">Popout</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutbuttonoptions.html" class="tsd-kind-icon">Popout<wbr>Button<wbr>Options</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutcheckboxoptions.html" class="tsd-kind-icon">Popout<wbr>Checkbox<wbr>Options</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutcomponent.html" class="tsd-kind-icon">Popout<wbr>Component</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutcomponentevent.html" class="tsd-kind-icon">Popout<wbr>Component<wbr>Event</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutcomponentfactory.html" class="tsd-kind-icon">Popout<wbr>Component<wbr>Factory</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutdialog.html" class="tsd-kind-icon">Popout<wbr>Dialog</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutoptions.html" class="tsd-kind-icon">Popout<wbr>Options</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutradiobuttonoptions.html" class="tsd-kind-icon">Popout<wbr>Radio<wbr>Button<wbr>Options</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutsection.html" class="tsd-kind-icon">Popout<wbr>Section</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/popoutsectionoptions.html" class="tsd-kind-icon">Popout<wbr>Section<wbr>Options</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/progress.html" class="tsd-kind-icon">Progress</a></li>
+									<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/readable.html" class="tsd-kind-icon">Readable</a></li>
+									<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/reader.html" class="tsd-kind-icon">Reader</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/rendercontext.html" class="tsd-kind-icon">Render<wbr>Context</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/scalestylinginfo.html" class="tsd-kind-icon">Scale<wbr>Styling<wbr>Info</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/size.html" class="tsd-kind-icon">Size</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/spotfiredocument.html" class="tsd-kind-icon">Spotfire<wbr>Document</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/stylinginfo.html" class="tsd-kind-icon">Styling<wbr>Info</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/tickstylinginfo.html" class="tsd-kind-icon">Tick<wbr>Styling<wbr>Info</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/time.html" class="tsd-kind-icon">Time</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/timespan.html" class="tsd-kind-icon">Time<wbr>Span</a></li>
+									<li class="tsd-kind-interface"><a href="interfaces/tooltip.html" class="tsd-kind-icon">Tooltip</a></li>
+								</ul>
+							</section>
+							<section class="tsd-index-section ">
+								<h3>Type aliases</h3>
+								<ul class="tsd-index-list">
+									<li class="tsd-kind-type-alias"><a href="modules.html#abortpredicate" class="tsd-kind-icon">Abort<wbr>Predicate</a></li>
+									<li class="tsd-kind-type-alias"><a href="modules.html#analysispropertydatatype" class="tsd-kind-icon">Analysis<wbr>Property<wbr>Data<wbr>Type</a></li>
+									<li class="tsd-kind-type-alias"><a href="modules.html#dataviewproxy" class="tsd-kind-icon">Data<wbr>View<wbr>Proxy</a></li>
+									<li class="tsd-kind-type-alias"><a href="modules.html#dataviewvaluetype" class="tsd-kind-icon">Data<wbr>View<wbr>Value<wbr>Type</a></li>
+									<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#extractvaluetype" class="tsd-kind-icon">Extract<wbr>Value<wbr>Type</a></li>
+									<li class="tsd-kind-type-alias"><a href="modules.html#markingoperation" class="tsd-kind-icon">Marking<wbr>Operation</a></li>
+									<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#methodkeys" class="tsd-kind-icon">Method<wbr>Keys</a></li>
+									<li class="tsd-kind-type-alias"><a href="modules.html#modpropertydatatype" class="tsd-kind-icon">Mod<wbr>Property<wbr>Data<wbr>Type</a></li>
+									<li class="tsd-kind-type-alias"><a href="modules.html#omittedreadableproxymethods" class="tsd-kind-icon">Omitted<wbr>Readable<wbr>Proxy<wbr>Methods</a></li>
+									<li class="tsd-kind-type-alias"><a href="modules.html#onloadcallback" class="tsd-kind-icon">On<wbr>Load<wbr>Callback</a></li>
+									<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#readableproxy" class="tsd-kind-icon">Readable<wbr>Proxy</a></li>
+								</ul>
+							</section>
+							<section class="tsd-index-section ">
+								<h3>Functions</h3>
+								<ul class="tsd-index-list">
+									<li class="tsd-kind-function"><a href="modules.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								</ul>
+							</section>
 						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>currentRowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>currentRowCount: <span class="tsd-signature-type">number</span></h5>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-									</li>
-								</ul>
+					</section>
+				</section>
+				<section class="tsd-panel-group tsd-member-group ">
+					<h2>Type aliases</h2>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias">
+						<a name="abortpredicate" class="tsd-anchor"></a>
+						<h3>Abort<wbr>Predicate</h3>
+						<div class="tsd-signature tsd-kind-icon">Abort<wbr>Predicate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>currentRowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:12</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Predicate to determine if a current read operation for <a href="interfaces/dataview.html#allrows">DataView.allRows</a> should be aborted when there is new, non-streaming, data available. If this predicate returns true the <a href="interfaces/dataview.html#allrows">DataView.allRows</a> promise will be rejected and no rows will be returned.</p>
+							</div>
+						</div>
+						<div class="tsd-type-declaration">
+							<h4>Type declaration</h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter-signature">
+									<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+										<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>currentRowCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<h4 class="tsd-parameters-title">Parameters</h4>
+											<ul class="tsd-parameters">
+												<li>
+													<h5>currentRowCount: <span class="tsd-signature-type">number</span></h5>
+												</li>
+											</ul>
+											<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias">
+						<a name="analysispropertydatatype" class="tsd-anchor"></a>
+						<h3>Analysis<wbr>Property<wbr>Data<wbr>Type</h3>
+						<div class="tsd-signature tsd-kind-icon">Analysis<wbr>Property<wbr>Data<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/timespan.html" class="tsd-signature-type" data-tsd-kind="Interface">TimeSpan</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/time.html" class="tsd-signature-type" data-tsd-kind="Interface">Time</a></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:32</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents the data types possible to store in a document, table or column <a href="interfaces/analysisproperty.html">AnalysisProperty</a>.</p>
+							</div>
+						</div>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias">
+						<a name="dataviewproxy" class="tsd-anchor"></a>
+						<h3>Data<wbr>View<wbr>Proxy</h3>
+						<div class="tsd-signature tsd-kind-icon">Data<wbr>View<wbr>Proxy<span class="tsd-signature-symbol">:</span> <a href="interfaces/dataviewproxymethods.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewProxyMethods</a><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/dataview.html" class="tsd-signature-type" data-tsd-kind="Interface">DataView</a><span class="tsd-signature-symbol">&gt;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:616</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents an object that provides access to a <a href="interfaces/dataview.html">DataView</a>.</p>
+							</div>
+						</div>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias">
+						<a name="dataviewvaluetype" class="tsd-anchor"></a>
+						<h3>Data<wbr>View<wbr>Value<wbr>Type</h3>
+						<div class="tsd-signature tsd-kind-icon">Data<wbr>View<wbr>Value<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/time.html" class="tsd-signature-type" data-tsd-kind="Interface">Time</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/timespan.html" class="tsd-signature-type" data-tsd-kind="Interface">TimeSpan</a></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:673</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents the type of a <a href="interfaces/dataview.html">DataView</a> value. The actual type that a given value has depends on the
+								type of the expression on the associated axis.</p>
+							</div>
+						</div>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+						<a name="extractvaluetype" class="tsd-anchor"></a>
+						<h3>Extract<wbr>Value<wbr>Type</h3>
+						<div class="tsd-signature tsd-kind-icon">Extract<wbr>Value<wbr>Type&lt;readableArray&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">readableName</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">readableArray</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">readableArray</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">readableName</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> extends </span><a href="interfaces/readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">infer </span> readableNameType<span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">readableNameType</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol"> }</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:703</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>From readableArray, an array of Readable of some value type, extract an array of this value type.</p>
+							</div>
+						</div>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>readableArray<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							</li>
 						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="analysispropertydatatype" class="tsd-anchor"></a>
-					<h3>Analysis<wbr>Property<wbr>Data<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">Analysis<wbr>Property<wbr>Data<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/timespan.html" class="tsd-signature-type" data-tsd-kind="Interface">TimeSpan</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/time.html" class="tsd-signature-type" data-tsd-kind="Interface">Time</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:32</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Represents the data types possible to store in a document, table or column <a href="interfaces/analysisproperty.html">AnalysisProperty</a>.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="dataviewproxy" class="tsd-anchor"></a>
-					<h3>Data<wbr>View<wbr>Proxy</h3>
-					<div class="tsd-signature tsd-kind-icon">Data<wbr>View<wbr>Proxy<span class="tsd-signature-symbol">:</span> <a href="interfaces/dataviewproxymethods.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewProxyMethods</a><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/dataview.html" class="tsd-signature-type" data-tsd-kind="Interface">DataView</a><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:616</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Represents an object that provides access to a <a href="interfaces/dataview.html">DataView</a>.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="dataviewvaluetype" class="tsd-anchor"></a>
-					<h3>Data<wbr>View<wbr>Value<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">Data<wbr>View<wbr>Value<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/time.html" class="tsd-signature-type" data-tsd-kind="Interface">Time</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/timespan.html" class="tsd-signature-type" data-tsd-kind="Interface">TimeSpan</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:673</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Represents the type of a <a href="interfaces/dataview.html">DataView</a> value. The actual type that a given value has depends on the
-							type of the expression on the associated axis.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
-					<a name="extractvaluetype" class="tsd-anchor"></a>
-					<h3>Extract<wbr>Value<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">Extract<wbr>Value<wbr>Type&lt;readableArray&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">readableName</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">readableArray</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">readableArray</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">readableName</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> extends </span><a href="interfaces/readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">infer </span> readableNameType<span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">readableNameType</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:703</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>From readableArray, an array of Readable of some value type, extract an array of this value type.</p>
-						</div>
-					</div>
-					<h4 class="tsd-type-parameters-title">Type parameters</h4>
-					<ul class="tsd-type-parameters">
-						<li>
-							<h4>readableArray<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="markingoperation" class="tsd-anchor"></a>
-					<h3>Marking<wbr>Operation</h3>
-					<div class="tsd-signature tsd-kind-icon">Marking<wbr>Operation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;Replace&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Add&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Subtract&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Toggle&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Intersect&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;ToggleOrAdd&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:801</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Specifies how a Marking shall be modified.</p>
-							<pre>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias">
+						<a name="markingoperation" class="tsd-anchor"></a>
+						<h3>Marking<wbr>Operation</h3>
+						<div class="tsd-signature tsd-kind-icon">Marking<wbr>Operation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;Replace&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Add&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Subtract&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Toggle&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Intersect&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;ToggleOrAdd&quot;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:801</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Specifies how a Marking shall be modified.</p>
+								<pre>
 - "Replace" - replaces the current marking.
 - "Add" - adds to the current marking.
 - "Subtract" - removes the current marking.
@@ -377,412 +368,412 @@
 - "Intersect" - marks the intersection of the current marking and the specified set.
 - "ToggleOrAdd" - will behave like toggle if all or no rows in the set are marked, otherwise it is an add operation. This is the default Spotfire behavior for control marking.
 </pre>
+							</div>
 						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
-					<a name="methodkeys" class="tsd-anchor"></a>
-					<h3>Method<wbr>Keys</h3>
-					<div class="tsd-signature tsd-kind-icon">Method<wbr>Keys&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:807</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Extract from T the keys of all properties with function values.</p>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+						<a name="methodkeys" class="tsd-anchor"></a>
+						<h3>Method<wbr>Keys</h3>
+						<div class="tsd-signature tsd-kind-icon">Method<wbr>Keys&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">]</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:807</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Extract from T the keys of all properties with function values.</p>
+							</div>
 						</div>
-					</div>
-					<h4 class="tsd-type-parameters-title">Type parameters</h4>
-					<ul class="tsd-type-parameters">
-						<li>
-							<h4>T</h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="modpropertydatatype" class="tsd-anchor"></a>
-					<h3>Mod<wbr>Property<wbr>Data<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">Mod<wbr>Property<wbr>Data<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:928</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Represents the data types possible to store in a mod <a href="interfaces/modproperty.html">ModProperty</a>.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="omittedreadableproxymethods" class="tsd-anchor"></a>
-					<h3>Omitted<wbr>Readable<wbr>Proxy<wbr>Methods</h3>
-					<div class="tsd-signature tsd-kind-icon">Omitted<wbr>Readable<wbr>Proxy<wbr>Methods<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;value&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;valueList&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:986</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Represents methods that are not available on a <a href="modules.html#readableproxy">ReadableProxy</a>. To access these methods the <a href="modules.html#readableproxy">ReadableProxy</a> must be awaited.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="onloadcallback" class="tsd-anchor"></a>
-					<h3>On<wbr>Load<wbr>Callback</h3>
-					<div class="tsd-signature tsd-kind-icon">On<wbr>Load<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>mod<span class="tsd-signature-symbol">: </span><a href="interfaces/mod.html" class="tsd-signature-type" data-tsd-kind="Interface">Mod</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:992</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Represents a function that consumes the <a href="interfaces/mod.html">Mod</a> API. See <a href="modules.html#initialize">initialize</a>.</p>
-						</div>
-					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>mod<span class="tsd-signature-symbol">: </span><a href="interfaces/mod.html" class="tsd-signature-type" data-tsd-kind="Interface">Mod</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>mod: <a href="interfaces/mod.html" class="tsd-signature-type" data-tsd-kind="Interface">Mod</a></h5>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
-									</li>
-								</ul>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>T</h4>
 							</li>
 						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
-					<a name="readableproxy" class="tsd-anchor"></a>
-					<h3>Readable<wbr>Proxy</h3>
-					<div class="tsd-signature tsd-kind-icon">Readable<wbr>Proxy&lt;Node&gt;<span class="tsd-signature-symbol">:</span> <a href="interfaces/readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">, </span><a href="modules.html#methodkeys" class="tsd-signature-type" data-tsd-kind="Type alias">MethodKeys</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="modules.html#omittedreadableproxymethods" class="tsd-signature-type" data-tsd-kind="Type alias">OmittedReadableProxyMethods</a><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:1286</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Represents an object that provides access to a node of the specified type.
-								It can be used as a <a href="interfaces/readable.html">Readable</a> but also acts as a proxy to the node by exposing all its methods.
-								Nodes that represent model state in the Spotfire document can thus be modified without first waiting
-							and materializing them in the browser.</p>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias">
+						<a name="modpropertydatatype" class="tsd-anchor"></a>
+						<h3>Mod<wbr>Property<wbr>Data<wbr>Type</h3>
+						<div class="tsd-signature tsd-kind-icon">Mod<wbr>Property<wbr>Data<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:928</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents the data types possible to store in a mod <a href="interfaces/modproperty.html">ModProperty</a>.</p>
+							</div>
 						</div>
-						<p>A full node will be created by using a <a href="interfaces/reader.html">Reader</a>.</p>
-					</div>
-					<h4 class="tsd-type-parameters-title">Type parameters</h4>
-					<ul class="tsd-type-parameters">
-						<li>
-							<h4>Node</h4>
-						</li>
-					</ul>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias">
+						<a name="omittedreadableproxymethods" class="tsd-anchor"></a>
+						<h3>Omitted<wbr>Readable<wbr>Proxy<wbr>Methods</h3>
+						<div class="tsd-signature tsd-kind-icon">Omitted<wbr>Readable<wbr>Proxy<wbr>Methods<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;value&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;valueList&quot;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:986</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents methods that are not available on a <a href="modules.html#readableproxy">ReadableProxy</a>. To access these methods the <a href="modules.html#readableproxy">ReadableProxy</a> must be awaited.</p>
+							</div>
+						</div>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias">
+						<a name="onloadcallback" class="tsd-anchor"></a>
+						<h3>On<wbr>Load<wbr>Callback</h3>
+						<div class="tsd-signature tsd-kind-icon">On<wbr>Load<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>mod<span class="tsd-signature-symbol">: </span><a href="interfaces/mod.html" class="tsd-signature-type" data-tsd-kind="Interface">Mod</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:992</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents a function that consumes the <a href="interfaces/mod.html">Mod</a> API. See <a href="modules.html#initialize">initialize</a>.</p>
+							</div>
+						</div>
+						<div class="tsd-type-declaration">
+							<h4>Type declaration</h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter-signature">
+									<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+										<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>mod<span class="tsd-signature-symbol">: </span><a href="interfaces/mod.html" class="tsd-signature-type" data-tsd-kind="Interface">Mod</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<h4 class="tsd-parameters-title">Parameters</h4>
+											<ul class="tsd-parameters">
+												<li>
+													<h5>mod: <a href="interfaces/mod.html" class="tsd-signature-type" data-tsd-kind="Interface">Mod</a></h5>
+												</li>
+											</ul>
+											<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+						<a name="readableproxy" class="tsd-anchor"></a>
+						<h3>Readable<wbr>Proxy</h3>
+						<div class="tsd-signature tsd-kind-icon">Readable<wbr>Proxy&lt;Node&gt;<span class="tsd-signature-symbol">:</span> <a href="interfaces/readable.html" class="tsd-signature-type" data-tsd-kind="Interface">Readable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">, </span><a href="modules.html#methodkeys" class="tsd-signature-type" data-tsd-kind="Type alias">MethodKeys</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="modules.html#omittedreadableproxymethods" class="tsd-signature-type" data-tsd-kind="Type alias">OmittedReadableProxyMethods</a><span class="tsd-signature-symbol">&gt;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:1286</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Represents an object that provides access to a node of the specified type.
+									It can be used as a <a href="interfaces/readable.html">Readable</a> but also acts as a proxy to the node by exposing all its methods.
+									Nodes that represent model state in the Spotfire document can thus be modified without first waiting
+								and materializing them in the browser.</p>
+							</div>
+							<p>A full node will be created by using a <a href="interfaces/reader.html">Reader</a>.</p>
+						</div>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>Node</h4>
+							</li>
+						</ul>
+					</section>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="initialize" class="tsd-anchor"></a>
-					<h3>initialize</h3>
-					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>onLoaded<span class="tsd-signature-symbol">: </span><a href="modules.html#onloadcallback" class="tsd-signature-type" data-tsd-kind="Type alias">OnLoadCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in spotfire-api-1-0.d.ts:765</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Initializes the Mod API. The specified <code>onLoaded</code> callback is called when the initialization is complete.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><pre><code><span style="color: #001080">Spotfire</span><span style="color: #000000">.</span><span style="color: #795E26">initialize</span><span style="color: #000000">(</span><span style="color: #0000FF">async</span><span style="color: #000000"> (</span><span style="color: #001080">mod</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+				<section class="tsd-panel-group tsd-member-group ">
+					<h2>Functions</h2>
+					<section class="tsd-panel tsd-member tsd-kind-function">
+						<a name="initialize" class="tsd-anchor"></a>
+						<h3>initialize</h3>
+						<ul class="tsd-signatures tsd-kind-function">
+							<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>onLoaded<span class="tsd-signature-symbol">: </span><a href="modules.html#onloadcallback" class="tsd-signature-type" data-tsd-kind="Type alias">OnLoadCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in spotfire-api-1-0.d.ts:765</li>
+									</ul>
+								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Initializes the Mod API. The specified <code>onLoaded</code> callback is called when the initialization is complete.</p>
+									</div>
+									<dl class="tsd-comment-tags">
+										<dt>example</dt>
+										<dd><pre><code><span style="color: #001080">Spotfire</span><span style="color: #000000">.</span><span style="color: #795E26">initialize</span><span style="color: #000000">(</span><span style="color: #0000FF">async</span><span style="color: #000000"> (</span><span style="color: #001080">mod</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Mod API loaded.&quot;</span><span style="color: #000000">);</span>
 <span style="color: #000000">});</span>
 </code></pre>
-										<p>The initialize method will invoke the provided callback with an instance of the mod API, to be used by the mod developer.</p>
-										<p>The initialize method needs to be invoked in order for the mod to function. Even if the mod only displays static content, the API must be initialized in order for events and export to work.</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>onLoaded: <a href="modules.html#onloadcallback" class="tsd-signature-type" data-tsd-kind="Type alias">OnLoadCallback</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Callback that is called when the mod API is initialized and ready to be interacted with.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+											<p>The initialize method will invoke the provided callback with an instance of the mod API, to be used by the mod developer.</p>
+											<p>The initialize method needs to be invoked in order for the mod to function. Even if the mod only displays static content, the API must be initialized in order for events and export to work.</p>
+										</dd>
+									</dl>
+								</div>
+								<h4 class="tsd-parameters-title">Parameters</h4>
+								<ul class="tsd-parameters">
+									<li>
+										<h5>onLoaded: <a href="modules.html#onloadcallback" class="tsd-signature-type" data-tsd-kind="Type alias">OnLoadCallback</a></h5>
+										<div class="tsd-comment tsd-typography">
+											<p>Callback that is called when the mod API is initialized and ready to be interacted with.</p>
+										</div>
+									</li>
+								</ul>
+								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							</li>
+						</ul>
+					</section>
+				</section>
+			</div>
+			<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+				<nav class="tsd-navigation primary">
+					<ul>
+						<li class="current ">
+							<a href="modules.html">Exports</a>
 						</li>
 					</ul>
-				</section>
-			</section>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class="current ">
-						<a href="modules.html">Exports</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/analysisproperty.html" class="tsd-kind-icon">Analysis<wbr>Property</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/analysispropertyvalue.html" class="tsd-kind-icon">Analysis<wbr>Property<wbr>Value</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/axis.html" class="tsd-kind-icon">Axis</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/axispart.html" class="tsd-kind-icon">Axis<wbr>Part</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/axisvalues.html" class="tsd-kind-icon">Axis<wbr>Values</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/column.html" class="tsd-kind-icon">Column</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/columnvalues.html" class="tsd-kind-icon">Column<wbr>Values</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/contextmenu.html" class="tsd-kind-icon">Context<wbr>Menu</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/contextmenuitem.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Item</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/controls.html" class="tsd-kind-icon">Controls</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/datatable.html" class="tsd-kind-icon">Data<wbr>Table</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/datatablevalues.html" class="tsd-kind-icon">Data<wbr>Table<wbr>Values</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/datatype.html" class="tsd-kind-icon">Data<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataview.html" class="tsd-kind-icon">Data<wbr>View</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Axis</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewcategoricalaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Axis</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewcategoricalvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewcategoricalvaluepathelement.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value<wbr>Path<wbr>Element</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewcolorinfo.html" class="tsd-kind-icon">Data<wbr>View<wbr>Color<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewcontinuousaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Axis</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/dataviewcontinuousvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Value</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewhierarchy.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewhierarchylevel.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy<wbr>Level</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewhierarchynode.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewproxymethods.html" class="tsd-kind-icon">Data<wbr>View<wbr>Proxy<wbr>Methods</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/dataviewrow.html" class="tsd-kind-icon">Data<wbr>View<wbr>Row</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/erroroverlay.html" class="tsd-kind-icon">Error<wbr>Overlay</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/fontinfo.html" class="tsd-kind-icon">Font<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/generalstylinginfo.html" class="tsd-kind-icon">General<wbr>Styling<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/linestylinginfo.html" class="tsd-kind-icon">Line<wbr>Styling<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/markinginfo.html" class="tsd-kind-icon">Marking<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/mod.html" class="tsd-kind-icon">Mod</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/modmetadata.html" class="tsd-kind-icon">Mod<wbr>Metadata</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/modproperty.html" class="tsd-kind-icon">Mod<wbr>Property</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/modpropertyvalue.html" class="tsd-kind-icon">Mod<wbr>Property<wbr>Value</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/modvisualization.html" class="tsd-kind-icon">Mod<wbr>Visualization</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/page.html" class="tsd-kind-icon">Page</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/pagevalues.html" class="tsd-kind-icon">Page<wbr>Values</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popout.html" class="tsd-kind-icon">Popout</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutbuttonoptions.html" class="tsd-kind-icon">Popout<wbr>Button<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutcheckboxoptions.html" class="tsd-kind-icon">Popout<wbr>Checkbox<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutcomponent.html" class="tsd-kind-icon">Popout<wbr>Component</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutcomponentevent.html" class="tsd-kind-icon">Popout<wbr>Component<wbr>Event</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutcomponentfactory.html" class="tsd-kind-icon">Popout<wbr>Component<wbr>Factory</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutdialog.html" class="tsd-kind-icon">Popout<wbr>Dialog</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutoptions.html" class="tsd-kind-icon">Popout<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutradiobuttonoptions.html" class="tsd-kind-icon">Popout<wbr>Radio<wbr>Button<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutsection.html" class="tsd-kind-icon">Popout<wbr>Section</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/popoutsectionoptions.html" class="tsd-kind-icon">Popout<wbr>Section<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/progress.html" class="tsd-kind-icon">Progress</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/readable.html" class="tsd-kind-icon">Readable</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/reader.html" class="tsd-kind-icon">Reader</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/rendercontext.html" class="tsd-kind-icon">Render<wbr>Context</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/scalestylinginfo.html" class="tsd-kind-icon">Scale<wbr>Styling<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/size.html" class="tsd-kind-icon">Size</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/spotfiredocument.html" class="tsd-kind-icon">Spotfire<wbr>Document</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/stylinginfo.html" class="tsd-kind-icon">Styling<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/tickstylinginfo.html" class="tsd-kind-icon">Tick<wbr>Styling<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/time.html" class="tsd-kind-icon">Time</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/timespan.html" class="tsd-kind-icon">Time<wbr>Span</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/tooltip.html" class="tsd-kind-icon">Tooltip</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#abortpredicate" class="tsd-kind-icon">Abort<wbr>Predicate</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#analysispropertydatatype" class="tsd-kind-icon">Analysis<wbr>Property<wbr>Data<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#dataviewproxy" class="tsd-kind-icon">Data<wbr>View<wbr>Proxy</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#dataviewvaluetype" class="tsd-kind-icon">Data<wbr>View<wbr>Value<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="modules.html#extractvaluetype" class="tsd-kind-icon">Extract<wbr>Value<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#markingoperation" class="tsd-kind-icon">Marking<wbr>Operation</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="modules.html#methodkeys" class="tsd-kind-icon">Method<wbr>Keys</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#modpropertydatatype" class="tsd-kind-icon">Mod<wbr>Property<wbr>Data<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#omittedreadableproxymethods" class="tsd-kind-icon">Omitted<wbr>Readable<wbr>Proxy<wbr>Methods</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#onloadcallback" class="tsd-kind-icon">On<wbr>Load<wbr>Callback</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="modules.html#readableproxy" class="tsd-kind-icon">Readable<wbr>Proxy</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#initialize" class="tsd-kind-icon">initialize</a>
-					</li>
-				</ul>
-			</nav>
+				</nav>
+				<nav class="tsd-navigation secondary menu-sticky">
+					<ul class="before-current">
+						<li class=" tsd-kind-interface tsd-has-type-parameter">
+							<a href="interfaces/analysisproperty.html" class="tsd-kind-icon">Analysis<wbr>Property</a>
+						</li>
+						<li class=" tsd-kind-interface tsd-has-type-parameter">
+							<a href="interfaces/analysispropertyvalue.html" class="tsd-kind-icon">Analysis<wbr>Property<wbr>Value</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/axis.html" class="tsd-kind-icon">Axis</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/axispart.html" class="tsd-kind-icon">Axis<wbr>Part</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/axisvalues.html" class="tsd-kind-icon">Axis<wbr>Values</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/column.html" class="tsd-kind-icon">Column</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/columnvalues.html" class="tsd-kind-icon">Column<wbr>Values</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/contextmenu.html" class="tsd-kind-icon">Context<wbr>Menu</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/contextmenuitem.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Item</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/controls.html" class="tsd-kind-icon">Controls</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/datatable.html" class="tsd-kind-icon">Data<wbr>Table</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/datatablevalues.html" class="tsd-kind-icon">Data<wbr>Table<wbr>Values</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/datatype.html" class="tsd-kind-icon">Data<wbr>Type</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataview.html" class="tsd-kind-icon">Data<wbr>View</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Axis</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewcategoricalaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Axis</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewcategoricalvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewcategoricalvaluepathelement.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value<wbr>Path<wbr>Element</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewcolorinfo.html" class="tsd-kind-icon">Data<wbr>View<wbr>Color<wbr>Info</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewcontinuousaxis.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Axis</a>
+						</li>
+						<li class=" tsd-kind-interface tsd-has-type-parameter">
+							<a href="interfaces/dataviewcontinuousvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Continuous<wbr>Value</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewhierarchy.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewhierarchylevel.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy<wbr>Level</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewhierarchynode.html" class="tsd-kind-icon">Data<wbr>View<wbr>Hierarchy<wbr>Node</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewproxymethods.html" class="tsd-kind-icon">Data<wbr>View<wbr>Proxy<wbr>Methods</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/dataviewrow.html" class="tsd-kind-icon">Data<wbr>View<wbr>Row</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/erroroverlay.html" class="tsd-kind-icon">Error<wbr>Overlay</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/fontinfo.html" class="tsd-kind-icon">Font<wbr>Info</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/generalstylinginfo.html" class="tsd-kind-icon">General<wbr>Styling<wbr>Info</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/linestylinginfo.html" class="tsd-kind-icon">Line<wbr>Styling<wbr>Info</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/markinginfo.html" class="tsd-kind-icon">Marking<wbr>Info</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/mod.html" class="tsd-kind-icon">Mod</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/modmetadata.html" class="tsd-kind-icon">Mod<wbr>Metadata</a>
+						</li>
+						<li class=" tsd-kind-interface tsd-has-type-parameter">
+							<a href="interfaces/modproperty.html" class="tsd-kind-icon">Mod<wbr>Property</a>
+						</li>
+						<li class=" tsd-kind-interface tsd-has-type-parameter">
+							<a href="interfaces/modpropertyvalue.html" class="tsd-kind-icon">Mod<wbr>Property<wbr>Value</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/modvisualization.html" class="tsd-kind-icon">Mod<wbr>Visualization</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/page.html" class="tsd-kind-icon">Page</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/pagevalues.html" class="tsd-kind-icon">Page<wbr>Values</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popout.html" class="tsd-kind-icon">Popout</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutbuttonoptions.html" class="tsd-kind-icon">Popout<wbr>Button<wbr>Options</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutcheckboxoptions.html" class="tsd-kind-icon">Popout<wbr>Checkbox<wbr>Options</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutcomponent.html" class="tsd-kind-icon">Popout<wbr>Component</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutcomponentevent.html" class="tsd-kind-icon">Popout<wbr>Component<wbr>Event</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutcomponentfactory.html" class="tsd-kind-icon">Popout<wbr>Component<wbr>Factory</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutdialog.html" class="tsd-kind-icon">Popout<wbr>Dialog</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutoptions.html" class="tsd-kind-icon">Popout<wbr>Options</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutradiobuttonoptions.html" class="tsd-kind-icon">Popout<wbr>Radio<wbr>Button<wbr>Options</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutsection.html" class="tsd-kind-icon">Popout<wbr>Section</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/popoutsectionoptions.html" class="tsd-kind-icon">Popout<wbr>Section<wbr>Options</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/progress.html" class="tsd-kind-icon">Progress</a>
+						</li>
+						<li class=" tsd-kind-interface tsd-has-type-parameter">
+							<a href="interfaces/readable.html" class="tsd-kind-icon">Readable</a>
+						</li>
+						<li class=" tsd-kind-interface tsd-has-type-parameter">
+							<a href="interfaces/reader.html" class="tsd-kind-icon">Reader</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/rendercontext.html" class="tsd-kind-icon">Render<wbr>Context</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/scalestylinginfo.html" class="tsd-kind-icon">Scale<wbr>Styling<wbr>Info</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/size.html" class="tsd-kind-icon">Size</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/spotfiredocument.html" class="tsd-kind-icon">Spotfire<wbr>Document</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/stylinginfo.html" class="tsd-kind-icon">Styling<wbr>Info</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/tickstylinginfo.html" class="tsd-kind-icon">Tick<wbr>Styling<wbr>Info</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/time.html" class="tsd-kind-icon">Time</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/timespan.html" class="tsd-kind-icon">Time<wbr>Span</a>
+						</li>
+						<li class=" tsd-kind-interface">
+							<a href="interfaces/tooltip.html" class="tsd-kind-icon">Tooltip</a>
+						</li>
+						<li class=" tsd-kind-type-alias">
+							<a href="modules.html#abortpredicate" class="tsd-kind-icon">Abort<wbr>Predicate</a>
+						</li>
+						<li class=" tsd-kind-type-alias">
+							<a href="modules.html#analysispropertydatatype" class="tsd-kind-icon">Analysis<wbr>Property<wbr>Data<wbr>Type</a>
+						</li>
+						<li class=" tsd-kind-type-alias">
+							<a href="modules.html#dataviewproxy" class="tsd-kind-icon">Data<wbr>View<wbr>Proxy</a>
+						</li>
+						<li class=" tsd-kind-type-alias">
+							<a href="modules.html#dataviewvaluetype" class="tsd-kind-icon">Data<wbr>View<wbr>Value<wbr>Type</a>
+						</li>
+						<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+							<a href="modules.html#extractvaluetype" class="tsd-kind-icon">Extract<wbr>Value<wbr>Type</a>
+						</li>
+						<li class=" tsd-kind-type-alias">
+							<a href="modules.html#markingoperation" class="tsd-kind-icon">Marking<wbr>Operation</a>
+						</li>
+						<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+							<a href="modules.html#methodkeys" class="tsd-kind-icon">Method<wbr>Keys</a>
+						</li>
+						<li class=" tsd-kind-type-alias">
+							<a href="modules.html#modpropertydatatype" class="tsd-kind-icon">Mod<wbr>Property<wbr>Data<wbr>Type</a>
+						</li>
+						<li class=" tsd-kind-type-alias">
+							<a href="modules.html#omittedreadableproxymethods" class="tsd-kind-icon">Omitted<wbr>Readable<wbr>Proxy<wbr>Methods</a>
+						</li>
+						<li class=" tsd-kind-type-alias">
+							<a href="modules.html#onloadcallback" class="tsd-kind-icon">On<wbr>Load<wbr>Callback</a>
+						</li>
+						<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+							<a href="modules.html#readableproxy" class="tsd-kind-icon">Readable<wbr>Proxy</a>
+						</li>
+						<li class=" tsd-kind-function">
+							<a href="modules.html#initialize" class="tsd-kind-icon">initialize</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
 		</div>
 	</div>
-</div>
-<footer>
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
+	<footer>
+		<div class="container">
+			<h2>Legend</h2>
+			<div class="tsd-legend-group">
+				<ul class="tsd-legend">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				</ul>
+			</div>
 		</div>
-	</div>
-</footer>
+	</footer>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>

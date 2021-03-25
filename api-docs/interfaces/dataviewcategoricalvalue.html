@@ -9,6 +9,7 @@
 	<link rel="icon"  href="/spotfire-mods/favicons/favicon.ico" >
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<link rel="stylesheet" href="../assets/css/overrides.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <div id="nav-wrapper">
@@ -100,18 +101,17 @@
 		<div class="tsd-page-toolbar">
 			<div class="container">
 				<div class="table-wrap">
-					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json"
-					data-base="..">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
 					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-				</div>
-				<!--
+					<!--
                 <div class="table-cell" id="tsd-widgets">
                     <div id="tsd-filter">
                         <a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
@@ -130,193 +130,189 @@
 
                                 <input type="checkbox" id="tsd-filter-externals" checked />
                                 <label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-
-                                <input type="checkbox" id="tsd-filter-only-exported" />
-                                <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
                         </div>
                     </div>
 
                     <a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
                 </div>
-
                 -->
+				</div>
 			</div>
 		</div>
-</div>
-<div class="tsd-page-title">
-	<div class="container">
-		<ul class="tsd-breadcrumb">
-			<li>
-				<a href="../modules.html">Globals</a>
-			</li>
-			<li>
-				<a href="dataviewcategoricalvalue.html">DataViewCategoricalValue</a>
-			</li>
-		</ul>
-		<h1>Interface DataViewCategoricalValue</h1>
-	</div>
-</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Represents a value of a categorical axis for one row in a data view.</p>
-					</div>
-				</div>
-			</section>
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
+		<div class="tsd-page-title">
+			<div class="container">
+				<ul class="tsd-breadcrumb">
 					<li>
-						<span class="target">DataViewCategoricalValue</span>
+						<a href="../modules.html">API Documentation</a>
+					</li>
+					<li>
+						<a href="dataviewcategoricalvalue.html">DataViewCategoricalValue</a>
 					</li>
 				</ul>
-			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dataviewcategoricalvalue.html#leafindex" class="tsd-kind-icon">leaf<wbr>Index</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Methods</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewcategoricalvalue.html#formattedvalue" class="tsd-kind-icon">formatted<wbr>Value</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewcategoricalvalue.html#value" class="tsd-kind-icon">value</a></li>
-							</ul>
-						</section>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="leafindex" class="tsd-anchor"></a>
-					<h3>leaf<wbr>Index</h3>
-					<div class="tsd-signature tsd-kind-icon">leaf<wbr>Index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in spotfire-api-1-0.d.ts:416</li>
-						</ul>
-					</aside>
+				<h1>Interface DataViewCategoricalValue</h1>
+			</div>
+		</div>
+	</header>
+	<div class="container container-main">
+		<div class="row">
+			<div class="col-8 col-content">
+				<section class="tsd-panel tsd-comment">
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Gets the index among the leaf nodes of the associated <a href="dataviewhierarchy.html">DataViewHierarchy</a> of this <a href="dataviewcategoricalaxis.html">DataViewCategoricalAxis</a>.
-							This, for example, can be used to determine the position on a scale where to render the visual element.</p>
+							<p>Represents a value of a categorical axis for one row in a data view.</p>
 						</div>
 					</div>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="formattedvalue" class="tsd-anchor"></a>
-					<h3>formatted<wbr>Value</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">formatted<wbr>Value<span class="tsd-signature-symbol">(</span>separator<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+				<section class="tsd-panel tsd-hierarchy">
+					<h3>Hierarchy</h3>
+					<ul class="tsd-hierarchy">
+						<li>
+							<span class="target">DataViewCategoricalValue</span>
+						</li>
 					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in spotfire-api-1-0.d.ts:411</li>
+				</section>
+				<section class="tsd-panel-group tsd-index-group">
+					<h2>Index</h2>
+					<section class="tsd-panel tsd-index-panel">
+						<div class="tsd-index-content">
+							<section class="tsd-index-section ">
+								<h3>Properties</h3>
+								<ul class="tsd-index-list">
+									<li class="tsd-kind-property tsd-parent-kind-interface"><a href="dataviewcategoricalvalue.html#leafindex" class="tsd-kind-icon">leaf<wbr>Index</a></li>
 								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Gets a formatted string that can be used to display this value.
-									This string is built by concatenating the <a href="dataviewcategoricalvaluepathelement.html#formattedvalue">DataViewCategoricalValuePathElement.formattedValue</a> for each element found in the <a href="dataviewcategoricalvalue.html#value">DataViewCategoricalValue.value</a> array.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> separator: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The separator used for concatenation. The default separator is &quot; » &quot;.</p>
-									</div>
-								</li>
+							</section>
+							<section class="tsd-index-section ">
+								<h3>Methods</h3>
+								<ul class="tsd-index-list">
+									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewcategoricalvalue.html#formattedvalue" class="tsd-kind-icon">formatted<wbr>Value</a></li>
+									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewcategoricalvalue.html#value" class="tsd-kind-icon">value</a></li>
+								</ul>
+							</section>
+						</div>
+					</section>
+				</section>
+				<section class="tsd-panel-group tsd-member-group ">
+					<h2>Properties</h2>
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+						<a name="leafindex" class="tsd-anchor"></a>
+						<h3>leaf<wbr>Index</h3>
+						<div class="tsd-signature tsd-kind-icon">leaf<wbr>Index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in spotfire-api-1-0.d.ts:416</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="value" class="tsd-anchor"></a>
-					<h3>value</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="dataviewcategoricalvaluepathelement.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewCategoricalValuePathElement</a><span class="tsd-signature-symbol">[]</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in spotfire-api-1-0.d.ts:405</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Gets an array representing the full path of the value in the hierarchy defined by the axis expression.
-									The first element is the top level of the hierarchy and the last element is the leaf level.</p>
-								</div>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Gets the index among the leaf nodes of the associated <a href="dataviewhierarchy.html">DataViewHierarchy</a> of this <a href="dataviewcategoricalaxis.html">DataViewCategoricalAxis</a>.
+								This, for example, can be used to determine the position on a scale where to render the visual element.</p>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="dataviewcategoricalvaluepathelement.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewCategoricalValuePathElement</a><span class="tsd-signature-symbol">[]</span></h4>
-						</li>
-					</ul>
+						</div>
+					</section>
 				</section>
-			</section>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="../modules.html">Exports</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface">
-						<a href="dataviewcategoricalvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="dataviewcategoricalvalue.html#leafindex" class="tsd-kind-icon">leaf<wbr>Index</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="dataviewcategoricalvalue.html#formattedvalue" class="tsd-kind-icon">formatted<wbr>Value</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="dataviewcategoricalvalue.html#value" class="tsd-kind-icon">value</a>
+				<section class="tsd-panel-group tsd-member-group ">
+					<h2>Methods</h2>
+					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+						<a name="formattedvalue" class="tsd-anchor"></a>
+						<h3>formatted<wbr>Value</h3>
+						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+							<li class="tsd-signature tsd-kind-icon">formatted<wbr>Value<span class="tsd-signature-symbol">(</span>separator<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in spotfire-api-1-0.d.ts:411</li>
+									</ul>
+								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Gets a formatted string that can be used to display this value.
+										This string is built by concatenating the <a href="dataviewcategoricalvaluepathelement.html#formattedvalue">DataViewCategoricalValuePathElement.formattedValue</a> for each element found in the <a href="dataviewcategoricalvalue.html#value">DataViewCategoricalValue.value</a> array.</p>
+									</div>
+								</div>
+								<h4 class="tsd-parameters-title">Parameters</h4>
+								<ul class="tsd-parameters">
+									<li>
+										<h5><span class="tsd-flag ts-flagOptional">Optional</span> separator: <span class="tsd-signature-type">string</span></h5>
+										<div class="tsd-comment tsd-typography">
+											<p>The separator used for concatenation. The default separator is &quot; » &quot;.</p>
+										</div>
+									</li>
+								</ul>
+								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 							</li>
 						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
-				</ul>
-			</nav>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+						<a name="value" class="tsd-anchor"></a>
+						<h3>value</h3>
+						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+							<li class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="dataviewcategoricalvaluepathelement.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewCategoricalValuePathElement</a><span class="tsd-signature-symbol">[]</span></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in spotfire-api-1-0.d.ts:405</li>
+									</ul>
+								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Gets an array representing the full path of the value in the hierarchy defined by the axis expression.
+										The first element is the top level of the hierarchy and the last element is the leaf level.</p>
+									</div>
+								</div>
+								<h4 class="tsd-returns-title">Returns <a href="dataviewcategoricalvaluepathelement.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewCategoricalValuePathElement</a><span class="tsd-signature-symbol">[]</span></h4>
+							</li>
+						</ul>
+					</section>
+				</section>
+			</div>
+			<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+				<nav class="tsd-navigation primary">
+					<ul>
+						<li class=" ">
+							<a href="../modules.html">Exports</a>
+						</li>
+					</ul>
+				</nav>
+				<nav class="tsd-navigation secondary menu-sticky">
+					<ul class="before-current">
+					</ul>
+					<ul class="current">
+						<li class="current tsd-kind-interface">
+							<a href="dataviewcategoricalvalue.html" class="tsd-kind-icon">Data<wbr>View<wbr>Categorical<wbr>Value</a>
+							<ul>
+								<li class=" tsd-kind-property tsd-parent-kind-interface">
+									<a href="dataviewcategoricalvalue.html#leafindex" class="tsd-kind-icon">leaf<wbr>Index</a>
+								</li>
+								<li class=" tsd-kind-method tsd-parent-kind-interface">
+									<a href="dataviewcategoricalvalue.html#formattedvalue" class="tsd-kind-icon">formatted<wbr>Value</a>
+								</li>
+								<li class=" tsd-kind-method tsd-parent-kind-interface">
+									<a href="dataviewcategoricalvalue.html#value" class="tsd-kind-icon">value</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="after-current">
+					</ul>
+				</nav>
+			</div>
 		</div>
 	</div>
-</div>
-<footer>
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
+	<footer>
+		<div class="container">
+			<h2>Legend</h2>
+			<div class="tsd-legend-group">
+				<ul class="tsd-legend">
+					<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+					<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				</ul>
+			</div>
 		</div>
-	</div>
-</footer>
+	</footer>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>

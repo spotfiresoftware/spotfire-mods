@@ -735,10 +735,6 @@ This is an example of a spider chart developed in TypeScript, rendered with D3, 
 &lt;td&gt;Folder for the mod&amp;rsquo;s source code.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;development-server.js&lt;/td&gt;
-&lt;td&gt;A node.js script that starts a development server.&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
 &lt;td&gt;package.json&lt;/td&gt;
 &lt;td&gt;Lists the Node.js dependencies and necessary scripts.&lt;/td&gt;
 &lt;/tr&gt;
