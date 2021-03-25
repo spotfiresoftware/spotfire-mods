@@ -1,8 +1,8 @@
 /*
-* Copyright © 2020. TIBCO Software Inc.
-* This file is subject to the license terms contained
-* in the license file that is distributed with this file.
-*/
+ * Copyright © 2020. TIBCO Software Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ */
 
 //@ts-check
 
@@ -99,8 +99,9 @@ function cacheRedirect(req, res, next) {
     res.setHeader(
         "content-security-policy",
         `sandbox allow-scripts; default-src 'self' 'unsafe-eval' 'unsafe-hashes' 'unsafe-inline' blob: data: ${[
-            ...allowedExternalResources.values()
-        , ...declaredExternalResourcesInManifest].join(" ")}`
+            ...allowedExternalResources.values(),
+            ...declaredExternalResourcesInManifest
+        ].join(" ")}`
     );
 
     // CSP header used by older browsers where the CSP policy is not fully supported.

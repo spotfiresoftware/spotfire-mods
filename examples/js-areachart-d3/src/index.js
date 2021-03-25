@@ -60,16 +60,8 @@ Spotfire.initialize(async (mod) => {
      */
     async function onChange(dataView, windowSize, chartType, roundedCurves, gapfill) {
         try {
-            await render(
-                state,
-                mod,
-                dataView,
-                windowSize,
-                chartType,
-                roundedCurves,
-                gapfill
-            );
-            
+            await render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill);
+
             context.signalRenderComplete();
 
             // Everything went well this time. Clear any error.

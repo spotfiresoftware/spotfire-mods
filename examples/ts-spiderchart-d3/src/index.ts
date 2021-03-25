@@ -11,7 +11,7 @@ export interface RenderState {
     preventRender: boolean;
 }
 
-Spotfire.initialize(async mod => {
+Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
     /**
@@ -159,7 +159,7 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
 async function buildData(mod: Mod, dataView: DataView): Promise<Data> {
     const allRows = await dataView.allRows();
 
-    const allYValues: Array<number> = allRows!.map(row => row.continuous<number>("Y").value() || 0);
+    const allYValues: Array<number> = allRows!.map((row) => row.continuous<number>("Y").value() || 0);
     const maxValue = Math.max(...allYValues);
     const minValue = Math.min(0, ...allYValues);
 
@@ -168,7 +168,7 @@ async function buildData(mod: Mod, dataView: DataView): Promise<Data> {
     const colorLeaves = (await (await dataView.hierarchy("Color"))!.root())!.leaves();
     const xHierarchyLeaves = (await xHierarchy!.root())!.leaves();
 
-    const xAxisData = xHierarchyLeaves.map(leaf => leaf.formattedPath());
+    const xAxisData = xHierarchyLeaves.map((leaf) => leaf.formattedPath());
 
     const xAxisMeta = await mod.visualization.axis("X");
     const yAxisMeta = await mod.visualization.axis("Y");
@@ -195,8 +195,8 @@ async function buildData(mod: Mod, dataView: DataView): Promise<Data> {
 
         if (yAxisMeta.parts.length > 1) {
             // Find the corresponding display name for the y axis value.
-            let colorLevelForColumnNames = colorAxisMeta.parts.map(p => p.expression).indexOf("[Axis.Default.Names]");
-            let xLevelForColumnNames = xAxisMeta.parts.map(p => p.expression).indexOf("[Axis.Default.Names]");
+            let colorLevelForColumnNames = colorAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
+            let xLevelForColumnNames = xAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
             if (colorLevelForColumnNames >= 0) {
                 yDisplayName = colorValues[colorLevelForColumnNames];
             }

@@ -28,14 +28,14 @@ export function buildColorSeries(
 ): Serie[] {
     const numberOrZero = (val: any) => (typeof val == "number" ? val : 0);
 
-    let colorSeries: Serie[] = colorLeaves.map(colorLeaf => ({
-        mark: m => colorLeaf.mark(m),
+    let colorSeries: Serie[] = colorLeaves.map((colorLeaf) => ({
+        mark: (m) => colorLeaf.mark(m),
         index: colorLeaf.leafIndex!,
         sum: colorLeaf.rows().reduce((sum, row) => sum + numberOrZero(row.continuous("Y").value()), 0),
-        points: colorLeaf.rows().map(row => createPoint(row, colorLeaf))
+        points: colorLeaf.rows().map((row) => createPoint(row, colorLeaf))
     }));
 
-    colorSeries.forEach(serie => {
+    colorSeries.forEach((serie) => {
         if (serie.points.length == 0) {
             return;
         } else if (serie.points.length == 1) {
@@ -71,7 +71,7 @@ export function buildColorSeries(
             tooltip() {
                 return getTooltip(this);
             },
-            mark: m => row.mark(m),
+            mark: (m) => row.mark(m),
             xIndex: hasX ? row.categorical("X").leafIndex : 0,
             Y: numberOrZero(row.continuous("Y").value()),
             Y_Formatted: row.continuous("Y").formattedValue(),

@@ -31,7 +31,7 @@ Spotfire.initialize(function (mod) {
 
     /**
      * Gets a row in the data view for a hierarchy node.
-     * @param {Spotfire.DataViewHierarchyNode} sfNode 
+     * @param {Spotfire.DataViewHierarchyNode} sfNode
      */
     function getRow(sfNode) {
         const rows = sfNode.rows();
@@ -53,7 +53,7 @@ Spotfire.initialize(function (mod) {
 
     /**
      * Checks if the node has any rows in the data view.
-     * @param {Spotfire.DataViewHierarchyNode} sfNode 
+     * @param {Spotfire.DataViewHierarchyNode} sfNode
      */
     function isNonEmptyNode(sfNode) {
         return sfNode.children ? sfNode.children.some(isNonEmptyNode) : sfNode.rows().length > 0;
@@ -61,7 +61,7 @@ Spotfire.initialize(function (mod) {
 
     /**
      * Gets the color for a node in the d3 hierarchy.
-     * @param d3node 
+     * @param d3node
      */
     function getColor(d3node) {
         if (d3node.children) {
@@ -74,7 +74,7 @@ Spotfire.initialize(function (mod) {
 
     /**
      * Gets the outline color for a node in the d3 hierarchy.
-     * @param d3node 
+     * @param d3node
      */
     function getOutlineColor(d3node) {
         if (d3node.children) {
@@ -91,7 +91,7 @@ Spotfire.initialize(function (mod) {
 
     /**
      * Gets the text color to use for a node in the d3 hierarchy.
-     * @param d3Node 
+     * @param d3Node
      */
     function getTextColor(d3Node) {
         const color = d3.hsl(getColor(d3Node));
@@ -117,8 +117,7 @@ Spotfire.initialize(function (mod) {
         const radius = d3Node.r * 0.85;
         const scale = radius / textRadius;
 
-        if (scale * fontSizePx < 5)
-        {
+        if (scale * fontSizePx < 5) {
             // Text will be to small. Skip this one.
             return;
         }
@@ -151,16 +150,15 @@ Spotfire.initialize(function (mod) {
         clear();
         if (messages) {
             mod.controls.errorOverlay.show(messages);
-        }
-        else {
+        } else {
             mod.controls.errorOverlay.hide();
         }
     }
-    
+
     /**
      * The main rendering function
-     * @param {Spotfire.DataView} dataView 
-     * @param {Spotfire.Size} size 
+     * @param {Spotfire.DataView} dataView
+     * @param {Spotfire.Size} size
      */
     async function render(dataView, size) {
         // Clear any open tooltips
@@ -168,7 +166,7 @@ Spotfire.initialize(function (mod) {
 
         // Check for data view errors
         const errors = await dataView.getErrors();
-        if (errors.length > 0) {  
+        if (errors.length > 0) {
             bailout(errors);
             return;
         }
@@ -235,10 +233,7 @@ Spotfire.initialize(function (mod) {
         });
 
         // Create a pack layout
-        const packLayout = d3
-            .pack()
-            .size([size.width, size.height])
-            .padding(1);
+        const packLayout = d3.pack().size([size.width, size.height]).padding(1);
 
         packLayout(d3Root);
 

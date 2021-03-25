@@ -73,7 +73,7 @@ const dev = series(build, function startWatchers(cb) {
     watch(staticFiles, series(moveStaticFiles, updateManifest));
     watch(manifestPath, updateManifest);
 
-    modsDevServer.start({root: "./dist"});
+    modsDevServer.start({ root: "./dist" });
 
     cb();
 });
@@ -140,12 +140,12 @@ async function updateManifestFiles() {
     const manifestName = "mod-manifest.json";
 
     let results = await filewalker(dir);
-    results = results.map(p => path.relative(dir, p)).map(p => p.replace(/\\/g, "/"));
+    results = results.map((p) => path.relative(dir, p)).map((p) => p.replace(/\\/g, "/"));
 
     try {
         var manifestFile = await readFile(path.join(dir, manifestName), { encoding: "utf8" });
         var manifest = JSON.parse(manifestFile);
-        manifest.files = results.filter(r => r != manifestName);
+        manifest.files = results.filter((r) => r != manifestName);
         await writeFile(path.join(dir, manifestName), JSON.stringify(manifest, null, 4), { encoding: "utf8" });
     } catch (err) {
         console.error(err);

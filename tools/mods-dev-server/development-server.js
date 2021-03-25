@@ -40,7 +40,7 @@ const defaultConfig = {
     open: "/" + manifestName,
     root: "./src/",
     wait: 250, // Waits for all changes, before reloading. Defaults to 0 sec.
-    middleware: [cacheRedirect],
+    middleware: [cacheRedirect]
 };
 
 module.exports.start = startServer;
@@ -49,7 +49,7 @@ module.exports.start = startServer;
 // @ts-ignore
 if (require.main === module) {
     startServer({
-        root: process.argv[2] || "./src/",
+        root: process.argv[2] || "./src/"
     }).catch((err) => {
         console.warn(err);
         process.exit(1);
@@ -63,7 +63,7 @@ if (require.main === module) {
 async function startServer(partialConfig = {}) {
     const config = {
         ...defaultConfig,
-        ...partialConfig,
+        ...partialConfig
     };
 
     const rootDirectoryAbsolutePath = path.resolve(config.root);
@@ -135,7 +135,7 @@ function cacheRedirect(req, res, next) {
         "content-security-policy",
         `sandbox allow-scripts; default-src 'self' 'unsafe-eval' 'unsafe-inline' blob: data: ${[
             ...allowedOrigins.values(),
-            ...declaredExternalResourcesInManifest,
+            ...declaredExternalResourcesInManifest
         ].join(" ")}`
     );
 
