@@ -1,8 +1,6 @@
-<p align="center">
-  <img width="500" alt="Spider chart example" src="https://github.com/TIBCOSoftware/spotfire-mods/blob/master/examples/ts-spiderchart-d3/SpiderChartModExample.png?raw=true">
-</p>
-
 # Spider chart
+
+![Spider chart example](SpiderChartModExample.png)
 
 This is a mod example demonstrating a spider chart written in `TypeScript`, rendered with `d3` and bundled with `Webpack`.
 
@@ -16,7 +14,8 @@ These instructions assume that you have [Node.js](https://nodejs.org/en/) (which
 
 - Open a terminal at the location of this example.
 - Run `npm install`. This will install necessary tools. Run this command only the first time you are building the mod and skip this step for any subsequent builds.
-- Run `npm start`. This will compile TypeScript to JavaScript and place the bundle in the `dist` folder. This task will watch for changes in code and will continue running until it is stopped. Whenever you save a file, the changes will be reflected in the visualization mod. This task will also start a development server.
+- Run `npm start`. This will compile TypeScript to JavaScript and place the bundle in the `dist` folder. This task will watch for changes in code and will continue running until it is stopped. Whenever you save a file, the changes will be reflected in the visualization mod.
+- Run `npm run server` in a separate terminal. This will start a development server.
 - Start editing, for example `src/main.ts`.
 - In Spotfire, follow the steps of creating a new mod and connecting to the development server.
 
