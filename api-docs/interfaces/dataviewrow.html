@@ -181,7 +181,9 @@
 									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#categorical" class="tsd-kind-icon">categorical</a></li>
 									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#color" class="tsd-kind-icon">color</a></li>
 									<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="dataviewrow.html#continuous" class="tsd-kind-icon">continuous</a></li>
+									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#elementid" class="tsd-kind-icon">element<wbr>Id</a></li>
 									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#ismarked" class="tsd-kind-icon">is<wbr>Marked</a></li>
+									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#leafnode" class="tsd-kind-icon">leaf<wbr>Node</a></li>
 									<li class="tsd-kind-method tsd-parent-kind-interface"><a href="dataviewrow.html#mark" class="tsd-kind-icon">mark</a></li>
 								</ul>
 							</section>
@@ -200,13 +202,13 @@
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in spotfire-api-1-0.d.ts:644</li>
+										<li>Defined in spotfire-api-1-1.d.ts:637</li>
 									</ul>
 								</aside>
 								<div class="tsd-comment tsd-typography">
 									<div class="lead">
 										<p>Gets a <a href="dataviewcategoricalvalue.html">DataViewCategoricalValue</a> representing the value of the axis with the specified <code>axisName</code>.
-											This method will throw an error if there is no categorical axis by that name.
+											This method will throw an error if there is no categorical axis by that name or if the expression is empty.
 										Use <a href="dataview.html#categoricalaxis">DataView.categoricalAxis</a> to check the current existence of a categorical value.</p>
 									</div>
 								</div>
@@ -233,7 +235,7 @@
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in spotfire-api-1-0.d.ts:656</li>
+										<li>Defined in spotfire-api-1-1.d.ts:671</li>
 									</ul>
 								</aside>
 								<div class="tsd-comment tsd-typography">
@@ -256,13 +258,13 @@
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in spotfire-api-1-0.d.ts:651</li>
+										<li>Defined in spotfire-api-1-1.d.ts:644</li>
 									</ul>
 								</aside>
 								<div class="tsd-comment tsd-typography">
 									<div class="lead">
 										<p>Gets a <a href="dataviewcontinuousvalue.html">DataViewContinuousValue</a> representing the value of the axis with the specified <code>axisName</code>.
-											This method will throw an error if there is no continuous axis by that name.
+											This method will throw an error if there is no continuous axis by that name or if the expression is empty.
 										Use <a href="dataview.html#continuousaxis">DataView.continuousAxis</a> to check the current existence of a continuous value.</p>
 									</div>
 								</div>
@@ -286,6 +288,54 @@
 						</ul>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+						<a name="elementid" class="tsd-anchor"></a>
+						<h3>element<wbr>Id</h3>
+						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+							<li class="tsd-signature tsd-kind-icon">element<wbr>Id<span class="tsd-signature-symbol">(</span>useStableId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, omitAxisNames<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in spotfire-api-1-1.d.ts:666</li>
+									</ul>
+								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Calculates an element id for this row, suitable for identifying rows between data views.
+											When stable identifiers is not used, only rows in immediately following data view are guaranteed to re-use previous id.
+										If a row is filtered out in a new data view, this row is thus not guaranteed to yield the same id when it re-appears.</p>
+									</div>
+									<dl class="tsd-comment-tags">
+										<dt>note</dt>
+										<dd><p>A stable element id is only stable in the current session, thus it should not be stored in the document,
+											e.g. as a <a href="modproperty.html">ModProperty</a> or <a href="analysisproperty.html">AnalysisProperty</a>.</p>
+										</dd>
+										<dt>version</dt>
+										<dd><p>1.1</p>
+										</dd>
+									</dl>
+								</div>
+								<h4 class="tsd-parameters-title">Parameters</h4>
+								<ul class="tsd-parameters">
+									<li>
+										<h5><span class="tsd-flag ts-flagOptional">Optional</span> useStableId: <span class="tsd-signature-type">boolean</span></h5>
+										<div class="tsd-comment tsd-typography">
+											<p>When true, the id will be a (longer) stable id guarranteed to be the same over time.</p>
+										</div>
+									</li>
+									<li>
+										<h5><span class="tsd-flag ts-flagOptional">Optional</span> omitAxisNames: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+										<div class="tsd-comment tsd-typography">
+											<p>Axis names to omit when creating the identifier. Can be used to group multiple elements split by these axes, for example to create animation effects in one data view.</p>
+										</div>
+									</li>
+								</ul>
+								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							</li>
+						</ul>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 						<a name="ismarked" class="tsd-anchor"></a>
 						<h3>is<wbr>Marked</h3>
 						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -295,7 +345,7 @@
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in spotfire-api-1-0.d.ts:637</li>
+										<li>Defined in spotfire-api-1-1.d.ts:630</li>
 									</ul>
 								</aside>
 								<div class="tsd-comment tsd-typography">
@@ -304,6 +354,45 @@
 									</div>
 								</div>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							</li>
+						</ul>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+						<a name="leafnode" class="tsd-anchor"></a>
+						<h3>leaf<wbr>Node</h3>
+						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+							<li class="tsd-signature tsd-kind-icon">leaf<wbr>Node<span class="tsd-signature-symbol">(</span>axisName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="dataviewhierarchynode.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewHierarchyNode</a></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in spotfire-api-1-1.d.ts:653</li>
+									</ul>
+								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Gets the leaf <a href="dataviewhierarchynode.html">DataViewHierarchyNode</a> for the specified axis,
+											or null for dual mode axes with continuous axis expression.
+											This method will throw an error for continuous mode axes
+										or if there is no axis by that name.</p>
+									</div>
+									<dl class="tsd-comment-tags">
+										<dt>version</dt>
+										<dd><p>1.1</p>
+										</dd>
+									</dl>
+								</div>
+								<h4 class="tsd-parameters-title">Parameters</h4>
+								<ul class="tsd-parameters">
+									<li>
+										<h5>axisName: <span class="tsd-signature-type">string</span></h5>
+										<div class="tsd-comment tsd-typography">
+											<p>The name of the axis</p>
+										</div>
+									</li>
+								</ul>
+								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="dataviewhierarchynode.html" class="tsd-signature-type" data-tsd-kind="Interface">DataViewHierarchyNode</a></h4>
 							</li>
 						</ul>
 					</section>
@@ -317,7 +406,7 @@
 							<li class="tsd-description">
 								<aside class="tsd-sources">
 									<ul>
-										<li>Defined in spotfire-api-1-0.d.ts:665</li>
+										<li>Defined in spotfire-api-1-1.d.ts:680</li>
 									</ul>
 								</aside>
 								<div class="tsd-comment tsd-typography">
@@ -367,7 +456,13 @@
 									<a href="dataviewrow.html#continuous" class="tsd-kind-icon">continuous</a>
 								</li>
 								<li class=" tsd-kind-method tsd-parent-kind-interface">
+									<a href="dataviewrow.html#elementid" class="tsd-kind-icon">element<wbr>Id</a>
+								</li>
+								<li class=" tsd-kind-method tsd-parent-kind-interface">
 									<a href="dataviewrow.html#ismarked" class="tsd-kind-icon">is<wbr>Marked</a>
+								</li>
+								<li class=" tsd-kind-method tsd-parent-kind-interface">
+									<a href="dataviewrow.html#leafnode" class="tsd-kind-icon">leaf<wbr>Node</a>
 								</li>
 								<li class=" tsd-kind-method tsd-parent-kind-interface">
 									<a href="dataviewrow.html#mark" class="tsd-kind-icon">mark</a>
