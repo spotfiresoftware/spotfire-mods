@@ -1,8 +1,8 @@
 /*
- * Copyright © 2020. TIBCO Software Inc.
- * This file is subject to the license terms contained
- * in the license file that is distributed with this file.
- */
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
 export as namespace Spotfire;
 
 /**
@@ -16,8 +16,7 @@ export declare type AbortPredicate = (currentRowCount: number) => boolean;
  * These can be either document properties, data table properties or data column properties.
  * @public
  */
-export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>
-    extends AnalysisPropertyValue<T> {
+export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType> extends AnalysisPropertyValue<T> {
     /**
      * Set the value of this instance.
      * @param value - The value to set.
@@ -241,6 +240,12 @@ export declare interface DataTableValues {
      * Gets the number of columns in this instance.
      */
     columnCount: number;
+    /**
+     * Gets the unique id for this instance.
+     * The id is stable during the data table life cycle, thus it can be used to store as a reference to this data table in a {@link ModProperty} or {@link AnalysisProperty}.
+     * @version 1.1
+     */
+    id: string;
 }
 
 /**
@@ -251,19 +256,7 @@ export declare interface DataType {
     /**
      * Gets the name of this DataType.
      */
-    name:
-        | "String"
-        | "Integer"
-        | "LongInteger"
-        | "Real"
-        | "SingleReal"
-        | "Currency"
-        | "Boolean"
-        | "Date"
-        | "DateTime"
-        | "Time"
-        | "TimeSpan"
-        | "Binary";
+    name: "String" | "Integer" | "LongInteger" | "Real" | "SingleReal" | "Currency" | "Boolean" | "Date" | "DateTime" | "Time" | "TimeSpan" | "Binary";
     /**
      * Gets a value indicating whether the data type is numeric or not, that is,
      * Integer, Currency, Real, LongInteger, or SingleReal.
@@ -637,18 +630,40 @@ export declare interface DataViewRow {
     isMarked(): boolean;
     /**
      * Gets a {@link DataViewCategoricalValue} representing the value of the axis with the specified `axisName`.
-     * This method will throw an error if there is no categorical axis by that name.
+     * This method will throw an error if there is no categorical axis by that name or if the expression is empty.
      * Use {@link DataView.categoricalAxis} to check the current existence of a categorical value.
      * @param axisName - The name of the axis to get the value for.
      */
     categorical(axisName: string): DataViewCategoricalValue;
     /**
      * Gets a {@link DataViewContinuousValue} representing the value of the axis with the specified `axisName`.
-     * This method will throw an error if there is no continuous axis by that name.
+     * This method will throw an error if there is no continuous axis by that name or if the expression is empty.
      * Use {@link DataView.continuousAxis} to check the current existence of a continuous value.
      * @param axisName - The name of the axis to get the value for.
      */
     continuous<T extends DataViewValueType>(axisName: string): DataViewContinuousValue<T>;
+    /**
+     * Gets the leaf {@link DataViewHierarchyNode} for the specified axis,
+     * or null for dual mode axes with continuous axis expression.
+     * This method will throw an error for continuous mode axes
+     * or if there is no axis by that name.
+     * @param axisName - The name of the axis
+     * @version 1.1
+     */
+    leafNode(axisName: string): DataViewHierarchyNode | null;
+    /**
+     * Calculates an element id for this row, suitable for identifying rows between data views.
+     * When stable identifiers is not used, only rows in immediately following data view are guaranteed to re-use previous id.
+     * If a row is filtered out in a new data view, this row is thus not guaranteed to yield the same id when it re-appears.
+     *
+     * @note A stable element id is only stable in the current session, thus it should not be stored in the document,
+     * e.g. as a {@link ModProperty} or {@link AnalysisProperty}.
+     * @version 1.1
+     *
+     * @param useStableId - When true, the id will be a (longer) stable id guarranteed to be the same over time.
+     * @param omitAxisNames - Axis names to omit when creating the identifier. Can be used to group multiple elements split by these axes, for example to create animation effects in one data view.
+     */
+    elementId(useStableId?: boolean, omitAxisNames?: string[]): string;
     /**
      * Gets the {@link DataViewColorInfo} for the row, if a color axis is defined in the mod manifest.
      * The underlying data value can be retrieved by using {@link DataViewRow.categorical}("Color") or {@link DataViewRow.continuous}("Color"), depending on the mode of the color axis.
@@ -701,9 +716,7 @@ export declare interface ErrorOverlay {
  * @public
  */
 export declare type ExtractValueType<readableArray extends ReadonlyArray<Readable<any>>> = {
-    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType>
-        ? readableNameType
-        : never;
+    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType> ? readableNameType : never;
 };
 
 /**
@@ -963,7 +976,7 @@ export declare interface ModVisualization {
     mainTable(): ReadableProxy<DataTable>;
     /**
      * Sets the main {@link DataTable} in the Mod visualization.
-     * @param tableName - The name of the {@link DataTable} to be used as main table.
+     * @param tableName - The name or id of the {@link DataTable} to be used as main table.
      */
     setMainTable(tableName: string): void;
     /**
@@ -1019,6 +1032,12 @@ export declare interface PageValues {
      * Gets the zero-based index in this instance in the page collection in the Spotfire document.
      */
     index: number;
+    /**
+     * Gets the unique id for this instance.
+     * The id is stable during the page life cycle, thus it can be used to store as a reference to this page in a {@link ModProperty} or {@link AnalysisProperty}.
+     * @version 1.1
+     */
+    id: string;
 }
 
 /**
@@ -1208,6 +1227,11 @@ export declare interface PopoutRadioButtonOptions {
      */
     checked: boolean;
     /**
+     * Specifies whether the radio button is enabled.
+     * @version 1.1
+     */
+    enabled?: boolean;
+    /**
      * Specifies the value represented by the radio button.
      */
     value: any;
@@ -1283,8 +1307,7 @@ export declare interface Readable<T = any> extends Promise<T> {
  * A full node will be created by using a {@link Reader}.
  * @public
  */
-export declare type ReadableProxy<Node> = Readable<Node> &
-    Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
+export declare type ReadableProxy<Node> = Readable<Node> & Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
 
 /**
  * The reader is responsible for combining multiple {@link Readable}s and scheduling a callback to be invoked
@@ -1309,7 +1332,7 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
      * The callback function will not be called until the previous callback function has returned.
      * @param onReadError - Optional callback function that will be called if there are errors reading the readables.
      */
-    subscribe(callback: (...values: T) => void, onReadError?: (error: string) => void): void;
+    subscribe(callback: (...values: T) => void, onReadError?: (error: string) => void): ReaderSubscription;
     /**
      * Read the content once for the readables specified when the reader was created.
      * Any current subscription for this reader will be cancelled.
@@ -1325,7 +1348,7 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
      * @param callback - The callback function that is called once when there is at least one new value to read.
      * @param onReadError - Optional callback function that will be called if there are errors reading the readables.
      */
-    once(callback: (...values: T) => void, onReadError?: (error: string) => void): void;
+    once(callback: (...values: T) => void, onReadError?: (error: string) => void): ReaderSubscription;
     /**
      * Checks if any of the readables have a new value available. If this function returns true,
      * the callback in the current subscription, or a new call to {@link Reader.once} is guaranteed
@@ -1334,6 +1357,19 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
      * readables specified when the reader was created.
      */
     hasExpired(): Promise<boolean>;
+}
+
+/**
+ * Represents a {@link Reader} subscription.
+ * @version 1.1
+ * @public
+ */
+export declare interface ReaderSubscription {
+    /**
+     * Immediately cancel the current subscription.
+     * Neither the callback or the error callback will be invoked afterwards.
+     */
+    cancel(): void;
 }
 
 /**
@@ -1422,9 +1458,7 @@ export declare interface SpotfireDocument {
     /**
      * Provides access to the `Document Property` with the specified `name` in the Spotfire Document.
      */
-    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(
-        name: string
-    ): ReadableProxy<AnalysisProperty<T>>;
+    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(name: string): ReadableProxy<AnalysisProperty<T>>;
     /**
      * Provides access to the {@link Page}s in the Spotfire document.
      */
@@ -1435,7 +1469,7 @@ export declare interface SpotfireDocument {
     activePage(): ReadableProxy<Page>;
     /**
      * Sets the specified {@link Page} as the active page.
-     * @param name - The name/title of the page to set as active.
+     * @param name - The name/title or id of the page to set as active.
      */
     setActivePage(name: string): void;
     /**
@@ -1544,4 +1578,4 @@ export declare interface Tooltip {
     hide(): void;
 }
 
-export {};
+export { }
