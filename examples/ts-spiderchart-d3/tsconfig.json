@@ -14,7 +14,7 @@
         "lib": ["es2019", "dom"],
         "baseUrl": ".",
         "paths": {
-            "spotfire-api": ["./spotfire/spotfire-api-1-0"],
+            "spotfire-api": ["./spotfire/spotfire-api-1-1"],
         },
         "typeRoots": ["./spotfire", "./node_modules/@types"]
     },
