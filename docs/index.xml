@@ -680,7 +680,7 @@ This example can be used as a starting point for any new mod that is also compat
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt;&lt;br&gt;
-This example is a basic bar chart that is built using the Google Charts library. The &lt;a href=&#34;../../tutorials/barchart-googlechart/&#34;&gt;tutorial&lt;/a&gt; covers the steps taken to create this bar chart from scratch.&lt;/p&gt;
+This example is a basic bar chart that is built using the Google Charts library. The &lt;a href=&#34;../tutorials/barchart-googlechart/&#34;&gt;tutorial&lt;/a&gt; covers the steps taken to create this bar chart from scratch.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;ts-dev-gauge-googlecharts&lt;/strong&gt;&lt;br&gt;
