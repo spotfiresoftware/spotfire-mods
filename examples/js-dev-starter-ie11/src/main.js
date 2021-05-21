@@ -4,14 +4,15 @@
  * in the license file that is distributed with this file.
  */
 
+//@ts-check - Get type warnings from the TypeScript language server. Remove if not wanted
+
 // Manually import the array polyfills because the API is using functions not supported in IE11.
 import "core-js/es/array";
 
-//@ts-check - Get type warnings from the TypeScript language server. Remove if not wanted
 /**
  * Get access to the Spotfire Mod API by providing a callback to the initialize method.
  */
-Spotfire.initialize(async (mod) => {
+window.Spotfire.initialize(async (mod) => {
     /**
      * Create the read function.
      */
@@ -47,10 +48,12 @@ Spotfire.initialize(async (mod) => {
         mod.controls.errorOverlay.hide();
 
         /**
-         * Get rows from dataView
+         * Get the hierarchy of the categorical X-axis.
          */
-        const rows = await dataView.allRows();
-        if (rows == null) {
+        const xHierarchy = await dataView.hierarchy("X");
+        const xRoot = await xHierarchy.root();
+
+        if (xRoot == null) {
             // User interaction caused the data view to expire.
             // Don't clear the mod content here to avoid flickering.
             return;
@@ -61,7 +64,7 @@ Spotfire.initialize(async (mod) => {
          */
         const container = document.querySelector("#mod-container");
         container.textContent = `windowSize: ${windowSize.width}x${windowSize.height}\r\n`;
-        container.textContent += `should render: ${rows.length} rows\r\n`;
+        container.textContent += `should render: ${xRoot.rows().length} rows\r\n`;
         container.textContent += `${prop.name}: ${prop.value()}`;
 
         /**
