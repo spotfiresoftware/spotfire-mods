@@ -57,20 +57,18 @@ Spotfire.initialize(async (mod) => {
         mod.controls.errorOverlay.hide();
 
         /**
-         * Get rows from dataView
+         * Get the color hierarchy.
          */
-        const rows = await dataView.allRows();
-        if (rows == null) {
+        const colorHierarchy = await dataView.hierarchy("Color");
+        const colorRoot = await colorHierarchy.root();
+
+        if (colorRoot == null) {
             // User interaction caused the data view to expire.
             // Don't clear the mod content here to avoid flickering.
             return;
         }
 
-        /**
-         * Get the color hierarchy.
-         */
-        const colorHierarchy = await dataView.hierarchy("Color");
-        const colorLeafNodes = (await colorHierarchy.root()).leaves();
+        const colorLeafNodes = colorRoot.leaves();
         const colorDomain = colorHierarchy.isEmpty
             ? ["All Values"]
             : colorLeafNodes.map((node) => node.formattedPath());
@@ -206,7 +204,7 @@ Spotfire.initialize(async (mod) => {
          * Select a row by `x` and `color` indexes.
          */
         function selectRow(xIndex, colorIndex) {
-            rows.forEach((row) => {
+            colorRoot.rows().forEach((row) => {
                 var rowColorIndex = !colorHierarchy.isEmpty ? row.categorical("Color").leafIndex : 0;
                 var rowXIndex = !xHierarchy.isEmpty ? row.categorical("X").leafIndex : 0;
                 if (rowXIndex == xIndex && rowColorIndex == colorIndex) {
