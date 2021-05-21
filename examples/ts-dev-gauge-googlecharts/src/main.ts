@@ -31,8 +31,11 @@ Spotfire.initialize(async (mod) => {
         }
 
         mod.controls.errorOverlay.hide("DataView");
-        let rows = await dataView.allRows();
-        if (rows == null) {
+        
+        let categoryHierarchy = await dataView.hierarchy("Category");
+        let categoryRoot = await categoryHierarchy!.root();
+
+        if (categoryRoot == null) {
             // Return and wait for next call to render when reading data was aborted.
             // Last rendered data view is still valid from a users perspective since
             // a document modification was made during a progress indication.
@@ -40,13 +43,12 @@ Spotfire.initialize(async (mod) => {
         }
 
         // Check for empty axis expression before.
-        let hasCategory = (await dataView.categoricalAxis("Category")) != null;
         let hasMeasurement = (await dataView.continuousAxis("Measurement")) != null;
 
         // Transform the rows to the google visualization format.
-        let data: [string, number][] = rows.map((row) => [
-            hasCategory ? row.categorical("Category").formattedValue() : "",
-            hasMeasurement ? row.continuous("Measurement").value() ?? 0 : 0
+        let data: [string, number][] = categoryRoot.leaves().map((leaf) => [
+            leaf.formattedPath(),
+            hasMeasurement ? leaf.rows()[0]?.continuous("Measurement").value() ?? 0 : 0
         ]);
 
         // Render the visualization using the transformed data
@@ -55,9 +57,9 @@ Spotfire.initialize(async (mod) => {
         // Add marking highlight using the marking color, if marking is enabled.
         let marking = await dataView.marking();
         let gauges = gauge.element.getElementsByTagName("td");
-        rows.forEach((row, index) => {
+        categoryRoot.leaves().forEach((leaf, index) => {
             gauges[index].style.background =
-                row.isMarked() && marking
+                leaf.rows()[0]?.isMarked() && marking
                     ? "radial-gradient(" + marking.colorHexCode + " 50%, transparent 100%)"
                     : "transparent";
         });
