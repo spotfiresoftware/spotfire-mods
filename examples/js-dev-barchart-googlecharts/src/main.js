@@ -197,21 +197,9 @@ Spotfire.initialize(async (mod) => {
             const { row, column } = selection;
             const xIndex = row;
             const colorIndex = (column - 1) / 2;
-            selectRow(xIndex, colorIndex);
-        });
 
-        /**
-         * Select a row by `x` and `color` indexes.
-         */
-        function selectRow(xIndex, colorIndex) {
-            colorRoot.rows().forEach((row) => {
-                var rowColorIndex = !colorHierarchy.isEmpty ? row.categorical("Color").leafIndex : 0;
-                var rowXIndex = !xHierarchy.isEmpty ? row.categorical("X").leafIndex : 0;
-                if (rowXIndex == xIndex && rowColorIndex == colorIndex) {
-                    row.mark();
-                }
-            });
-        }
+            intersection(xLeafNodes[xIndex].rows(), colorLeafNodes[colorIndex].rows()).forEach((r) => r.mark());
+        });
 
         /**
          * Add click events for background and both axes
@@ -301,6 +289,10 @@ Spotfire.initialize(async (mod) => {
         function popoutChangeHandler({ name, value }) {
             name == orientation.name && orientation.set(value);
             name == stacking.name && stacking.set(value);
+        }
+
+        function intersection(rows1, rows2) {
+            return rows1.filter((r) => rows2.indexOf(r) > -1);
         }
 
         /**
