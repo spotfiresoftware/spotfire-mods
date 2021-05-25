@@ -59,7 +59,7 @@ Spotfire.initialize(async (mod) => {
         let gauges = gauge.element.getElementsByTagName("td");
         categoryRoot.leaves().forEach((leaf, index) => {
             gauges[index].style.background =
-                leaf.rows()[0]?.isMarked() && marking
+                marking && leaf.rows().filter(r => r.isMarked()).length
                     ? "radial-gradient(" + marking.colorHexCode + " 50%, transparent 100%)"
                     : "transparent";
         });
