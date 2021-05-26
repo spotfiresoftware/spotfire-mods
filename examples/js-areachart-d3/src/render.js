@@ -94,28 +94,31 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     } else {
         mod.controls.errorOverlay.hide("rowCount");
     }
+    
+    const colorHierarchy = await dataView.hierarchy("Color");
+    const xHierarchy = await dataView.hierarchy("X");
 
-    const allRows = await dataView.allRows();
-    if (allRows == null) {
+    // By awaiting one hierarchy root, all rows will be fetched.
+    const colorRoot = await colorHierarchy.root();
+    const xRoot = await xHierarchy.root();
+    if (colorRoot == null) {
         // Return and wait for next call to render when reading data was aborted.
         // Last rendered data view is still valid from a users perspective since
         // a document modification was made during a progress indication.
         return;
     }
 
-    const colorHierarchy = await dataView.hierarchy("Color");
-    const xHierarchy = await dataView.hierarchy("X");
+    const colorLeaves = colorRoot.leaves();
+    const xLeaves = xRoot.leaves();
+
     const colorSeries = buildColorSeries(
-        (await colorHierarchy.root()).leaves(),
-        (await xHierarchy.root()).leaves(),
+        colorLeaves,
+        xLeaves,
         !xHierarchy.isEmpty,
         !!(await dataView.continuousAxis("Y")),
         chartType.value(),
         gapfill.value()
     );
-
-    const xLeaves = (await xHierarchy.root()).leaves();
-    const colorLeaves = (await colorHierarchy.root()).leaves();
 
     const xAxisMeta = await mod.visualization.axis("X");
     const yAxisMeta = await mod.visualization.axis("Y");

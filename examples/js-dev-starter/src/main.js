@@ -46,10 +46,12 @@ Spotfire.initialize(async (mod) => {
         mod.controls.errorOverlay.hide();
 
         /**
-         * Get rows from dataView
+         * Get the hierarchy of the categorical X-axis.
          */
-        const rows = await dataView.allRows();
-        if (rows == null) {
+        const xHierarchy = await dataView.hierarchy("X");
+        const xRoot = await xHierarchy.root();
+
+        if (xRoot == null) {
             // User interaction caused the data view to expire.
             // Don't clear the mod content here to avoid flickering.
             return;
@@ -60,7 +62,7 @@ Spotfire.initialize(async (mod) => {
          */
         const container = document.querySelector("#mod-container");
         container.textContent = `windowSize: ${windowSize.width}x${windowSize.height}\r\n`;
-        container.textContent += `should render: ${rows.length} rows\r\n`;
+        container.textContent += `should render: ${xRoot.rows().length} rows\r\n`;
         container.textContent += `${prop.name}: ${prop.value()}`;
 
         /**

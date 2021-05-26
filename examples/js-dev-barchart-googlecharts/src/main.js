@@ -57,20 +57,18 @@ Spotfire.initialize(async (mod) => {
         mod.controls.errorOverlay.hide();
 
         /**
-         * Get rows from dataView
+         * Get the color hierarchy.
          */
-        const rows = await dataView.allRows();
-        if (rows == null) {
+        const colorHierarchy = await dataView.hierarchy("Color");
+        const colorRoot = await colorHierarchy.root();
+
+        if (colorRoot == null) {
             // User interaction caused the data view to expire.
             // Don't clear the mod content here to avoid flickering.
             return;
         }
 
-        /**
-         * Get the color hierarchy.
-         */
-        const colorHierarchy = await dataView.hierarchy("Color");
-        const colorLeafNodes = (await colorHierarchy.root()).leaves();
+        const colorLeafNodes = colorRoot.leaves();
         const colorDomain = colorHierarchy.isEmpty
             ? ["All Values"]
             : colorLeafNodes.map((node) => node.formattedPath());
@@ -199,21 +197,9 @@ Spotfire.initialize(async (mod) => {
             const { row, column } = selection;
             const xIndex = row;
             const colorIndex = (column - 1) / 2;
-            selectRow(xIndex, colorIndex);
-        });
 
-        /**
-         * Select a row by `x` and `color` indexes.
-         */
-        function selectRow(xIndex, colorIndex) {
-            rows.forEach((row) => {
-                var rowColorIndex = !colorHierarchy.isEmpty ? row.categorical("Color").leafIndex : 0;
-                var rowXIndex = !xHierarchy.isEmpty ? row.categorical("X").leafIndex : 0;
-                if (rowXIndex == xIndex && rowColorIndex == colorIndex) {
-                    row.mark();
-                }
-            });
-        }
+            intersection(xLeafNodes[xIndex].rows(), colorLeafNodes[colorIndex].rows()).forEach((r) => r.mark());
+        });
 
         /**
          * Add click events for background and both axes
@@ -303,6 +289,10 @@ Spotfire.initialize(async (mod) => {
         function popoutChangeHandler({ name, value }) {
             name == orientation.name && orientation.set(value);
             name == stacking.name && stacking.set(value);
+        }
+
+        function intersection(rows1, rows2) {
+            return rows1.filter((r) => rows2.indexOf(r) > -1);
         }
 
         /**
