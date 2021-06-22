@@ -230,6 +230,10 @@ Spotfire.initialize(async (mod) => {
         const { radioButton } = popout.components;
 
         function showPopout(e) {
+            if (!context.isEditing) {
+                return;
+            }
+
             popout.show(
                 {
                     x: e.x,
