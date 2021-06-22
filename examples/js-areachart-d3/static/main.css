@@ -72,6 +72,9 @@ body,
 
 .x-axis-label-container {
     position: absolute;
+}
+
+.editable {
     cursor: pointer;
 }
 
