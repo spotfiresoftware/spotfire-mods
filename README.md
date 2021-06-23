@@ -30,9 +30,9 @@ The Mods API is backwards compatible but not forwards compatible. Pick a Mod API
 | Spotfire 11.3    | 1.1             |
 | Spotfire 11.4    | 1.2             |
 
-When a mod is trying to use newer API features without updating the `apiVersion` in the `mod-manifest.json` the following happens.
+When a mod is trying to use newer API features without updating the [`apiVersion`](https://github.com/TIBCOSoftware/spotfire-mods/blob/7be343f007d2ec9f3d36e5078419b57674db8467/examples/js-dev-barchart/src/mod-manifest.json#L2) in the `mod-manifest.json` the following happens.
 
-- Newer Properties are omitted in the Spotfire runtime. E.g this means that a 1.1 mod will never see a `isEditing` property on a RenderContext object.
+- Newer Properties are omitted in the Spotfire runtime. E.g this means that a 1.1 mod will never see an `isEditing` property on a RenderContext object.
 - Newer functions are available but throw a runtime error when invoked. The error message states the required API version to invoke the function without errors.
 
 When a Spotfire analysis file with embedded mods is saved in its compatibility file format, the mod is replaced with a text area if the mod or its API version is not supported in the compatibility version.
