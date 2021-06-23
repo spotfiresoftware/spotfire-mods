@@ -14,7 +14,7 @@ With Spotfire Mods, you can include custom visualizations in your Spotfire® app
 
 The mod examples are starting points for your own mod project. The following steps describe how to update an older mod to a newer API version:
 
-- Copy a new [`spotfire-api-X-X.d.ts`](https://github.com/TIBCOSoftware/spotfire-mods/tree/master/examples/js-dev-barchart/spotfire) declaration file into the `spotfire` folder in your mod project and remove the older one.
+- Copy new versions of the [`spotfire-api-X-X.d.ts`](https://github.com/TIBCOSoftware/spotfire-mods/tree/master/examples/js-dev-barchart/spotfire) and `mod-schema.json` files into the `spotfire` folder in your mod project, and remove the older ones.
 - Update the [`apiVersion`](https://github.com/TIBCOSoftware/spotfire-mods/blob/7be343f007d2ec9f3d36e5078419b57674db8467/examples/js-dev-barchart/src/mod-manifest.json#L2) property in your `mod-manifest.json` file to the version you want to use.
 - In TypeScript projects you might need to update the [`paths`](https://github.com/TIBCOSoftware/spotfire-mods/blob/7be343f007d2ec9f3d36e5078419b57674db8467/examples/ts-spiderchart-d3/tsconfig.json#L17) property in the `tsconfig.json` file with the correct version.
 
