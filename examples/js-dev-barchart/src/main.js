@@ -164,6 +164,10 @@ Spotfire.initialize(async (mod) => {
         };
 
         yScaleDiv.onclick = function (e) {
+            if (!context.isEditing) {
+                return;
+            }
+
             mod.controls.tooltip.hide();
             let factory = mod.controls.popout.components;
             let section = mod.controls.popout.section;
@@ -240,6 +244,10 @@ Spotfire.initialize(async (mod) => {
         }
 
         xScaleDiv.onclick = function (e) {
+            if (!context.isEditing) {
+                return;
+            }
+
             let factory = mod.controls.popout.components;
             let section = mod.controls.popout.section;
             let box = xScaleDiv.getBoundingClientRect();

@@ -22,7 +22,7 @@ body {
     cursor: default;
 }
 
-.x-axis-labels {
+.x-axis-labels-editable {
     cursor: pointer;
 }
 svg {

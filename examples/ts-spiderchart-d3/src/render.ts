@@ -38,7 +38,7 @@ export interface Options {
     yAxisNormalization: boolean;
     /** If true the color fill for blobs will be disabled */
     enableColorFill: boolean;
-    onLabelClick(x: number, y: number): void;
+    onLabelClick: null | ((x: number, y: number) => void);
 }
 
 const defaultConfig: Options = {
@@ -54,7 +54,7 @@ const defaultConfig: Options = {
     enableColorFill: true,
     labelOffset: 20,
     minBoxSize: 300,
-    onLabelClick: () => {}
+    onLabelClick: null
 };
 
 export interface Data {
@@ -178,7 +178,7 @@ export async function render(
 
     d3.selectAll(".x-axis-labels").on("click", function () {
         const mouse = d3.mouse(document.body);
-        cfg.onLabelClick(mouse[0], mouse[1]);
+        cfg.onLabelClick?.(mouse[0], mouse[1]);
     });
 
     /**
@@ -376,7 +376,7 @@ export async function render(
                 return "rotate(" + centerAngle * (180 / Math.PI) + ")";
             })
             .append("text")
-            .attr("class", "x-axis-labels")
+            .attr("class", "x-axis-labels" + (config.onLabelClick ? " x-axis-labels-editable" : ""))
             .attr("text-anchor", function (_d: string, i: number) {
                 let x2 = radius * Math.cos(angleSlice * i - Math.PI / 2);
                 if (x2 > xMin) {

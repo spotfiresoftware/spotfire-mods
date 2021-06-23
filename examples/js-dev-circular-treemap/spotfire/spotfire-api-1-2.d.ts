@@ -673,7 +673,7 @@ export declare interface DataViewRow {
      * e.g. as a {@link ModProperty} or {@link AnalysisProperty}.
      * @version 1.1
      *
-     * @param useStableId - When true, the id will be a (longer) stable id guarranteed to be the same over time.
+     * @param useStableId - When true, the id will be a (longer) stable id guaranteed to be the same over time.
      * @param omitAxisNames - Axis names to omit when creating the identifier. Can be used to group multiple elements split by these axes, for example to create animation effects in one data view.
      */
     elementId(useStableId?: boolean, omitAxisNames?: string[]): string;
@@ -1404,6 +1404,14 @@ export declare interface RenderContext {
      * Gets the image pixel ratio that shall be used when rendering rasterized images and/or using a canvas element.
      */
     imagePixelRatio: number;
+    /**
+     * Gets a value indicating whether the Spotfire UI is in editing mode.
+     *
+     * When this value is true the Spotfire UI displays authoring UI elements, such as axis selectors.
+     * This property can be used to hide controls not meant for consumers of the analysis.
+     * @version 1.2
+     */
+    isEditing: boolean;
     /**
      * Gets information about the currently used theme.
      */

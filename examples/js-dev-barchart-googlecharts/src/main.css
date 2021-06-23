@@ -11,5 +11,9 @@ html, body, #mod-container {
 }
 
 svg text {
+    cursor: default;
+}
+
+.editable svg text {
     cursor: pointer;
 }

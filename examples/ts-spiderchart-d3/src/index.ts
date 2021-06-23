@@ -66,14 +66,16 @@ Spotfire.initialize(async (mod) => {
             xLabelsRotation: xLabelsRotation.value()!,
             yAxisNormalization: yAxisNormalization.value()!,
             enableColorFill: enableColorFill.value()!,
-            onLabelClick: createLabelPopout(
-                mod.controls,
-                curveType,
-                xLabelsRotation,
-                yAxisNormalization,
-                enableColorFill,
-                popoutClosedEventEmitter
-            ),
+            onLabelClick: context.isEditing
+                ? createLabelPopout(
+                      mod.controls,
+                      curveType,
+                      xLabelsRotation,
+                      yAxisNormalization,
+                      enableColorFill,
+                      popoutClosedEventEmitter
+                  )
+                : null,
             labelOffset: context.styling.scales.font.fontSize * 2
         };
 

@@ -60,7 +60,8 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         state.preventRender = dragSelectActive;
     };
 
-    const styling = mod.getRenderContext().styling;
+    const context = mod.getRenderContext();
+    const styling = context.styling;
     const { tooltip, popout } = mod.controls;
     const { radioButton, checkbox } = popout.components;
     const { section } = popout;
@@ -94,7 +95,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     } else {
         mod.controls.errorOverlay.hide("rowCount");
     }
-    
+
     const colorHierarchy = await dataView.hierarchy("Color");
     const xHierarchy = await dataView.hierarchy("X");
 
@@ -824,7 +825,12 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
      * @type {HTMLElement}
      */
     const labelContainer = document.querySelector(".x-axis-label-container");
+    labelContainer.classList.toggle("editable", context.isEditing);
     labelContainer.onclick = (e) => {
+        if (!context.isEditing) {
+            return;
+        }
+
         tooltip.hide();
         popout.show(
             {

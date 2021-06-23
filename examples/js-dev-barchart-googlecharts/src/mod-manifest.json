@@ -1,5 +1,5 @@
 {
-    "apiVersion": "1.1",
+    "apiVersion": "1.2",
     "version": "1.0",
     "name": "BarChart example using googlecharts",
     "id": "basic-barchart-googlecharts",
