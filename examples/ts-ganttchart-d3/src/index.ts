@@ -1,0 +1,260 @@
+import { DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Tooltip } from "spotfire/spotfire-api-1-2";
+import { createScalePopout } from "./Components/popout";
+import { ViewMode } from "./custom-types";
+import { config } from "./global-settings";
+import { RenderState } from "./interfaces";
+import { render } from "./render";
+import { addDays, getMaxDate, getMinDate, _MS_PER_DAY } from "./utils";
+var events = require("events");
+
+const Spotfire = window.Spotfire;
+const DEBUG = true;
+
+Spotfire.initialize(async (mod) => {
+    const context = mod.getRenderContext();
+
+    /**
+     * Create reader function which is actually a one time listener for the provided values.
+     */
+    const reader = mod.createReader(
+        mod.visualization.data(),
+        mod.windowSize(),
+        mod.property<boolean>("overdue"),
+        mod.property<boolean>("weekend")
+    );
+
+    /**
+     * Create a persistent state used by the rendering code
+     */
+    const state: RenderState = {
+        preventRender: false,
+        dataStartDate: undefined,
+        dataEndDate: undefined,
+        startDate: undefined,
+        endDate: undefined,
+        unitWidth: 40,
+        timeScale: undefined,
+        viewMode: undefined,
+        verticalScrollPosition: -1,
+        isEditing: false
+    };
+
+    /**
+     * Creates a function that is part of the main read-render loop.
+     * It checks for valid data and will print errors in case of bad data or bad renders.
+     * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
+     */
+    reader.subscribe(onChange);
+
+    /**
+     * The function that is part of the main read-render loop.
+     * It checks for valid data and will print errors in case of bad data or bad renders.
+     * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
+     * @param {Spotfire.DataView} dataView
+     * @param {Spotfire.Size} windowSize
+     * @param {ModProperty<boolean>} overdue
+     * @param {ModProperty<boolean>} weekend
+     */
+    async function onChange(
+        dataView: DataView,
+        windowsSize: Spotfire.Size,
+        overdue: ModProperty<boolean>,
+        weekend: ModProperty<boolean>
+    ) {
+        try {
+            const errors = await dataView.getErrors();
+            if (errors.length > 0) {
+                mod.controls.errorOverlay.show(errors, "DataView");
+                return;
+            }
+            mod.controls.errorOverlay.hide("DataView");
+
+            /**
+             * Hard abort if row count exceeds an arbitrary selected limit
+             */
+            const rowCount = await dataView.rowCount();
+            const limit = 20000;
+            if (rowCount && rowCount > limit) {
+                mod.controls.errorOverlay.show(
+                    `☹️ Cannot render - too many rows (rowCount: ${rowCount}, limit: ${limit}) `
+                );
+                return;
+            }
+
+            /** Helper function to disregard duplicated rows on leaf nodes due to multiple links */
+            const distinctRows = function (node: DataViewHierarchyNode): DataViewRow[] {
+                if (node.children) {
+                    return [].concat(...node.children.map(distinctRows));
+                }
+
+                if (node.rowCount() == 0) {
+                    return [];
+                }
+
+                return [node.rows()[0]];
+            };
+
+            //let hasLinks = !(await dataView.hierarchy("Links")).isEmpty;
+            let root = await (await dataView.hierarchy("Task")).root();
+            const tooltip: Tooltip = mod.controls.tooltip;
+
+            const buildData = function (node: DataViewHierarchyNode, index: number, parentIndex?: number) {
+                const rows = distinctRows(node);
+                let percent = rows.reduce((tot, curr) => tot + (curr.continuous("Progress").value() as number),0) / rows.length;
+                percent = Math.round(percent * 100) / 100;
+
+                let startDates = node.rows().map((r) => r.continuous("Start").value() as Date);
+                let endDates = node.rows().map((r) => r.continuous("End").value() as Date);
+                startDates.sort((a, b) => a.getTime() - b.getTime());
+                endDates.sort((a, b) => b.getTime() - a.getTime());
+
+                const sortNodes = function (n1: DataViewHierarchyNode, n2: DataViewHierarchyNode): number {
+                    const sortRows = function (r1: DataViewRow, r2: DataViewRow) {
+                        return (
+                            //@ts-ignore
+                            r1.continuous("Start").value() -
+                            //@ts-ignore
+                            r2.continuous("Start").value()
+                        );
+                    };
+
+                    const start1 = n1.rows().sort(sortRows);
+                    const start2 = n2.rows().sort(sortRows);
+                    if (start1.length == 0 || start2.length == 0) {
+                        return 0;
+                    }
+
+                    return (
+                        //@ts-ignore
+                        start1[0].continuous("Start").value() -
+                        //@ts-ignore
+                        start2[0].continuous("Start").value()
+                    );
+                };
+
+                const options = { day: "numeric", month: "numeric" } as const;
+
+                let color = config.defaultBarColor;
+                const unmarkedRows = node.rows().filter((r) => !r.isMarked());
+
+                if(unmarkedRows.length > 0) {
+                    color = unmarkedRows[0].color().hexCode;
+                    if (unmarkedRows.filter((r) => r.color().hexCode !== color).length > 0) {
+                        color = config.defaultBarColor;
+                    }
+                }
+                else {
+                    const markedRows = node.rows().filter((r) => r.isMarked());
+                    color = markedRows[0].color().hexCode;
+                    if (markedRows.filter((r) => r.color().hexCode !== color).length > 0) {
+                        color = config.defaultBarColor;
+                    }
+                }
+
+                return [].concat(
+                    {
+                        id: `${node.level}-${node.key}`,
+                        showTooltip: () => {
+                            //@ts-ignore
+                            //tooltip.show(node.rows()[0]);
+                            tooltip.show(
+                                [
+                                    node.formattedValue(),
+                                    "",
+                                    //"Responsible: " + responsible.key,
+                                    "Start date: " + startDates[0].toLocaleDateString(undefined, options),
+                                    "End date: " + endDates[0].toLocaleDateString(undefined, options),
+                                    "Progress: " + Math.round(percent * 100 * 100) / 100 + "%"
+                                ].join("\n")
+                            );
+                        },
+                        hideTooltip: () => {
+                            tooltip.hide();
+                        },
+                        mark: (ctrlKey) => {
+                            ctrlKey ? node.mark("ToggleOrAdd") : node.mark();
+                        },
+                        type: node.leafIndex == undefined ? "group" : undefined,
+                        text: "".repeat(node.level) + node.formattedValue(),
+                        level: node.level,
+                        percent: percent,
+                        // links:
+                        //     hasLinks && node.leafIndex != undefined
+                        //         ? node.rows().map((r) => ({[]
+                        //               target: `${node.level}-${r.categorical("Links").value()[0].key}`,
+                        //               type: "FS"
+                        //           }))
+                        //         : [],
+                        start: startDates[0],
+                        end: endDates[0],
+                        isMarked: node.rows().every((r) => r.isMarked()),
+                        parent: parentIndex !== undefined ? node.parent : undefined,
+                        color: color ?? config.defaultBarColor
+                        //taskId: `${node.level}-${node.rows().map((r) => r.categorical("TaskId").value()[0].key)}`
+                    },
+                    node.children
+                        ? [].concat(...node.children.sort(sortNodes).map((c, i) => buildData(c, i, index)))
+                        : []
+                );
+            };
+
+            let data = root.children ? [].concat(...root.children.map((c, i) => buildData(c, i))) : [];
+
+            if(data.length === 0) {
+                return;
+            }
+
+            let minDate;
+            let maxDate;
+            data.forEach((v) => {
+                minDate = getMinDate(minDate, v.start);
+                maxDate = getMaxDate(maxDate, v.end);
+            });
+
+            minDate = addDays(minDate, -5);
+            maxDate = addDays(maxDate, 5);
+
+            if (state.startDate === undefined || state.endDate === undefined) {
+                state.startDate = minDate;
+                state.endDate = maxDate;
+                state.dataStartDate = minDate;
+                state.dataEndDate = maxDate;
+            }
+
+            if (state.dataStartDate.getTime() !== minDate.getTime() || state.dataEndDate.getTime() !== maxDate.getTime()) {
+                state.dataStartDate = minDate;
+                state.dataEndDate = maxDate;
+                state.startDate = minDate;
+                state.endDate = maxDate;
+            }
+
+            if (!state.viewMode && state.viewMode !== 0) {
+                state.viewMode = ViewMode.Day;
+            }
+
+            const styling = context.styling;
+            state.isEditing = context.isEditing;
+
+            if(context.isEditing) {
+                var popoutClosedEventEmitter = new events.EventEmitter();
+                config.onScaleClick = createScalePopout(mod.controls, overdue, weekend, popoutClosedEventEmitter);
+                config.showOverdue = overdue.value();
+                config.showWeekend = weekend.value();
+            }
+
+
+            render(data, dataView, state, minDate, maxDate, tooltip, styling, windowsSize);
+            context.signalRenderComplete();
+
+            mod.controls.errorOverlay.hide("General");
+        } catch (e) {
+            mod.controls.errorOverlay.show(
+                e.message || e || "☹️ Something went wrong, check developer console",
+                "General"
+            );
+            if (DEBUG) {
+                throw e;
+            }
+        }
+    }
+});
