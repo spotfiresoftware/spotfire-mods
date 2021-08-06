@@ -4,7 +4,7 @@ import { ViewMode } from "./custom-types";
 import { config } from "./global-settings";
 import { RenderState } from "./interfaces";
 import { render } from "./render";
-import { addDays, getMaxDate, getMinDate, _MS_PER_DAY } from "./utils";
+import { addDays, getMaxDate, getMinDate, increaseBrightness, _MS_PER_DAY } from "./utils";
 var events = require("events");
 
 const Spotfire = window.Spotfire;
@@ -98,10 +98,42 @@ Spotfire.initialize(async (mod) => {
             let root = await (await dataView.hierarchy("Task")).root();
             const tooltip: Tooltip = mod.controls.tooltip;
 
+            // if(root.markedRowCount() > 0) {
+            //     config.defaultBarColor = increaseBrightness(config.defaultBarColor, 80);
+            // }
+            // else {
+            //     config.defaultBarColor = "#a0a0a0";
+            // }
+
             const buildData = function (node: DataViewHierarchyNode, index: number, parentIndex?: number) {
                 const rows = distinctRows(node);
-                let percent = rows.reduce((tot, curr) => tot + (curr.continuous("Progress").value() as number),0) / rows.length;
-                percent = Math.round(percent * 100) / 100;
+
+                let percent;
+                let showProgress = true;
+
+                try {
+                    percent =
+                    rows.reduce(
+                        (tot, curr) =>
+                            tot +
+                            (curr.continuous("Progress").value() as number) *
+                                ((curr.continuous("End").value() as Date).getTime() -
+                                    (curr.continuous("Start").value() as Date).getTime() || 1),
+                        0
+                    ) /
+                    rows.reduce(
+                        (tot, curr) =>
+                            tot +
+                            ((curr.continuous("End").value() as Date).getTime() -
+                                (curr.continuous("Start").value() as Date).getTime() || 1),
+                        0
+                    );
+                    percent = Math.round(percent * 100) / 100;
+                }
+                catch(e) {
+                    percent = 1;
+                    showProgress = false;
+                }
 
                 let startDates = node.rows().map((r) => r.continuous("Start").value() as Date);
                 let endDates = node.rows().map((r) => r.continuous("End").value() as Date);
@@ -136,19 +168,24 @@ Spotfire.initialize(async (mod) => {
 
                 let color = config.defaultBarColor;
                 const unmarkedRows = node.rows().filter((r) => !r.isMarked());
+                const markedRows = node.rows().filter((r) => r.isMarked());
 
                 if(unmarkedRows.length > 0) {
                     color = unmarkedRows[0].color().hexCode;
-                    if (unmarkedRows.filter((r) => r.color().hexCode !== color).length > 0) {
+                    if (unmarkedRows.filter((r) => r.color().hexCode !== color).length > 0)
+                    {
                         color = config.defaultBarColor;
                     }
                 }
                 else {
-                    const markedRows = node.rows().filter((r) => r.isMarked());
                     color = markedRows[0].color().hexCode;
                     if (markedRows.filter((r) => r.color().hexCode !== color).length > 0) {
                         color = config.defaultBarColor;
                     }
+                }
+
+                if(root.markedRowCount() > 0 && node.leafIndex === undefined && !node.rows().every((r) => r.isMarked()) && color === config.defaultBarColor) {
+                    color = increaseBrightness(color, 80);
                 }
 
                 return [].concat(
@@ -164,7 +201,7 @@ Spotfire.initialize(async (mod) => {
                                     //"Responsible: " + responsible.key,
                                     "Start date: " + startDates[0].toLocaleDateString(undefined, options),
                                     "End date: " + endDates[0].toLocaleDateString(undefined, options),
-                                    "Progress: " + Math.round(percent * 100 * 100) / 100 + "%"
+                                    showProgress ? "Progress: " + Math.round(percent * 100 * 100) / 100 + "%" : ""
                                 ].join("\n")
                             );
                         },
@@ -201,8 +238,10 @@ Spotfire.initialize(async (mod) => {
             let data = root.children ? [].concat(...root.children.map((c, i) => buildData(c, i))) : [];
 
             if(data.length === 0) {
+                mod.controls.errorOverlay.show("Empty visualization!", "DataView");
                 return;
             }
+            mod.controls.errorOverlay.hide("DataView");
 
             let minDate;
             let maxDate;

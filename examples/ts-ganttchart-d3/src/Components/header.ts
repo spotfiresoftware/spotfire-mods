@@ -36,7 +36,7 @@ export function updateHeader(renderInfo: RenderInfo) {
     buildHeader(headerContainer, renderInfo);
 }
 
-export function buildHeader(headerContainer: D3_SELECTION, renderInfo: RenderInfo) {
+export function buildHeader(headerContainer, renderInfo: RenderInfo) {
     const labelsWidth = config.labelsWidth;
     let x: number = labelsWidth;
     const dates = getDates(renderInfo.state.startDate, renderInfo.state.endDate);
@@ -55,8 +55,8 @@ export function buildHeader(headerContainer: D3_SELECTION, renderInfo: RenderInf
         y: config.viewModeSliderHeight + config.zoomSliderHeight
     };
     const years = headerFactory(yearsOptions, renderInfo.tooltip);
-    const yearsHeight = years.node().getBoundingClientRect().height;
-
+    const yearsHeight = years.node().getBBox().height;
+    console.log(yearsHeight);
     if (renderInfo.state.viewMode === ViewMode.Day || renderInfo.state.viewMode === ViewMode.Month) {
         const monthOptions: HeaderOptions = {
             format: "MMMM",
@@ -69,7 +69,7 @@ export function buildHeader(headerContainer: D3_SELECTION, renderInfo: RenderInf
             y: config.viewModeSliderHeight + config.zoomSliderHeight + yearsHeight
         };
         const months = headerFactory(monthOptions, renderInfo.tooltip);
-        const monthsHeight = months.node().getBoundingClientRect().height;
+        const monthsHeight = months.node().getBBox().height;
 
         if (renderInfo.state.viewMode === ViewMode.Day) {
             const daysHeight = config.viewModeSliderHeight + config.zoomSliderHeight + monthsHeight + yearsHeight;
@@ -157,15 +157,15 @@ export function buildHeader(headerContainer: D3_SELECTION, renderInfo: RenderInf
                 x += renderInfo.state.unitWidth;
             });
 
-            const firstUnit = d3.select<SVGElement, unknown>("#Days text");
-            let textBoundingBox = firstUnit.node().getBoundingClientRect();
+            const firstUnit = d3.select<SVGPathElement, unknown>("#Days text");
+            let textBoundingBox = firstUnit.node().getBBox();
             if (textBoundingBox.left <= labelsWidth + 8) {
                 firstUnit.style("text-anchor", "start");
                 firstUnit.attr("x", labelsWidth + 8);
             }
 
-            const lastUnit = d3.select<SVGElement, unknown>("#Days text:last-of-type");
-            textBoundingBox = lastUnit.node().getBoundingClientRect();
+            const lastUnit = d3.select<SVGPathElement, unknown>("#Days text:last-of-type");
+            textBoundingBox = lastUnit.node().getBBox();
             if (textBoundingBox.right >= labelsWidth + config.chartWidth - 8) {
                 lastUnit.style("text-anchor", "end");
                 lastUnit.attr("x", labelsWidth + config.chartWidth - 8);
@@ -175,7 +175,7 @@ export function buildHeader(headerContainer: D3_SELECTION, renderInfo: RenderInf
         }
     }
 
-    config.headerHeight = headerContainer.node().getBoundingClientRect().height;
+    config.headerHeight = headerContainer.node().getBBox().height;
     config.chartHeight = config.svgHeight - config.viewModeSliderHeight - config.zoomSliderHeight - config.headerHeight;
 
     headerContainer
@@ -244,15 +244,15 @@ function headerFactory(options: HeaderOptions, tooltip) {
         x += options.state.unitWidth;
     });
 
-    const firstUnit = d3.select<SVGElement, unknown>("#" + options.type + " text");
-    let textBoundingBox = firstUnit.node().getBoundingClientRect();
+    const firstUnit = d3.select<SVGPathElement, unknown>("#" + options.type + " text");
+    let textBoundingBox = firstUnit.node().getBBox();
     if (textBoundingBox.left <= labelsWidth + 8) {
         firstUnit.style("text-anchor", "start");
         firstUnit.attr("x", labelsWidth + 8);
     }
 
-    const lastUnit = d3.select<SVGElement, unknown>("#" + options.type + " text:last-of-type");
-    textBoundingBox = lastUnit.node().getBoundingClientRect();
+    const lastUnit = d3.select<SVGPathElement, unknown>("#" + options.type + " text:last-of-type");
+    textBoundingBox = lastUnit.node().getBBox();
     if (textBoundingBox.right >= labelsWidth + config.chartWidth - 8) {
         lastUnit.style("text-anchor", "end");
         lastUnit.attr("x", labelsWidth + config.chartWidth - 8);
@@ -279,15 +279,6 @@ function getTypeInfo(type: string, currentDate: Moment): HeaderTypeInfo {
         dayOfUnit: dayOfUnit,
         halfOfUnitDay: halfOfUnitDay
     };
-}
-
-function adjustY(text: d3.Selection<SVGTextElement, unknown, HTMLElement, any>, options: HeaderOptions) {
-    const textHeight = text.node().getBBox().height;
-    if (textHeight + 8 > options.minHeight) {
-        options.minHeight = options.heightScale(textHeight) + 8;
-        options.minHeight = Math.ceil((textHeight + config.minPadding) / config.minPadding) * config.minPadding;
-    }
-    text.attr("y", options.y + options.minHeight / 2);
 }
 
 function renderTextPathPair(header, x1, x2, textToRender, options) {
