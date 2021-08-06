@@ -30,10 +30,14 @@ export function renderHeader(parent: D3_SELECTION, renderInfo: RenderInfo) {
 }
 
 export function updateHeader(renderInfo: RenderInfo) {
-    const headerContainer = d3.select<SVGElement, unknown>("#Header");
+    const headerContainer = d3.select<SVGPathElement, unknown>("#Header");
+    
+    const previousHeight = headerContainer.node().getBBox().height;
     headerContainer.selectAll("*").remove();
 
     buildHeader(headerContainer, renderInfo);
+    const currentHeight = headerContainer.node().getBBox().height;
+    renderInfo.state.verticalScrollPosition -= previousHeight - currentHeight;
 }
 
 export function buildHeader(headerContainer, renderInfo: RenderInfo) {
@@ -56,7 +60,6 @@ export function buildHeader(headerContainer, renderInfo: RenderInfo) {
     };
     const years = headerFactory(yearsOptions, renderInfo.tooltip);
     const yearsHeight = years.node().getBBox().height;
-    console.log(yearsHeight);
     if (renderInfo.state.viewMode === ViewMode.Day || renderInfo.state.viewMode === ViewMode.Month) {
         const monthOptions: HeaderOptions = {
             format: "MMMM",

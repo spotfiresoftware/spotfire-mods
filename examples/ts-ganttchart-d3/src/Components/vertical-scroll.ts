@@ -31,7 +31,10 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
     const y = config.svgHeight - config.chartHeight;
     const scale = config.chartHeight / totalHeight;
     const scrollbarHeight = scale * config.chartHeight;
-    let scrollPosition = renderInfo.state.verticalScrollPosition !== -1 ? renderInfo.state.verticalScrollPosition : y;
+    if(renderInfo.state.verticalScrollPosition === -1) {
+        renderInfo.state.verticalScrollPosition = y;
+    }
+    let scrollPosition = renderInfo.state.verticalScrollPosition;
 
     if(scrollPosition < y) {
         scrollPosition = y;
