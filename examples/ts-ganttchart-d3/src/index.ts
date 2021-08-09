@@ -280,8 +280,16 @@ Spotfire.initialize(async (mod) => {
     function getColor(node: DataViewHierarchyNode, root: DataViewHierarchyNode) {
         let color = config.defaultBarColor;
 
+        const unmarkedRows = node.rows().filter((r) => !r.isMarked());
+
         if(node.leafIndex === undefined) {
-            color = node.rows()[0].color().hexCode;
+            
+            if(unmarkedRows.length > 0) {
+                color = unmarkedRows[0].color().hexCode;
+            }
+            else {
+                color = node.rows()[0].color().hexCode;
+            }
             let isContinuous = false;
 
             try {
@@ -314,7 +322,7 @@ Spotfire.initialize(async (mod) => {
             color = node.rows()[0].color().hexCode;
         }
 
-        if(root.markedRowCount() > 0 && node.leafIndex === undefined && !node.rows().every((r) => r.isMarked())) {
+        if(root.markedRowCount() > 0 && node.leafIndex === undefined && !node.rows().every((r) => r.isMarked()) && color === config.defaultBarColor) {
             color = increaseBrightness(color, 80);
         }
 
