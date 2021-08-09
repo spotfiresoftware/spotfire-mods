@@ -12,12 +12,7 @@
   },
   "author": "cnicolet, valexand, ebrandin",
   "license": "ISC",
-  "dependencies": {
-    "@types/d3": "^6.7.0",
-    "d3": "^7.0.0",
-    "invert-color": "^2.0.0",
-    "moment": "^2.29.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@tibco/spotfire-mods-dev-server": "^1.0.0",
     "@types/jest": "^26.0.15",
@@ -27,6 +22,10 @@
     "ts-loader": "^8.0.11",
     "typescript": "^4.1.2",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "@types/d3": "^6.7.0",
+    "d3": "^7.0.0",
+    "invert-color": "^2.0.0",
+    "moment": "^2.29.1"
   }
 }
