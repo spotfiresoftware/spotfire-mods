@@ -71,7 +71,7 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
     }
 
     parent.on("wheel", (e) => {
-        updateVerticalScrollPosition(e.deltaY);
+        updateVerticalScrollPosition(Math.sign(e.deltaY) * config.rowHeight * scale);
     });
 
     let isVerticalDragging = false;
