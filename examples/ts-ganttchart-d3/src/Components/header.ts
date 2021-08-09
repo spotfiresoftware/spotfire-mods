@@ -164,14 +164,14 @@ export function buildHeader(headerContainer, renderInfo: RenderInfo) {
 
             const firstUnit = d3.select<SVGPathElement, unknown>("#Days text");
             let textBoundingBox = firstUnit.node().getBBox();
-            if (textBoundingBox.left <= labelsWidth + 8) {
+            if (textBoundingBox.x <= labelsWidth + 8) {
                 firstUnit.style("text-anchor", "start");
                 firstUnit.attr("x", labelsWidth + 8);
             }
 
             const lastUnit = d3.select<SVGPathElement, unknown>("#Days text:last-of-type");
             textBoundingBox = lastUnit.node().getBBox();
-            if (textBoundingBox.right >= labelsWidth + config.chartWidth - 8) {
+            if (textBoundingBox.x + textBoundingBox.width >= labelsWidth + config.chartWidth - 8) {
                 lastUnit.style("text-anchor", "end");
                 lastUnit.attr("x", labelsWidth + config.chartWidth - 8);
             }
@@ -251,14 +251,14 @@ function headerFactory(options: HeaderOptions, tooltip) {
 
     const firstUnit = d3.select<SVGPathElement, unknown>("#" + options.type + " text");
     let textBoundingBox = firstUnit.node().getBBox();
-    if (textBoundingBox.left <= labelsWidth + 8) {
+    if (textBoundingBox.x <= labelsWidth + 8) {
         firstUnit.style("text-anchor", "start");
         firstUnit.attr("x", labelsWidth + 8);
     }
 
     const lastUnit = d3.select<SVGPathElement, unknown>("#" + options.type + " text:last-of-type");
     textBoundingBox = lastUnit.node().getBBox();
-    if (textBoundingBox.right >= labelsWidth + config.chartWidth - 8) {
+    if (textBoundingBox.x + textBoundingBox.width >= labelsWidth + config.chartWidth - 8) {
         lastUnit.style("text-anchor", "end");
         lastUnit.attr("x", labelsWidth + config.chartWidth - 8);
     }

@@ -104,9 +104,9 @@ export function adjustText(type, tooltip) {
     const unitTexts = d3.selectAll("#" + type + " text");
 
     unitTexts.each(function (_, i) {
-        let textElement = d3.select(this as SVGElement);
+        let textElement = d3.select(this as SVGPathElement);
         const initialText = textElement.text();
-        let textPath = d3.select((this as SVGElement).previousSibling as SVGElement);
+        let textPath = d3.select((this as SVGPathElement).previousSibling as SVGPathElement);
         let textBoundingBox = textElement.node().getBoundingClientRect();
         const pathBoundingBox = textPath.node().getBoundingClientRect();
         while (!insideBoundingBox(textBoundingBox, pathBoundingBox) && textElement.text() !== "") {

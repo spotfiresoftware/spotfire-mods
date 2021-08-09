@@ -81,7 +81,7 @@ export function renderViewModeSlider(parent, renderInfo: RenderInfo) {
         .style("fill", "transparent")
         .on("click", (evt) => {
             var dim = parent.node().getBBox();
-            var x = evt.clientX - dim.left;
+            var x = evt.clientX - dim.x;
             const viewModeX = viewModeScale(x);
             renderInfo.state.viewMode = viewModeTypeScale(viewModeX);
             thumb.attr("transform", `translate(${viewModeX}, ${thumbY})`);
