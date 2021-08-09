@@ -1,7 +1,7 @@
-export const messages = 
-[
-    {
-        MessageToReplace: "Attempt to get the value for empty axis 'Start'. The axis must have an expression to have any data.",
-        CustomMessage: "Select start date column for Start axis using Min aggregation!"
-    }
-]
+export const messages = {
+    InitialConfigurationHelper: [
+        "Please make sure that the following settings are done:",
+        "1. Select the start date column for Start axis using Min aggregation.",
+        "2. Select the end date column for End axis using Max aggregation."
+    ]
+};

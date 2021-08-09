@@ -35,11 +35,11 @@ function buildTodayLine(todayContainer, unitWidth, renderInfo: RenderInfo) {
     let y: number = config.viewModeSliderHeight + config.zoomSliderHeight + config.headerHeight;
     
     if (renderInfo.state.viewMode === ViewMode.Year) {
-        y -= d3.select<SVGElement, unknown>("#Years").node().getBoundingClientRect().height;
+        y -= d3.select<SVGPathElement, unknown>("#Years").node().getBBox().height;
     } else if (renderInfo.state.viewMode === ViewMode.Month) {
-        y -= d3.select<SVGElement, unknown>("#Months").node().getBoundingClientRect().height;
+        y -= d3.select<SVGPathElement, unknown>("#Months").node().getBBox().height;
     } else if (renderInfo.state.viewMode === ViewMode.Day) {
-        y -= d3.select<SVGElement, unknown>("#Days").node().getBoundingClientRect().height;
+        y -= d3.select<SVGPathElement, unknown>("#Days").node().getBBox().height;
     }
 
     const todayX = config.labelsWidth + time2Pixel(renderInfo.state.startDate, new Date(), unitWidth);

@@ -20,11 +20,11 @@ function buildDefs(defs: D3_SELECTION, renderInfo: RenderInfo) {
     let todaysLineY: number = config.viewModeSliderHeight + config.zoomSliderHeight + config.headerHeight;
     
     if (renderInfo.state.viewMode === ViewMode.Year) {
-        todaysLineY -= d3.select<SVGElement, unknown>("#Years").node().getBoundingClientRect().height;
+        todaysLineY -= d3.select<SVGPathElement, unknown>("#Years").node().getBBox().height;
     } else if (renderInfo.state.viewMode === ViewMode.Month) {
-        todaysLineY -= d3.select<SVGElement, unknown>("#Months").node().getBoundingClientRect().height;
+        todaysLineY -= d3.select<SVGPathElement, unknown>("#Months").node().getBBox().height;
     } else if (renderInfo.state.viewMode === ViewMode.Day) {
-        todaysLineY -= d3.select<SVGElement, unknown>("#Days").node().getBoundingClientRect().height;
+        todaysLineY -= d3.select<SVGPathElement, unknown>("#Days").node().getBBox().height;
     }
 
     defs.append("clipPath")

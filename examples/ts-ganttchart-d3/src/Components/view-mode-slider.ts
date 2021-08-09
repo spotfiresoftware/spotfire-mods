@@ -12,7 +12,7 @@ const textPadding = 8;
 const textY = 18;
 const thumbY = 2;
 
-export function renderViewModeSlider(parent: D3_SELECTION, renderInfo: RenderInfo) {
+export function renderViewModeSlider(parent, renderInfo: RenderInfo) {
     const textMeasures = textWidth(
         "YearMonthDay",
         renderInfo.styling.scales.font.fontSize,
@@ -80,7 +80,7 @@ export function renderViewModeSlider(parent: D3_SELECTION, renderInfo: RenderInf
         .style("cursor", "pointer")
         .style("fill", "transparent")
         .on("click", (evt) => {
-            var dim = parent.node().getBoundingClientRect();
+            var dim = parent.node().getBBox();
             var x = evt.clientX - dim.left;
             const viewModeX = viewModeScale(x);
             renderInfo.state.viewMode = viewModeTypeScale(viewModeX);
@@ -130,5 +130,5 @@ export function renderViewModeSlider(parent: D3_SELECTION, renderInfo: RenderInf
         });
     thumb.call(thumbDragBehaviour);
 
-    config.viewModeSliderHeight = Math.floor(viewModeSliderContainer.node().getBoundingClientRect().height + 8);
+    config.viewModeSliderHeight = Math.floor(viewModeSliderContainer.node().getBBox().height + 8);
 }

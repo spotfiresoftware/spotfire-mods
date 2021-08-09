@@ -149,7 +149,3 @@ export function increaseBrightness(hex, percent){
        ((0|(1<<8) + g + (256 - g) * percent / 100).toString(16)).substr(1) +
        ((0|(1<<8) + b + (256 - b) * percent / 100).toString(16)).substr(1);
 }
-
-export function getCustomMessage(message: string) {
-    return messages.find(m => m.MessageToReplace === message)?.CustomMessage;
-}

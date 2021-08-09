@@ -1,5 +1,6 @@
-import { DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Tooltip } from "spotfire/spotfire-api-1-2";
+import { DataView, DataViewHierarchyNode, DataViewRow, ModProperty, Tooltip } from "spotfire/spotfire-api-1-2";
 import { createScalePopout } from "./Components/popout";
+import { messages } from "./custom-messages";
 import { ViewMode } from "./custom-types";
 import { config } from "./global-settings";
 import { RenderState } from "./interfaces";
@@ -64,7 +65,8 @@ Spotfire.initialize(async (mod) => {
         try {
             const errors = await dataView.getErrors();
             if (errors.length > 0) {
-                mod.controls.errorOverlay.show(errors, "DataView");
+                mod.controls.errorOverlay.hide("General");
+                mod.controls.errorOverlay.show(errors.concat(messages.InitialConfigurationHelper), "DataView");
                 return;
             }
             mod.controls.errorOverlay.hide("DataView");
@@ -166,28 +168,6 @@ Spotfire.initialize(async (mod) => {
 
                 const options = { day: "numeric", month: "numeric" } as const;
 
-                let color = config.defaultBarColor;
-                const unmarkedRows = node.rows().filter((r) => !r.isMarked());
-                const markedRows = node.rows().filter((r) => r.isMarked());
-
-                if(unmarkedRows.length > 0) {
-                    color = unmarkedRows[0].color().hexCode;
-                    if (unmarkedRows.filter((r) => r.color().hexCode !== color).length > 0)
-                    {
-                        color = config.defaultBarColor;
-                    }
-                }
-                else {
-                    color = markedRows[0].color().hexCode;
-                    if (markedRows.filter((r) => r.color().hexCode !== color).length > 0) {
-                        color = config.defaultBarColor;
-                    }
-                }
-
-                if(root.markedRowCount() > 0 && node.leafIndex === undefined && !node.rows().every((r) => r.isMarked()) && color === config.defaultBarColor) {
-                    color = increaseBrightness(color, 80);
-                }
-
                 return [].concat(
                     {
                         id: `${node.level}-${node.key}`,
@@ -226,7 +206,7 @@ Spotfire.initialize(async (mod) => {
                         end: endDates[0],
                         isMarked: node.rows().every((r) => r.isMarked()),
                         parent: parentIndex !== undefined ? node.parent : undefined,
-                        color: color ?? config.defaultBarColor
+                        color: getColor(node, root)
                         //taskId: `${node.level}-${node.rows().map((r) => r.categorical("TaskId").value()[0].key)}`
                     },
                     node.children
@@ -288,12 +268,56 @@ Spotfire.initialize(async (mod) => {
             mod.controls.errorOverlay.hide("General");
         } catch (e) {
             mod.controls.errorOverlay.show(
-                e.message || e || "☹️ Something went wrong, check developer console",
+                [e.message].concat(messages.InitialConfigurationHelper) || e || "☹️ Something went wrong, check developer console",
                 "General"
             );
             if (DEBUG) {
                 throw e;
             }
         }
+    }
+
+    function getColor(node: DataViewHierarchyNode, root: DataViewHierarchyNode) {
+        let color = config.defaultBarColor;
+
+        if(node.leafIndex === undefined) {
+            color = node.rows()[0].color().hexCode;
+            let isContinuous = false;
+
+            try {
+                const colorValue = node.rows()[0].categorical("Color").value()[0].key;
+                const differentElements = node.rows().filter((r) => {
+                        return r.categorical("Color").value()[0].key !== colorValue;
+                }).length;
+                if(differentElements > 0) {
+                    color = config.defaultBarColor;
+                }
+            }
+            catch(e) {
+                isContinuous = true;
+            }
+
+            try {
+                const colorValue = node.rows()[0].continuous("Color").value()[0].key;
+                const differentElements = node.rows().filter((r) => {
+                        return r.continuous("Color").value()[0].key !== colorValue;
+                }).length;
+                if(differentElements > 0) {
+                    color = config.defaultBarColor;
+                }
+            }
+            catch(e) {
+                isContinuous = true;
+            }
+            
+        } else {
+            color = node.rows()[0].color().hexCode;
+        }
+
+        if(root.markedRowCount() > 0 && node.leafIndex === undefined && !node.rows().every((r) => r.isMarked())) {
+            color = increaseBrightness(color, 80);
+        }
+
+        return color;
     }
 });

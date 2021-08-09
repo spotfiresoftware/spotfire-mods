@@ -22,7 +22,7 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
     const bars = d3.select("#Bars").attr("transform", `translate(${0},${0})`);
     const links = d3.select("#Links").attr("transform", `translate(${0},${0})`);
 
-    const totalHeight = d3.select<SVGElement, unknown>("#Labels").node().getBoundingClientRect().height;
+    const totalHeight = d3.select<SVGPathElement, unknown>("#Labels").node().getBBox().height;
 
     if(Math.abs(totalHeight - config.chartHeight) < 2) {
         return;
