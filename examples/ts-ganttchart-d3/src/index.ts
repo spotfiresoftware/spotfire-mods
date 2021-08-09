@@ -300,7 +300,8 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
             try {
                 const errors = await dataView.getErrors();
                 if (errors.length > 0) {
-                    mod.controls.errorOverlay.show(errors, "DataView");
+                    mod.controls.errorOverlay.hide("General");
+                    mod.controls.errorOverlay.show(errors.concat(messages.InitialConfigurationHelper), "DataView");
                     return;
                 }
                 mod.controls.errorOverlay.hide("DataView");
@@ -330,7 +331,7 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
                 mod.controls.errorOverlay.hide("General");
             } catch (e) {
                 mod.controls.errorOverlay.show(
-                    e.message || e || "☹️ Something went wrong, check developer console",
+                    [e.message].concat(messages.InitialConfigurationHelper) || e || "☹️ Something went wrong, check developer console",
                     "General"
                 );
                 if (DEBUG) {
