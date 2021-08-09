@@ -1,4 +1,4 @@
-import { DataView, DataViewHierarchyNode, DataViewRow, ModProperty, Tooltip } from "spotfire/spotfire-api-1-2";
+import { DataView, DataViewHierarchyNode, DataViewRow, ModProperty, Tooltip, Axis } from "spotfire/spotfire-api-1-2";
 import { createScalePopout } from "./Components/popout";
 import { messages } from "./custom-messages";
 import { ViewMode } from "./custom-types";
@@ -19,6 +19,7 @@ Spotfire.initialize(async (mod) => {
      */
     const reader = mod.createReader(
         mod.visualization.data(),
+        mod.visualization.axis("Color"),
         mod.windowSize(),
         mod.property<boolean>("overdue"),
         mod.property<boolean>("weekend")
@@ -58,6 +59,7 @@ Spotfire.initialize(async (mod) => {
      */
     async function onChange(
         dataView: DataView,
+        colorAxis: Axis,
         windowsSize: Spotfire.Size,
         overdue: ModProperty<boolean>,
         weekend: ModProperty<boolean>
@@ -78,8 +80,6 @@ Spotfire.initialize(async (mod) => {
         //let hasLinks = !(await dataView.hierarchy("Links")).isEmpty;
         let root = await (await dataView.hierarchy("Task")).root();
         const tooltip: Tooltip = mod.controls.tooltip;
-
-        const colorAxis = (await dataView.axes()).find((ax) => ax.name === "Color");
 
         const buildData = function (node: DataViewHierarchyNode, index: number, parentIndex?: number) {
             const rows = distinctRows(node);
