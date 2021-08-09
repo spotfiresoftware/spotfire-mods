@@ -23,7 +23,9 @@ export function renderHeader(parent: D3_SELECTION, renderInfo: RenderInfo) {
         .attr("class", renderInfo.state.isEditing ? "skip-unmark" : "")
         .style("cursor", renderInfo.state.isEditing ? "pointer" : "default")
         .on("click", (e) => {
-            config.onScaleClick(e.clientX, e.clientY);
+            if(config.onScaleClick) {
+                config.onScaleClick(e.clientX, e.clientY);
+            }
         });
 
     buildHeader(headerContainer, renderInfo);
