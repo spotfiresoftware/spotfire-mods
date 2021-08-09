@@ -100,12 +100,7 @@ Spotfire.initialize(async (mod) => {
             let root = await (await dataView.hierarchy("Task")).root();
             const tooltip: Tooltip = mod.controls.tooltip;
 
-            // if(root.markedRowCount() > 0) {
-            //     config.defaultBarColor = increaseBrightness(config.defaultBarColor, 80);
-            // }
-            // else {
-            //     config.defaultBarColor = "#a0a0a0";
-            // }
+            const colorAxis = (await dataView.axes()).find((ax) => ax.name === "Color");
 
             const buildData = function (node: DataViewHierarchyNode, index: number, parentIndex?: number) {
                 const rows = distinctRows(node);
@@ -115,24 +110,23 @@ Spotfire.initialize(async (mod) => {
 
                 try {
                     percent =
-                    rows.reduce(
-                        (tot, curr) =>
-                            tot +
-                            (curr.continuous("Progress").value() as number) *
+                        rows.reduce(
+                            (tot, curr) =>
+                                tot +
+                                (curr.continuous("Progress").value() as number) *
+                                    ((curr.continuous("End").value() as Date).getTime() -
+                                        (curr.continuous("Start").value() as Date).getTime() || 1),
+                            0
+                        ) /
+                        rows.reduce(
+                            (tot, curr) =>
+                                tot +
                                 ((curr.continuous("End").value() as Date).getTime() -
                                     (curr.continuous("Start").value() as Date).getTime() || 1),
-                        0
-                    ) /
-                    rows.reduce(
-                        (tot, curr) =>
-                            tot +
-                            ((curr.continuous("End").value() as Date).getTime() -
-                                (curr.continuous("Start").value() as Date).getTime() || 1),
-                        0
-                    );
+                            0
+                        );
                     percent = Math.round(percent * 100) / 100;
-                }
-                catch(e) {
+                } catch (e) {
                     percent = 1;
                     showProgress = false;
                 }
@@ -206,7 +200,7 @@ Spotfire.initialize(async (mod) => {
                         end: endDates[0],
                         isMarked: node.rows().every((r) => r.isMarked()),
                         parent: parentIndex !== undefined ? node.parent : undefined,
-                        color: getColor(node, root)
+                        color: getColor(node, root, colorAxis.isCategorical)
                         //taskId: `${node.level}-${node.rows().map((r) => r.categorical("TaskId").value()[0].key)}`
                     },
                     node.children
@@ -217,7 +211,7 @@ Spotfire.initialize(async (mod) => {
 
             let data = root.children ? [].concat(...root.children.map((c, i) => buildData(c, i))) : [];
 
-            if(data.length === 0) {
+            if (data.length === 0) {
                 mod.controls.errorOverlay.show("Empty visualization!", "DataView");
                 return;
             }
@@ -240,7 +234,10 @@ Spotfire.initialize(async (mod) => {
                 state.dataEndDate = maxDate;
             }
 
-            if (state.dataStartDate.getTime() !== minDate.getTime() || state.dataEndDate.getTime() !== maxDate.getTime()) {
+            if (
+                state.dataStartDate.getTime() !== minDate.getTime() ||
+                state.dataEndDate.getTime() !== maxDate.getTime()
+            ) {
                 state.dataStartDate = minDate;
                 state.dataEndDate = maxDate;
                 state.startDate = minDate;
@@ -254,13 +251,12 @@ Spotfire.initialize(async (mod) => {
             const styling = context.styling;
             state.isEditing = context.isEditing;
 
-            if(context.isEditing) {
+            if (context.isEditing) {
                 var popoutClosedEventEmitter = new events.EventEmitter();
                 config.onScaleClick = createScalePopout(mod.controls, overdue, weekend, popoutClosedEventEmitter);
                 config.showOverdue = overdue.value();
                 config.showWeekend = weekend.value();
             }
-
 
             render(data, dataView, state, minDate, maxDate, tooltip, styling, windowsSize);
             context.signalRenderComplete();
@@ -268,7 +264,9 @@ Spotfire.initialize(async (mod) => {
             mod.controls.errorOverlay.hide("General");
         } catch (e) {
             mod.controls.errorOverlay.show(
-                [e.message].concat(messages.InitialConfigurationHelper) || e || "☹️ Something went wrong, check developer console",
+                [e.message].concat(messages.InitialConfigurationHelper) ||
+                    e ||
+                    "☹️ Something went wrong, check developer console",
                 "General"
             );
             if (DEBUG) {
@@ -277,52 +275,45 @@ Spotfire.initialize(async (mod) => {
         }
     }
 
-    function getColor(node: DataViewHierarchyNode, root: DataViewHierarchyNode) {
+    function getColor(node: DataViewHierarchyNode, root: DataViewHierarchyNode, isCategorical: boolean) {
         let color = config.defaultBarColor;
 
         const unmarkedRows = node.rows().filter((r) => !r.isMarked());
 
-        if(node.leafIndex === undefined) {
-            
-            if(unmarkedRows.length > 0) {
+        if (node.leafIndex === undefined) {
+            if (unmarkedRows.length > 0) {
                 color = unmarkedRows[0].color().hexCode;
-            }
-            else {
+            } else {
                 color = node.rows()[0].color().hexCode;
             }
-            let isContinuous = false;
 
-            try {
+            if (isCategorical) {
                 const colorValue = node.rows()[0].categorical("Color").value()[0].key;
                 const differentElements = node.rows().filter((r) => {
-                        return r.categorical("Color").value()[0].key !== colorValue;
+                    return r.categorical("Color").value()[0].key !== colorValue;
                 }).length;
-                if(differentElements > 0) {
+                if (differentElements > 0) {
                     color = config.defaultBarColor;
                 }
-            }
-            catch(e) {
-                isContinuous = true;
-            }
-
-            try {
+            } else {
                 const colorValue = node.rows()[0].continuous("Color").value()[0].key;
                 const differentElements = node.rows().filter((r) => {
-                        return r.continuous("Color").value()[0].key !== colorValue;
+                    return r.continuous("Color").value()[0].key !== colorValue;
                 }).length;
-                if(differentElements > 0) {
+                if (differentElements > 0) {
                     color = config.defaultBarColor;
                 }
             }
-            catch(e) {
-                isContinuous = true;
-            }
-            
         } else {
             color = node.rows()[0].color().hexCode;
         }
 
-        if(root.markedRowCount() > 0 && node.leafIndex === undefined && !node.rows().every((r) => r.isMarked()) && color === config.defaultBarColor) {
+        if (
+            root.markedRowCount() > 0 &&
+            node.leafIndex === undefined &&
+            !node.rows().every((r) => r.isMarked()) &&
+            color === config.defaultBarColor
+        ) {
             color = increaseBrightness(color, 80);
         }
 
