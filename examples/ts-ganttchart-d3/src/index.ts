@@ -257,10 +257,7 @@ Spotfire.initialize(async (mod) => {
 
 function sortNodes(n1: DataViewHierarchyNode, n2: DataViewHierarchyNode): number {
     const sortRows = function (r1: DataViewRow, r2: DataViewRow) {
-        return (
-            //@ts-ignore
-            r1.continuous("Start").value() - r2.continuous("Start").value()
-        );
+        return r1.continuous<Date>("Start").value()?.valueOf() - r2.continuous<Date>("Start").value()?.valueOf();
     };
 
     const start1 = n1.rows().sort(sortRows);
@@ -269,10 +266,7 @@ function sortNodes(n1: DataViewHierarchyNode, n2: DataViewHierarchyNode): number
         return 0;
     }
 
-    return (
-        //@ts-ignore
-        start1[0].continuous("Start").value() - start2[0].continuous("Start").value()
-    );
+    return sortRows(start1[0], start2[0]);
 }
 
 /**
