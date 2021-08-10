@@ -20,7 +20,7 @@ export function renderText(
         .text(text)
         .style("text-anchor", anchor)
         .style("dominant-baseline", dominantBaseline)
-        .style("font-size", font.fontSize)
+        .style("font-size", font.fontSize + "px")
         .style("font-family", font.fontFamily)
         .style("font-weight", font.fontWeight)
         .style("font-stlye", font.fontStyle)

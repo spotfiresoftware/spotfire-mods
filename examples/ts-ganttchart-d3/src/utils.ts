@@ -89,7 +89,7 @@ export function overlap(firstArea: DOMRect, secondArea: DOMRect): boolean {
 }
 
 export function insideBoundingBox(smallBox: DOMRect, bigBox: DOMRect): boolean {
-    return smallBox.left > bigBox.left && smallBox.right < bigBox.right;
+    return smallBox.x > bigBox.x && (smallBox.x + smallBox.width) < (bigBox.x + bigBox.width);
 }
 
 export function leftSideOverflow(smallBox: DOMRect, bigBox: DOMRect): boolean {
@@ -107,8 +107,8 @@ export function adjustText(type, tooltip) {
         let textElement = d3.select(this as SVGPathElement);
         const initialText = textElement.text();
         let textPath = d3.select((this as SVGPathElement).previousSibling as SVGPathElement);
-        let textBoundingBox = textElement.node().getBoundingClientRect();
-        const pathBoundingBox = textPath.node().getBoundingClientRect();
+        let textBoundingBox = textElement.node().getBBox();
+        const pathBoundingBox = textPath.node().getBBox();
         while (!insideBoundingBox(textBoundingBox, pathBoundingBox) && textElement.text() !== "") {
             const text = textElement.text();
 
@@ -119,7 +119,7 @@ export function adjustText(type, tooltip) {
             } else {
                 textElement.text(text.slice(0, -3));
             }
-            textBoundingBox = textElement.node().getBoundingClientRect();
+            textBoundingBox = textElement.node().getBBox();
         }
         if (textElement.text() !== initialText) {
           textElement

@@ -79,7 +79,7 @@ function buildGrid(grid, renderInfo: RenderInfo) {
                     } h${-renderInfo.state.unitWidth} z`
                 )
                 .style("pointer-events", "none")
-                .style("fill", invert(renderInfo.styling.general.backgroundColor))
+                .style("fill", renderInfo.styling.general.backgroundColor !== "transparent" ? invert(renderInfo.styling.general.backgroundColor) : renderInfo.styling.scales.font.color)
                 .style("fill-opacity", "0.1");
         }
 
@@ -194,7 +194,7 @@ function buildBars(bars, renderInfo: RenderInfo) {
             .classed("bar-hover", true)
             .classed("marking-element", true)
             .style("fill", "transparent")
-            .style("stroke", invert(renderInfo.styling.general.backgroundColor))
+            .style("stroke", renderInfo.styling.general.backgroundColor !== "transparent" ? invert(renderInfo.styling.general.backgroundColor) : renderInfo.styling.scales.font.color)
             .on("mouseover", v.showTooltip)
             .on("mouseout", v.hideTooltip)
             .on("click", (e) => {
@@ -207,10 +207,10 @@ function buildBars(bars, renderInfo: RenderInfo) {
     const texts = d3.selectAll("#Bars text");
 
     texts.each(function (_, i) {
-        let textElement = d3.select(this as SVGElement);
-        let gridElement = d3.select<SVGElement, unknown>("#Grid");
-        let textBoundingBox = textElement.node().getBoundingClientRect();
-        const gridBoundingBox = gridElement.node().getBoundingClientRect();
+        let textElement = d3.select(this as SVGPathElement);
+        let gridElement = d3.select<SVGPathElement, unknown>("#Grid");
+        let textBoundingBox = textElement.node().getBBox();
+        const gridBoundingBox = gridElement.node().getBBox();
         while (!insideBoundingBox(textBoundingBox, gridBoundingBox) && textElement.text() !== "") {
             const text = textElement.text();
 
@@ -221,7 +221,7 @@ function buildBars(bars, renderInfo: RenderInfo) {
             } else {
                 textElement.text(text.slice(0, -3));
             }
-            textBoundingBox = textElement.node().getBoundingClientRect();
+            textBoundingBox = textElement.node().getBBox();
         }
     });
 

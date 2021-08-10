@@ -38,9 +38,9 @@ export function renderViewModeSlider(parent, renderInfo: RenderInfo) {
     const texts = d3.selectAll("#ViewModeSlider text");
 
     texts.each(function (_, i) {
-        let textElement = d3.select(this as SVGElement);
-        let textBoundingBox = textElement.node().getBoundingClientRect();
-        const svgBoundingBox = parent.node().getBoundingClientRect();
+        let textElement = d3.select(this as SVGPathElement);
+        let textBoundingBox = textElement.node().getBBox();
+        const svgBoundingBox = parent.node().getBBox();
         while (!insideBoundingBox(textBoundingBox, svgBoundingBox) && textElement.text() !== "") {
             const text = textElement.text();
   
@@ -51,7 +51,7 @@ export function renderViewModeSlider(parent, renderInfo: RenderInfo) {
             } else {
                 textElement.text(text.slice(0, -3));
             }
-            textBoundingBox = textElement.node().getBoundingClientRect();
+            textBoundingBox = textElement.node().getBBox();
         }
     });
 
