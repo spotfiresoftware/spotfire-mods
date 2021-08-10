@@ -40,7 +40,7 @@ export function renderViewModeSlider(parent, renderInfo: RenderInfo) {
     texts.each(function (_, i) {
         let textElement = d3.select(this as SVGPathElement);
         let textBoundingBox = textElement.node().getBBox();
-        const svgBoundingBox = parent.node().getBBox();
+        const svgBoundingBox = parent.node().getBoundingClientRect();
         while (!insideBoundingBox(textBoundingBox, svgBoundingBox) && textElement.text() !== "") {
             const text = textElement.text();
   
