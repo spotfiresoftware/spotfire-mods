@@ -12,7 +12,7 @@ import { RenderState } from "./interfaces";
  */
 const svg = d3.select("#mod-container").append("svg").attr("xmlns", "http://www.w3.org/2000/svg");
 
-export function render(
+export async function render(
     data: GanttData[],
     dataView: DataView,
     state: RenderState,
@@ -77,9 +77,9 @@ export function render(
     svg.attr("viewBox", `0, 0, ${config.svgWidth}, ${config.svgHeight}`);
     svg.selectAll("*").remove();
 
-    (document as any).fonts.ready.then(() => {
-        renderGantt(svg, data, state, tooltip, styling, interactive);
-    });
+    await (document as any).fonts.ready;
+
+    renderGantt(svg, data, state, tooltip, styling, interactive);
 
     svg.on("click", (e) => {
         const header = e.target.closest("#Header");

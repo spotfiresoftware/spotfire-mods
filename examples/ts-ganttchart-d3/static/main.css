@@ -6,13 +6,6 @@ body,
     height: 100%;
     width: 100%;
     user-select: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-#mod-container {
-    overflow-y: hidden;
 }
 
 body {

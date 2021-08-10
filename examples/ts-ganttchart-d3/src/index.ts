@@ -114,7 +114,7 @@ Spotfire.initialize(async (mod) => {
             config.showWeekend = weekend.value();
         }
 
-        render(tasks, dataView, state, minDate, maxDate, tooltip, styling, windowsSize, context.interactive);
+        await render(tasks, dataView, state, minDate, maxDate, tooltip, styling, windowsSize, context.interactive);
         context.signalRenderComplete();
 
         mod.controls.errorOverlay.hide("General");
