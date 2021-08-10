@@ -4,7 +4,6 @@ import { RenderState } from "./interfaces";
 export type D3_SELECTION = d3.Selection<SVGElement, unknown, HTMLElement, any>;
 export type GanttData = {
     id: string,
-    taskId: string,
     text: string,
     level: number,
     start: Date,
