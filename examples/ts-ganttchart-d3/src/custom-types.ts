@@ -15,7 +15,6 @@ export type GanttData = {
     y: number,
     width: number,
     heigth: number,
-    links: Link[],
     color: string,
     showTooltip: () => void,
     hideTooltip: () => void,
@@ -34,10 +33,6 @@ export type HeaderOptions = {
 export type HeaderTypeInfo = {
     dayOfUnit: number,
     halfOfUnitDay: number
-}
-
-type Link = {
-    target: string
 }
 
 export enum ViewMode {

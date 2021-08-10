@@ -64,25 +64,11 @@ Spotfire.initialize(async (mod) => {
         overdue: ModProperty<boolean>,
         weekend: ModProperty<boolean>
     ) {
-        /** Helper function to disregard duplicated rows on leaf nodes due to multiple links */
-        const distinctRows = function (node: DataViewHierarchyNode): DataViewRow[] {
-            if (node.children) {
-                return [].concat(...node.children.map(distinctRows));
-            }
-
-            if (node.rowCount() == 0) {
-                return [];
-            }
-
-            return [node.rows()[0]];
-        };
-
-        //let hasLinks = !(await dataView.hierarchy("Links")).isEmpty;
         let root = await (await dataView.hierarchy("Task")).root();
         const tooltip: Tooltip = mod.controls.tooltip;
 
         const buildData = function (node: DataViewHierarchyNode, index: number, parentIndex?: number) {
-            const rows = distinctRows(node);
+            const rows = node.rows();
 
             let percent;
             let showProgress = true;
@@ -119,9 +105,7 @@ Spotfire.initialize(async (mod) => {
                 const sortRows = function (r1: DataViewRow, r2: DataViewRow) {
                     return (
                         //@ts-ignore
-                        r1.continuous("Start").value() -
-                        //@ts-ignore
-                        r2.continuous("Start").value()
+                        r1.continuous("Start").value() - r2.continuous("Start").value()
                     );
                 };
 
@@ -133,9 +117,7 @@ Spotfire.initialize(async (mod) => {
 
                 return (
                     //@ts-ignore
-                    start1[0].continuous("Start").value() -
-                    //@ts-ignore
-                    start2[0].continuous("Start").value()
+                    start1[0].continuous("Start").value() - start2[0].continuous("Start").value()
                 );
             };
 
@@ -145,13 +127,10 @@ Spotfire.initialize(async (mod) => {
                 {
                     id: `${node.level}-${node.key}`,
                     showTooltip: () => {
-                        //@ts-ignore
-                        //tooltip.show(node.rows()[0]);
                         tooltip.show(
                             [
                                 node.formattedValue(),
                                 "",
-                                //"Responsible: " + responsible.key,
                                 "Start date: " + startDates[0].toLocaleDateString(undefined, options),
                                 "End date: " + endDates[0].toLocaleDateString(undefined, options),
                                 showProgress ? "Progress: " + Math.round(percent * 100 * 100) / 100 + "%" : ""
@@ -168,19 +147,11 @@ Spotfire.initialize(async (mod) => {
                     text: "".repeat(node.level) + node.formattedValue(),
                     level: node.level,
                     percent: percent,
-                    // links:
-                    //     hasLinks && node.leafIndex != undefined
-                    //         ? node.rows().map((r) => ({[]
-                    //               target: `${node.level}-${r.categorical("Links").value()[0].key}`,
-                    //               type: "FS"
-                    //           }))
-                    //         : [],
                     start: startDates[0],
                     end: endDates[0],
                     isMarked: node.rows().every((r) => r.isMarked()),
                     parent: parentIndex !== undefined ? node.parent : undefined,
                     color: getColor(node, root, colorAxis.isCategorical)
-                    //taskId: `${node.level}-${node.rows().map((r) => r.categorical("TaskId").value()[0].key)}`
                 },
                 node.children ? [].concat(...node.children.sort(sortNodes).map((c, i) => buildData(c, i, index))) : []
             );
@@ -331,7 +302,9 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
                 mod.controls.errorOverlay.hide("General");
             } catch (e) {
                 mod.controls.errorOverlay.show(
-                    [e.message].concat(messages.InitialConfigurationHelper) || e || "☹️ Something went wrong, check developer console",
+                    [e.message].concat(messages.InitialConfigurationHelper) ||
+                        e ||
+                        "☹️ Something went wrong, check developer console",
                     "General"
                 );
                 if (DEBUG) {

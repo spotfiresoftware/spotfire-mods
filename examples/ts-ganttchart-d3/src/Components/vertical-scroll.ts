@@ -20,7 +20,6 @@ export function updateVerticalScroll(parent: D3_SELECTION, renderInfo: RenderInf
 function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D3_SELECTION, renderInfo: RenderInfo) {
     const labels = d3.select("#Labels").attr("transform", `translate(${0},${0})`);
     const bars = d3.select("#Bars").attr("transform", `translate(${0},${0})`);
-    const links = d3.select("#Links").attr("transform", `translate(${0},${0})`);
 
     const totalHeight = d3.select<SVGPathElement, unknown>("#Labels").node().getBBox().height;
 
@@ -42,7 +41,6 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
 
     const xValue = getTranslation(bars.attr("transform"))[0];
     bars.attr("transform", `translate(${xValue}, ${(y - scrollPosition) / scale})`);
-    links.attr("transform", `translate(${xValue}, ${(y - scrollPosition) / scale})`);
     labels.attr("transform", `translate(${0},${(y - scrollPosition) / scale})`);
 
     const verticalScrollBar = verticalScrollBarContainer
@@ -64,7 +62,6 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
         const xValue = getTranslation(bars.attr("transform"))[0];
 
         bars.attr("transform", `translate(${xValue}, ${(y - newScrollPosition) / scale})`);
-        links.attr("transform", `translate(${xValue}, ${(y - newScrollPosition) / scale})`);
         labels.attr("transform", `translate(${0},${(y - newScrollPosition) / scale})`);
         verticalScrollBar.attr("y", newScrollPosition);
         renderInfo.state.verticalScrollPosition = newScrollPosition
