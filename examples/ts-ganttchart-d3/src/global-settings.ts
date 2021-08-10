@@ -23,7 +23,7 @@ export interface Config {
     onScaleClick(x: number, y: number): void;
 }
 
-export const config: Config = {
+export let config: Config = {
     minDate: null,
     maxDate: null,
     svgWidth: 1200,

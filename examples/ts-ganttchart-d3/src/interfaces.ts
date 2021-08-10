@@ -18,5 +18,6 @@ export interface RenderInfo {
     state: RenderState,
     data: GanttData[],
     styling: StylingInfo,
-    tooltip: Tooltip
+    tooltip: Tooltip,
+    interactive: boolean
 }

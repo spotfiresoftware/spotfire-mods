@@ -18,19 +18,24 @@ export function renderGantt(
     data: GanttData[],
     state: RenderState,
     tooltip: Tooltip,
-    styling: StylingInfo
+    styling: StylingInfo,
+    interactive: boolean
 ) {
     const renderInfo: RenderInfo = {
         data: data,
         state: state,
         tooltip: tooltip,
-        styling: styling
-    }
+        styling: styling,
+        interactive: interactive
+    };
 
     calculateUnitWidth(state);
 
-    renderViewModeSlider(parent, renderInfo);
-    renderZoomSlider(parent, renderInfo);
+    if (interactive) {
+        renderViewModeSlider(parent, renderInfo);
+        renderZoomSlider(parent, renderInfo);
+    }
+
     renderHeader(parent, renderInfo);
     renderDefs(parent, renderInfo);
     renderBars(parent, renderInfo);

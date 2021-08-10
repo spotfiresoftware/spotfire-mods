@@ -49,7 +49,7 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
         .attr("height", scrollbarHeight)
         .attr("rx", config.scrollBarThickness / 2)
         .attr("ry", config.scrollBarThickness / 2)
-        .attr("opacity", 1)
+        .attr("opacity", renderInfo.interactive ? 1 : 0)
         .attr("fill", "rgba(0, 0, 0, 0.3)")
         .attr("x", x)
         .attr("y", scrollPosition);
@@ -94,4 +94,11 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
         });
 
     verticalScrollBar.call(verticalDragBehaviour);
+
+    // Add gradient at end of chart during export to indicate overflowing content.
+    if(!renderInfo.interactive && config.chartHeight < totalHeight) {
+        let hiddenContent = document.createElement("div");
+        hiddenContent.classList.add("hidden-content");
+        document.body.appendChild(hiddenContent);
+    }
 }

@@ -67,3 +67,13 @@ svg {
 .bar-hover:hover {
     stroke-width: 1px;
 }
+
+.hidden-content {
+    background-image: linear-gradient(rgba(0, 0, 0, 0), currentColor);
+    height: 50px;
+    opacity: 0.3;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}

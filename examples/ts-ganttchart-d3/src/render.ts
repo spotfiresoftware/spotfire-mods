@@ -20,7 +20,8 @@ export function render(
     maxDate: Date,
     tooltip: Tooltip,
     styling: StylingInfo,
-    windowSize: Spotfire.Size
+    windowSize: Spotfire.Size,
+    interactive: boolean
 ) {
     if (state.preventRender) {
         // Early return if the state currently disallows rendering.
@@ -36,6 +37,11 @@ export function render(
 
     if (lvl0Elements > 0) {
         gapsHeight = config.spaceBetweenGroups * (lvl0Elements - 1);
+    }
+
+    if(!interactive) {
+        config.zoomSliderHeight = 0;
+        config.viewModeSliderHeight = 0;
     }
 
     const maxHeight = windowSize.height;
@@ -72,7 +78,7 @@ export function render(
     svg.selectAll("*").remove();
 
     (document as any).fonts.ready.then(() => {
-        renderGantt(svg, data, state, tooltip, styling);
+        renderGantt(svg, data, state, tooltip, styling, interactive);
     });
 
     svg.on("click", (e) => {
