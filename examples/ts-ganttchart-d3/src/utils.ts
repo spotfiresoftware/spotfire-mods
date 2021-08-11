@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { Tooltip } from "spotfire/spotfire-api-1-2";
+
 export const _MS_PER_DAY = 24 * 3600 * 1000;
 
 export function getMinDate(a: Date, b: Date) {
@@ -53,13 +54,6 @@ export function getDates(begin: Date, end: Date) {
     return dates;
 }
 
-export function formatDay(date: Date) {
-    const m = date.getMonth() + 1;
-    const d = date.getDate();
-    return `${m}/${d}`;
-}
-
-
 export function time2Pixel(startDate: Date, endDate: Date, unitWidth: number) {
     return ((endDate.getTime() - startDate.getTime()) * unitWidth) / _MS_PER_DAY;
 }
@@ -75,25 +69,8 @@ export function textWidth(text: string, fontSize: number, fontFace: string, pad:
     return textMeasures;
 }
 
-export function overlap(firstArea: DOMRect, secondArea: DOMRect): boolean {
-    return !(
-        firstArea.right < secondArea.left ||
-        firstArea.left > secondArea.right ||
-        firstArea.bottom < secondArea.top ||
-        firstArea.top > secondArea.bottom
-    );
-}
-
 export function insideBoundingBox(smallBox: DOMRect, bigBox: DOMRect): boolean {
     return smallBox.x > bigBox.x && (smallBox.x + smallBox.width) < (bigBox.x + bigBox.width);
-}
-
-export function leftSideOverflow(smallBox: DOMRect, bigBox: DOMRect): boolean {
-    return smallBox.left < bigBox.left && smallBox.right < bigBox.right;
-}
-
-export function rigthSideOverflow(smallBox: DOMRect, bigBox: DOMRect): boolean {
-    return smallBox.left > bigBox.left && smallBox.right > bigBox.right;
 }
 
 export function adjustText(type: string, tooltip: Tooltip) {
