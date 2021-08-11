@@ -4,7 +4,7 @@
         "noUnusedLocals": false,
         "allowJs": true,
         "allowUnreachableCode": false,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "strict": false,
         "charset": "utf8",
         "sourceMap": true,

@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { RenderInfo } from "../interfaces";
-import { D3_SELECTION, ViewMode } from "../custom-types";
+import { D3_SELECTION, D3_SELECTION_BASE, ViewMode } from "../custom-types";
 import { config } from "../global-settings";
 import { dateDiffInDays, time2Pixel } from "../utils";
 
@@ -31,7 +31,7 @@ export function updateTodayLine(renderInfo: RenderInfo) {
     buildTodayLine(todayContainer, unitWidth, renderInfo);
 }
 
-function buildTodayLine(todayContainer, unitWidth, renderInfo: RenderInfo) {
+function buildTodayLine(todayContainer: D3_SELECTION_BASE, unitWidth: number, renderInfo: RenderInfo) {
     let y: number = config.viewModeSliderHeight + config.zoomSliderHeight + config.headerHeight;
     
     if (renderInfo.state.viewMode === ViewMode.Year) {

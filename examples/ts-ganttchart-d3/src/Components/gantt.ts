@@ -1,4 +1,4 @@
-import { D3_SELECTION, GanttData } from "../custom-types";
+import { D3_SELECTION, D3_SELECTION_SVGG, GanttData } from "../custom-types";
 import { renderLabels, updateLabels } from "./labels";
 import { renderBars, updateBars } from "./bars";
 import { renderZoomSlider } from "./zoom-slider";
@@ -14,7 +14,7 @@ import { renderDefs, updateDefs } from "./svg-defs";
 import { RenderInfo, RenderState } from "../interfaces";
 
 export function renderGantt(
-    parent: D3_SELECTION,
+    parent: D3_SELECTION_SVGG,
     data: GanttData[],
     state: RenderState,
     tooltip: Tooltip,

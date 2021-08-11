@@ -76,8 +76,8 @@ Spotfire.initialize(async (mod) => {
 
         let tasks = buildTasks(root);
 
-        let minDate;
-        let maxDate;
+        let minDate: Date;
+        let maxDate: Date;
         tasks.forEach((v) => {
             minDate = getMinDate(minDate, v.start);
             maxDate = getMaxDate(maxDate, v.end);
@@ -141,7 +141,7 @@ Spotfire.initialize(async (mod) => {
             function addTask(node: DataViewHierarchyNode): GanttData {
                 const rows = node.rows();
 
-                let percent;
+                let percent: number;
                 let showProgress = true;
 
                 try {

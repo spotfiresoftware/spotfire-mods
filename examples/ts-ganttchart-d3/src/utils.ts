@@ -1,23 +1,24 @@
 import * as d3 from "d3";
+import { Tooltip } from "spotfire/spotfire-api-1-2";
 import { messages } from "./custom-messages";
 
 export const _MS_PER_DAY = 24 * 3600 * 1000;
 
-export function getMinDate(a, b) {
+export function getMinDate(a: Date, b: Date) {
     if (a && b) {
         return a > b ? b : a;
     }
     return a || b;
 }
 
-export function getMaxDate(a, b) {
+export function getMaxDate(a: Date, b: Date) {
     if (a && b) {
         return a < b ? b : a;
     }
     return a || b;
 }
 
-export function dateDiffInDays(a, b, includeLastDay = false) {
+export function dateDiffInDays(a: Date, b: Date, includeLastDay = false) {
     const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
     const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
@@ -27,20 +28,20 @@ export function dateDiffInDays(a, b, includeLastDay = false) {
     return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
-export function addDays(date, days) {
+export function addDays(date: Date, days: number) {
     const d = new Date(date.valueOf());
     d.setDate(d.getDate() + days);
     return d;
 }
 
-export function getTranslation(transform) {
+export function getTranslation(transform: string) {
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttributeNS(null, "transform", transform);
     const { matrix } = g.transform.baseVal.consolidate();
     return [matrix.e, matrix.f];
 }
 
-export function getDates(begin, end) {
+export function getDates(begin: Date, end: Date) {
     const dates = [];
     let s = new Date(begin);
     s.setHours(0, 0, 0, 0);
@@ -54,21 +55,18 @@ export function getDates(begin, end) {
     return dates;
 }
 
-export function formatDay(date) {
+export function formatDay(date: Date) {
     const m = date.getMonth() + 1;
     const d = date.getDate();
     return `${m}/${d}`;
 }
 
-export function p2s(arr) {
-    return arr.map((p) => `${p[0]},${p[1]}`).join(" ");
+
+export function time2Pixel(startDate: Date, endDate: Date, unitWidth: number) {
+    return ((endDate.getTime() - startDate.getTime()) * unitWidth) / _MS_PER_DAY;
 }
 
-export function time2Pixel(startDate, endDate, unitWidth) {
-    return ((endDate - startDate) * unitWidth) / _MS_PER_DAY;
-}
-
-export function textWidth(text, fontSize, fontFace, pad) {
+export function textWidth(text: string, fontSize: number, fontFace: string, pad: number) {
     const ctx = document.createElement("canvas").getContext("2d");
     ctx.font = fontSize + "px " + fontFace;
     const metrics = ctx.measureText(text);
@@ -100,7 +98,7 @@ export function rigthSideOverflow(smallBox: DOMRect, bigBox: DOMRect): boolean {
     return smallBox.left > bigBox.left && smallBox.right > bigBox.right;
 }
 
-export function adjustText(type, tooltip) {
+export function adjustText(type: string, tooltip: Tooltip) {
     const unitTexts = d3.selectAll("#" + type + " text");
 
     unitTexts.each(function (_, i) {
@@ -133,7 +131,7 @@ export function adjustText(type, tooltip) {
     });
 }
 
-export function increaseBrightness(hex, percent){
+export function increaseBrightness(hex: string, percent: number){
     hex = hex.replace(/^\s*#|\s*$/g, '');
 
     if(hex.length == 3){

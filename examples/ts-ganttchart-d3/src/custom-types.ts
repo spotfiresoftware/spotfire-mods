@@ -1,7 +1,10 @@
+import { BaseType } from "d3";
 import { StylingInfo } from "spotfire/spotfire-api-1-2";
 import { RenderState } from "./interfaces";
 
 export type D3_SELECTION = d3.Selection<SVGElement, unknown, HTMLElement, any>;
+export type D3_SELECTION_BASE = d3.Selection<BaseType, unknown, HTMLElement, any>;
+export type D3_SELECTION_SVGG = d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 export type GanttData = {
     id: string,
     text: string,
@@ -17,10 +20,10 @@ export type GanttData = {
     color: string,
     showTooltip: () => void,
     hideTooltip: () => void,
-    mark: (e: Event) => void,
+    mark: (ctrlKey: boolean) => void,
 }
 export type HeaderOptions = {
-    headerContainer: D3_SELECTION,
+    headerContainer: D3_SELECTION_SVGG,
     state: RenderState,
     format: string,
     y: number,
@@ -32,6 +35,20 @@ export type HeaderOptions = {
 export type HeaderTypeInfo = {
     dayOfUnit: number,
     halfOfUnitDay: number
+}
+export type TextToRender = {
+    x: number,
+    position: string,
+    text: string
+}
+export type SelectionResult = {
+    x?: number,
+    y?: number,
+    width?: number,
+    height?: number,
+    dragSelectActive?: boolean,
+    ctrlKey?: boolean,
+    altKey?: boolean
 }
 
 export enum ViewMode {

@@ -1,4 +1,4 @@
-import { D3_SELECTION } from "../custom-types";
+import { D3_SELECTION, D3_SELECTION_BASE } from "../custom-types";
 import { config } from "../global-settings";
 import { dateDiffInDays, getDates, increaseBrightness, insideBoundingBox } from "../utils";
 import { renderText } from "../render-helper";
@@ -43,7 +43,7 @@ function updateGrid(renderInfo: RenderInfo) {
     buildGrid(grid, renderInfo);
 }
 
-function buildGrid(grid, renderInfo: RenderInfo) {
+function buildGrid(grid: D3_SELECTION_BASE, renderInfo: RenderInfo) {
     let x: number = config.labelsWidth;
     const y: number = config.viewModeSliderHeight + config.zoomSliderHeight + config.headerHeight;
     const dates = getDates(renderInfo.state.startDate, renderInfo.state.endDate);
@@ -98,7 +98,7 @@ function buildGrid(grid, renderInfo: RenderInfo) {
         .style("stroke", renderInfo.styling.scales.line.stroke);
 }
 
-function buildBars(bars, renderInfo: RenderInfo) {
+function buildBars(bars: D3_SELECTION_BASE, renderInfo: RenderInfo) {
     const unitWidth = config.chartWidth / dateDiffInDays(renderInfo.state.startDate, renderInfo.state.endDate, true);
     const y: number = config.viewModeSliderHeight + config.zoomSliderHeight + config.headerHeight;
     let x = config.labelsWidth;
@@ -107,7 +107,7 @@ function buildBars(bars, renderInfo: RenderInfo) {
     const lang = navigator.language;
     moment.locale(lang);
 
-    const getFormattedDateTime = (dateTime) =>
+    const getFormattedDateTime = (dateTime: Date) =>
         dateTime.toLocaleDateString(lang, {
             month: "numeric",
             day: "numeric"

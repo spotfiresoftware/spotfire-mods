@@ -1,4 +1,4 @@
-import { D3_SELECTION, ViewMode } from "../custom-types";
+import { D3_SELECTION, D3_SELECTION_SVGG, ViewMode } from "../custom-types";
 import { config } from "../global-settings";
 import { getTranslation, insideBoundingBox, textWidth } from "../utils";
 import * as d3 from "d3";
@@ -12,7 +12,7 @@ const textPadding = 8;
 const textY = 18;
 const thumbY = 2;
 
-export function renderViewModeSlider(parent, renderInfo: RenderInfo) {
+export function renderViewModeSlider(parent: D3_SELECTION_SVGG, renderInfo: RenderInfo) {
     const textMeasures = textWidth(
         "YearMonthDay",
         renderInfo.styling.scales.font.fontSize,

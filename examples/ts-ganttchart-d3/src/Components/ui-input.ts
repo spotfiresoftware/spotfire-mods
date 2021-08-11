@@ -4,6 +4,8 @@
  * in the license file that is distributed with this file.
  */
 
+import { SelectionResult } from "src/custom-types";
+
 const selectionDiv = document.createElement("div");
 selectionDiv.className = "selection";
 
@@ -13,11 +15,11 @@ selectionBgDiv.className = "selection-bg";
 document.querySelector("body").appendChild(selectionBgDiv);
 document.querySelector("body").appendChild(selectionDiv);
 
-const clamp = (value, min, max) => Math.min(Math.max(min, value), max);
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(min, value), max);
 
 let selectionPoint = { x: 0, y: 0 };
 let meta = { ctrlKey: false, altKey: false };
-export const addHandlersSelection = (callback) => {
+export const addHandlersSelection = (callback: (result: SelectionResult) => void) => {
     document.onmousedown = (e) => {
         callback({ dragSelectActive: true });
         const { x, y, ctrlKey, altKey } = e;
@@ -32,7 +34,7 @@ export const addHandlersSelection = (callback) => {
         document.addEventListener("mouseup", mouseup);
     };
 
-    const mousemove = (e) => {
+    const mousemove = (e: MouseEvent) => {
         const x = clamp(e.x, 0, window.innerWidth - 2);
         const y = clamp(e.y, 0, window.innerHeight - 2);
         const width = Math.abs(selectionPoint.x - x);
@@ -46,7 +48,7 @@ export const addHandlersSelection = (callback) => {
         y < selectionPoint.y && (selectionDiv.style.top = y + "px");
     };
 
-    const mouseup = (e) => {
+    const mouseup = (e: MouseEvent) => {
         const { x, y } = e;
         const width = Math.abs(selectionPoint.x - x);
         const height = Math.abs(selectionPoint.y - y);

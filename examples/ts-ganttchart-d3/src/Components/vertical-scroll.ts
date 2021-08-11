@@ -54,7 +54,7 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
         .attr("x", x)
         .attr("y", scrollPosition);
 
-    function updateVerticalScrollPosition(deltaY) {
+    function updateVerticalScrollPosition(deltaY: number) {
         let newScrollPosition = parseFloat(verticalScrollBar.attr("y")) + deltaY;
         newScrollPosition = Math.max(y, newScrollPosition);
         newScrollPosition = Math.min(config.svgHeight - scrollbarHeight, newScrollPosition);

@@ -1,12 +1,13 @@
 //@ts-ignore
 import * as moment from "moment";
-import { D3_SELECTION, HeaderOptions, HeaderTypeInfo, ViewMode } from "../custom-types";
+import { D3_SELECTION, D3_SELECTION_SVGG, HeaderOptions, HeaderTypeInfo, TextToRender, ViewMode } from "../custom-types";
 import { config } from "../global-settings";
 import * as d3 from "d3";
 import { adjustText, getDates } from "../utils";
 import { renderText } from "../render-helper";
 import { Moment } from "node_modules/moment/ts3.1-typings/moment";
 import { RenderInfo } from "../interfaces";
+import { Tooltip } from "spotfire/spotfire-api-1-2";
 
 let yearMonthMinHeight = 24;
 let daysMinHeight = 18;
@@ -42,7 +43,7 @@ export function updateHeader(renderInfo: RenderInfo) {
     renderInfo.state.verticalScrollPosition -= previousHeight - currentHeight;
 }
 
-export function buildHeader(headerContainer, renderInfo: RenderInfo) {
+export function buildHeader(headerContainer: D3_SELECTION_SVGG, renderInfo: RenderInfo) {
     const labelsWidth = config.labelsWidth;
     let x: number = labelsWidth;
     const dates = getDates(renderInfo.state.startDate, renderInfo.state.endDate);
@@ -83,7 +84,7 @@ export function buildHeader(headerContainer, renderInfo: RenderInfo) {
             let x1 = labelsWidth;
             let x2 = labelsWidth;
 
-            let textToRender = undefined;
+            let textToRender: TextToRender = undefined;
 
             dates.map((d, i) => {
                 const currentDate = moment(new Date(d));
@@ -195,7 +196,7 @@ export function buildHeader(headerContainer, renderInfo: RenderInfo) {
         .style("stroke", renderInfo.styling.scales.line.stroke);
 }
 
-function headerFactory(options: HeaderOptions, tooltip) {
+function headerFactory(options: HeaderOptions, tooltip: Tooltip) {
     const labelsWidth = config.labelsWidth;
     let x: number = labelsWidth;
     const dates = getDates(options.state.startDate, options.state.endDate);
@@ -207,7 +208,7 @@ function headerFactory(options: HeaderOptions, tooltip) {
     let x2 = labelsWidth;
 
     const header = options.headerContainer.append("g").attr("id", options.type);
-    let textToRender = undefined;
+    let textToRender: TextToRender = undefined;
 
     dates.map((d, i) => {
         const currentDate = moment(new Date(d));
@@ -286,7 +287,7 @@ function getTypeInfo(type: string, currentDate: Moment): HeaderTypeInfo {
     };
 }
 
-function renderTextPathPair(header, x1, x2, textToRender, options) {
+function renderTextPathPair(header: D3_SELECTION_SVGG, x1: number, x2: number, textToRender: TextToRender, options: HeaderOptions) {
     if(textToRender === undefined) {
         return;
     }
