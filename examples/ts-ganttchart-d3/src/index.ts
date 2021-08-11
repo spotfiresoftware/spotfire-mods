@@ -230,9 +230,9 @@ Spotfire.initialize(async (mod) => {
                     color = config.defaultBarColor;
                 }
             } else {
-                const colorValue = node.rows()[0].continuous("Color").value()[0].key;
+                const colorValue = node.rows()[0].continuous("Color").value();
                 const differentElements = node.rows().filter((r) => {
-                    return r.continuous("Color").value()[0].key !== colorValue;
+                    return r.continuous("Color").value() !== colorValue;
                 }).length;
                 if (differentElements > 0) {
                     color = config.defaultBarColor;
