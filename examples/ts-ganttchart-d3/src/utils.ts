@@ -1,7 +1,5 @@
 import * as d3 from "d3";
 import { Tooltip } from "spotfire/spotfire-api-1-2";
-import { messages } from "./custom-messages";
-
 export const _MS_PER_DAY = 24 * 3600 * 1000;
 
 export function getMinDate(a: Date, b: Date) {
