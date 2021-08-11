@@ -1,6 +1,13 @@
 //@ts-ignore
 import * as moment from "moment";
-import { D3_SELECTION, D3_SELECTION_SVGG, HeaderOptions, HeaderTypeInfo, TextToRender, ViewMode } from "../custom-types";
+import {
+    D3_SELECTION,
+    D3_SELECTION_SVGG,
+    HeaderOptions,
+    HeaderTypeInfo,
+    TextToRender,
+    ViewMode
+} from "../custom-types";
 import { config } from "../global-settings";
 import * as d3 from "d3";
 import { adjustText, getDates } from "../utils";
@@ -24,7 +31,7 @@ export function renderHeader(parent: D3_SELECTION, renderInfo: RenderInfo) {
         .attr("class", renderInfo.state.isEditing ? "skip-unmark" : "")
         .style("cursor", renderInfo.state.isEditing ? "pointer" : "default")
         .on("click", (e) => {
-            if(config.onScaleClick) {
+            if (config.onScaleClick) {
                 config.onScaleClick(e.clientX, e.clientY);
             }
         });
@@ -34,7 +41,7 @@ export function renderHeader(parent: D3_SELECTION, renderInfo: RenderInfo) {
 
 export function updateHeader(renderInfo: RenderInfo) {
     const headerContainer = d3.select<SVGPathElement, unknown>("#Header");
-    
+
     const previousHeight = headerContainer.node().getBBox().height;
     headerContainer.selectAll("*").remove();
 
@@ -287,11 +294,17 @@ function getTypeInfo(type: string, currentDate: Moment): HeaderTypeInfo {
     };
 }
 
-function renderTextPathPair(header: D3_SELECTION_SVGG, x1: number, x2: number, textToRender: TextToRender, options: HeaderOptions) {
-    if(textToRender === undefined) {
+function renderTextPathPair(
+    header: D3_SELECTION_SVGG,
+    x1: number,
+    x2: number,
+    textToRender: TextToRender,
+    options: HeaderOptions
+) {
+    if (textToRender === undefined) {
         return;
     }
-    
+
     const unitPath = header
         .append("path")
         .attr("d", `M${x1} ${options.y} H${x2} v${options.minHeight} H${x1} z`)
@@ -313,5 +326,34 @@ function renderTextPathPair(header: D3_SELECTION_SVGG, x1: number, x2: number, t
         options.minHeight = Math.ceil((textHeight + config.minPadding) / config.minPadding) * config.minPadding;
     }
     unitText.attr("y", options.y + options.minHeight / 2);
-    unitPath.attr("d", `M${x1} ${options.y} H${x2} v${options.minHeight} H${x1} z`);
+
+    let pathD = `M${x1} ${options.y} H${x2} v${options.minHeight} H${x1} z`;
+
+    // Create round borders for year header
+    const radius = 8;
+
+    if(options.y === config.viewModeSliderHeight + config.zoomSliderHeight) {
+
+        if (
+            x1 === config.labelsWidth &&
+            x2 === config.svgWidth - config.scrollBarThickness
+        ) {
+            pathD = `M${x1 + radius} ${options.y} H${x2 - radius} q${radius + ",0 " + radius + "," + radius} v${
+                options.minHeight - radius
+            } H${x1} v${radius - options.minHeight} q${"0," + -radius + " " + radius + "," + -radius} z`;
+        } else if (x1 === config.labelsWidth) {
+            pathD = `M${x1 + radius} ${options.y} H${x2} v${options.minHeight} H${x1} v${radius - options.minHeight} q${
+                "0," + -radius + " " + radius + "," + -radius
+            } z`;
+        } else if (
+            x2 === config.svgWidth - config.scrollBarThickness
+        ) {
+            pathD = `M${x1} ${options.y} H${x2 - radius} q${radius + ",0 " + radius + "," + radius} v${
+                options.minHeight - radius
+            } H${x1} z`;
+        }
+
+    }
+    
+    unitPath.attr("d", pathD);
 }
