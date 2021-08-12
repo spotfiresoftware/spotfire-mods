@@ -6,7 +6,7 @@ import { RenderInfo } from "src/interfaces";
 
 export function renderVerticalScroll(parent: D3_SELECTION, renderInfo: RenderInfo) {
     const verticalScrollBarContainer = parent.append("g").attr("id", "VerticalScrollBarContainer");
-    
+
     buildVerticalScroll(parent, verticalScrollBarContainer, renderInfo);
 }
 
@@ -23,19 +23,19 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
 
     const totalHeight = d3.select<SVGPathElement, unknown>("#Labels").node().getBBox().height;
 
-    if(Math.abs(totalHeight - config.chartHeight) < 2) {
+    if (Math.abs(totalHeight - config.chartHeight) < 2) {
         return;
     }
     const x = config.svgWidth - config.scrollBarThickness;
     const y = config.svgHeight - config.chartHeight;
     const scale = config.chartHeight / totalHeight;
     const scrollbarHeight = scale * config.chartHeight;
-    if(renderInfo.state.verticalScrollPosition === -1) {
+    if (renderInfo.state.verticalScrollPosition === -1) {
         renderInfo.state.verticalScrollPosition = y;
     }
     let scrollPosition = renderInfo.state.verticalScrollPosition;
 
-    if(scrollPosition < y) {
+    if (scrollPosition < y) {
         scrollPosition = y;
     }
 
@@ -64,7 +64,7 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
         bars.attr("transform", `translate(${xValue}, ${(y - newScrollPosition) / scale})`);
         labels.attr("transform", `translate(${0},${(y - newScrollPosition) / scale})`);
         verticalScrollBar.attr("y", newScrollPosition);
-        renderInfo.state.verticalScrollPosition = newScrollPosition
+        renderInfo.state.verticalScrollPosition = newScrollPosition;
     }
 
     parent.on("wheel", (e) => {
@@ -96,9 +96,15 @@ function buildVerticalScroll(parent: D3_SELECTION, verticalScrollBarContainer: D
     verticalScrollBar.call(verticalDragBehaviour);
 
     // Add gradient at end of chart during export to indicate overflowing content.
-    if(!renderInfo.interactive && config.chartHeight < totalHeight) {
+    if (!renderInfo.interactive && config.chartHeight < totalHeight) {
         let hiddenContent = document.createElement("div");
         hiddenContent.classList.add("hidden-content");
         document.body.appendChild(hiddenContent);
     }
+
+    parent.on("mouseover", () => {
+        verticalScrollBarContainer.style("visibility", "visible");
+    }).on("mouseout", () => {
+        verticalScrollBarContainer.style("visibility", "hidden");
+    });
 }
