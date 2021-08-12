@@ -19,7 +19,7 @@ export function createScalePopout(
             children: [
                 checkbox({
                     name: overdue.name,
-                    text: "Show project overdue",
+                    text: "Show overdue tasks",
                     checked: is(overdue)(true),
                     enabled: true
                 })
