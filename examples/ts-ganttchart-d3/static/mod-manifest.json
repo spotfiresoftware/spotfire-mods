@@ -34,12 +34,18 @@
                 "name": "Start",
                 "mode": "continuous",
                 "placement": "none",
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                },
                 "dataTypes": {"allowNumeric": false, "allowDateTime": true, "allowString": false}
             },
             {
                 "name": "End",
                 "mode": "continuous",
                 "placement": "none",
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                },
                 "dataTypes": {"allowNumeric": false, "allowDateTime": true, "allowString": false}
             },
             {
