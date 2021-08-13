@@ -7,7 +7,7 @@
     "server": "mods-dev-server dist",
     "build": "webpack --mode production",
     "build-watch": "webpack --watch",
-    "start": "npm run build-watch",
+    "start": "npm run build-watch"
   },
   "author": "cnicolet, valexand, ebrandin",
   "license": "ISC",
