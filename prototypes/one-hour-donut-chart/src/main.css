@@ -1,0 +1,29 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    white-space: pre-line;
+    margin: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+#chart-area svg {
+    margin:auto;
+    display:inherit;
+  }
+  text {
+    font: 10px sans-serif;
+  }
+  form {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }

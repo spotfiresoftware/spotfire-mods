@@ -1,0 +1,42 @@
+{
+    "apiVersion": "1.0",
+    "version": "1.0",
+    "name": "Donut chart",
+    "id": "js-dev-one-hour-donut-chart",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "y-axis-mode",
+            "type": "string",
+            "defaultValue": "numeric"
+        },
+        {
+            "name": "split-bars",
+            "type": "boolean",
+            "defaultValue": true
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "Y",
+                "mode": "continuous",
+                "placement": "left"
+            }
+        ]
+    },
+    "files": [
+        "index.html",
+        "main.css",
+        "main.js",
+        "d3.js",
+        "piechart.js"
+    ]
+}
