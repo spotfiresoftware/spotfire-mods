@@ -25,11 +25,13 @@ window.Spotfire.initialize(async (mod) => {
         ) {
             const coloringFromLevel = getColoringLevel(colorAxis, hierarchyAxis);
 
-            const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
+            mod.controls.errorOverlay.hide("axis-configuration");
 
-            const hasSizeExpression = !!sizeAxis.expression;
+            let root = await (await dataView.hierarchy(hierarchyAxisName))?.root();
 
-            render(windowSize, rootNode!, hasSizeExpression, coloringFromLevel);
+            const hasSize = !!sizeAxis.expression;
+
+            await render(dataView, windowSize, root!, hasSize, coloringFromLevel);
 
             context.signalRenderComplete();
         })

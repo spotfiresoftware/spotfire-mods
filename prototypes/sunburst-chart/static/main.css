@@ -2,6 +2,7 @@ html,
 body,
 #border,
 #mod-container {
+    position: absolute;
     margin: 0;
     height: 100%;
     width: 100%;
@@ -9,9 +10,26 @@ body,
     display: flex;
     justify-self: center;
     align-items: center;
-}
-#mod-container {
     overflow-y: auto;
+}
+
+#explanation {
+    position: absolute;
+    margin: 0 43%;
+    height: 20%;
+    width: 14%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#explanation #percentage {
+    font-size: 5vh;
+    white-space: nowrap;
+}
+
+#explanation #value{
+    font-size: 2vh;
 }
 
 body {

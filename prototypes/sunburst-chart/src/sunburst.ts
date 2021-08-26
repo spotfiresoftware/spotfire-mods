@@ -1,11 +1,20 @@
 import * as d3 from "d3";
-import { DataViewHierarchyNode, DataViewRow, Size } from "spotfire-api";
+import { DataView, DataViewHierarchyNode, DataViewRow, Size } from "spotfire-api";
 export const hierarchyAxisName = "Hierarchy";
 export const sizeAxisName = "Size";
 
 // Main function to draw and set up the visualization, once we have the data.
-export function render(size: Size, rootNode: DataViewHierarchyNode, hasSize: boolean, colorFromLevel: number) {
-    document.querySelector("#mod-container")!.innerHTML = "";
+export function render(
+    dataView: DataView,
+    size: Size,
+    rootNode: DataViewHierarchyNode,
+    hasSize: boolean,
+    colorFromLevel: number
+) {
+    var svg = document.querySelector("#mod-container svg");
+    if (svg) {
+        document.querySelector("#mod-container")!.removeChild(svg);
+    }
 
     let radius = Math.min(size.width, size.height) / 2;
 
@@ -29,6 +38,8 @@ export function render(size: Size, rootNode: DataViewHierarchyNode, hasSize: boo
         .attr("id", "container")
         .attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
 
+    document.querySelector("#mod-container svg")!.addEventListener("click", dataView.clearMarking);
+
     let partition = d3.partition().size([Math.PI * 2, radius]);
 
     let totalSize = rootNode.rows().reduce((p: number, c: DataViewRow) => p + getSize(c), 0);
@@ -37,12 +48,9 @@ export function render(size: Size, rootNode: DataViewHierarchyNode, hasSize: boo
         .hierarchy(rootNode, (d) => d.children)
         .sum((d) => {
             return !d.children ? d.rows().reduce((p, c) => p + getSize(c), 0) : 0;
-        })
-        .sort((a, b) => {
-            return b!.value - a!.value;
         });
 
-    let partitionLayout  = partition(hierarchy);
+    let partitionLayout = partition(hierarchy);
 
     // Bounding circle underneath the sunburst, to make it easier to detect
     // when the mouse leaves the parent g.
@@ -55,7 +63,11 @@ export function render(size: Size, rootNode: DataViewHierarchyNode, hasSize: boo
         .enter()
         .append("svg:path")
         .attr("d", arc)
-        .on("click", (d) => d.data.mark())
+        .on("click", (d) => {
+            d.data.mark();
+            d3.event.stopPropagation();
+        })
+        .style("stroke-width", 2)
         .style("fill", function (d) {
             if (
                 d.data
@@ -72,9 +84,12 @@ export function render(size: Size, rootNode: DataViewHierarchyNode, hasSize: boo
                 return "#ddd";
             }
 
-            return d.data.rows()[0].color().hexCode; /* colors[d.name]; */
+            const firstMarkedRow = d.data.rows().findIndex((r) => r.isMarked());
+            if (firstMarkedRow == -1) {
+                firstMarkedRow = 0;
+            }
+            return d.data.rows()[firstMarkedRow].color().hexCode; /* colors[d.name]; */
         })
-        .style("opacity", 1)
         .on("mouseover", mouseover);
 
     // Add the mouseleave handler to the bounding circle.
@@ -92,7 +107,7 @@ export function render(size: Size, rootNode: DataViewHierarchyNode, hasSize: boo
         d3.selectAll("path")
             .transition()
             .duration(1000)
-            .style("opacity", 1)
+            .style("stroke", "transparent")
             .on("end", function () {
                 d3.select(this).on("mouseover", mouseover);
             });
@@ -100,7 +115,6 @@ export function render(size: Size, rootNode: DataViewHierarchyNode, hasSize: boo
         d3.select("#explanation").style("visibility", "hidden");
     }
 
-    // Fade all but the current sequence, and show it in the breadcrumb trail.
     function mouseover(d: any) {
         let percentage = (100 * d.value) / totalSize;
         let percentageString = percentage.toPrecision(3) + "%";
@@ -109,21 +123,21 @@ export function render(size: Size, rootNode: DataViewHierarchyNode, hasSize: boo
         }
 
         d3.select("#percentage").text(percentageString);
+        d3.select("#value").text(d.data.formattedValue());
 
         d3.select("#explanation").style("visibility", "");
 
         let sequenceArray = getAncestors(d);
-        // updateBreadcrumbs(sequenceArray, percentageString);
 
         // Fade all the segments.
-        d3.selectAll("path").style("opacity", 0.3);
+        d3.selectAll("path").style("stroke", "transparent");
 
         // Then highlight only those that are an ancestor of the current segment.
         vis.selectAll("path")
             .filter(function (node: any) {
                 return sequenceArray.indexOf(node) >= 0;
             })
-            .style("opacity", 1);
+            .style("stroke", "#888");
     }
 }
 
