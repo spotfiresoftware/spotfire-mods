@@ -28,7 +28,8 @@
     ],
     "dataViewDefinition": {
         "colorAxis": {
-            "mode": "categorical",
+            "mode": "dual",
+            "preferredDualMode": "categorical",
             "dropTarget": {
                 "icon": "Color",
                 "description": "Color by {0}"
@@ -36,18 +37,20 @@
         },
         "axes": [
             {
-                "name": "X",
+                "name": "Hierarchy",
+                "automaticConfiguration": {
+                    "priority": "100"
+                },
                 "mode": "categorical",
                 "placement": "bottom",
                 "dropTarget": {
                     "icon": "XAxis3D",
-                    "description": "Use {0} on the mod's X-axis"
+                    "description": "Use {0} on the mod's Hierarchy-axis"
                 }
             },
             {
-                "name": "Y",
+                "name": "Size",
                 "mode": "continuous",
-                "allowMultipleMeasures": true,
                 "placement": "left"
             }
         ]

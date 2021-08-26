@@ -1,14 +1,8 @@
-import { Data, Options, render } from "./render";
-import { createLabelPopout } from "./popout";
-import { buildColorSeries, Point } from "./series";
-import { AxisPart, DataView, DataViewHierarchyNode, Mod, ModProperty } from "spotfire-api";
+import { hierarchyAxisName, render } from "./sunburst";
+import { Axis, DataView } from "spotfire-api";
 
 const Spotfire = window.Spotfire;
 const DEBUG = true;
-
-export interface RenderState {
-    preventRender: boolean;
-}
 
 Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
@@ -19,80 +13,60 @@ Spotfire.initialize(async (mod) => {
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
-        mod.property<string>("curveType"),
-        mod.property<boolean>("xLabelsRotation"),
-        mod.property<boolean>("yAxisNormalization"),
-        mod.property<boolean>("enableColorFill")
+        mod.visualization.axis("Hierarchy"),
+        mod.visualization.axis("Color"),
+        mod.visualization.axis("Size")
     );
-
-    /**
-     * Create a persistent state used by the rendering code
-     */
-    const state: RenderState = { preventRender: false };
 
     /**
      * Creates a function that is part of the main read-render loop.
      * It checks for valid data and will print errors in case of bad data or bad renders.
      * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
      */
-    reader.subscribe(generalErrorHandler(mod)(onChange));
+    reader.subscribe(
+        generalErrorHandler(
+            mod,
+            10000
+        )(async function onChange(
+            dataView: DataView,
+            windowSize: Spotfire.Size,
+            hierarchyAxis: Axis,
+            colorAxis: Axis,
+            sizeAxis: Axis
+        ) {
+            let colorFromLevel = 0;
+            if (colorAxis.isCategorical) {
+                if (colorAxis.parts.length > 1) {
+                    mod.controls.errorOverlay.show(["The color axis can only be one level"], "axis-configuration");
+                    return;
+                }
 
-    /**
-     * The function that is part of the main read-render loop.
-     * It checks for valid data and will print errors in case of bad data or bad renders.
-     * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
-     * @param {Spotfire.DataView} dataView
-     * @param {Spotfire.Size} windowSize
-     * @param {ModProperty<string>} curveType
-     * @param {ModProperty<boolean>} xLabelsRotation
-     * @param {ModProperty<boolean>} yAxisNormalization
-     * @param {ModProperty<boolean>} enableColorFill
-     */
-    async function onChange(
-        dataView: DataView,
-        windowSize: Spotfire.Size,
-        curveType: ModProperty<string>,
-        xLabelsRotation: ModProperty<boolean>,
-        yAxisNormalization: ModProperty<boolean>,
-        enableColorFill: ModProperty<boolean>
-    ) {
-        let data = await buildData(mod, dataView);
+                if (colorAxis.parts.length == 1) {
+                    colorFromLevel = hierarchyAxis.parts.findIndex(
+                        (p1) => colorAxis.parts[0].expression == p1.expression
+                    );
+                }
 
-        var popoutClosedEventEmitter = () => {};
+                if (colorFromLevel == -1) {
+                    mod.controls.errorOverlay.show(
+                        ["All expressions of the Color axis must also be part of the hierarchy axis"],
+                        "axis-configuration"
+                    );
+                    return;
+                }
+            }
 
-        const config: Partial<Options> = {
-            curveType: curveType.value()!,
-            xLabelsRotation: xLabelsRotation.value()!,
-            yAxisNormalization: yAxisNormalization.value()!,
-            enableColorFill: enableColorFill.value()!,
-            onLabelClick: context.isEditing
-                ? createLabelPopout(
-                      mod.controls,
-                      curveType,
-                      xLabelsRotation,
-                      yAxisNormalization,
-                      enableColorFill,
-                      popoutClosedEventEmitter
-                  )
-                : null,
-            labelOffset: context.styling.scales.font.fontSize * 2
-        };
+            mod.controls.errorOverlay.hide("axis-configuration");
 
-        await render(
-            state,
-            data,
-            windowSize,
-            config,
-            {
-                scales: context.styling.scales.font,
-                stroke: context.styling.scales.line.stroke
-            },
-            mod.controls.tooltip,
-            popoutClosedEventEmitter
-        );
+            let root = await (await dataView.hierarchy(hierarchyAxisName))?.root();
 
-        context.signalRenderComplete();
-    }
+            const hasSize = !!sizeAxis.expression;
+
+            await render(windowSize, root!, hasSize, colorFromLevel);
+
+            context.signalRenderComplete();
+        })
+    );
 });
 
 /**
@@ -150,87 +124,4 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
             }
         } as T;
     };
-}
-
-/**
- * Construct a data format suitable for consumption in d3.
- * @param mod The Mod API object
- * @param dataView The mod's DataView
- */
-async function buildData(mod: Mod, dataView: DataView): Promise<Data> {
-    const allRows = await dataView.allRows();
-
-    const allYValues: Array<number> = allRows!.map((row) => row.continuous<number>("Y").value() || 0);
-    const maxValue = Math.max(...allYValues);
-    const minValue = Math.min(0, ...allYValues);
-
-    const xHierarchy = await dataView.hierarchy("X");
-
-    const colorLeaves = (await (await dataView.hierarchy("Color"))!.root())!.leaves();
-    const xHierarchyLeaves = (await xHierarchy!.root())!.leaves();
-
-    const xAxisData = xHierarchyLeaves.map((leaf) => leaf.formattedPath());
-
-    const xAxisMeta = await mod.visualization.axis("X");
-    const yAxisMeta = await mod.visualization.axis("Y");
-    const colorAxisMeta = await mod.visualization.axis("Color");
-
-    return {
-        clearMarking: dataView.clearMarking,
-        yDomain: { min: minValue, max: maxValue },
-        xScale: xAxisData,
-        series: buildColorSeries(
-            colorLeaves,
-            xHierarchyLeaves,
-            !(xHierarchy?.isEmpty ?? true),
-            createPointTooltip,
-            minValue
-        )
-    };
-
-    function createPointTooltip(point: Point) {
-        const separator = "\n";
-        let colorValues = getFormattedValues(colorLeaves[point.index]);
-        let xValues = getFormattedValues(xHierarchyLeaves[point.xIndex]);
-        let yDisplayName = yAxisMeta.parts[0].displayName;
-
-        if (yAxisMeta.parts.length > 1) {
-            // Find the corresponding display name for the y axis value.
-            let colorLevelForColumnNames = colorAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
-            let xLevelForColumnNames = xAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
-            if (colorLevelForColumnNames >= 0) {
-                yDisplayName = colorValues[colorLevelForColumnNames];
-            }
-
-            if (xLevelForColumnNames >= 0) {
-                yDisplayName = xValues[xLevelForColumnNames];
-            }
-        }
-
-        return [
-            createAxisTooltip(xAxisMeta.parts, xValues, separator) ||
-                xAxisMeta.parts[0].displayName + ": " + xHierarchyLeaves[point.xIndex].formattedPath(),
-            yDisplayName + ": " + point.Y_Formatted,
-            colorAxisMeta.parts.length > 0
-                ? createAxisTooltip(colorAxisMeta.parts, colorValues, separator) ||
-                  colorAxisMeta.parts[0].displayName + ": " + colorLeaves[point.index].formattedPath()
-                : ""
-        ].join(separator);
-    }
-
-    function getFormattedValues(node: DataViewHierarchyNode) {
-        let values: string[] = [];
-        while (node.parent) {
-            values.push(node.formattedValue());
-            node = node.parent;
-        }
-
-        return values.reverse();
-    }
-
-    function createAxisTooltip(axisParts: AxisPart[], formattedValues: string[], separator: string) {
-        return axisParts.length == formattedValues.length
-            ? formattedValues.map((v, i) => axisParts[i].displayName + ": " + v).join(separator)
-            : null;
-    }
 }
