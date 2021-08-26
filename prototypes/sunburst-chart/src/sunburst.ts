@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { HierarchyRectangularNode } from "d3";
 import { DataView, DataViewHierarchyNode, DataViewRow, Size } from "spotfire-api";
 export const hierarchyAxisName = "Hierarchy";
 export const sizeAxisName = "Size";
@@ -50,7 +51,7 @@ export function render(
             return !d.children ? d.rows().reduce((p, c) => p + getSize(c), 0) : 0;
         });
 
-    let partitionLayout = partition(hierarchy);
+    let partitionLayout = partition(hierarchy) as HierarchyRectangularNode<DataViewHierarchyNode>;
 
     // Bounding circle underneath the sunburst, to make it easier to detect
     // when the mouse leaves the parent g.
@@ -84,10 +85,11 @@ export function render(
                 return "#ddd";
             }
 
-            const firstMarkedRow = d.data.rows().findIndex((r) => r.isMarked());
+            let firstMarkedRow = d.data.rows().findIndex((r) => r.isMarked());
             if (firstMarkedRow == -1) {
                 firstMarkedRow = 0;
             }
+
             return d.data.rows()[firstMarkedRow].color().hexCode; /* colors[d.name]; */
         })
         .on("mouseover", mouseover);
