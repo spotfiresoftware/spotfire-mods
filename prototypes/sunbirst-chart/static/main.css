@@ -1,0 +1,90 @@
+html,
+body,
+#border,
+#mod-container {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+}
+#mod-container {
+    overflow-y: auto;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-align: center;
+    cursor: default;
+}
+
+.x-axis-labels-editable {
+    cursor: pointer;
+}
+svg {
+    display: block;
+}
+
+.line-hover {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.line-hover-fill {
+    pointer-events: none;
+    stroke: #fff;
+    stroke-width: 5px;
+}
+
+.line-hover-casing {
+    pointer-events: none;
+    stroke: #333;
+    stroke-width: 7px;
+}
+
+.line-hover-bg {
+    stroke: #333;
+    stroke-opacity: 0;
+    stroke-width: 7px;
+}
+
+.radar-circle:hover {
+    stroke: #333;
+    stroke-opacity: 1;
+    stroke-width: 1px;
+}
+
+.selection {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    border: 1px solid #677085;
+    background-color: rgba(0, 90, 230, 0.17);
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+}
+
+.selection-bg {
+    visibility: hidden;
+    position: absolute;
+    background-color: rgba(200, 90, 230, 0);
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.rectangle {
+    fill: #add8e6;
+    stroke: #add8e6;
+    fill-opacity: 0.3;
+    stroke-opacity: 0.7;
+    stroke-width: 2;
+}
