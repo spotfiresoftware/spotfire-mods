@@ -1,15 +1,9 @@
 import { hierarchyAxisName, render } from "./sunburst";
 import { Axis, DataView } from "spotfire-api";
 
-const Spotfire = window.Spotfire;
-const DEBUG = true;
-
-Spotfire.initialize(async (mod) => {
+window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
-    /**
-     * Create reader function which is actually a one time listener for the provided values.
-     */
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
@@ -18,11 +12,6 @@ Spotfire.initialize(async (mod) => {
         mod.visualization.axis("Size")
     );
 
-    /**
-     * Creates a function that is part of the main read-render loop.
-     * It checks for valid data and will print errors in case of bad data or bad renders.
-     * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
-     */
     reader.subscribe(
         generalErrorHandler(
             mod,
@@ -34,40 +23,37 @@ Spotfire.initialize(async (mod) => {
             colorAxis: Axis,
             sizeAxis: Axis
         ) {
-            let colorFromLevel = 0;
-            if (colorAxis.isCategorical) {
-                if (colorAxis.parts.length > 1) {
-                    mod.controls.errorOverlay.show(["The color axis can only be one level"], "axis-configuration");
-                    return;
-                }
+            const coloringFromLevel = getColoringLevel(colorAxis, hierarchyAxis);
 
-                if (colorAxis.parts.length == 1) {
-                    colorFromLevel = hierarchyAxis.parts.findIndex(
-                        (p1) => colorAxis.parts[0].expression == p1.expression
-                    );
-                }
+            const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
 
-                if (colorFromLevel == -1) {
-                    mod.controls.errorOverlay.show(
-                        ["All expressions of the Color axis must also be part of the hierarchy axis"],
-                        "axis-configuration"
-                    );
-                    return;
-                }
-            }
+            const hasSizeExpression = !!sizeAxis.expression;
 
-            mod.controls.errorOverlay.hide("axis-configuration");
-
-            let root = await (await dataView.hierarchy(hierarchyAxisName))?.root();
-
-            const hasSize = !!sizeAxis.expression;
-
-            await render(windowSize, root!, hasSize, colorFromLevel);
+            render(windowSize, rootNode!, hasSizeExpression, coloringFromLevel);
 
             context.signalRenderComplete();
         })
     );
 });
+
+function getColoringLevel(colorAxis: Axis, hierarchyAxis: Axis) {
+    let coloringFromLevel = 0;
+    if (colorAxis.isCategorical) {
+        if (colorAxis.parts.length > 1) {
+            throw "The color axis can only be one level";
+        }
+
+        if (colorAxis.parts.length == 1) {
+            coloringFromLevel = hierarchyAxis.parts.findIndex((p1) => colorAxis.parts[0].expression == p1.expression);
+        }
+
+        if (coloringFromLevel == -1) {
+            throw "All expressions of the Color axis must also be part of the hierarchy axis";
+        }
+    }
+
+    return coloringFromLevel;
+}
 
 /**
  * subscribe callback wrapper with general error handling, row count check and an early return when the data has become invalid while fetching it.
@@ -118,9 +104,7 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
                     e.message || e || "☹️ Something went wrong, check developer console",
                     "General"
                 );
-                if (DEBUG) {
-                    throw e;
-                }
+                console.error(e);
             }
         } as T;
     };
