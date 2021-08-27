@@ -7,6 +7,7 @@ export interface SunBurstSettings {
     size: { width: number; height: number };
     totalSize: number;
     getFill(datum: unknown): string;
+    getLabel(datum: unknown, availablePixels: number): string;
     mark(datum: unknown): void;
     clearMarking(): void;
     markingStroke: string;
@@ -14,9 +15,9 @@ export interface SunBurstSettings {
 
 export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstSettings) {
     const { size } = settings;
-    const svg = document.querySelector(settings.containerSelector + " svg");
-    if (svg) {
-        document.querySelector(settings.containerSelector)!.removeChild(svg);
+    const prevSvg = document.querySelector(settings.containerSelector + " svg");
+    if (prevSvg) {
+        document.querySelector(settings.containerSelector)!.removeChild(prevSvg);
     }
 
     const radius = Math.min(size.width, size.height) / 2;
@@ -34,20 +35,24 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
 
     const partitionLayout = partition(hierarchy);
 
-    const vis = d3
+    const container = d3
         .select(settings.containerSelector)
         .append("svg:svg")
         .attr("width", size.width)
         .attr("height", size.height)
+        .on("click", settings.clearMarking)
         .append("svg:g")
-        .attr("id", "container")
         .attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
 
-    document.querySelector(settings.containerSelector + " svg")!.addEventListener("click", settings.clearMarking);
-
-    vis.data([hierarchy])
+    const visibleSectors = partitionLayout
+        .descendants()
+        .filter((d) => d.depth && settings.getFill(d.data) !== "transparent");
+    container
+        .append("svg:g")
+        .attr("id", "container")
+        .data([hierarchy])
         .selectAll("path")
-        .data(partitionLayout.descendants().filter((d) => d.depth && settings.getFill(d.data) !== "transparent"))
+        .data(visibleSectors)
         .enter()
         .append("svg:path")
         .attr("d", arc)
@@ -59,6 +64,22 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         .style("fill", (d) => settings.getFill(d.data))
         .on("mouseover", onMouseover);
 
+    container
+        .append("g")
+        .attr("pointer-events", "none")
+        .attr("text-anchor", "middle")
+        .attr("font-size", 10)
+        .attr("font-family", "sans-serif")
+        .selectAll("text")
+        .data(visibleSectors.filter((d) => ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > 12))
+        .join("text")
+        .attr("transform", function (d) {
+            const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
+            const y = (d.y0 + d.y1) / 2;
+            return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+        })
+        .attr("dy", "0.35em")
+        .text((d) => settings.getLabel(d.data, (d.y0 + d.y1) / 2 - 20));
     d3.select("#container").on("mouseleave", onMouseleave);
 
     function onMouseleave(d: any) {
@@ -92,7 +113,8 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
 
         d3.selectAll("path").style("stroke", "transparent");
 
-        vis.selectAll("path")
+        sectors
+            .selectAll("path")
             .filter((node: any) => ancestors.indexOf(node) >= 0)
             .style("stroke", settings.markingStroke);
     }

@@ -85,6 +85,14 @@ window.Spotfire.initialize(async (mod) => {
 
                     return node.rows()[firstMarkedRow].color().hexCode;
                 },
+                getLabel(node: DataViewHierarchyNode, availablePixels: number) {
+                    let label = node.formattedValue();
+                    if (label.length > availablePixels / 15) {
+                        return label.slice(0, availablePixels / 15 - 3) + "...";
+                    }
+
+                    return label;
+                },
                 onMouseover(node: DataViewHierarchyNode) {
                     mod.controls.tooltip.show(node.formattedPath());
                 },
