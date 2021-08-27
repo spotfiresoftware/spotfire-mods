@@ -3,11 +3,11 @@ import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, S
 import { generalErrorHandler } from "./generalErrorHandler";
 import * as d3 from "d3";
 
+const hierarchyAxisName = "Hierarchy";
+const sizeAxisName = "Size";
+
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
-
-    const hierarchyAxisName = "Hierarchy";
-    const sizeAxisName = "Size";
 
     const reader = mod.createReader(
         mod.visualization.data(),
@@ -35,7 +35,11 @@ window.Spotfire.initialize(async (mod) => {
             return;
         }
 
-        const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis);
+        let plotWarnings: string[] = [];
+
+        validateHierarchyPaths(rootNode, plotWarnings);
+
+        const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis, plotWarnings);
 
         const getSize = (r: DataViewRow) => (hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1);
 
@@ -115,10 +119,42 @@ window.Spotfire.initialize(async (mod) => {
         render(hierarchy, settings);
 
         renderSettingsButton(mod, labels);
+        renderWarningsIcon(mod, plotWarnings);
 
         context.signalRenderComplete();
     }
 });
+
+/**
+ * Validate that no empty path element is followed by a value.
+ * @param rootNode - The hierarchy root.
+ * @param warnings - The warnings array
+ */
+function validateHierarchyPaths(rootNode: DataViewHierarchyNode, warnings: string[]) {
+    let issues = 0;
+    rowLoop: for (let row of rootNode.rows()) {
+        let path = row.categorical(hierarchyAxisName).value().slice();
+        let length = path.length;
+        let currentIndex = length - 1;
+        while (currentIndex >= 1) {
+            if (path[currentIndex].value() && !path[currentIndex - 1].value()) {
+                issues++;
+                warnings.push(
+                    "Some elements are not visualized. The following path has holes in it: " +
+                        row.categorical(hierarchyAxisName).formattedValue()
+                );
+
+                if (issues == 3) {
+                    break rowLoop;
+                }
+
+                break;
+            }
+
+            currentIndex--;
+        }
+    }
+}
 
 /**
  * Get the coloring start level. This is the level where all rows for the child nodes share coloring.
@@ -126,7 +162,12 @@ window.Spotfire.initialize(async (mod) => {
  * @param hierarchyAxis The hierarchy axis.
  * @returns The level from which to start coloring in the sunburst chart.
  */
-function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis, hierarchyAxis: Axis) {
+function getColoringStartLevel(
+    rootNode: DataViewHierarchyNode,
+    colorAxis: Axis,
+    hierarchyAxis: Axis,
+    warnings: string[]
+) {
     let coloringStartLevel = 0;
 
     // If the color axis is continuous or empty the coloring starts from the root.
@@ -161,7 +202,10 @@ function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis,
 
     // Make sure there is an available coloring level.
     if (coloringStartLevel >= hierarchyAxis.parts.length) {
-        throw "Coloring could not be applied. The expression on the color axis must be included on the hierarchy axis.";
+        warnings.push(
+            "Coloring could not be applied. The expression on the color axis must be included on the hierarchy axis."
+        );
+        coloringStartLevel = 9999;
     }
 
     return coloringStartLevel;
@@ -218,4 +262,18 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>) {
             ]
         );
     };
+}
+
+function renderWarningsIcon(mod: Mod, warnings: string[]) {
+    let warningButton = document.querySelector<HTMLElement>(".warnings");
+    warningButton?.classList.toggle("visible", !!warnings.length);
+
+    warningButton!.onmouseenter = () => {
+        mod.controls.tooltip.show("Warnings:\n" + warnings.join("\n"));
+    };
+    warningButton!.onmouseleave = () => {
+        mod.controls.tooltip.hide();
+    };
+
+    document.body.onclick = () => mod.controls.tooltip.hide();
 }
