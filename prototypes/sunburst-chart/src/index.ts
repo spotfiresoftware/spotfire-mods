@@ -74,7 +74,11 @@ window.Spotfire.initialize(async (mod) => {
                     }
 
                     return node.rows()[firstMarkedRow].color().hexCode;
-                }
+                },
+                onMouseover(node: DataViewHierarchyNode) {
+                    mod.controls.tooltip.show(node.formattedPath());
+                },
+                onMouseLeave: mod.controls.tooltip.hide
             };
 
             render(hierarchy, settings);

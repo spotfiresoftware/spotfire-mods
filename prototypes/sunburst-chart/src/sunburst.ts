@@ -1,6 +1,8 @@
 import * as d3 from "d3";
 
 export interface SunBurstSettings {
+    onMouseover?(data: any): void;
+    onMouseLeave?(): void;
     containerSelector: string;
     size: { width: number; height: number };
     totalSize: number;
@@ -65,12 +67,14 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
     function onMouseleave(d: any) {
         d3.selectAll("path").on("mouseover", null);
 
+        settings.onMouseLeave?.();
+
         d3.selectAll("path")
             .transition()
             .duration(500)
             .style("stroke", "transparent")
             .on("end", function () {
-                d3.select(this).on("mouseover", onMouseover);
+                d3.select<any, any>(this).on("mouseover", onMouseover);
             });
     }
 
@@ -81,6 +85,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
             percentageString = "< 0.1%";
         }
 
+        settings.onMouseover?.(d.data);
         d3.select("#percentage").text(percentageString);
         d3.select("#value").text(d.data.formattedValue());
 
