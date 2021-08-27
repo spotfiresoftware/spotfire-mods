@@ -22,13 +22,14 @@ window.Spotfire.initialize(async (mod) => {
             mod,
             10000
         )(async (dataView, windowSize, hierarchyAxis, colorAxis, sizeAxis) => {
-            const coloringFromLevel = getColoringStartLevel(colorAxis, hierarchyAxis);
             const hasSizeExpression = !!sizeAxis.expression;
             const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
-
+            
             if (!rootNode) {
                 return;
             }
+            
+            const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis);
 
             const getSize = (r: DataViewRow) =>
                 hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
@@ -50,7 +51,14 @@ window.Spotfire.initialize(async (mod) => {
                 },
                 getFill(node: DataViewHierarchyNode) {
                     if (node.level + 1 <= coloringFromLevel) {
-                        return "#ddd"; // TODO Other color when part of marking?
+                        if (node.rows().findIndex(r => r.isMarked()) >= 0 || rootNode.rows().findIndex(r => r.isMarked()) == -1)
+                        {
+                            // Any child marked or no marked rows in the data view;
+                            return "rgb(208,208,208)";
+                        }
+
+                        // Dataview has marked rows, but not any rows for this node.
+                        return "rgba(208,208,208, 0.2)";
                     }
 
                     let rows = node.rows();
@@ -89,12 +97,12 @@ window.Spotfire.initialize(async (mod) => {
 });
 
 /**
- * Get the coloring start level by matching the color axis expression with the hierarchy axis.
+ * Get the coloring start level. This is the level where all rows for the child nodes share coloring.
  * @param colorAxis - The color axis.
  * @param hierarchyAxis The hierarchy axis.
  * @returns The level from which to start coloring in the sunburst chart.
  */
-function getColoringStartLevel(colorAxis: Axis, hierarchyAxis: Axis) {
+function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis, hierarchyAxis: Axis) {
     let coloringStartLevel = 0;
 
     // If the color axis is continuous or empty the coloring starts from the root.
@@ -102,16 +110,31 @@ function getColoringStartLevel(colorAxis: Axis, hierarchyAxis: Axis) {
         return 0;
     }
 
-    // Multiple expressions will yield misguiding color results in the plot.
-    if (colorAxis.parts.length > 1) {
-        throw "The color axis can only be one level";
+    const uniqueCount = (arr?: number[]) => arr?.filter((item, i, a) => a.indexOf(item) === i).length || 0;
+
+    const firstLevelWithUniqueColoring = (node: DataViewHierarchyNode) : number =>
+    {
+        if (!node.children)
+        {
+            return node.level + 1;
+        }
+
+        if (Math.max(...node.children.map(child => child.rows().map(r => r.categorical("Color").leafIndex)).map(uniqueCount)) <= 1)
+        {
+            // Every child has a unique color. Apply the color information on from the next level.
+            return node.level + 1;
+        }
+
+        // Recursively find the appropriate level
+        return Math.max(...node.children.map(firstLevelWithUniqueColoring));
     }
 
     // Find the matching expression in the hierarchy axis and use its level as a starting point for the coloring.
-    coloringStartLevel = hierarchyAxis.parts.findIndex((p1) => colorAxis.parts[0].expression == p1.expression);
+    coloringStartLevel = firstLevelWithUniqueColoring(rootNode);
 
-    if (coloringStartLevel == -1) {
-        throw "All expressions of the Color axis must also be part of the hierarchy axis";
+    // Make sure there is an available coloring level.
+    if (coloringStartLevel >= hierarchyAxis.parts.length) {
+        throw "Coloring could not be applied. The expression on the color axis must be included on the hierarchy axis.";
     }
 
     return coloringStartLevel;
