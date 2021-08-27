@@ -1,6 +1,11 @@
 import * as d3 from "d3";
 
 export interface SunBurstSettings {
+    style: {
+        label: { size: number; weight: string; style: string; color: string; fontFamily: string };
+        marking: { color: string };
+        background: { color: string };
+    };
     onMouseover?(data: any): void;
     onMouseLeave?(): void;
     containerSelector: string;
@@ -10,7 +15,6 @@ export interface SunBurstSettings {
     getLabel(datum: unknown, availablePixels: number): string;
     mark(datum: unknown): void;
     clearMarking(): void;
-    markingStroke: string;
 }
 
 export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstSettings) {
@@ -50,6 +54,12 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
 
     const sectors = container.append("svg:g").attr("id", "container");
 
+    const labelColorLumincance = luminance(
+        parseInt(settings.style.label.color.substr(1, 2), 16),
+        parseInt(settings.style.label.color.substr(3, 2), 16),
+        parseInt(settings.style.label.color.substr(5, 2), 16)
+    );
+
     sectors
         .data([hierarchy])
         .selectAll("path")
@@ -69,10 +79,8 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         .append("g")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
-        .attr("font-size", 10)
-        .attr("font-family", "sans-serif")
         .selectAll("text")
-        .data(visibleSectors.filter((d) => ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > 12))
+        .data(visibleSectors.filter((d) => ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > settings.style.label.size))
         .join("text")
         .attr("transform", function (d) {
             const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
@@ -80,9 +88,36 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
             return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
         })
         .attr("dy", "0.35em")
-        .text((d) => settings.getLabel(d.data, (d.y0 + d.y1) / 2 - 20));
+        .attr("font-size", settings.style.label.size)
+        .attr("font-style", settings.style.label.style)
+        .attr("font-weight", settings.style.label.weight)
+        .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
+        .attr("font-family", settings.style.label.fontFamily)
+        .text((d) => settings.getLabel(d.data, d.y1 - d.y0));
     d3.select("#container").on("mouseleave", onMouseleave);
 
+    function getTextColor(fillColor: string) {
+        return contrastToLabelColor(fillColor) > 1.7 ? settings.style.label.color : settings.style.background.color;
+    }
+
+    function luminance(r: number, g: number, b: number) {
+        var a = [r, g, b].map(function (v) {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+    }
+
+    function contrastToLabelColor(fillColor: string) {
+        var fillLuminance = luminance(
+            parseInt(fillColor.substr(1, 2), 16),
+            parseInt(fillColor.substr(3, 2), 16),
+            parseInt(fillColor.substr(5, 2), 16)
+        );
+        var brightest = Math.max(fillLuminance, labelColorLumincance);
+        var darkest = Math.min(fillLuminance, labelColorLumincance);
+        return (brightest + 0.05) / (darkest + 0.05);
+    }
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
         d3.selectAll("path").on("mouseover", null);
@@ -117,7 +152,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         sectors
             .selectAll("path")
             .filter((node: any) => ancestors.indexOf(node) >= 0)
-            .style("stroke", settings.markingStroke);
+            .style("stroke", settings.style.marking.color);
     }
 }
 

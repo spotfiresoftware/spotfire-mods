@@ -53,7 +53,6 @@ window.Spotfire.initialize(async (mod) => {
             containerSelector: "#mod-container",
             size: windowSize,
             totalSize: totalSize,
-            markingStroke: context.styling.scales.font.color,
             clearMarking: dataView.clearMarking,
             mark(node: DataViewHierarchyNode) {
                 node.mark();
@@ -102,13 +101,26 @@ window.Spotfire.initialize(async (mod) => {
                 if (labels.value() == "marked" && node.markedRowCount() == 0) {
                     return "";
                 }
+                const fontSize = context.styling.general.font.fontSize;
+                const fontWidth = fontSize * 0.7;
 
                 let label = node.formattedValue();
-                if (label.length > availablePixels / 15) {
-                    return label.slice(0, availablePixels / 15 - 3) + "...";
+                if (label.length > availablePixels / fontWidth) {
+                    return label.slice(0, Math.max(1, availablePixels / fontWidth - 2)) + "…";
                 }
 
                 return label;
+            },
+            style: {
+                marking: { color: context.styling.scales.font.color },
+                background: { color: context.styling.general.backgroundColor },
+                label: {
+                    fontFamily: context.styling.general.font.fontFamily,
+                    color: context.styling.general.font.color,
+                    size: context.styling.general.font.fontSize,
+                    style: context.styling.general.font.fontStyle,
+                    weight: context.styling.general.font.fontWeight
+                }
             },
             onMouseover(node: DataViewHierarchyNode) {
                 mod.controls.tooltip.show(node.formattedPath());
