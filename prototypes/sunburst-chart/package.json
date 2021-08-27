@@ -1,5 +1,5 @@
 {
-    "name": "sunbirst-chart-mod",
+    "name": "sunburst-chart-mod",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -9,7 +9,7 @@
         "build-watch": "webpack --watch",
         "start": "npm install && npm run build-watch"
     },
-    "author": "objerke",
+    "author": "objerke, ebrandin",
     "license": "ISC",
     "devDependencies": {
         "@tibco/spotfire-mods-dev-server": "^1.0.0",
