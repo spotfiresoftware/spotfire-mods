@@ -24,12 +24,12 @@ body,
     align-items: center;
 }
 #explanation #percentage {
-    font-size: 5vh;
+    font-size: 5vmin;
     white-space: nowrap;
 }
 
 #explanation #value{
-    font-size: 2vh;
+    font-size: 2vmin;
 }
 
 body {

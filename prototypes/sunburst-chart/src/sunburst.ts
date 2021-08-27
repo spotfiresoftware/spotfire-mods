@@ -43,14 +43,11 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         .attr("id", "container")
         .attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
 
-    // Background circle for easier mouse leave detection.
-    vis.append("svg:circle").attr("r", radius).style("opacity", 0);
-
     document.querySelector(settings.containerSelector + " svg")!.addEventListener("click", settings.clearMarking);
 
     vis.data([hierarchy])
         .selectAll("path")
-        .data(partitionLayout.descendants().filter((d) => d.depth))
+        .data(partitionLayout.descendants().filter((d) => d.depth && settings.getFill(d.data) !== "transparent"))
         .enter()
         .append("svg:path")
         .attr("d", arc)
@@ -65,6 +62,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
     d3.select("#container").on("mouseleave", onMouseleave);
 
     function onMouseleave(d: any) {
+        d3.select("#explanation").style("visibility", "hidden");
         d3.selectAll("path").on("mouseover", null);
 
         settings.onMouseLeave?.();
@@ -86,6 +84,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         }
 
         settings.onMouseover?.(d.data);
+        d3.select("#explanation").style("visibility", "visible");
         d3.select("#percentage").text(percentageString);
         d3.select("#value").text(d.data.formattedValue());
 
