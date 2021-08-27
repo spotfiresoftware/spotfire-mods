@@ -106,3 +106,41 @@ svg {
     stroke-opacity: 0.7;
     stroke-width: 2;
 }
+
+.icon-button {
+    padding: 5px;
+    position: absolute;
+    top: 0;
+    width: 24px;
+    cursor: pointer;
+    height: 24px;
+    display: none;
+}
+
+.icon-button svg {
+    display: block;
+    width: 14px;
+    height: 14px;
+}
+
+.visible {
+    display: block;
+}
+
+.warnings {
+    color: gold;
+    left: 0;
+}
+
+.warnings:hover {
+    color: goldenrod
+}
+
+.settings {
+    right: 0;
+    color: #ddd;
+}
+
+.settings:hover {
+    color: #ccc;
+}

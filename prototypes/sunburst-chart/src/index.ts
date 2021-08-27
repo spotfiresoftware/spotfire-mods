@@ -1,5 +1,5 @@
 import { render, SunBurstSettings } from "./sunburst";
-import { Axis, DataViewHierarchyNode, DataViewRow } from "spotfire-api";
+import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Size } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import * as d3 from "d3";
 
@@ -14,96 +14,110 @@ window.Spotfire.initialize(async (mod) => {
         mod.windowSize(),
         mod.visualization.axis(hierarchyAxisName),
         mod.visualization.axis("Color"),
-        mod.visualization.axis(sizeAxisName)
+        mod.visualization.axis(sizeAxisName),
+        mod.property<string>("labels")
     );
 
-    reader.subscribe(
-        generalErrorHandler(
-            mod,
-            10000
-        )(async (dataView, windowSize, hierarchyAxis, colorAxis, sizeAxis) => {
-            const hasSizeExpression = !!sizeAxis.expression;
-            const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
+    reader.subscribe(generalErrorHandler(mod, 10000)(onChange));
 
-            if (!rootNode) {
-                return;
-            }
+    async function onChange(
+        dataView: DataView,
+        windowSize: Size,
+        hierarchyAxis: Axis,
+        colorAxis: Axis,
+        sizeAxis: Axis,
+        labels: ModProperty<string>
+    ) {
+        const hasSizeExpression = !!sizeAxis.expression;
+        const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
 
-            const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis);
+        if (!rootNode) {
+            return;
+        }
 
-            const getSize = (r: DataViewRow) =>
-                hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
+        const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis);
 
-            let hierarchy = d3.hierarchy(rootNode).sum((d) => {
-                return !d!.children ? d!.rows().reduce((p, c) => p + getSize(c), 0) : 0;
-            });
+        const getSize = (r: DataViewRow) => (hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1);
 
-            let totalSize = rootNode.rows().reduce((p: number, c: DataViewRow) => p + getSize(c), 0);
+        let hierarchy = d3.hierarchy(rootNode).sum((d) => {
+            return !d!.children ? d!.rows().reduce((p, c) => p + getSize(c), 0) : 0;
+        });
 
-            const settings: SunBurstSettings = {
-                containerSelector: "#mod-container",
-                size: windowSize,
-                totalSize: totalSize,
-                markingStroke: context.styling.scales.font.color,
-                clearMarking: dataView.clearMarking,
-                mark(node: DataViewHierarchyNode) {
-                    node.mark();
-                },
-                getFill(node: DataViewHierarchyNode) {
-                    if (node.level + 1 <= coloringFromLevel) {
-                        if (
-                            node.rows().findIndex((r) => r.isMarked()) >= 0 ||
-                            rootNode.rows().findIndex((r) => r.isMarked()) == -1
-                        ) {
-                            // Any child marked or no marked rows in the data view;
-                            return "rgb(208,208,208)";
-                        }
+        let totalSize = rootNode.rows().reduce((p: number, c: DataViewRow) => p + getSize(c), 0);
 
-                        // Dataview has marked rows, but not any rows for this node.
-                        return "rgba(208,208,208, 0.2)";
-                    }
-
-                    let rows = node.rows();
-                    if (!rows.length) {
-                        return "transparent";
-                    }
-
+        const settings: SunBurstSettings = {
+            containerSelector: "#mod-container",
+            size: windowSize,
+            totalSize: totalSize,
+            markingStroke: context.styling.scales.font.color,
+            clearMarking: dataView.clearMarking,
+            mark(node: DataViewHierarchyNode) {
+                node.mark();
+            },
+            getFill(node: DataViewHierarchyNode) {
+                if (node.level + 1 <= coloringFromLevel) {
                     if (
-                        rows[0]
-                            .categorical(hierarchyAxisName)
-                            .value()
-                            .slice(0, node.level + 1)
-                            .find((pathElement) => pathElement.value() == null)
+                        node.rows().findIndex((r) => r.isMarked()) >= 0 ||
+                        rootNode.rows().findIndex((r) => r.isMarked()) == -1
                     ) {
-                        return "transparent";
+                        // Any child marked or no marked rows in the data view;
+                        return "rgb(208,208,208)";
                     }
 
-                    let firstMarkedRow = node.rows().findIndex((r) => r.isMarked());
-                    if (firstMarkedRow == -1) {
-                        firstMarkedRow = 0;
-                    }
+                    // Dataview has marked rows, but not any rows for this node.
+                    return "rgba(208,208,208, 0.2)";
+                }
 
-                    return node.rows()[firstMarkedRow].color().hexCode;
-                },
-                getLabel(node: DataViewHierarchyNode, availablePixels: number) {
-                    let label = node.formattedValue();
-                    if (label.length > availablePixels / 15) {
-                        return label.slice(0, availablePixels / 15 - 3) + "...";
-                    }
+                let rows = node.rows();
+                if (!rows.length) {
+                    return "transparent";
+                }
 
-                    return label;
-                },
-                onMouseover(node: DataViewHierarchyNode) {
-                    mod.controls.tooltip.show(node.formattedPath());
-                },
-                onMouseLeave: mod.controls.tooltip.hide
-            };
+                if (
+                    rows[0]
+                        .categorical(hierarchyAxisName)
+                        .value()
+                        .slice(0, node.level + 1)
+                        .find((pathElement) => pathElement.value() == null)
+                ) {
+                    return "transparent";
+                }
 
-            render(hierarchy, settings);
+                let firstMarkedRow = node.rows().findIndex((r) => r.isMarked());
+                if (firstMarkedRow == -1) {
+                    firstMarkedRow = 0;
+                }
 
-            context.signalRenderComplete();
-        })
-    );
+                return node.rows()[firstMarkedRow].color().hexCode;
+            },
+            getLabel(node: DataViewHierarchyNode, availablePixels: number) {
+                if (labels.value() == "off") {
+                    return "";
+                }
+
+                if (labels.value() == "marked" && node.markedRowCount() == 0) {
+                    return "";
+                }
+
+                let label = node.formattedValue();
+                if (label.length > availablePixels / 15) {
+                    return label.slice(0, availablePixels / 15 - 3) + "...";
+                }
+
+                return label;
+            },
+            onMouseover(node: DataViewHierarchyNode) {
+                mod.controls.tooltip.show(node.formattedPath());
+            },
+            onMouseLeave: mod.controls.tooltip.hide
+        };
+
+        render(hierarchy, settings);
+
+        renderSettingsButton(mod, labels);
+
+        context.signalRenderComplete();
+    }
 });
 
 /**
@@ -151,4 +165,57 @@ function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis,
     }
 
     return coloringStartLevel;
+}
+
+function renderSettingsButton(mod: Mod, labels: ModProperty<string>) {
+    let settingsButton = document.querySelector<HTMLElement>(".settings");
+    settingsButton?.classList.toggle("visible", mod.getRenderContext().isEditing);
+    let pos = settingsButton!.getBoundingClientRect();
+
+    settingsButton!.onclick = () => {
+        mod.controls.popout.show(
+            {
+                x: pos.left + pos.width / 2,
+                y: pos.top + pos.height / 2,
+                autoClose: true,
+                alignment: "Top",
+                onChange(event) {
+                    if (event.name == "labels") {
+                        labels.set(event.value);
+                    }
+                },
+                onClosed() {
+                    settingsButton!.onclick = null;
+                }
+            },
+            () => [
+                mod.controls.popout.section({
+                    heading: "Labels",
+                    children: [
+                        mod.controls.popout.components.radioButton({
+                            enabled: true,
+                            name: "labels",
+                            value: "all",
+                            checked: labels.value() == "all",
+                            text: "All"
+                        }),
+                        mod.controls.popout.components.radioButton({
+                            enabled: true,
+                            name: "labels",
+                            value: "marked",
+                            checked: labels.value() == "marked",
+                            text: "Marked"
+                        }),
+                        mod.controls.popout.components.radioButton({
+                            enabled: true,
+                            value: "off",
+                            name: "labels",
+                            checked: labels.value() == "off",
+                            text: "Off"
+                        })
+                    ]
+                })
+            ]
+        );
+    };
 }

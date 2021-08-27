@@ -6,24 +6,9 @@
     "icon": "icon.svg",
     "properties": [
         {
-            "name": "curveType",
+            "name": "labels",
             "type": "string",
-            "defaultValue": "Rounded"
-        },
-        {
-            "name": "xLabelsRotation",
-            "type": "boolean",
-            "defaultValue": "false"
-        },
-        {
-            "name": "yAxisNormalization",
-            "type": "boolean",
-            "defaultValue": "false"
-        },
-        {
-            "name": "enableColorFill",
-            "type": "boolean",
-            "defaultValue": "true"
+            "defaultValue": "all"
         }
     ],
     "dataViewDefinition": {
