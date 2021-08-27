@@ -1,8 +1,8 @@
-# Spider chart
+# Sunburst chart
 
-![Spider chart example](SpiderChartModExample.png)
+![Sunburst chart example](sunburst.png)
 
-This is a mod example demonstrating a spider chart written in `TypeScript`, rendered with `d3` and bundled with `Webpack`.
+This is a mod example demonstrating a sunburst chart written in `TypeScript`, rendered with `d3` and bundled with `Webpack`.
 
 All source code for the mod example can be found in the `src` folder. Other necessary files reside in the `static` folder. Read below for further explanation.
 
