@@ -58,19 +58,6 @@ window.Spotfire.initialize(async (mod) => {
                 node.mark();
             },
             getFill(node: DataViewHierarchyNode) {
-                if (node.level + 1 <= coloringFromLevel) {
-                    if (
-                        node.rows().findIndex((r) => r.isMarked()) >= 0 ||
-                        rootNode.rows().findIndex((r) => r.isMarked()) == -1
-                    ) {
-                        // Any child marked or no marked rows in the data view;
-                        return "rgb(208,208,208)";
-                    }
-
-                    // Dataview has marked rows, but not any rows for this node.
-                    return "rgba(208,208,208, 0.2)";
-                }
-
                 let rows = node.rows();
                 if (!rows.length) {
                     return "transparent";
@@ -84,6 +71,19 @@ window.Spotfire.initialize(async (mod) => {
                         .find((pathElement) => pathElement.value() == null)
                 ) {
                     return "transparent";
+                }
+
+                if (node.level + 1 <= coloringFromLevel) {
+                    if (
+                        node.rows().findIndex((r) => r.isMarked()) >= 0 ||
+                        rootNode.rows().findIndex((r) => r.isMarked()) == -1
+                    ) {
+                        // Any child marked or no marked rows in the data view;
+                        return "rgb(208,208,208)";
+                    }
+
+                    // Dataview has marked rows, but not any rows for this node.
+                    return "rgba(208,208,208, 0.2)";
                 }
 
                 let firstMarkedRow = node.rows().findIndex((r) => r.isMarked());
