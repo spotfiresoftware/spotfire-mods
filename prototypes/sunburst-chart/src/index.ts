@@ -55,6 +55,11 @@ window.Spotfire.initialize(async (mod) => {
             totalSize: totalSize,
             clearMarking: dataView.clearMarking,
             mark(node: DataViewHierarchyNode) {
+                if (d3.event.ctrlKey) {
+                    node.mark("ToggleOrAdd");
+                    return;
+                }
+
                 node.mark();
             },
             getFill(node: DataViewHierarchyNode) {
@@ -132,7 +137,7 @@ window.Spotfire.initialize(async (mod) => {
                 return {
                     value: percentageString,
                     text: node.formattedValue()
-                }
+                };
             },
             onMouseover(node: DataViewHierarchyNode) {
                 mod.controls.tooltip.show(node.formattedPath());
