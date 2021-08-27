@@ -24,11 +24,11 @@ window.Spotfire.initialize(async (mod) => {
         )(async (dataView, windowSize, hierarchyAxis, colorAxis, sizeAxis) => {
             const hasSizeExpression = !!sizeAxis.expression;
             const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
-            
+
             if (!rootNode) {
                 return;
             }
-            
+
             const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis);
 
             const getSize = (r: DataViewRow) =>
@@ -51,8 +51,10 @@ window.Spotfire.initialize(async (mod) => {
                 },
                 getFill(node: DataViewHierarchyNode) {
                     if (node.level + 1 <= coloringFromLevel) {
-                        if (node.rows().findIndex(r => r.isMarked()) >= 0 || rootNode.rows().findIndex(r => r.isMarked()) == -1)
-                        {
+                        if (
+                            node.rows().findIndex((r) => r.isMarked()) >= 0 ||
+                            rootNode.rows().findIndex((r) => r.isMarked()) == -1
+                        ) {
                             // Any child marked or no marked rows in the data view;
                             return "rgb(208,208,208)";
                         }
@@ -112,22 +114,25 @@ function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis,
 
     const uniqueCount = (arr?: number[]) => arr?.filter((item, i, a) => a.indexOf(item) === i).length || 0;
 
-    const firstLevelWithUniqueColoring = (node: DataViewHierarchyNode) : number =>
-    {
-        if (!node.children)
-        {
+    const firstLevelWithUniqueColoring = (node: DataViewHierarchyNode): number => {
+        if (!node.children) {
             return node.level + 1;
         }
 
-        if (Math.max(...node.children.map(child => child.rows().map(r => r.categorical("Color").leafIndex)).map(uniqueCount)) <= 1)
-        {
+        if (
+            Math.max(
+                ...node.children
+                    .map((child) => child.rows().map((r) => r.categorical("Color").leafIndex))
+                    .map(uniqueCount)
+            ) <= 1
+        ) {
             // Every child has a unique color. Apply the color information on from the next level.
             return node.level + 1;
         }
 
         // Recursively find the appropriate level
         return Math.max(...node.children.map(firstLevelWithUniqueColoring));
-    }
+    };
 
     // Find the matching expression in the hierarchy axis and use its level as a starting point for the coloring.
     coloringStartLevel = firstLevelWithUniqueColoring(rootNode);
