@@ -1,16 +1,20 @@
-import { hierarchyAxisName, render } from "./sunburst";
-import { Axis } from "spotfire-api";
+import { render, SunBurstSettings } from "./sunburst";
+import { Axis, DataViewHierarchyNode, DataViewRow } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
+import * as d3 from "d3";
 
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
+    const hierarchyAxisName = "Hierarchy";
+    const sizeAxisName = "Size";
+
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
-        mod.visualization.axis("Hierarchy"),
+        mod.visualization.axis(hierarchyAxisName),
         mod.visualization.axis("Color"),
-        mod.visualization.axis("Size")
+        mod.visualization.axis(sizeAxisName)
     );
 
     reader.subscribe(
@@ -19,10 +23,62 @@ window.Spotfire.initialize(async (mod) => {
             10000
         )(async (dataView, windowSize, hierarchyAxis, colorAxis, sizeAxis) => {
             const coloringFromLevel = getColoringStartLevel(colorAxis, hierarchyAxis);
-            const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
             const hasSizeExpression = !!sizeAxis.expression;
+            const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
 
-            render(dataView, windowSize, rootNode!, hasSizeExpression, coloringFromLevel);
+            if (!rootNode) {
+                return;
+            }
+
+            const getSize = (r: DataViewRow) =>
+                hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
+
+            let hierarchy = d3.hierarchy(rootNode).sum((d) => {
+                return !d!.children ? d!.rows().reduce((p, c) => p + getSize(c), 0) : 0;
+            });
+
+            let totalSize = rootNode.rows().reduce((p: number, c: DataViewRow) => p + getSize(c), 0);
+
+            const settings: SunBurstSettings = {
+                containerSelector: "#mod-container",
+                size: windowSize,
+                totalSize: totalSize,
+                markingStroke: context.styling.scales.font.color,
+                clearMarking: dataView.clearMarking,
+                mark(node: DataViewHierarchyNode) {
+                    node.mark();
+                },
+                getFill(node: DataViewHierarchyNode) {
+                    if (node.level + 1 <= coloringFromLevel) {
+                        return "#ddd"; // TODO Other color when part of marking?
+                    }
+
+                    let rows = node.rows();
+                    if (!rows.length) {
+                        return "transparent";
+                    }
+
+                    if (
+                        rows[0]
+                            .categorical(hierarchyAxisName)
+                            .value()
+                            .slice(0, node.level + 1)
+                            .find((pathElement) => pathElement.value() == null)
+                    ) {
+                        return "transparent";
+                    }
+
+                    let firstMarkedRow = node.rows().findIndex((r) => r.isMarked());
+                    if (firstMarkedRow == -1) {
+                        firstMarkedRow = 0;
+                    }
+
+                    return node.rows()[firstMarkedRow].color().hexCode;
+                }
+            };
+
+            render(hierarchy, settings);
+
             context.signalRenderComplete();
         })
     );
