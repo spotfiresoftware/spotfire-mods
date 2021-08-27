@@ -47,9 +47,10 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
     const visibleSectors = partitionLayout
         .descendants()
         .filter((d) => d.depth && settings.getFill(d.data) !== "transparent");
-    container
-        .append("svg:g")
-        .attr("id", "container")
+
+    const sectors = container.append("svg:g").attr("id", "container");
+
+    sectors
         .data([hierarchy])
         .selectAll("path")
         .data(visibleSectors)
