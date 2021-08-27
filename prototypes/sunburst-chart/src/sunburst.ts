@@ -6,14 +6,16 @@ export interface SunBurstSettings {
         marking: { color: string };
         background: { color: string };
     };
-    onMouseover?(data: any): void;
+    onMouseover?(data: unknown): void;
     onMouseLeave?(): void;
     containerSelector: string;
     size: { width: number; height: number };
     totalSize: number;
-    getFill(datum: unknown): string;
-    getLabel(datum: unknown, availablePixels: number): string;
-    mark(datum: unknown): void;
+    getFill(data: unknown): string;
+    getLabel(data: unknown, availablePixels: number): string;
+    /** Text to place in the center while hovering sectors. */
+    getCenterText(data: unknown): { value: string; text: string };
+    mark(data: unknown): void;
     clearMarking(): void;
 }
 
@@ -120,30 +122,17 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
     }
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
-        d3.selectAll("path").on("mouseover", null);
-
+        d3.selectAll("path").transition().duration(200).style("stroke", "transparent");
         settings.onMouseLeave?.();
-
-        d3.selectAll("path")
-            .transition()
-            .duration(500)
-            .style("stroke", "transparent")
-            .on("end", function () {
-                d3.select<any, any>(this).on("mouseover", onMouseover);
-            });
     }
 
     function onMouseover(d: any) {
-        let percentage = (100 * d.value) / settings.totalSize;
-        let percentageString = percentage.toPrecision(3) + "%";
-        if (percentage < 0.1) {
-            percentageString = "< 0.1%";
-        }
-
+        let texts = settings.getCenterText(d.data);
         settings.onMouseover?.(d.data);
+
         d3.select("#explanation").style("visibility", "visible");
-        d3.select("#percentage").text(percentageString);
-        d3.select("#value").text(d.data.formattedValue());
+        d3.select("#percentage").text(texts.value);
+        d3.select("#value").text(texts.text);
 
         let ancestors = getAncestors(d);
 

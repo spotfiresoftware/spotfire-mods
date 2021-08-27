@@ -122,6 +122,18 @@ window.Spotfire.initialize(async (mod) => {
                     weight: context.styling.general.font.fontWeight
                 }
             },
+            getCenterText(node: DataViewHierarchyNode) {
+                let percentage = (100 * getSize(node.rows()[0])) / settings.totalSize;
+                let percentageString = percentage.toPrecision(3) + "%";
+                if (percentage < 0.1) {
+                    percentageString = "< 0.1%";
+                }
+
+                return {
+                    value: percentageString,
+                    text: node.formattedValue()
+                }
+            },
             onMouseover(node: DataViewHierarchyNode) {
                 mod.controls.tooltip.show(node.formattedPath());
             },
