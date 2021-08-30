@@ -145,7 +145,7 @@ window.Spotfire.initialize(async (mod) => {
             onMouseLeave: mod.controls.tooltip.hide
         };
 
-        render(hierarchy, settings);
+        await render(hierarchy, settings);
 
         renderSettingsButton(mod, labels);
         renderWarningsIcon(mod, plotWarnings);

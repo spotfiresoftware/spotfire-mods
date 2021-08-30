@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { markingInProgress, rectangularSelection } from "./rectangularMarking";
 
 export interface SunBurstSettings {
     style: {
@@ -19,7 +20,9 @@ export interface SunBurstSettings {
     clearMarking(): void;
 }
 
-export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstSettings) {
+export async function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstSettings) {
+    await markingInProgress();
+
     const { size } = settings;
     const prevSvg = document.querySelector(settings.containerSelector + " svg");
     if (prevSvg) {
@@ -41,12 +44,12 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
 
     const partitionLayout = partition(hierarchy);
 
-    const container = d3
+    const svg = d3
         .select(settings.containerSelector)
         .append("svg:svg")
         .attr("width", size.width)
-        .attr("height", size.height)
-        .on("click", settings.clearMarking)
+        .attr("height", size.height);
+    const container = svg
         .append("svg:g")
         .attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
 
@@ -69,6 +72,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         .enter()
         .append("svg:path")
         .attr("d", arc)
+        .attr("class", "sector")
         .on("click", (d) => {
             settings.mark(d.data);
             d3.event.stopPropagation();
@@ -96,7 +100,15 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
         .attr("font-family", settings.style.label.fontFamily)
         .text((d) => settings.getLabel(d.data, d.y1 - d.y0));
+
     d3.select("#container").on("mouseleave", onMouseleave);
+
+    rectangularSelection(svg, {
+        clearMarking: settings.clearMarking,
+        mark: settings.mark,
+        ignoredClickClasses: "sector",
+        classesToMark: "sector"
+    });
 
     function getTextColor(fillColor: string) {
         return contrastToLabelColor(fillColor) > 1.7 ? settings.style.label.color : settings.style.background.color;
