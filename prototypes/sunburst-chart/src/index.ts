@@ -39,11 +39,12 @@ window.Spotfire.initialize(async (mod) => {
 
         let plotWarnings: string[] = [];
 
-        validateHierarchyPaths(rootNode, plotWarnings);
+        validateDataView(rootNode, plotWarnings);
 
         const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis, plotWarnings);
 
-        const getSize = (r: DataViewRow) => (hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1);
+        const getSize = (r: DataViewRow) =>
+            hasSizeExpression ? Math.abs(r.continuous(sizeAxisName).value<number>() || 0) : 1;
 
         let hierarchy = d3.hierarchy(rootNode).sum((d) => {
             return !d!.children ? d!.rows().reduce((p, c) => p + getSize(c), 0) : 0;
@@ -157,13 +158,15 @@ window.Spotfire.initialize(async (mod) => {
 });
 
 /**
- * Validate that no empty path element is followed by a value.
+ * Validate that no empty path element is followed by a value and that all values are positive.
  * @param rootNode - The hierarchy root.
  * @param warnings - The warnings array
  */
-function validateHierarchyPaths(rootNode: DataViewHierarchyNode, warnings: string[]) {
+function validateDataView(rootNode: DataViewHierarchyNode, warnings: string[]) {
     let issues = 0;
-    rowLoop: for (let row of rootNode.rows()) {
+    let rows = rootNode.rows();
+
+    rowLoop: for (let row of rows) {
         let path = row.categorical(hierarchyAxisName).value().slice();
         let length = path.length;
         let currentIndex = length - 1;
@@ -183,6 +186,16 @@ function validateHierarchyPaths(rootNode: DataViewHierarchyNode, warnings: strin
             }
 
             currentIndex--;
+        }
+    }
+
+    rowLoop: for (let row of rows) {
+        const size = row.continuous(sizeAxisName).value();
+        if (typeof size == "number" && size < 0) {
+            warnings.push(
+                "The plot contains negative values: " + row.categorical(hierarchyAxisName).formattedValue() + " " + size
+            );
+            break rowLoop;
         }
     }
 }
