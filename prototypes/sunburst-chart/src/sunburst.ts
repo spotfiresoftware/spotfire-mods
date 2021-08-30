@@ -100,10 +100,6 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
                 return enter
                     .append("text")
                     .style("opacity", 0)
-                    .attr("transform", function (d) {
-                        const { x, y } = labelPosition(d);
-                        return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-                    })
                     .attr("dy", "0.35em")
                     .attr("font-size", settings.style.label.size)
                     .attr("font-style", settings.style.label.style)
@@ -111,7 +107,13 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
                     .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
                     .attr("font-family", settings.style.label.fontFamily)
                     .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
-                    .call((enter) => enter.transition().duration(animationSpeed).style("opacity", 1));
+                    .call((enter) =>
+                        enter
+                            .transition()
+                            .duration(animationSpeed)
+                            .style("opacity", 1)
+                            .attrTween("transform", tweenTransform)
+                    );
             },
             (update) =>
                 update.call((update) =>
