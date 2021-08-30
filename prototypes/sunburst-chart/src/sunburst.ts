@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { markingInProgress, rectangularSelection } from "./rectangularMarking";
+import { rectangularSelection } from "./rectangularMarking";
 
 export interface SunBurstSettings {
     style: {
@@ -20,8 +20,7 @@ export interface SunBurstSettings {
     clearMarking(): void;
 }
 
-export async function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstSettings) {
-    await markingInProgress();
+export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstSettings) {
 
     const { size } = settings;
     const prevSvg = document.querySelector(settings.containerSelector + " svg");

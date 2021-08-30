@@ -1,3 +1,5 @@
+import { InteractionLock } from "./interactionLock";
+
 /**
  * subscribe callback wrapper with general error handling, row count check and an early return when the data has become invalid while fetching it.
  *
@@ -7,11 +9,14 @@
  */
 export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...args: any) => any>(
     mod: Spotfire.Mod,
-    rowLimit = 2000
+    rowLimit = 2000,
+    interactionLock?: InteractionLock
 ): (a: T) => T {
     return function (callback: T) {
         return async function callbackWrapper(dataView: Spotfire.DataView, ...args: any) {
             try {
+                await interactionLock?.interactionInProgress();
+
                 const errors = await dataView.getErrors();
                 if (errors.length > 0) {
                     mod.controls.errorOverlay.show(errors, "DataView");

@@ -62,7 +62,6 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
     };
 
     svg.on("mousedown", function (this: any) {
-        blockRendering();
         if (d3.event.which === 3) {
             return;
         }
@@ -81,38 +80,4 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
                 subject.on("mousemove.rectangle", null).on("mouseup.rectangle", null);
             });
     });
-
-    svg.on("mouseup", function (this) {
-        releaseRendering();
-    });
-}
-
-let resolveLastPromise: () => void;
-let currentRenderingPromise: Promise<void> | null;
-
-/**
- * Await further code execution if a marking operation is in progress.
- * @returns A promise that is resolved when no marking is active.
- */
-export async function markingInProgress() {
-    if (currentRenderingPromise) {
-        return currentRenderingPromise;
-    }
-
-    return;
-}
-
-function blockRendering() {
-    if (currentRenderingPromise) {
-        return;
-    }
-
-    currentRenderingPromise = new Promise((res) => {
-        resolveLastPromise = res;
-    });
-}
-
-function releaseRendering() {
-    resolveLastPromise();
-    currentRenderingPromise = null;
 }

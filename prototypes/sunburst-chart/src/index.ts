@@ -2,6 +2,7 @@ import { render, SunBurstSettings } from "./sunburst";
 import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Size } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import * as d3 from "d3";
+import { interactionLock } from "./interactionLock";
 
 const hierarchyAxisName = "Hierarchy";
 const sizeAxisName = "Size";
@@ -18,7 +19,8 @@ window.Spotfire.initialize(async (mod) => {
         mod.property<string>("labels")
     );
 
-    reader.subscribe(generalErrorHandler(mod, 10000)(onChange));
+    let interaction = interactionLock();
+    reader.subscribe(generalErrorHandler(mod, 10000, interaction)(onChange));
 
     async function onChange(
         dataView: DataView,
@@ -145,7 +147,7 @@ window.Spotfire.initialize(async (mod) => {
             onMouseLeave: mod.controls.tooltip.hide
         };
 
-        await render(hierarchy, settings);
+        render(hierarchy, settings);
 
         renderSettingsButton(mod, labels);
         renderWarningsIcon(mod, plotWarnings);
