@@ -13,6 +13,7 @@ export interface SunBurstSettings {
     size: { width: number; height: number };
     totalSize: number;
     getFill(data: unknown): string;
+    getId(data: unknown): string;
     getLabel(data: unknown, availablePixels: number): string;
     /** Text to place in the center while hovering sectors. */
     getCenterText(data: unknown): { value: string; text: string };
@@ -21,12 +22,8 @@ export interface SunBurstSettings {
 }
 
 export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstSettings) {
-
+    const animationSpeed = 250;
     const { size } = settings;
-    const prevSvg = document.querySelector(settings.containerSelector + " svg");
-    if (prevSvg) {
-        document.querySelector(settings.containerSelector)!.removeChild(prevSvg);
-    }
 
     const radius = Math.min(size.width, size.height) / 2;
 
@@ -45,18 +42,21 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
 
     const svg = d3
         .select(settings.containerSelector)
-        .append("svg:svg")
+        .select("svg#svg")
         .attr("width", size.width)
         .attr("height", size.height);
-    const container = svg
-        .append("svg:g")
-        .attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
+    svg.select("g#container").attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
 
     const visibleSectors = partitionLayout
         .descendants()
         .filter((d) => d.depth && settings.getFill(d.data) !== "transparent");
 
-    const sectors = container.append("svg:g").attr("id", "container");
+    const sectors = svg
+        .select("g#sectors")
+        .selectAll("path")
+        .data(visibleSectors, (d: any) => {
+            return settings.getId(d.data);
+        });
 
     const labelColorLumincance = luminance(
         parseInt(settings.style.label.color.substr(1, 2), 16),
@@ -64,41 +64,66 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         parseInt(settings.style.label.color.substr(5, 2), 16)
     );
 
-    sectors
-        .data([hierarchy])
-        .selectAll("path")
-        .data(visibleSectors)
+    var newSectors = sectors
         .enter()
         .append("svg:path")
-        .attr("d", arc)
         .attr("class", "sector")
         .on("click", (d) => {
             settings.mark(d.data);
             d3.event.stopPropagation();
         })
         .style("stroke-width", 2)
-        .style("fill", (d) => settings.getFill(d.data))
+        .style("opacity", 0)
+        .attr("fill", (d: any) => settings.getFill(d.data))
         .on("mouseover", onMouseover);
 
-    container
-        .append("g")
+    sectors
+        .merge(newSectors)
+        .transition()
+        .duration(animationSpeed)
+        .attrTween("d", tweenArc)
+        .style("opacity", 1)
+        .attr("fill", (d: any) => settings.getFill(d.data));
+
+    sectors.exit().transition().duration(animationSpeed).attr("fill", "transparent").remove();
+
+    svg.select("g#labels")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
         .selectAll("text")
-        .data(visibleSectors.filter((d) => ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > settings.style.label.size))
-        .join("text")
-        .attr("transform", function (d) {
-            const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-            const y = (d.y0 + d.y1) / 2;
-            return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-        })
-        .attr("dy", "0.35em")
-        .attr("font-size", settings.style.label.size)
-        .attr("font-style", settings.style.label.style)
-        .attr("font-weight", settings.style.label.weight)
-        .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
-        .attr("font-family", settings.style.label.fontFamily)
-        .text((d) => settings.getLabel(d.data, d.y1 - d.y0));
+        .data(
+            visibleSectors.filter((d) => ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > settings.style.label.size),
+            (d: any) => `label-${settings.getId(d.data)}`
+        )
+        .join(
+            (enter) => {
+                return enter
+                    .append("text")
+                    .style("opacity", 0)
+                    .attr("transform", function (d) {
+                        const { x, y } = labelPosition(d);
+                        return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+                    })
+                    .attr("dy", "0.35em")
+                    .attr("font-size", settings.style.label.size)
+                    .attr("font-style", settings.style.label.style)
+                    .attr("font-weight", settings.style.label.weight)
+                    .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
+                    .attr("font-family", settings.style.label.fontFamily)
+                    .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
+                    .call((enter) => enter.transition().duration(animationSpeed).style("opacity", 1));
+            },
+            (update) =>
+                update.call((update) =>
+                    update
+                        .transition()
+                        .duration(animationSpeed)
+                        .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
+                        .style("opacity", 1)
+                        .attrTween("transform", tweenTransform)
+                ),
+            (exit) => exit.transition().duration(animationSpeed).style("opacity", 0).remove()
+        );
 
     d3.select("#container").on("mouseleave", onMouseleave);
 
@@ -108,6 +133,42 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         ignoredClickClasses: "sector",
         classesToMark: "sector"
     });
+
+    function getTransformData(data: any) {
+        // d3.interpolate should not try to interpolate other properties
+        return (({ value, x0, x1, y0, y1 }) => ({ value, x0, x1, y0, y1 }))(data);
+    }
+
+    function tweenArc(this: any, data: any) {
+        let prevValue = this.__prev ? getTransformData(this.__prev) : {};
+        let newValue = getTransformData(data);
+        this.__prev = newValue;
+
+        var i = d3.interpolate(prevValue, newValue);
+
+        return function (value: any) {
+            return arc(i(value))!;
+        };
+    }
+
+    function labelPosition(d: any) {
+        const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
+        const y = (d.y0 + d.y1) / 2;
+        return { x, y };
+    }
+
+    function tweenTransform(this: any, data: any) {
+        let prevValue = this.__prev ? getTransformData(this.__prev) : {};
+        let newValue = getTransformData(data);
+        this.__prev = newValue;
+
+        var i = d3.interpolate(prevValue, newValue);
+
+        return function (value: any) {
+            var { x, y } = labelPosition(i(value));
+            return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+        };
+    }
 
     function getTextColor(fillColor: string) {
         return contrastToLabelColor(fillColor) > 1.7 ? settings.style.label.color : settings.style.background.color;
@@ -131,6 +192,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         var darkest = Math.min(fillLuminance, labelColorLumincance);
         return (brightest + 0.05) / (darkest + 0.05);
     }
+
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
         d3.selectAll("path").transition().duration(200).style("stroke", "transparent");

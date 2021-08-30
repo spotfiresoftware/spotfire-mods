@@ -101,6 +101,17 @@ window.Spotfire.initialize(async (mod) => {
 
                 return node.rows()[firstMarkedRow].color().hexCode;
             },
+            getId(node: DataViewHierarchyNode) {
+                // The entire path of keys is needed to identify a node.
+                let id = "";
+                let n: DataViewHierarchyNode | undefined = node;
+                while (n)
+                {
+                    id += (n.key ? `key:${n.key}` : "null") + "|";
+                    n = n.parent;
+                }
+                return id;
+            },
             getLabel(node: DataViewHierarchyNode, availablePixels: number) {
                 if (labels.value() == "off") {
                     return "";
@@ -139,7 +150,7 @@ window.Spotfire.initialize(async (mod) => {
 
                 return {
                     value: percentageString,
-                    text: node.formattedValue()
+                    text: node.formattedPath()
                 };
             },
             onMouseover(node: DataViewHierarchyNode) {
