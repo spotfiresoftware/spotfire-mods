@@ -12,10 +12,7 @@ function pieChart(size, data, mod) {
     d3.select("#chart-area svg").attr("width", width).attr("height", height);
     const g = d3.select("#chart-area svg g").attr("transform", `translate(${width / 2}, ${height / 2})`);
 
-    const pie = d3
-        .pie()
-        .value((d) => d.value)
-        .sort(null);
+    const pie = d3.pie().value((d) => d.value);
 
     const arc = d3
         .arc()
@@ -25,9 +22,8 @@ function pieChart(size, data, mod) {
 
     // Join new data
     const path = g.selectAll("path").data(pie(data), (d) => {
-        d.data.id;
+        return d.data.id;
     });
-    
 
     let newPaths = path
         .enter()
@@ -40,18 +36,27 @@ function pieChart(size, data, mod) {
         })
         .on("mouseleave", function (d) {
             mod.controls.tooltip.hide();
-        });
+        })
+        .attr("fill", (d) => "transparent");
 
     path.merge(newPaths)
-
         .transition()
-        .duration(500)
-        .attr("fill", (d, i) => d.data.color)
-        .attr("d", arc)
-        .attr("stroke", "none")
-        .each(function (d) {
-            this._current = d;
-        });
+        .duration(300)
+        .attr("fill", (d) => d.data.color)
+        .attrTween("d", tweenArc)
+        .attr("stroke", "none");
 
-    path.exit().remove();
+    function tweenArc(elem) {
+        let prevValue = this.__prev || {};
+        let newValue = elem;
+        this.__prev = elem;
+
+        var i = d3.interpolate(prevValue, newValue);
+
+        return function (value) {
+            return arc(i(value));
+        };
+    }
+
+    path.exit().transition().duration(300).attr("fill", "transparent").remove();
 }
