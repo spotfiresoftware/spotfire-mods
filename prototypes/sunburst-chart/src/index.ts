@@ -124,6 +124,7 @@ window.Spotfire.initialize(async (mod) => {
                 const fontWidth = fontSize * 0.7;
 
                 let label = node.formattedValue();
+                console.log(label, availablePixels);
                 if (label.length > availablePixels / fontWidth) {
                     return label.slice(0, Math.max(1, availablePixels / fontWidth - 2)) + "…";
                 }

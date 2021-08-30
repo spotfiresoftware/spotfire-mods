@@ -122,6 +122,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
                         .duration(animationSpeed)
                         .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
                         .style("opacity", 1)
+                        .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
                         .attrTween("transform", tweenTransform)
                 ),
             (exit) => exit.transition().duration(animationSpeed).style("opacity", 0).remove()
