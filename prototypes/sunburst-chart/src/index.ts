@@ -22,6 +22,8 @@ window.Spotfire.initialize(async (mod) => {
     let interaction = interactionLock();
     reader.subscribe(generalErrorHandler(mod, 10000, interaction)(onChange));
 
+    let totalSize = 0;
+
     async function onChange(
         dataView: DataView,
         windowSize: Size,
@@ -46,12 +48,11 @@ window.Spotfire.initialize(async (mod) => {
         const getSize = (r: DataViewRow) =>
             hasSizeExpression ? Math.abs(r.continuous(sizeAxisName).value<number>() || 0) : 1;
 
-        let hierarchy = d3.hierarchy(rootNode).sum((d) => {
+        const hierarchy = d3.hierarchy(rootNode).sum((d) => {
             return !d!.children ? d!.rows().reduce((p, c) => p + getSize(c), 0) : 0;
         });
 
-        let totalSize = rootNode.rows().reduce((p: number, c: DataViewRow) => p + getSize(c), 0);
-
+        totalSize = rootNode.rows().reduce((p: number, c: DataViewRow) => p + getSize(c), 0);
         const settings: SunBurstSettings = {
             containerSelector: "#mod-container",
             size: windowSize,
