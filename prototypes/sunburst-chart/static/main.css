@@ -24,12 +24,26 @@ body,
     align-items: center;
 }
 #explanation #percentage {
-    font-size: 5vmin;
+    font-size: max(5vmin, 10px);
     white-space: nowrap;
 }
 
 #explanation #value{
     font-size: 2vmin;
+}
+
+@media (max-width: 20em)   
+{
+    #explanation #value{
+        display: none;
+    }
+}
+
+@media (max-height: 20em)   
+{
+    #explanation #value{
+        display: none;
+    }
 }
 
 body {
