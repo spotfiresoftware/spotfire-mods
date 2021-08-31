@@ -83,8 +83,8 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         .style("opacity", 1)
         .attr("fill", (d: any) => settings.getFill(d.data))
         .end()
-        .then(() => {
-            newSectors.on("mouseover", onMouseover);
+        .finally(() => {
+            newSectors.on("mouseover.hover", onMouseover);
             d3.select("#container").on("mouseleave", onMouseleave);
         });
 
