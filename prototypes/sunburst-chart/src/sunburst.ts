@@ -87,7 +87,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
             settings.mark(d.data);
             d3.event.stopPropagation();
         })
-        .style("stroke-width", 2)
+        .style("stroke-width", 1)
         .style("opacity", 0)
         .attr("fill", (d: any) => settings.getFill(d.data));
 
