@@ -91,7 +91,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         .attr("text-anchor", "middle")
         .selectAll("text")
         .data(
-            visibleSectors.filter((d) => ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > settings.style.label.size),
+            visibleSectors.filter((d) => d.y0 * (d.x1 - d.x0) > settings.style.label.size - 4),
             (d: any) => `label-${settings.getId(d.data)}`
         )
         .join(
