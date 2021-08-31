@@ -105,8 +105,7 @@ window.Spotfire.initialize(async (mod) => {
                 // The entire path of keys is needed to identify a node.
                 let id = "";
                 let n: DataViewHierarchyNode | undefined = node;
-                while (n)
-                {
+                while (n) {
                     id += (n.key ? `key:${n.key}` : "null") + "|";
                     n = n.parent;
                 }
@@ -155,7 +154,23 @@ window.Spotfire.initialize(async (mod) => {
                 };
             },
             onMouseover(node: DataViewHierarchyNode) {
-                mod.controls.tooltip.show(node.formattedPath());
+                let rowCount = node.leafCount();
+
+                const tooltipText =
+                    rowCount +
+                    " sector" +
+                    (rowCount == 1 ? "" : "s") +
+                    ":\n" +
+                    node
+                        .rows()
+                        .map(
+                            (r) =>
+                                r.categorical(hierarchyAxisName).formattedValue() +
+                                ": " +
+                                r.continuous(sizeAxisName).formattedValue()
+                        )
+                        .join("\n");
+                mod.controls.tooltip.show(tooltipText);
             },
             onMouseLeave: mod.controls.tooltip.hide
         };
