@@ -6,6 +6,7 @@ import { interactionLock } from "./interactionLock";
 
 const hierarchyAxisName = "Hierarchy";
 const sizeAxisName = "Size";
+const addColorLevel = false;
 
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
@@ -50,10 +51,9 @@ window.Spotfire.initialize(async (mod) => {
 
         const categoricalColor = !!(await dataView.categoricalAxis("Color"));
 
-        function mapper(node: SunBurstHieararchyNode): any {
-            return node.virtualLeaf || node.children || !categoricalColor || node.rows().length <= 1
-                ? node.children
-                : node.rows().map((r) => {
+        function addColorLevelIfColorSplits(node: SunBurstHieararchyNode): any {
+            return !node.virtualLeaf && !node.children && categoricalColor && node.rows().length >= 1
+                ? node.rows().map((r) => {
                       var thisNode = node;
                       var thisRow = r;
                       node.hasVirtualChildren = true;
@@ -65,16 +65,43 @@ window.Spotfire.initialize(async (mod) => {
                           level: node.level + 1,
                           mark: (operation?: any) => r.mark(operation),
                           markedRowCount: () => (r.isMarked() ? 1 : 0),
-                          parent: thisNode as SunBurstHieararchyNode,
-                          children: undefined,
+                          parent: thisNode,
                           virtualLeaf: true,
                           rows: () => [r]
                       };
-                  });
+                  })
+                : node.children;
+        }
+
+        function flattenColorsIfColorSplits(node: SunBurstHieararchyNode): any {
+            return node.level == hierarchyAxis.parts.length - 2 && categoricalColor
+                ? node.children?.flatMap((child) =>
+                      child.rows().map((r) => {
+                          var thisRow = r;
+                          return {
+                              formattedPath: () => child.formattedPath(),
+                              formattedValue: () => child.formattedValue(),
+                              key:
+                                  (node.key == null ? "null" : "v:" + node.key) +
+                                  "-" +
+                                  thisRow.categorical("Color").leafIndex,
+                              leafCount: () => 1,
+                              level: node.level + 1,
+                              mark: (operation?: any) => r.mark(operation),
+                              markedRowCount: () => (r.isMarked() ? 1 : 0),
+                              parent: node,
+                              rows: () => [thisRow]
+                          };
+                      })
+                  )
+                : node.children;
         }
 
         const hierarchy: d3.HierarchyNode<SunBurstHieararchyNode> = d3
-            .hierarchy<SunBurstHieararchyNode>(rootNode, mapper)
+            .hierarchy<SunBurstHieararchyNode>(
+                rootNode,
+                addColorLevel ? addColorLevelIfColorSplits : flattenColorsIfColorSplits
+            )
             .sum((d: SunBurstHieararchyNode) => {
                 return !d!.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getSize(c), 0) : 0;
             });
@@ -269,7 +296,7 @@ function getColoringStartLevel(
 
     // If the color axis is continuous or empty the coloring starts from the root.
     if (!colorAxis.isCategorical || !colorAxis.parts.length) {
-        return hierarchyAxis.parts.length - 1;
+        return 0;
     }
 
     const uniqueCount = (arr?: number[]) => arr?.filter((item, i, a) => a.indexOf(item) === i).length || 0;
@@ -298,11 +325,8 @@ function getColoringStartLevel(
     coloringStartLevel = firstLevelWithUniqueColoring(rootNode);
 
     // Make sure there is an available coloring level.
-    if (coloringStartLevel >= hierarchyAxis.parts.length) {
-        warnings.push(
-            "Coloring could not be applied. The expression on the color axis must be included on the hierarchy axis."
-        );
-        coloringStartLevel = hierarchyAxis.parts.length;
+    if (coloringStartLevel == hierarchyAxis.parts.length && !addColorLevel) {
+        coloringStartLevel = hierarchyAxis.parts.length - 1;
     }
 
     return coloringStartLevel;
