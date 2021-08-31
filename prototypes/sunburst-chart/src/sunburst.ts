@@ -1,5 +1,21 @@
 import * as d3 from "d3";
+import { DataViewRow } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
+
+export interface SunBurstHieararchyNode {
+    hasVirtualChildren?: boolean;
+    mark: (operation?: any) => void;
+    level: number;
+    key: any;
+    parent?: any;
+    markedRowCount: () => number;
+    formattedValue: () => string;
+    formattedPath: () => string;
+    leafCount: () => number;
+    children?: SunBurstHieararchyNode[];
+    rows: () => DataViewRow[];
+    virtualLeaf?: boolean;
+}
 
 export interface SunBurstSettings {
     style: {
@@ -20,7 +36,7 @@ export interface SunBurstSettings {
     clearMarking(): void;
 }
 
-export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstSettings) {
+export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, settings: SunBurstSettings) {
     const animationSpeed = 250;
     const { size } = settings;
 
@@ -111,7 +127,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
                         enter
                             .transition("add labels")
                             .duration(animationSpeed)
-                            .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < (settings.style.label.size + 4) ? 0 : 1))
+                            .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < settings.style.label.size + 4 ? 0 : 1))
                             .attrTween("transform", tweenTransform)
                     );
             },
@@ -121,7 +137,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
                         .transition("update labels")
                         .duration(animationSpeed)
                         .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
-                        .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < (settings.style.label.size + 4) ? 0 : 1))
+                        .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < settings.style.label.size + 4 ? 0 : 1))
                         .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
                         .attrTween("transform", tweenTransform)
                 ),
