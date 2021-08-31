@@ -52,7 +52,7 @@ window.Spotfire.initialize(async (mod) => {
         const categoricalColor = !!(await dataView.categoricalAxis("Color"));
 
         function addColorLevelIfColorSplits(node: SunBurstHieararchyNode): any {
-            return !node.virtualLeaf && !node.children && categoricalColor && node.rows().length >= 1
+            return !node.virtualLeaf && node.children == undefined && categoricalColor && node.rows().length > 1
                 ? node.rows().map((r) => {
                       var thisNode = node;
                       var thisRow = r;
