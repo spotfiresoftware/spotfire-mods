@@ -73,8 +73,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         })
         .style("stroke-width", 2)
         .style("opacity", 0)
-        .attr("fill", (d: any) => settings.getFill(d.data))
-        .on("mouseover", onMouseover);
+        .attr("fill", (d: any) => settings.getFill(d.data));
 
     sectors
         .merge(newSectors)
@@ -82,7 +81,12 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         .duration(animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
-        .attr("fill", (d: any) => settings.getFill(d.data));
+        .attr("fill", (d: any) => settings.getFill(d.data))
+        .end()
+        .then(() => {
+            newSectors.on("mouseover", onMouseover);
+            d3.select("#container").on("mouseleave", onMouseleave);
+        });
 
     sectors.exit().transition().duration(animationSpeed).attr("fill", "transparent").remove();
 
@@ -126,8 +130,6 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
                 ),
             (exit) => exit.transition().duration(animationSpeed).style("opacity", 0).remove()
         );
-
-    d3.select("#container").on("mouseleave", onMouseleave);
 
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
