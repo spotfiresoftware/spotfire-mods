@@ -226,12 +226,9 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
 
         let ancestors = getAncestors(d);
 
-        d3.selectAll("path").style("stroke", "transparent");
-
-        sectors
-            .selectAll("path")
-            .filter((node: any) => ancestors.indexOf(node) >= 0)
-            .style("stroke", settings.style.marking.color);
+        d3.selectAll("path").style("stroke", (d: any) =>
+            ancestors.indexOf(d) >= 0 ? settings.style.marking.color : "transparent"
+        );
     }
 }
 
