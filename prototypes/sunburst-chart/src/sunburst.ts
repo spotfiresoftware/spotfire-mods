@@ -77,7 +77,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
 
     sectors
         .merge(newSectors)
-        .transition()
+        .transition("add sectors")
         .duration(animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
@@ -88,16 +88,13 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
             d3.select("#container").on("mouseleave", onMouseleave);
         });
 
-    sectors.exit().transition().duration(animationSpeed).attr("fill", "transparent").remove();
+    sectors.exit().transition("remove sectors").duration(animationSpeed).attr("fill", "transparent").remove();
 
     svg.select("g#labels")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
         .selectAll("text")
-        .data(
-            visibleSectors.filter((d) => d.y0 * (d.x1 - d.x0) > settings.style.label.size - 4),
-            (d: any) => `label-${settings.getId(d.data)}`
-        )
+        .data(visibleSectors, (d: any) => `label-${settings.getId(d.data)}`)
         .join(
             (enter) => {
                 return enter
@@ -112,23 +109,23 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
                     .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
                     .call((enter) =>
                         enter
-                            .transition()
+                            .transition("add labels")
                             .duration(animationSpeed)
-                            .style("opacity", 1)
+                            .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < (settings.style.label.size + 4) ? 0 : 1))
                             .attrTween("transform", tweenTransform)
                     );
             },
             (update) =>
                 update.call((update) =>
                     update
-                        .transition()
+                        .transition("update labels")
                         .duration(animationSpeed)
                         .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
-                        .style("opacity", 1)
+                        .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < (settings.style.label.size + 4) ? 0 : 1))
                         .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
                         .attrTween("transform", tweenTransform)
                 ),
-            (exit) => exit.transition().duration(animationSpeed).style("opacity", 0).remove()
+            (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
         );
 
     rectangularSelection(svg, {
@@ -213,7 +210,7 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
 
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
-        d3.selectAll("path").transition().duration(200).style("stroke", "transparent");
+        d3.selectAll("path").transition("mouse leave").duration(200).style("stroke", "transparent");
         settings.onMouseLeave?.();
     }
 
