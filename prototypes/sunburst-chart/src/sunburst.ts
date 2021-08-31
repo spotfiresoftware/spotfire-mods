@@ -11,7 +11,6 @@ export interface SunBurstSettings {
     onMouseLeave?(): void;
     containerSelector: string;
     size: { width: number; height: number };
-    totalSize: number;
     getFill(data: unknown): string;
     getId(data: unknown): string;
     getLabel(data: unknown, availablePixels: number): string;

@@ -55,7 +55,6 @@ window.Spotfire.initialize(async (mod) => {
         const settings: SunBurstSettings = {
             containerSelector: "#mod-container",
             size: windowSize,
-            totalSize: totalSize,
             clearMarking: dataView.clearMarking,
             mark(node: DataViewHierarchyNode) {
                 if (d3.event.ctrlKey) {
@@ -142,7 +141,7 @@ window.Spotfire.initialize(async (mod) => {
                 }
             },
             getCenterText(node: DataViewHierarchyNode) {
-                let percentage = (100 * getSize(node.rows()[0])) / settings.totalSize;
+                let percentage = 100 * node.rows().reduce((p, r) => p + getSize(r), 0) / totalSize;
                 let percentageString = percentage.toPrecision(3) + "%";
                 if (percentage < 0.1) {
                     percentageString = "< 0.1%";
