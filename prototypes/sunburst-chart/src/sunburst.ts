@@ -147,11 +147,25 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         let newValue = getTransformData(data);
         this.__prev = newValue;
 
-        var i = d3.interpolate(prevValue, newValue);
+        var i = interpolate(prevValue, newValue);
 
         return function (value: any) {
             return arc(i(value))!;
         };
+    }
+
+    function interpolate(start: any, end: any) {
+        let nearestEnd = { ...end };
+        if (start && end) {
+            const midStartX = (start.x0 + start.x1) / 2;
+            const midEndX = (end.x0 + end.x1) / 2;
+            if (Math.abs(midEndX - midStartX) > Math.PI) {
+                nearestEnd.x0 += 2 * Math.PI * Math.sign(midStartX - midEndX);
+                nearestEnd.x1 += 2 * Math.PI * Math.sign(midStartX - midEndX);
+            }
+        }
+
+        return d3.interpolate(start, nearestEnd);
     }
 
     function labelPosition(d: any) {
@@ -165,11 +179,11 @@ export function render(hierarchy: d3.HierarchyNode<unknown>, settings: SunBurstS
         let newValue = getTransformData(data);
         this.__prev = newValue;
 
-        var i = d3.interpolate(prevValue, newValue);
+        var i = interpolate(prevValue, newValue);
 
         return function (value: any) {
             var { x, y } = labelPosition(i(value));
-            return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+            return `rotate(${x - 90}) translate(${y},0) rotate(${Math.sin((Math.PI * x) / 180) >= 0 ? 0 : 180})`;
         };
     }
 
