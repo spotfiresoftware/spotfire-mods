@@ -101,6 +101,9 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
         .style("opacity", 1)
         .attr("fill", (d: any) => settings.getFill(d.data))
         .end()
+        .then(() => {}, () => {
+            // This happens when a new dataView is rendered while the transition is in progress.
+        })
         .finally(() => {
             newSectors.on("mouseover.hover", onMouseover);
             d3.select("#container").on("mouseleave", onMouseleave);
