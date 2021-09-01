@@ -2,7 +2,9 @@ import * as d3 from "d3";
 import { DataViewRow } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
 
-export interface SunBurstHieararchyNode {
+const animationSpeed = 250;
+
+export interface SunBurstHierarchyNode {
     hasVirtualChildren?: boolean;
     mark: (operation?: any) => void;
     level: number;
@@ -12,10 +14,10 @@ export interface SunBurstHieararchyNode {
     formattedValue: () => string;
     formattedPath: () => string;
     leafCount: () => number;
-    children?: SunBurstHieararchyNode[];
+    children?: SunBurstHierarchyNode[];
     rows: () => DataViewRow[];
     virtualLeaf?: boolean;
-    actualValue?: number
+    actualValue?: number;
 }
 
 export interface SunBurstSettings {
@@ -37,9 +39,10 @@ export interface SunBurstSettings {
     clearMarking(): void;
 }
 
-export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, settings: SunBurstSettings) {
-    const animationSpeed = 2500;
+export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, settings: SunBurstSettings) {
     const { size } = settings;
+
+    const showOnlyRoot = hierarchy.height ? false : true;
 
     const radius = Math.min(size.width, size.height) / 2;
 
@@ -49,7 +52,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
         .endAngle((d) => d.x1)
         .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.01))
         .padRadius(radius / 2)
-        .innerRadius((d) => d.y0)
+        .innerRadius((d) => (showOnlyRoot ? radius / 2 : d.y0))
         .outerRadius((d) => d.y1 - 1);
 
     const partition = d3.partition().size([Math.PI * 2, radius]);
@@ -65,7 +68,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
 
     const visibleSectors = partitionLayout
         .descendants()
-        .filter((d) => d.depth && settings.getFill(d.data) !== "transparent");
+        .filter((d) => (d.depth || showOnlyRoot) && settings.getFill(d.data) !== "transparent");
 
     const sectors = svg
         .select("g#sectors")
@@ -74,7 +77,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
             return settings.getId(d.data);
         });
 
-    const labelColorLumincance = luminance(
+    const labelColorLuminance = luminance(
         parseInt(settings.style.label.color.substr(1, 2), 16),
         parseInt(settings.style.label.color.substr(3, 2), 16),
         parseInt(settings.style.label.color.substr(5, 2), 16)
@@ -94,16 +97,19 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
 
     sectors
         .merge(newSectors)
-        .attr("class", (d: any) => d.data && d.data.actualValue < 0 ? "negative sector" : "sector")
+        .attr("class", (d: any) => (d.data && d.data.actualValue < 0 ? "negative sector" : "sector"))
         .transition("add sectors")
         .duration(animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
         .attr("fill", (d: any) => settings.getFill(d.data))
         .end()
-        .then(() => {}, () => {
-            // This happens when a new dataView is rendered while the transition is in progress.
-        })
+        .then(
+            () => {},
+            () => {
+                // This happens when a new dataView is rendered while the transition is in progress.
+            }
+        )
         .finally(() => {
             newSectors.on("mouseover.hover", onMouseover);
             d3.select("#container").on("mouseleave", onMouseleave);
@@ -224,8 +230,8 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
             parseInt(fillColor.substr(3, 2), 16),
             parseInt(fillColor.substr(5, 2), 16)
         );
-        var brightest = Math.max(fillLuminance, labelColorLumincance);
-        var darkest = Math.min(fillLuminance, labelColorLumincance);
+        var brightest = Math.max(fillLuminance, labelColorLuminance);
+        var darkest = Math.min(fillLuminance, labelColorLuminance);
         return (brightest + 0.05) / (darkest + 0.05);
     }
 

@@ -1,10 +1,11 @@
-import { render, SunBurstHieararchyNode, SunBurstSettings } from "./sunburst";
+import { render, SunBurstHierarchyNode, SunBurstSettings } from "./sunburst";
 import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Size } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import * as d3 from "d3";
 import { interactionLock } from "./interactionLock";
 
 const hierarchyAxisName = "Hierarchy";
+const colorAxisName = "Color";
 const sizeAxisName = "Size";
 const addColorLevel = false;
 
@@ -15,7 +16,7 @@ window.Spotfire.initialize(async (mod) => {
         mod.visualization.data(),
         mod.windowSize(),
         mod.visualization.axis(hierarchyAxisName),
-        mod.visualization.axis("Color"),
+        mod.visualization.axis(colorAxisName),
         mod.visualization.axis(sizeAxisName),
         mod.property<string>("labels")
     );
@@ -33,18 +34,23 @@ window.Spotfire.initialize(async (mod) => {
         sizeAxis: Axis,
         labels: ModProperty<string>
     ) {
-        const hasSizeExpression = !!sizeAxis.expression;
-        const rootNode = await (await dataView.hierarchy(hierarchyAxisName))?.root()!;
+        const hasSizeExpression = !!sizeAxis.parts.length;
+        const hasHierarchyExpression = !!hierarchyAxis.parts.length;
+        const hasColorHierarchy = !!colorAxis.parts.length && colorAxis.isCategorical;
 
-        if (!rootNode) {
-            return;
+        let rootNode: DataViewHierarchyNode;
+
+        if (hasHierarchyExpression) {
+            rootNode = (await (await dataView.hierarchy(hierarchyAxisName))!.root()) as DataViewHierarchyNode;
+        } else if (hasColorHierarchy) {
+            rootNode = (await (await dataView.hierarchy(colorAxisName))!.root()) as DataViewHierarchyNode;
+        } else {
+            rootNode = (await dataView.allRows())?.[0]?.leafNode(hierarchyAxisName) as DataViewHierarchyNode;
         }
 
-        let plotWarnings: string[] = [];
+        const plotWarnings = validateDataView(rootNode, hasHierarchyExpression, hasSizeExpression);
 
-        validateDataView(rootNode, plotWarnings);
-
-        const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis, plotWarnings);
+        const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis);
 
         const getAbsSize = (r: DataViewRow) =>
             hasSizeExpression ? Math.abs(r.continuous(sizeAxisName).value<number>() || 0) : 1;
@@ -53,7 +59,7 @@ window.Spotfire.initialize(async (mod) => {
 
         const categoricalColor = !!(await dataView.categoricalAxis("Color"));
 
-        function addColorLevelIfColorSplits(node: SunBurstHieararchyNode): any {
+        function addColorLevelIfColorSplits(node: SunBurstHierarchyNode): any {
             return !node.virtualLeaf && node.children == undefined && categoricalColor && node.rows().length > 1
                 ? node.rows().map((r) => {
                       var thisNode = node;
@@ -75,7 +81,7 @@ window.Spotfire.initialize(async (mod) => {
                 : node.children;
         }
 
-        function flattenColorsIfColorSplits(node: SunBurstHieararchyNode): any {
+        function flattenColorsIfColorSplits(node: SunBurstHierarchyNode): any {
             return node.level == hierarchyAxis.parts.length - 2 && categoricalColor
                 ? node.children?.flatMap((child) =>
                       child.rows().map((r) => {
@@ -99,8 +105,8 @@ window.Spotfire.initialize(async (mod) => {
                 : node.children;
         }
 
-        const hierarchy: d3.HierarchyNode<SunBurstHieararchyNode> = d3
-            .hierarchy<SunBurstHieararchyNode>(
+        const hierarchy: d3.HierarchyNode<SunBurstHierarchyNode> = d3
+            .hierarchy<SunBurstHierarchyNode>(
                 rootNode,
                 addColorLevel ? addColorLevelIfColorSplits : flattenColorsIfColorSplits
             )
@@ -108,7 +114,9 @@ window.Spotfire.initialize(async (mod) => {
                 var d = n.data;
                 d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
             })
-            .sum((d: SunBurstHieararchyNode) => !d.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getAbsSize(c), 0) : 0);
+            .sum((d: SunBurstHierarchyNode) =>
+                !d.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getAbsSize(c), 0) : 0
+            );
 
         totalSize = hierarchy.value || 0;
 
@@ -116,7 +124,7 @@ window.Spotfire.initialize(async (mod) => {
             containerSelector: "#mod-container",
             size: windowSize,
             clearMarking: dataView.clearMarking,
-            mark(node: SunBurstHieararchyNode) {
+            mark(node: SunBurstHierarchyNode) {
                 if (d3.event.ctrlKey) {
                     node.mark("ToggleOrAdd");
                     return;
@@ -124,12 +132,20 @@ window.Spotfire.initialize(async (mod) => {
 
                 node.mark();
             },
-            getFill(node: SunBurstHieararchyNode) {
+            getFill(node: SunBurstHierarchyNode) {
                 let rows = node.rows();
+
+                // Empty leaf nodes are empty
                 if (!rows.length) {
                     return "transparent";
                 }
 
+                // Use faux color leaf node to retrieve color
+                if (!hasHierarchyExpression) {
+                    return node.rows()[0].color().hexCode;
+                }
+
+                // When the path has empty values, make sure all children are transparent. This is also a warning.
                 if (
                     rows[0]
                         .categorical(hierarchyAxisName)
@@ -140,6 +156,7 @@ window.Spotfire.initialize(async (mod) => {
                     return "transparent";
                 }
 
+                // This node does not have a unique color amongst its children.
                 if (node.level + 1 <= coloringFromLevel) {
                     if (
                         node.rows().findIndex((r) => r.isMarked()) >= 0 ||
@@ -153,6 +170,7 @@ window.Spotfire.initialize(async (mod) => {
                     return "rgba(208,208,208, 0.2)";
                 }
 
+                // Attempt to use the marked color if any of the underlying rows are marked.
                 let firstMarkedRow = node.rows().findIndex((r) => r.isMarked());
                 if (firstMarkedRow == -1) {
                     firstMarkedRow = 0;
@@ -160,17 +178,17 @@ window.Spotfire.initialize(async (mod) => {
 
                 return node.rows()[firstMarkedRow].color().hexCode;
             },
-            getId(node: SunBurstHieararchyNode) {
+            getId(node: SunBurstHierarchyNode) {
                 // The entire path of keys is needed to identify a node.
                 let id = "";
-                let n: SunBurstHieararchyNode | undefined = node;
+                let n: SunBurstHierarchyNode | undefined = node;
                 while (n) {
                     id += (n.key ? `key:${n.key}` : "null") + "|";
                     n = n.parent;
                 }
                 return id;
             },
-            getLabel(node: SunBurstHieararchyNode, availablePixels: number) {
+            getLabel(node: SunBurstHierarchyNode, availablePixels: number) {
                 if (labels.value() == "off") {
                     return "";
                 }
@@ -199,8 +217,13 @@ window.Spotfire.initialize(async (mod) => {
                     weight: context.styling.general.font.fontWeight
                 }
             },
-            getCenterText(node: SunBurstHieararchyNode) {
-                let percentage = (100 * node.rows().reduce((p, r) => p + getAbsSize(r), 0)) / totalSize;
+            getCenterText(node: SunBurstHierarchyNode) {
+                let percentage = 0;
+                try {
+                    percentage = (100 * node.rows().reduce((p, r) => p + getAbsSize(r), 0)) / totalSize;
+                } catch (_) {
+                    // The dataview might become disposed and will throw when reading old rows.
+                }
                 let percentageString = percentage.toPrecision(3) + "%";
                 if (percentage < 0.1) {
                     percentageString = "< 0.1%";
@@ -211,24 +234,8 @@ window.Spotfire.initialize(async (mod) => {
                     text: node.formattedPath()
                 };
             },
-            onMouseover(node: SunBurstHieararchyNode) {
-                let rowCount = node.leafCount();
-
-                const tooltipText =
-                    rowCount +
-                    " sector" +
-                    (rowCount == 1 ? "" : "s") +
-                    ":\n" +
-                    node
-                        .rows()
-                        .map(
-                            (r) =>
-                                r.categorical(hierarchyAxisName).formattedValue() +
-                                ": " +
-                                r.continuous(sizeAxisName).formattedValue()
-                        )
-                        .join("\n");
-                mod.controls.tooltip.show(tooltipText);
+            onMouseover(node: SunBurstHierarchyNode) {
+                mod.controls.tooltip.show(node.formattedPath());
             },
             onMouseLeave: mod.controls.tooltip.hide
         };
@@ -247,40 +254,51 @@ window.Spotfire.initialize(async (mod) => {
  * @param rootNode - The hierarchy root.
  * @param warnings - The warnings array
  */
-function validateDataView(rootNode: DataViewHierarchyNode, warnings: string[]) {
+function validateDataView(
+    rootNode: DataViewHierarchyNode,
+    hasHierarchyExpression: boolean,
+    hasSizeExpression: boolean
+) {
+    let warnings: string[] = [];
     let issues = 0;
     let rows = rootNode.rows();
 
-    rowLoop: for (let row of rows) {
-        let path = row.categorical(hierarchyAxisName).value().slice();
-        let length = path.length;
-        let currentIndex = length - 1;
-        while (currentIndex >= 1) {
-            if (path[currentIndex].value() && !path[currentIndex - 1].value()) {
-                issues++;
-                warnings.push(
-                    "Some elements are not visualized. The following path has holes in it: " +
-                        row.categorical(hierarchyAxisName).formattedValue()
-                );
+    if (hasHierarchyExpression) {
+        rowLoop: for (let row of rows) {
+            let path = row.categorical(hierarchyAxisName).value().slice();
+            let length = path.length;
+            let currentIndex = length - 1;
+            while (currentIndex >= 1) {
+                if (path[currentIndex].value() && !path[currentIndex - 1].value()) {
+                    issues++;
+                    warnings.push(
+                        "Some elements are not visualized. The following path has holes in it: " +
+                            row.categorical(hierarchyAxisName).formattedValue()
+                    );
 
-                if (issues == 3) {
-                    break rowLoop;
+                    if (issues == 3) {
+                        break rowLoop;
+                    }
+
+                    break;
                 }
 
-                break;
+                currentIndex--;
             }
-
-            currentIndex--;
         }
     }
 
-    rowLoop: for (let row of rows) {
-        const size = row.continuous(sizeAxisName).value();
-        if (typeof size == "number" && size < 0) {
-            warnings.push("The plot contains negative values. These nodes have a red outline.");
-            break rowLoop;
+    if (hasSizeExpression) {
+        rowLoop: for (let row of rows) {
+            const size = row.continuous(sizeAxisName).value();
+            if (typeof size == "number" && size < 0) {
+                warnings.push("The plot contains negative values. These nodes have a red outline.");
+                break rowLoop;
+            }
         }
     }
+
+    return warnings;
 }
 
 /**
@@ -289,12 +307,7 @@ function validateDataView(rootNode: DataViewHierarchyNode, warnings: string[]) {
  * @param hierarchyAxis The hierarchy axis.
  * @returns The level from which to start coloring in the sunburst chart.
  */
-function getColoringStartLevel(
-    rootNode: DataViewHierarchyNode,
-    colorAxis: Axis,
-    hierarchyAxis: Axis,
-    warnings: string[]
-) {
+function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis, hierarchyAxis: Axis) {
     let coloringStartLevel = 0;
 
     // If the color axis is continuous or empty the coloring starts from the root.
@@ -312,7 +325,7 @@ function getColoringStartLevel(
         if (
             Math.max(
                 ...node.children
-                    .map((child) => child.rows().map((r) => r.categorical("Color").leafIndex))
+                    .map((child) => child.rows().map((r) => r.categorical(colorAxisName).leafIndex))
                     .map(uniqueCount)
             ) <= 1
         ) {
