@@ -106,10 +106,9 @@ window.Spotfire.initialize(async (mod) => {
             )
             .eachAfter((n) => {
                 var d = n.data;
-                d.actualValue =
-                    !d!.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getRealSize(c), 0) : 0;
+                d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
             })
-            .sum((d: SunBurstHieararchyNode) => Math.abs(d.actualValue || 0));
+            .sum((d: SunBurstHieararchyNode) => !d.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getAbsSize(c), 0) : 0);
 
         totalSize = hierarchy.value || 0;
 

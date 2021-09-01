@@ -24,8 +24,7 @@ body,
     align-items: center;
 }
 
-path.negativeSector
-{
+path.sector.negative {
     stroke: red;
 }
 

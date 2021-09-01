@@ -38,7 +38,7 @@ export interface SunBurstSettings {
 }
 
 export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, settings: SunBurstSettings) {
-    const animationSpeed = 250;
+    const animationSpeed = 2500;
     const { size } = settings;
 
     const radius = Math.min(size.width, size.height) / 2;
@@ -94,12 +94,12 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
 
     sectors
         .merge(newSectors)
+        .attr("class", (d: any) => d.data && d.data.actualValue < 0 ? "negative sector" : "sector")
         .transition("add sectors")
         .duration(animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
         .attr("fill", (d: any) => settings.getFill(d.data))
-        .attr("class", (d: any) => d.data && d.data.actualValue < 0 ? "negativeSector" : "")
         .end()
         .finally(() => {
             newSectors.on("mouseover.hover", onMouseover);
