@@ -359,16 +359,13 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>) {
         mod.controls.popout.show(
             {
                 x: pos.left + pos.width / 2,
-                y: pos.top + pos.height / 2,
+                y: pos.top + pos.height,
                 autoClose: true,
                 alignment: "Top",
                 onChange(event) {
                     if (event.name == "labels") {
                         labels.set(event.value);
                     }
-                },
-                onClosed() {
-                    settingsButton!.onclick = null;
                 }
             },
             () => [

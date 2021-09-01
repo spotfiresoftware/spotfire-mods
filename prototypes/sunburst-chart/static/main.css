@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 html,
 body,
 #border,
@@ -130,16 +134,16 @@ svg {
     padding: 5px;
     position: absolute;
     top: 0;
-    width: 24px;
+    width: 31px;
     cursor: pointer;
-    height: 24px;
+    height: 31px;
     display: none;
 }
 
 .icon-button svg {
     display: block;
-    width: 14px;
-    height: 14px;
+    width: 21px;
+    height: 21px;
 }
 
 .visible {
@@ -157,9 +161,9 @@ svg {
 
 .settings {
     right: 0;
-    color: #ddd;
+    color: #ccc;
 }
 
 .settings:hover {
-    color: #ccc;
+    color: #ddd;
 }
