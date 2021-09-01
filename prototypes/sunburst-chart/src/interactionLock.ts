@@ -1,7 +1,7 @@
 export type InteractionLock = ReturnType<typeof interactionLock>;
 
 export function interactionLock() {
-    let resolveLastPromise: () => void;
+    let resolveLastPromise: null | (() => void) = null;
     let currentRenderingPromise: Promise<void> | null;
 
     document.body.addEventListener("mousedown", blockRendering, true);
@@ -32,7 +32,7 @@ export function interactionLock() {
     }
 
     function releaseRendering() {
-        resolveLastPromise();
+        resolveLastPromise?.();
         currentRenderingPromise = null;
     }
 }
