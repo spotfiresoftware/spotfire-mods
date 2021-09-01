@@ -138,7 +138,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                         enter
                             .transition("add labels")
                             .duration(animationSpeed)
-                            .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < settings.style.label.size + 4 ? 0 : 1))
+                            .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1))
                             .attrTween("transform", tweenTransform)
                     );
             },
@@ -213,6 +213,9 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
     }
 
     function getTextColor(fillColor: string) {
+        if (settings.style.background.color == "transparent") {
+            return settings.style.label.color;
+        }
         return contrastToLabelColor(fillColor) > 1.7 ? settings.style.label.color : settings.style.background.color;
     }
 
