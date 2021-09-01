@@ -7,7 +7,6 @@ import { interactionLock } from "./interactionLock";
 const hierarchyAxisName = "Hierarchy";
 const colorAxisName = "Color";
 const sizeAxisName = "Size";
-const addColorLevel = false;
 
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
@@ -42,70 +41,50 @@ window.Spotfire.initialize(async (mod) => {
 
         if (hasHierarchyExpression) {
             rootNode = (await (await dataView.hierarchy(hierarchyAxisName))!.root()) as DataViewHierarchyNode;
-        } else if (hasColorHierarchy) {
-            rootNode = (await (await dataView.hierarchy(colorAxisName))!.root()) as DataViewHierarchyNode;
         } else {
             rootNode = (await dataView.allRows())?.[0]?.leafNode(hierarchyAxisName) as DataViewHierarchyNode;
         }
 
         const plotWarnings = validateDataView(rootNode, hasHierarchyExpression, hasSizeExpression);
 
-        const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis);
+        const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis, plotWarnings);
 
         const getAbsSize = (r: DataViewRow) =>
             hasSizeExpression ? Math.abs(r.continuous(sizeAxisName).value<number>() || 0) : 1;
         const getRealSize = (r: DataViewRow) =>
             hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
 
-        const categoricalColor = !!(await dataView.categoricalAxis("Color"));
-
-        function addColorLevelIfColorSplits(node: SunBurstHierarchyNode): any {
-            return !node.virtualLeaf && node.children == undefined && categoricalColor && node.rows().length > 1
-                ? node.rows().map((r) => {
-                      var thisNode = node;
-                      var thisRow = r;
-                      node.hasVirtualChildren = true;
-                      return {
-                          formattedPath: () => thisNode.formattedPath(),
-                          formattedValue: () => thisRow.categorical("Color").formattedValue(),
-                          key: r.elementId(),
-                          leafCount: () => 1,
-                          level: node.level + 1,
-                          mark: (operation?: any) => r.mark(operation),
-                          markedRowCount: () => (r.isMarked() ? 1 : 0),
-                          parent: thisNode,
-                          virtualLeaf: true,
-                          rows: () => [r]
-                      } as SunBurstHierarchyNode;
-                  })
-                : node.children;
-        }
-
         function flattenColorsIfColorSplits(node: SunBurstHierarchyNode): any {
-            return node.level == hierarchyAxis.parts.length - 2 && categoricalColor
-                ? node.children?.flatMap((child) =>
-                      child.rows().map((r) => {
-                          var thisRow = r;
-                          return {
-                              formattedPath: () => child.formattedPath(),
-                              formattedValue: () => child.formattedValue(),
-                              key: r.elementId(),
-                              leafCount: () => 1,
-                              level: node.level + 1,
-                              mark: (operation?: any) => r.mark(operation),
-                              markedRowCount: () => (r.isMarked() ? 1 : 0),
-                              parent: node,
-                              rows: () => [thisRow]
-                          };
-                      })
-                  )
+            if (!hasHierarchyExpression && hasColorHierarchy && !node.virtualLeaf) {
+                const fakeNodes = node.rows().map((r) => rowToSunBurstHierarchyLeaf(r, node));
+                node.hasVirtualChildren = true;
+                return fakeNodes;
+            }
+
+            return node.level == hierarchyAxis.parts.length - 2 && hasColorHierarchy
+                ? node.children?.flatMap((child) => child.rows().map((r) => rowToSunBurstHierarchyLeaf(r, child)))
                 : node.children;
+
+            function rowToSunBurstHierarchyLeaf(r: DataViewRow, child: SunBurstHierarchyNode) {
+                return {
+                    formattedPath: () => child.formattedPath(),
+                    formattedValue: () => child.formattedValue(),
+                    key: r.elementId(),
+                    leafCount: () => 1,
+                    level: node.level + 1,
+                    mark: (operation?: any) => r.mark(operation),
+                    markedRowCount: () => (r.isMarked() ? 1 : 0),
+                    parent: node,
+                    rows: () => [r],
+                    virtualLeaf: true,
+                } as SunBurstHierarchyNode;
+            }
         }
 
         const hierarchy: d3.HierarchyNode<SunBurstHierarchyNode> = d3
             .hierarchy<SunBurstHierarchyNode>(
                 rootNode,
-                addColorLevel ? addColorLevelIfColorSplits : flattenColorsIfColorSplits
+                flattenColorsIfColorSplits
             )
             .eachAfter((n) => {
                 var d = n.data;
@@ -309,7 +288,7 @@ function validateDataView(
  * @param hierarchyAxis The hierarchy axis.
  * @returns The level from which to start coloring in the sunburst chart.
  */
-function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis, hierarchyAxis: Axis) {
+function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis, hierarchyAxis: Axis, warnings: string[]) {
     let coloringStartLevel = 0;
 
     // If the color axis is continuous or empty the coloring starts from the root.
@@ -343,8 +322,9 @@ function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis,
     coloringStartLevel = firstLevelWithUniqueColoring(rootNode);
 
     // Make sure there is an available coloring level.
-    if (coloringStartLevel == hierarchyAxis.parts.length && !addColorLevel) {
+    if (coloringStartLevel == hierarchyAxis.parts.length) {
         coloringStartLevel = hierarchyAxis.parts.length - 1;
+        warnings.push("The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times.")
     }
 
     return coloringStartLevel;
