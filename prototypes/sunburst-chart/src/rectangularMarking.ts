@@ -31,7 +31,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         rectangle.attr("visibility", "hidden");
 
         // Ignore rectangular markings that were just a click.
-        if (Math.abs(start[0] - end[0]) < 2 || Math.abs(start[1] - end[1]) < 2) {
+        if (Math.abs(start[0] - end[0]) < 4 || Math.abs(start[1] - end[1]) < 4) {
             if (!firstTarget?.classList?.contains(settings.ignoredClickClasses)) {
                 settings.clearMarking();
             }
