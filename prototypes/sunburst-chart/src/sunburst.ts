@@ -138,7 +138,9 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                         enter
                             .transition("add labels")
                             .duration(animationSpeed)
-                            .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1))
+                            .style("opacity", (d) =>
+                                d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
+                            )
                             .attrTween("transform", tweenTransform)
                     );
             },
@@ -148,7 +150,9 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                         .transition("update labels")
                         .duration(animationSpeed)
                         .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
-                        .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < settings.style.label.size + 4 ? 0 : 1))
+                        .style("opacity", (d) =>
+                            d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
+                        )
                         .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
                         .attrTween("transform", tweenTransform)
                 ),
