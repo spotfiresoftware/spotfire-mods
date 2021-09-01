@@ -15,6 +15,7 @@ export interface SunBurstHieararchyNode {
     children?: SunBurstHieararchyNode[];
     rows: () => DataViewRow[];
     virtualLeaf?: boolean;
+    actualValue?: number
 }
 
 export interface SunBurstSettings {
@@ -98,6 +99,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
         .attrTween("d", tweenArc)
         .style("opacity", 1)
         .attr("fill", (d: any) => settings.getFill(d.data))
+        .attr("class", (d: any) => d.data && d.data.actualValue < 0 ? "negativeSector" : "")
         .end()
         .finally(() => {
             newSectors.on("mouseover.hover", onMouseover);
@@ -226,7 +228,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
 
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
-        d3.selectAll("path").transition("mouse leave").duration(200).style("stroke", "transparent");
+        d3.selectAll("path").transition("mouse leave").duration(200).style("stroke", null);
         settings.onMouseLeave?.();
     }
 
@@ -241,7 +243,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHieararchyNode>, sett
         let ancestors = getAncestors(d);
 
         d3.selectAll("path").style("stroke", (d: any) =>
-            ancestors.indexOf(d) >= 0 ? settings.style.marking.color : "transparent"
+            ancestors.indexOf(d) >= 0 ? settings.style.marking.color : null
         );
     }
 }

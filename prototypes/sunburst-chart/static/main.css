@@ -23,6 +23,12 @@ body,
     justify-content: center;
     align-items: center;
 }
+
+path.negativeSector
+{
+    stroke: red;
+}
+
 #explanation #percentage {
     font-size: max(5vmin, 10px);
     white-space: nowrap;

@@ -46,8 +46,10 @@ window.Spotfire.initialize(async (mod) => {
 
         const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis, plotWarnings);
 
-        const getSize = (r: DataViewRow) =>
+        const getAbsSize = (r: DataViewRow) =>
             hasSizeExpression ? Math.abs(r.continuous(sizeAxisName).value<number>() || 0) : 1;
+        const getRealSize = (r: DataViewRow) =>
+            hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
 
         const categoricalColor = !!(await dataView.categoricalAxis("Color"));
 
@@ -102,11 +104,15 @@ window.Spotfire.initialize(async (mod) => {
                 rootNode,
                 addColorLevel ? addColorLevelIfColorSplits : flattenColorsIfColorSplits
             )
-            .sum((d: SunBurstHieararchyNode) => {
-                return !d!.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getSize(c), 0) : 0;
-            });
+            .eachAfter((n) => {
+                var d = n.data;
+                d.actualValue =
+                    !d!.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getRealSize(c), 0) : 0;
+            })
+            .sum((d: SunBurstHieararchyNode) => Math.abs(d.actualValue || 0));
 
-        totalSize = rootNode.rows().reduce((p: number, c: DataViewRow) => p + getSize(c), 0);
+        totalSize = hierarchy.value || 0;
+
         const settings: SunBurstSettings = {
             containerSelector: "#mod-container",
             size: windowSize,
@@ -195,7 +201,7 @@ window.Spotfire.initialize(async (mod) => {
                 }
             },
             getCenterText(node: SunBurstHieararchyNode) {
-                let percentage = (100 * node.rows().reduce((p, r) => p + getSize(r), 0)) / totalSize;
+                let percentage = (100 * node.rows().reduce((p, r) => p + getAbsSize(r), 0)) / totalSize;
                 let percentageString = percentage.toPrecision(3) + "%";
                 if (percentage < 0.1) {
                     percentageString = "< 0.1%";
@@ -272,9 +278,7 @@ function validateDataView(rootNode: DataViewHierarchyNode, warnings: string[]) {
     rowLoop: for (let row of rows) {
         const size = row.continuous(sizeAxisName).value();
         if (typeof size == "number" && size < 0) {
-            warnings.push(
-                "The plot contains negative values: " + row.categorical(hierarchyAxisName).formattedValue() + " " + size
-            );
+            warnings.push("The plot contains negative values. These nodes have a red outline.");
             break rowLoop;
         }
     }
