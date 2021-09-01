@@ -68,7 +68,7 @@ window.Spotfire.initialize(async (mod) => {
                       return {
                           formattedPath: () => thisNode.formattedPath(),
                           formattedValue: () => thisRow.categorical("Color").formattedValue(),
-                          key: node.key + r.color().hexCode,
+                          key: r.elementId(),
                           leafCount: () => 1,
                           level: node.level + 1,
                           mark: (operation?: any) => r.mark(operation),
@@ -76,7 +76,7 @@ window.Spotfire.initialize(async (mod) => {
                           parent: thisNode,
                           virtualLeaf: true,
                           rows: () => [r]
-                      };
+                      } as SunBurstHierarchyNode;
                   })
                 : node.children;
         }
@@ -89,10 +89,7 @@ window.Spotfire.initialize(async (mod) => {
                           return {
                               formattedPath: () => child.formattedPath(),
                               formattedValue: () => child.formattedValue(),
-                              key:
-                                  (node.key == null ? "null" : "v:" + node.key) +
-                                  "-" +
-                                  thisRow.categorical("Color").leafIndex,
+                              key: r.elementId(),
                               leafCount: () => 1,
                               level: node.level + 1,
                               mark: (operation?: any) => r.mark(operation),
@@ -113,6 +110,18 @@ window.Spotfire.initialize(async (mod) => {
             .eachAfter((n) => {
                 var d = n.data;
                 d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
+
+                if (!d.key) {
+                    // The entire path of keys is needed to identify a node.
+                    let calculatedKey = "";
+                    let currentNode: SunBurstHierarchyNode | undefined = d;
+                    while (currentNode) {
+                        calculatedKey += (currentNode.key ? `key:${currentNode.key}` : "null") + "|";
+                        currentNode = currentNode.parent;
+                    }
+
+                    d.key = calculatedKey;
+                }
             })
             .sum((d: SunBurstHierarchyNode) =>
                 !d.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getAbsSize(c), 0) : 0
@@ -179,14 +188,7 @@ window.Spotfire.initialize(async (mod) => {
                 return node.rows()[firstMarkedRow].color().hexCode;
             },
             getId(node: SunBurstHierarchyNode) {
-                // The entire path of keys is needed to identify a node.
-                let id = "";
-                let n: SunBurstHierarchyNode | undefined = node;
-                while (n) {
-                    id += (n.key ? `key:${n.key}` : "null") + "|";
-                    n = n.parent;
-                }
-                return id;
+                return node.key;
             },
             getLabel(node: SunBurstHierarchyNode, availablePixels: number) {
                 if (labels.value() == "off") {
