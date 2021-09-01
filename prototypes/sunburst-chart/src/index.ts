@@ -17,7 +17,8 @@ window.Spotfire.initialize(async (mod) => {
         mod.visualization.axis(hierarchyAxisName),
         mod.visualization.axis(colorAxisName),
         mod.visualization.axis(sizeAxisName),
-        mod.property<string>("labels")
+        mod.property<string>("labels"),
+        mod.property<boolean>("showNullValues")
     );
 
     let interaction = interactionLock();
@@ -31,7 +32,8 @@ window.Spotfire.initialize(async (mod) => {
         hierarchyAxis: Axis,
         colorAxis: Axis,
         sizeAxis: Axis,
-        labels: ModProperty<string>
+        labels: ModProperty<string>,
+        showNullValues: ModProperty<boolean>
     ) {
         const hasSizeExpression = !!sizeAxis.parts.length;
         const hasHierarchyExpression = !!hierarchyAxis.parts.length;
@@ -45,7 +47,7 @@ window.Spotfire.initialize(async (mod) => {
             rootNode = (await dataView.allRows())?.[0]?.leafNode(hierarchyAxisName) as DataViewHierarchyNode;
         }
 
-        const plotWarnings = validateDataView(rootNode, hasHierarchyExpression, hasSizeExpression);
+        const plotWarnings = validateDataView(rootNode, !!showNullValues.value() && hasHierarchyExpression, hasSizeExpression);
 
         const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis, plotWarnings);
 
@@ -134,7 +136,7 @@ window.Spotfire.initialize(async (mod) => {
                 }
 
                 // When the path has empty values, make sure all children are transparent. This is also a warning.
-                if (
+                if (showNullValues.value() &&
                     rows[0]
                         .categorical(hierarchyAxisName)
                         .value()
@@ -223,7 +225,7 @@ window.Spotfire.initialize(async (mod) => {
 
         render(hierarchy, settings);
 
-        renderSettingsButton(mod, labels);
+        renderSettingsButton(mod, labels, showNullValues);
         renderWarningsIcon(mod, plotWarnings);
 
         context.signalRenderComplete();
@@ -237,14 +239,14 @@ window.Spotfire.initialize(async (mod) => {
  */
 function validateDataView(
     rootNode: DataViewHierarchyNode,
-    hasHierarchyExpression: boolean,
-    hasSizeExpression: boolean
+    validateHierarchy: boolean,
+    validataSize: boolean
 ) {
     let warnings: string[] = [];
     let issues = 0;
     let rows = rootNode.rows();
 
-    if (hasHierarchyExpression) {
+    if (validateHierarchy) {
         rowLoop: for (let row of rows) {
             let path = row.categorical(hierarchyAxisName).value().slice();
             let length = path.length;
@@ -269,7 +271,7 @@ function validateDataView(
         }
     }
 
-    if (hasSizeExpression) {
+    if (validataSize) {
         rowLoop: for (let row of rows) {
             const size = row.continuous(sizeAxisName).value();
             if (typeof size == "number" && size < 0) {
@@ -330,7 +332,7 @@ function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis,
     return coloringStartLevel;
 }
 
-function renderSettingsButton(mod: Mod, labels: ModProperty<string>) {
+function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullValues: ModProperty<boolean>) {
     let settingsButton = document.querySelector<HTMLElement>(".settings");
     settingsButton?.classList.toggle("visible", mod.getRenderContext().isEditing);
     let pos = settingsButton!.getBoundingClientRect();
@@ -345,6 +347,10 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>) {
                 onChange(event) {
                     if (event.name == "labels") {
                         labels.set(event.value);
+                    }
+                    if (event.name == "showNullValues")
+                    {
+                        showNullValues.set(event.value);
                     }
                 }
             },
@@ -374,7 +380,18 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>) {
                             text: "Off"
                         })
                     ]
+                }),
+                mod.controls.popout.section({
+                    children: [
+                        mod.controls.popout.components.checkbox({
+                            enabled: true,
+                            name: "showNullValues",
+                            checked: showNullValues.value() || false,
+                            text: "Show empty values as missing"
+                        })
+                    ]
                 })
+
             ]
         );
     };
