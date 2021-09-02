@@ -126,7 +126,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         return {
             x0: d.x0,
             x1: d.x1,
-            r: lastSector.y1 * radius + (parseInt("" + settings.style.label.size) + 4)
+            r: !lastSector ? 0 : lastSector.y1 * radius + (parseInt("" + settings.style.label.size) + 4)
         };
     }
 
@@ -182,15 +182,13 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .text((d) => d.label);
             },
             (update) =>
-                update
-                .select("textPath")
-                    .call((update) =>
-                        update
-                            .transition("update labels")
-                            .duration(animationSpeed)
-                            .style("opacity", (d) => 1)
-                            .text((d) => d.label)
-                    ),
+                update.select("textPath").call((update) =>
+                    update
+                        .transition("update labels")
+                        .duration(animationSpeed)
+                        .style("opacity", (d) => 1)
+                        .text((d) => d.label)
+                ),
             (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
         );
 
