@@ -53,19 +53,16 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     }
 
     function describeArc(d: { r: number; x0: number; x1: number }) {
-        
-        let midX = (d.x1 + d.x0) /2;
-        var start = polarToCartesian(0, 0, d.r, d.x0);
-        var end = polarToCartesian(0, 0, d.r, d.x1);
+        let midX = (d.x1 + d.x0) / 2;
+        let start = polarToCartesian(0, 0, d.r, d.x0);
+        let end = polarToCartesian(0, 0, d.r, d.x1);
 
-        if (midX > Math.PI / 2 && midX < 3*Math.PI /2)
-        {
+        let flipText = midX > Math.PI / 2 && midX < (3 * Math.PI) / 2;
+        if (flipText) {
             [start, end] = [end, start];
-            return ["M", start.x, start.y, "A", d.r, d.r, 0, 0, 0, end.x, end.y].join(" ");
         }
 
-        return ["M", start.x, start.y, "A", d.r, d.r, 1, 0, 1, end.x, end.y].join(" ");
-
+        return ["M", start.x, start.y, "A", d.r, d.r, 0, 0, flipText ? 0 : 1, end.x, end.y].join(" ");
     }
 
     const svg = d3
@@ -144,10 +141,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .append("path")
                     .attr("fill", "none")
                     .call((enter) =>
-                        enter
-                            .transition("create paths")
-                            .duration(animationSpeed)
-                            .attrTween("d", tweenArcForLabelPath)
+                        enter.transition("create paths").duration(animationSpeed).attrTween("d", tweenArcForLabelPath)
                     )
                     .attr("id", (d) => "label-" + btoa(d.id));
             },
