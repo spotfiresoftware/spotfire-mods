@@ -1,24 +1,7 @@
 import * as d3 from "d3";
-import { DataViewRow } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
 
 const animationSpeed = 250;
-
-export interface RoseChartHierarchyNode {
-    hasVirtualChildren?: boolean;
-    mark: (operation?: any) => void;
-    level: number;
-    key: any;
-    parent?: any;
-    markedRowCount: () => number;
-    formattedValue: () => string;
-    formattedPath: () => string;
-    leafCount: () => number;
-    children?: RoseChartHierarchyNode[];
-    rows: () => DataViewRow[];
-    virtualLeaf?: boolean;
-    actualValue?: number;
-}
 
 export interface RoseChartSettings {
     style: {
@@ -30,19 +13,18 @@ export interface RoseChartSettings {
     onMouseLeave?(): void;
     containerSelector: string;
     size: { width: number; height: number };
-    getFill(data: unknown): string;
-    getId(data: unknown): string;
-    getLabel(data: unknown, availablePixels: number): string;
-    /** Text to place in the center while hovering sectors. */
-    getCenterText(data: unknown): { value: string; text: string };
-    mark(data: unknown): void;
     clearMarking(): void;
 }
 
-export interface RoseChartSector {
+export interface RoseChartSlice {
+    id: string;
     x0: number;
     x1: number;
-    label :string;
+    label: string;
+    mark(): void;
+    sectors: RoseChartSector[];
+}
+export interface RoseChartSector {
     value: number;
     y0: number;
     y1: number;
@@ -51,17 +33,33 @@ export interface RoseChartSector {
     mark(): void;
 }
 
-export function render(sectors2: RoseChartSector[], settings: RoseChartSettings) {
+export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     const { size } = settings;
 
-    const radius = Math.min(size.width, size.height) / 2;
+    const radius = Math.min(size.width, size.height) / 2 - parseInt("" + settings.style.label.size) * 2 - 8;
 
     const arc = d3
-        .arc<{ x0: number; y0: number; x1: number; y1: number; value: number }>()
+        .arc<{ x0: number; y0: number; x1: number; y1: number }>()
         .startAngle((d) => d.x0)
         .endAngle((d) => d.x1)
         .innerRadius((d) => d.y0 * radius)
         .outerRadius((d) => d.y1 * radius);
+
+    function polarToCartesian(centerX: number, centerY: number, radius: number, angleInRadians: number) {
+        return {
+            x: centerX + radius * Math.cos(angleInRadians - Math.PI / 2),
+            y: centerY + radius * Math.sin(angleInRadians - Math.PI / 2)
+        };
+    }
+
+    function describeArc(d: { r: number; x0: number; x1: number }) {
+        var start = polarToCartesian(0, 0, d.r, d.x1);
+        var end = polarToCartesian(0, 0, d.r, d.x0);
+
+        var largeArcFlag = (d.x1 - d.x0) / 2 <= Math.PI ? 1 : 0;
+
+        return ["M", start.x, start.y, "A", d.r, d.r, 0, 0, 0, end.x, end.y].join(" ") + "Z";
+    }
 
     const svg = d3
         .select(settings.containerSelector)
@@ -70,7 +68,10 @@ export function render(sectors2: RoseChartSector[], settings: RoseChartSettings)
         .attr("height", size.height);
     svg.select("g#container").attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
 
-    const sectors = svg.select("g#sectors").selectAll("path").data(sectors2);
+    const sectors = svg
+        .select("g#sectors")
+        .selectAll("path")
+        .data(slices.flatMap((s) => s.sectors.map((sector) => ({ ...s, ...sector }))));
 
     const labelColorLuminance = luminance(
         parseInt(settings.style.label.color.substr(1, 2), 16),
@@ -120,11 +121,48 @@ export function render(sectors2: RoseChartSector[], settings: RoseChartSettings)
 
     sectors.exit().transition("remove sectors").duration(animationSpeed).attr("fill", "transparent").remove();
 
+    function createArcArgument(d: RoseChartSlice) {
+        let lastSector = d.sectors[d.sectors.length - 1];
+        return {
+            x0: d.x0,
+            x1: d.x1,
+            r: lastSector.y1 * radius + (parseInt("" + settings.style.label.size) + 4)
+        };
+    }
+
+    svg.select("g#labelPaths")
+        .attr("pointer-events", "none")
+        // .attr("text-anchor", "middle")
+        .selectAll<any, RoseChartSlice>("path")
+        .data(slices, (d: RoseChartSlice) => `path-${d.id}`)
+        .join(
+            (enter) => {
+                return enter
+                    .append("path")
+                    .attr("fill", "none")
+                    .call((enter) =>
+                        enter.transition("create paths").duration(animationSpeed).attrTween("d", tweenArcForLabelPath)
+                    )
+                    .attr("id", (d) => "label-" + btoa(d.id));
+            },
+            (update) =>
+                update
+                    .call((update) =>
+                        update
+                            .transition("update paths")
+                            .duration(animationSpeed)
+                            .text((d) => d.label)
+                            .attrTween("d", tweenArcForLabelPath)
+                    )
+                    .select("textPath")
+                    .text((d) => d.label),
+            (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
+        );
     svg.select("g#labels")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
-        .selectAll<any, RoseChartSector>("text")
-        .data(sectors2, (d: RoseChartSector) => `label-${d.id}`)
+        .selectAll<any, RoseChartSlice>("text")
+        .data(slices, (d: RoseChartSlice) => `label-${d.id}`)
         .join(
             (enter) => {
                 return enter
@@ -134,37 +172,31 @@ export function render(sectors2: RoseChartSector[], settings: RoseChartSettings)
                     .attr("font-size", settings.style.label.size)
                     .attr("font-style", settings.style.label.style)
                     .attr("font-weight", settings.style.label.weight)
-                    .attr("fill", (d) => getTextColor(d.color))
+                    .attr("fill", settings.style.label.color)
                     .attr("font-family", settings.style.label.fontFamily)
-                    .text((d) => settings.getLabel(d, d.y1 - d.y0))
-                    .call((enter) =>
-                        enter
-                            .transition("add labels")
-                            .duration(animationSpeed)
-                            .style("opacity", (d) =>
-                            (d.y0 + d.y1) / 2 * radius * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
-                            )
-                            .attrTween("transform", tweenTransform)
-                    );
+                    .call((enter) => enter.transition("add labels").duration(animationSpeed).style("opacity", 1))
+                    .append("textPath")
+                    .attr("href", (d) => "#label-" + btoa(d.id))
+                    .attr("startOffset", "25%")
+                    .style("text-anchor", "start")
+                    .text((d) => d.label);
             },
             (update) =>
-                update.call((update) =>
-                    update
-                        .transition("update labels")
-                        .duration(animationSpeed)
-                        .attr("fill", (d) => getTextColor(d.color))
-                        .style("opacity", (d) =>
-                            (d.y0 + d.y1) / 2 * radius * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
-                        )
-                        .text((d) => settings.getLabel(d, d.y1 - d.y0))
-                        .attrTween("transform", tweenTransform)
-                ),
+                update
+                .select("textPath")
+                    .call((update) =>
+                        update
+                            .transition("update labels")
+                            .duration(animationSpeed)
+                            .style("opacity", (d) => 1)
+                            .text((d) => d.label)
+                    ),
             (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
         );
 
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
-        mark: settings.mark,
+        mark: (d: RoseChartSector) => d.mark(),
         ignoredClickClasses: "sector",
         classesToMark: "sector"
     });
@@ -175,14 +207,27 @@ export function render(sectors2: RoseChartSector[], settings: RoseChartSettings)
     }
 
     function tweenArc(this: any, data: any) {
-        let prevValue = this.__prev ? getTransformData(this.__prev) : {};
-        let newValue = getTransformData(data);
+        let prevValue = this.__prev ? this.__prev : {};
+        let newValue = data;
         this.__prev = newValue;
 
         var i = interpolate(prevValue, newValue);
 
         return function (value: any) {
             return arc(i(value))!;
+        };
+    }
+
+    function tweenArcForLabelPath(this: any, data: any) {
+        let prevValue = this.__prev ? this.__prev : {};
+        let newValue = createArcArgument(data);
+        this.__prev = newValue;
+
+        console.log(prevValue, newValue);
+        var i = interpolate(prevValue, newValue);
+
+        return function (value: any) {
+            return describeArc(i(value))!;
         };
     }
 
@@ -251,28 +296,9 @@ export function render(sectors2: RoseChartSector[], settings: RoseChartSettings)
         settings.onMouseLeave?.();
     }
 
-    function onMouseover(d: any) {
-        let texts = settings.getCenterText(d.data);
+    function onMouseover(this: any, d: any) {
         settings.onMouseover?.(d.data);
 
-        d3.select("#explanation").style("visibility", "visible");
-        d3.select("#percentage").text(texts.value);
-        d3.select("#value").text(texts.text);
-
-        let ancestors = getAncestors(d);
-
-        d3.selectAll("path").style("stroke", (d: any) =>
-            ancestors.indexOf(d) >= 0 ? settings.style.marking.color : null
-        );
+        d3.select(this).style("stroke", settings.style.marking.color);
     }
-}
-
-function getAncestors(node: d3.HierarchyNode<unknown>) {
-    let path = [];
-    let current = node;
-    while (current.parent) {
-        path.unshift(current);
-        current = current.parent;
-    }
-    return path;
 }
