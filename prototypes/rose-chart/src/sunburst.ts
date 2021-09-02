@@ -4,7 +4,7 @@ import { rectangularSelection } from "./rectangularMarking";
 
 const animationSpeed = 250;
 
-export interface SunBurstHierarchyNode {
+export interface RoseChartHierarchyNode {
     hasVirtualChildren?: boolean;
     mark: (operation?: any) => void;
     level: number;
@@ -14,13 +14,13 @@ export interface SunBurstHierarchyNode {
     formattedValue: () => string;
     formattedPath: () => string;
     leafCount: () => number;
-    children?: SunBurstHierarchyNode[];
+    children?: RoseChartHierarchyNode[];
     rows: () => DataViewRow[];
     virtualLeaf?: boolean;
     actualValue?: number;
 }
 
-export interface SunBurstSettings {
+export interface RoseChartSettings {
     style: {
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
         marking: { color: string };
@@ -30,6 +30,7 @@ export interface SunBurstSettings {
     onMouseLeave?(): void;
     containerSelector: string;
     size: { width: number; height: number };
+    totalSize: number;
     getFill(data: unknown): string;
     getId(data: unknown): string;
     getLabel(data: unknown, availablePixels: number): string;
@@ -39,25 +40,43 @@ export interface SunBurstSettings {
     clearMarking(): void;
 }
 
-export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, settings: SunBurstSettings) {
+export function render(hierarchy: d3.HierarchyNode<RoseChartHierarchyNode>, settings: RoseChartSettings) {
     const { size } = settings;
 
     const showOnlyRoot = hierarchy.height ? false : true;
 
     const radius = Math.min(size.width, size.height) / 2;
 
+    const twoDegrees = Math.PI * 2 / 360 * 2;
+
     const arc = d3
         .arc<{ x0: number; y0: number; x1: number; y1: number }>()
         .startAngle((d) => d.x0)
         .endAngle((d) => d.x1)
-        .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.01))
+        .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0))
         .padRadius(radius / 2)
-        .innerRadius((d) => (showOnlyRoot ? radius / 2 : d.y0))
-        .outerRadius((d) => d.y1 - 1);
+        .innerRadius((d) => (0))
+        .outerRadius((d) => d.value / settings.totalSize * radius);
 
     const partition = d3.partition().size([Math.PI * 2, radius]);
 
     const partitionLayout = partition(hierarchy);
+
+    hierarchy.each((node) => {
+        console.log(node);
+        if(!node.children) {
+            return;
+        }
+
+        let sectorSize = 2* Math.PI / node.children.length;
+        let pos = 0;
+
+        for (const child of node.children) {
+            child.x0 = pos;
+            pos += sectorSize;
+            child.x1 = pos;
+        }
+    })
 
     const svg = d3
         .select(settings.containerSelector)
@@ -199,7 +218,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     function labelPosition(d: any) {
         const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-        const y = (d.y0 + d.y1) / 2;
+        const y = d.value / settings.totalSize * radius - 50;
         return { x, y };
     }
 

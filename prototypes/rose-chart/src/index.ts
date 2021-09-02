@@ -1,4 +1,4 @@
-import { render, SunBurstHierarchyNode, SunBurstSettings } from "./sunburst";
+import { render, RoseChartHierarchyNode, RoseChartSettings } from "./sunburst";
 import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Size } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import * as d3 from "d3";
@@ -56,18 +56,22 @@ window.Spotfire.initialize(async (mod) => {
         const getRealSize = (r: DataViewRow) =>
             hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
 
-        function flattenColorsIfColorSplits(node: SunBurstHierarchyNode): any {
+        function flattenColorsIfColorSplits(node: RoseChartHierarchyNode): any {
             if (!hasHierarchyExpression && hasColorHierarchy && !node.virtualLeaf) {
                 const fakeNodes = node.rows().map((r) => rowToSunBurstHierarchyLeaf(r, node));
                 node.hasVirtualChildren = true;
                 return fakeNodes;
             }
 
+            if(node.level == -1) {
+                return (node as DataViewHierarchyNode).leaves();
+            }
+
             return node.level == hierarchyAxis.parts.length - 2 && hasColorHierarchy
                 ? node.children?.flatMap((child) => child.rows().map((r) => rowToSunBurstHierarchyLeaf(r, child)))
                 : node.children;
 
-            function rowToSunBurstHierarchyLeaf(r: DataViewRow, child: SunBurstHierarchyNode) {
+            function rowToSunBurstHierarchyLeaf(r: DataViewRow, child: RoseChartHierarchyNode) {
                 return {
                     formattedPath: () => child.formattedPath(),
                     formattedValue: () => child.formattedValue(),
@@ -79,12 +83,12 @@ window.Spotfire.initialize(async (mod) => {
                     parent: node,
                     rows: () => [r],
                     virtualLeaf: true,
-                } as SunBurstHierarchyNode;
+                } as RoseChartHierarchyNode;
             }
         }
 
-        const hierarchy: d3.HierarchyNode<SunBurstHierarchyNode> = d3
-            .hierarchy<SunBurstHierarchyNode>(
+        const hierarchy: d3.HierarchyNode<RoseChartHierarchyNode> = d3
+            .hierarchy<RoseChartHierarchyNode>(
                 rootNode,
                 flattenColorsIfColorSplits
             )
@@ -95,7 +99,7 @@ window.Spotfire.initialize(async (mod) => {
                 if (!d.key) {
                     // The entire path of keys is needed to identify a node.
                     let calculatedKey = "";
-                    let currentNode: SunBurstHierarchyNode | undefined = d;
+                    let currentNode: RoseChartHierarchyNode | undefined = d;
                     while (currentNode) {
                         calculatedKey += (currentNode.key ? `key:${currentNode.key}` : "null") + "|";
                         currentNode = currentNode.parent;
@@ -104,17 +108,27 @@ window.Spotfire.initialize(async (mod) => {
                     d.key = calculatedKey;
                 }
             })
-            .sum((d: SunBurstHierarchyNode) =>
+            .sum((d: RoseChartHierarchyNode) =>
                 !d.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getAbsSize(c), 0) : 0
             );
 
         totalSize = hierarchy.value || 0;
 
-        const settings: SunBurstSettings = {
+        let maxSector = (rootNode.leaves() || []).reduce((pMax, node) => {
+            let sum = node.rows().reduce((p, c) => p + getAbsSize(c), 0);
+            if(sum > pMax) {
+                return sum;
+            }
+
+            return pMax
+        }, 0)
+
+        const settings: RoseChartSettings = {
             containerSelector: "#mod-container",
             size: windowSize,
+            totalSize: maxSector,
             clearMarking: dataView.clearMarking,
-            mark(node: SunBurstHierarchyNode) {
+            mark(node: RoseChartHierarchyNode) {
                 if (d3.event.ctrlKey) {
                     node.mark("ToggleOrAdd");
                     return;
@@ -122,7 +136,7 @@ window.Spotfire.initialize(async (mod) => {
 
                 node.mark();
             },
-            getFill(node: SunBurstHierarchyNode) {
+            getFill(node: RoseChartHierarchyNode) {
                 let rows = node.rows();
 
                 // Empty leaf nodes are empty
@@ -168,10 +182,10 @@ window.Spotfire.initialize(async (mod) => {
 
                 return node.rows()[firstMarkedRow].color().hexCode;
             },
-            getId(node: SunBurstHierarchyNode) {
+            getId(node: RoseChartHierarchyNode) {
                 return node.key;
             },
-            getLabel(node: SunBurstHierarchyNode, availablePixels: number) {
+            getLabel(node: RoseChartHierarchyNode, availablePixels: number) {
                 if (labels.value() == "off") {
                     return "";
                 }
@@ -200,7 +214,7 @@ window.Spotfire.initialize(async (mod) => {
                     weight: context.styling.general.font.fontWeight
                 }
             },
-            getCenterText(node: SunBurstHierarchyNode) {
+            getCenterText(node: RoseChartHierarchyNode) {
                 let percentage = 0;
                 try {
                     percentage = (100 * node.rows().reduce((p, r) => p + getAbsSize(r), 0)) / totalSize;
@@ -217,7 +231,7 @@ window.Spotfire.initialize(async (mod) => {
                     text: node.formattedPath()
                 };
             },
-            onMouseover(node: SunBurstHierarchyNode) {
+            onMouseover(node: RoseChartHierarchyNode) {
                 mod.controls.tooltip.show(node.formattedPath());
             },
             onMouseLeave: mod.controls.tooltip.hide
