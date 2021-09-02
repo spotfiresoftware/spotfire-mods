@@ -97,13 +97,24 @@ function buildSectors(rootNode: DataViewHierarchyNode, hasSizeExpression: boolea
         return pMax;
     }, 0);
 
+    function createId(leaf: DataViewHierarchyNode) {
+        let parts = [];
+        let node: DataViewHierarchyNode | undefined = leaf;
+        while (node) {
+            parts.push(node.key != null ? "v:" + node.key : "null");
+            node = node.parent;
+        }
+
+        return parts.join("-");
+    }
+
     return rootNode.leaves().flatMap((leaf, i) => {
         let x0 = pos;
         pos += sectorSize;
         let x1 = pos;
         let y0 = 0;
         return {
-            id: leaf.key != null ? "key:" + leaf.key : "null",
+            id: createId(leaf),
             label: leaf.formattedPath(),
             mark() {
                 if (d3.event.ctrlKey) {
