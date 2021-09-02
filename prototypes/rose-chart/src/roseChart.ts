@@ -53,12 +53,19 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     }
 
     function describeArc(d: { r: number; x0: number; x1: number }) {
-        var start = polarToCartesian(0, 0, d.r, d.x1);
-        var end = polarToCartesian(0, 0, d.r, d.x0);
+        
+        let midX = (d.x1 + d.x0) /2;
+        var start = polarToCartesian(0, 0, d.r, d.x0);
+        var end = polarToCartesian(0, 0, d.r, d.x1);
 
-        var flag = 0;
+        if (midX > Math.PI / 2 && midX < 3*Math.PI /2)
+        {
+            [start, end] = [end, start];
+            return ["M", start.x, start.y, "A", d.r, d.r, 0, 0, 0, end.x, end.y].join(" ");
+        }
 
-        return ["M", start.x, start.y, "A", d.r, d.r, flag, flag, 0, end.x, end.y].join(" ");
+        return ["M", start.x, start.y, "A", d.r, d.r, 1, 0, 1, end.x, end.y].join(" ");
+
     }
 
     const svg = d3
@@ -71,13 +78,10 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     const sectors = svg
         .select("g#sectors")
         .selectAll("path")
-        .data(slices.flatMap((s) => s.sectors.map((sector) => ({ ...s, ...sector }))));
-
-    const labelColorLuminance = luminance(
-        parseInt(settings.style.label.color.substr(1, 2), 16),
-        parseInt(settings.style.label.color.substr(3, 2), 16),
-        parseInt(settings.style.label.color.substr(5, 2), 16)
-    );
+        .data(
+            slices.flatMap((s) => s.sectors.map((sector) => ({ ...s, ...sector }))),
+            (d: any) => d.id
+        );
 
     var newSectors = sectors
         .enter()
@@ -130,15 +134,6 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         };
     }
 
-    function flipUpperQuadrants(d: RoseChartSlice) {
-        let midX = (d.x0 + d.x1) / 2;
-        if (midX <= Math.PI / 2 || midX >= (3 * Math.PI) / 2) {
-            return `scale(-1,1), rotate(-${2 * Math.round((midX * 180) / Math.PI)})`;
-        }
-
-        return "";
-    }
-
     svg.select("g#labelPaths")
         .attr("pointer-events", "none")
         .selectAll<any, RoseChartSlice>("path")
@@ -148,15 +143,16 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                 return enter
                     .append("path")
                     .attr("fill", "none")
-                    .attr("transform", flipUpperQuadrants)
                     .call((enter) =>
-                        enter.transition("create paths").duration(animationSpeed).attrTween("d", tweenArcForLabelPath)
+                        enter
+                            .transition("create paths")
+                            .duration(animationSpeed)
+                            .attrTween("d", tweenArcForLabelPath)
                     )
                     .attr("id", (d) => "label-" + btoa(d.id));
             },
             (update) =>
                 update
-                    .attr("transform", flipUpperQuadrants)
                     .call((update) =>
                         update
                             .transition("update paths")
@@ -176,7 +172,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
             (enter) => {
                 return enter
                     .append("text")
-                    .on("click", d => d.mark())
+                    .on("click", (d) => d.mark())
                     .attr("class", "label")
                     .style("opacity", 0)
                     .attr("dy", "0.35em")
@@ -210,17 +206,12 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         classesToMark: "sector"
     });
 
-    function getTransformData(data: any) {
-        // d3.interpolate should not try to interpolate other properties
-        return (({ value, x0, x1, y0, y1 }) => ({ value, x0, x1, y0, y1 }))(data);
-    }
-
     function tweenArc(this: any, data: any) {
-        let prevValue = this.__prev ? this.__prev : {};
+        let prevValue = this.__prev || {};
         let newValue = data;
         this.__prev = newValue;
 
-        var i = interpolate(prevValue, newValue);
+        var i = d3.interpolate(prevValue, newValue);
 
         return function (value: any) {
             return arc(i(value))!;
@@ -232,71 +223,11 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         let newValue = createArcArgument(data);
         this.__prev = newValue;
 
-        console.log(prevValue, newValue);
-        var i = interpolate(prevValue, newValue);
+        var i = d3.interpolate(prevValue, newValue);
 
         return function (value: any) {
             return describeArc(i(value))!;
         };
-    }
-
-    function interpolate(start: any, end: any) {
-        let nearestEnd = { ...end };
-        if (start && end) {
-            const midStartX = (start.x0 + start.x1) / 2;
-            const midEndX = (end.x0 + end.x1) / 2;
-            if (Math.abs(midEndX - midStartX) > Math.PI) {
-                nearestEnd.x0 += 2 * Math.PI * Math.sign(midStartX - midEndX);
-                nearestEnd.x1 += 2 * Math.PI * Math.sign(midStartX - midEndX);
-            }
-        }
-
-        return d3.interpolate(start, nearestEnd);
-    }
-
-    function labelPosition(d: any) {
-        const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-        const y = ((d.y0 + d.y1) / 2) * radius;
-        return { x, y };
-    }
-
-    function tweenTransform(this: any, data: any) {
-        let prevValue = this.__prev ? getTransformData(this.__prev) : {};
-        let newValue = getTransformData(data);
-        this.__prev = newValue;
-
-        var i = interpolate(prevValue, newValue);
-
-        return function (value: any) {
-            var { x, y } = labelPosition(i(value));
-            return `rotate(${x - 90}) translate(${y},0) rotate(${Math.sin((Math.PI * x) / 180) >= 0 ? 0 : 180})`;
-        };
-    }
-
-    function getTextColor(fillColor: string) {
-        if (settings.style.background.color == "transparent") {
-            return settings.style.label.color;
-        }
-        return contrastToLabelColor(fillColor) > 1.7 ? settings.style.label.color : settings.style.background.color;
-    }
-
-    function luminance(r: number, g: number, b: number) {
-        var a = [r, g, b].map(function (v) {
-            v /= 255;
-            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-        });
-        return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
-    }
-
-    function contrastToLabelColor(fillColor: string) {
-        var fillLuminance = luminance(
-            parseInt(fillColor.substr(1, 2), 16),
-            parseInt(fillColor.substr(3, 2), 16),
-            parseInt(fillColor.substr(5, 2), 16)
-        );
-        var brightest = Math.max(fillLuminance, labelColorLuminance);
-        var darkest = Math.min(fillLuminance, labelColorLuminance);
-        return (brightest + 0.05) / (darkest + 0.05);
     }
 
     function onMouseleave(d: any) {
