@@ -130,9 +130,17 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         };
     }
 
+    function flipUpperQuadrants(d: RoseChartSlice) {
+        let midX = (d.x0 + d.x1) / 2;
+        if (midX <= Math.PI / 2 || midX >= (3 * Math.PI) / 2) {
+            return `scale(-1,1), rotate(-${2 * Math.round((midX * 180) / Math.PI)})`;
+        }
+        
+        return "";
+    }
+
     svg.select("g#labelPaths")
         .attr("pointer-events", "none")
-        // .attr("text-anchor", "middle")
         .selectAll<any, RoseChartSlice>("path")
         .data(slices, (d: RoseChartSlice) => `path-${d.id}`)
         .join(
@@ -140,6 +148,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                 return enter
                     .append("path")
                     .attr("fill", "none")
+                    .attr("transform", flipUpperQuadrants)
                     .call((enter) =>
                         enter.transition("create paths").duration(animationSpeed).attrTween("d", tweenArcForLabelPath)
                     )
@@ -147,6 +156,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
             },
             (update) =>
                 update
+                    .attr("transform", flipUpperQuadrants)
                     .call((update) =>
                         update
                             .transition("update paths")
