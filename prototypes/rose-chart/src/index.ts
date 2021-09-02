@@ -1,4 +1,4 @@
-import { render, RoseChartHierarchyNode, RoseChartSettings } from "./roseChart";
+import { render, RoseChartHierarchyNode, RoseChartSector, RoseChartSettings } from "./roseChart";
 import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Size } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import * as d3 from "d3";
@@ -47,7 +47,11 @@ window.Spotfire.initialize(async (mod) => {
             rootNode = (await dataView.allRows())?.[0]?.leafNode(hierarchyAxisName) as DataViewHierarchyNode;
         }
 
-        const plotWarnings = validateDataView(rootNode, !!showNullValues.value() && hasHierarchyExpression, hasSizeExpression);
+        const plotWarnings = validateDataView(
+            rootNode,
+            !!showNullValues.value() && hasHierarchyExpression,
+            hasSizeExpression
+        );
 
         const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis, plotWarnings);
 
@@ -63,7 +67,7 @@ window.Spotfire.initialize(async (mod) => {
                 return fakeNodes;
             }
 
-            if(node.level == -1) {
+            if (node.level == -1) {
                 return (node as DataViewHierarchyNode).leaves();
             }
 
@@ -82,16 +86,13 @@ window.Spotfire.initialize(async (mod) => {
                     markedRowCount: () => (r.isMarked() ? 1 : 0),
                     parent: node,
                     rows: () => [r],
-                    virtualLeaf: true,
+                    virtualLeaf: true
                 } as RoseChartHierarchyNode;
             }
         }
 
         const hierarchy: d3.HierarchyNode<RoseChartHierarchyNode> = d3
-            .hierarchy<RoseChartHierarchyNode>(
-                rootNode,
-                flattenColorsIfColorSplits
-            )
+            .hierarchy<RoseChartHierarchyNode>(rootNode, flattenColorsIfColorSplits)
             .eachAfter((n) => {
                 var d = n.data;
                 d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
@@ -114,21 +115,12 @@ window.Spotfire.initialize(async (mod) => {
 
         totalSize = hierarchy.value || 0;
 
-        let maxSector = (rootNode.leaves() || []).reduce((pMax, node) => {
-            let sum = node.rows().reduce((p, c) => p + getAbsSize(c), 0);
-            if(sum > pMax) {
-                return sum;
-            }
-
-            return pMax
-        }, 0)
-
         const settings: RoseChartSettings = {
             containerSelector: "#mod-container",
             size: windowSize,
-            totalSize: maxSector,
             clearMarking: dataView.clearMarking,
             mark(node: RoseChartHierarchyNode) {
+                return;
                 if (d3.event.ctrlKey) {
                     node.mark("ToggleOrAdd");
                     return;
@@ -150,7 +142,8 @@ window.Spotfire.initialize(async (mod) => {
                 }
 
                 // When the path has empty values, make sure all children are transparent. This is also a warning.
-                if (showNullValues.value() &&
+                if (
+                    showNullValues.value() &&
                     rows[0]
                         .categorical(hierarchyAxisName)
                         .value()
@@ -185,23 +178,14 @@ window.Spotfire.initialize(async (mod) => {
             getId(node: RoseChartHierarchyNode) {
                 return node.key;
             },
-            getLabel(node: RoseChartHierarchyNode, availablePixels: number) {
+            getLabel(node: RoseChartSector, availablePixels: number) {
+                
                 if (labels.value() == "off") {
                     return "";
                 }
 
-                if (labels.value() == "marked" && node.markedRowCount() == 0) {
-                    return "";
-                }
-                const fontSize = context.styling.general.font.fontSize;
-                const fontWidth = fontSize * 0.7;
-
-                let label = node.formattedValue();
-                if (label.length > availablePixels / fontWidth) {
-                    return label.slice(0, Math.max(1, availablePixels / fontWidth - 2)) + "…";
-                }
-
-                return label;
+                return node.label;
+                
             },
             style: {
                 marking: { color: context.styling.scales.font.color },
@@ -215,6 +199,7 @@ window.Spotfire.initialize(async (mod) => {
                 }
             },
             getCenterText(node: RoseChartHierarchyNode) {
+                return {value: "", text: ""};
                 let percentage = 0;
                 try {
                     percentage = (100 * node.rows().reduce((p, r) => p + getAbsSize(r), 0)) / totalSize;
@@ -232,12 +217,13 @@ window.Spotfire.initialize(async (mod) => {
                 };
             },
             onMouseover(node: RoseChartHierarchyNode) {
-                mod.controls.tooltip.show(node.formattedPath());
+                // mod.controls.tooltip.show(node.formattedPath());
             },
             onMouseLeave: mod.controls.tooltip.hide
         };
 
-        render(hierarchy, settings);
+        let data = buildSectors(rootNode, hasSizeExpression);
+        render(data, settings);
 
         renderSettingsButton(mod, labels, showNullValues);
         renderWarningsIcon(mod, plotWarnings);
@@ -246,16 +232,64 @@ window.Spotfire.initialize(async (mod) => {
     }
 });
 
+function buildSectors(rootNode: DataViewHierarchyNode, hasSizeExpression: boolean): RoseChartSector[] {
+    let sectorSize = (2 * Math.PI) / rootNode.leaves().length;
+    let pos = 0;
+
+    const getAbsSize = (r: DataViewRow) =>
+        hasSizeExpression ? Math.abs(r.continuous(sizeAxisName).value<number>() || 0) : 1;
+    let maxLeafSum = (rootNode.leaves() || []).reduce((pMax, node) => {
+        let sum = node.rows().reduce((p, c) => p + getAbsSize(c), 0);
+        if (sum > pMax) {
+            return sum;
+        }
+
+        return pMax;
+    }, 0);
+
+    return rootNode.leaves().flatMap((leaf, i) => {
+        let x0 = pos;
+        pos += sectorSize;
+        let x1 = pos;
+        let y0 = 0;
+
+        return leaf.rows().map((row) => {
+            const value = getAbsSize(row);
+
+            let y1 = y0 + value / maxLeafSum;
+
+            let sector: RoseChartSector = {
+                x0: x0,
+                x1: x1,
+                label: leaf.formattedPath(),
+                y0: y0,
+                y1: y1,
+                color: row.color().hexCode,
+                id: row.elementId(),
+                value: value,
+                mark() {
+                    if (d3.event.ctrlKey) {
+                        row.mark("ToggleOrAdd");
+                        return;
+                    }
+
+                    row.mark();
+                }
+            };
+
+            y0 = y1;
+
+            return sector as any;
+        });
+    });
+}
+
 /**
  * Validate that no empty path element is followed by a value and that all values are positive.
  * @param rootNode - The hierarchy root.
  * @param warnings - The warnings array
  */
-function validateDataView(
-    rootNode: DataViewHierarchyNode,
-    validateHierarchy: boolean,
-    validataSize: boolean
-) {
+function validateDataView(rootNode: DataViewHierarchyNode, validateHierarchy: boolean, validataSize: boolean) {
     let warnings: string[] = [];
     let issues = 0;
     let rows = rootNode.rows();
@@ -304,7 +338,12 @@ function validateDataView(
  * @param hierarchyAxis The hierarchy axis.
  * @returns The level from which to start coloring in the sunburst chart.
  */
-function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis, hierarchyAxis: Axis, warnings: string[]) {
+function getColoringStartLevel(
+    rootNode: DataViewHierarchyNode,
+    colorAxis: Axis,
+    hierarchyAxis: Axis,
+    warnings: string[]
+) {
     let coloringStartLevel = 0;
 
     // If the color axis is continuous or empty the coloring starts from the root.
@@ -340,7 +379,9 @@ function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis,
     // Make sure there is an available coloring level.
     if (coloringStartLevel == hierarchyAxis.parts.length) {
         coloringStartLevel = hierarchyAxis.parts.length - 1;
-        warnings.push("The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times.")
+        warnings.push(
+            "The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times."
+        );
     }
 
     return coloringStartLevel;
@@ -362,8 +403,7 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullVal
                     if (event.name == "labels") {
                         labels.set(event.value);
                     }
-                    if (event.name == "showNullValues")
-                    {
+                    if (event.name == "showNullValues") {
                         showNullValues.set(event.value);
                     }
                 }
@@ -405,7 +445,6 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullVal
                         })
                     ]
                 })
-
             ]
         );
     };

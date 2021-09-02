@@ -30,7 +30,6 @@ export interface RoseChartSettings {
     onMouseLeave?(): void;
     containerSelector: string;
     size: { width: number; height: number };
-    totalSize: number;
     getFill(data: unknown): string;
     getId(data: unknown): string;
     getLabel(data: unknown, availablePixels: number): string;
@@ -40,43 +39,29 @@ export interface RoseChartSettings {
     clearMarking(): void;
 }
 
-export function render(hierarchy: d3.HierarchyNode<RoseChartHierarchyNode>, settings: RoseChartSettings) {
-    const { size } = settings;
+export interface RoseChartSector {
+    x0: number;
+    x1: number;
+    label :string;
+    value: number;
+    y0: number;
+    y1: number;
+    color: string;
+    id: string;
+    mark(): void;
+}
 
-    const showOnlyRoot = hierarchy.height ? false : true;
+export function render(sectors2: RoseChartSector[], settings: RoseChartSettings) {
+    const { size } = settings;
 
     const radius = Math.min(size.width, size.height) / 2;
 
-    const twoDegrees = Math.PI * 2 / 360 * 2;
-
     const arc = d3
-        .arc<{ x0: number; y0: number; x1: number; y1: number }>()
+        .arc<{ x0: number; y0: number; x1: number; y1: number; value: number }>()
         .startAngle((d) => d.x0)
         .endAngle((d) => d.x1)
-        .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0))
-        .padRadius(radius / 2)
-        .innerRadius((d) => (0))
-        .outerRadius((d) => d.value / settings.totalSize * radius);
-
-    const partition = d3.partition().size([Math.PI * 2, radius]);
-
-    const partitionLayout = partition(hierarchy);
-
-    hierarchy.each((node) => {
-        console.log(node);
-        if(!node.children) {
-            return;
-        }
-
-        let sectorSize = 2* Math.PI / node.children.length;
-        let pos = 0;
-
-        for (const child of node.children) {
-            child.x0 = pos;
-            pos += sectorSize;
-            child.x1 = pos;
-        }
-    })
+        .innerRadius((d) => d.y0 * radius)
+        .outerRadius((d) => d.y1 * radius);
 
     const svg = d3
         .select(settings.containerSelector)
@@ -85,16 +70,7 @@ export function render(hierarchy: d3.HierarchyNode<RoseChartHierarchyNode>, sett
         .attr("height", size.height);
     svg.select("g#container").attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
 
-    const visibleSectors = partitionLayout
-        .descendants()
-        .filter((d) => (d.depth || showOnlyRoot) && settings.getFill(d.data) !== "transparent");
-
-    const sectors = svg
-        .select("g#sectors")
-        .selectAll("path")
-        .data(visibleSectors, (d: any) => {
-            return settings.getId(d.data);
-        });
+    const sectors = svg.select("g#sectors").selectAll("path").data(sectors2);
 
     const labelColorLuminance = luminance(
         parseInt(settings.style.label.color.substr(1, 2), 16),
@@ -107,21 +83,29 @@ export function render(hierarchy: d3.HierarchyNode<RoseChartHierarchyNode>, sett
         .append("svg:path")
         .attr("class", "sector")
         .on("click", (d) => {
-            settings.mark(d.data);
+            d.mark();
             d3.event.stopPropagation();
         })
         .style("stroke-width", 1)
         .style("opacity", 0)
-        .attr("fill", (d: any) => settings.getFill(d.data));
+        .attr("fill", (d: any) => d.color);
 
+    const padding = 5;
     sectors
         .merge(newSectors)
         .attr("class", (d: any) => (d.data && d.data.actualValue < 0 ? "negative sector" : "sector"))
         .transition("add sectors")
+        .attr(
+            "transform",
+            (d) =>
+                `translate(${Math.cos((d.x0 + d.x1) / 2 - Math.PI / 2) * padding}, ${
+                    Math.sin((d.x0 + d.x1) / 2 - Math.PI / 2) * padding
+                })`
+        )
         .duration(animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
-        .attr("fill", (d: any) => settings.getFill(d.data))
+        .attr("fill", (d: any) => d.color)
         .end()
         .then(
             () => {},
@@ -139,8 +123,8 @@ export function render(hierarchy: d3.HierarchyNode<RoseChartHierarchyNode>, sett
     svg.select("g#labels")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
-        .selectAll("text")
-        .data(visibleSectors, (d: any) => `label-${settings.getId(d.data)}`)
+        .selectAll<any, RoseChartSector>("text")
+        .data(sectors2, (d: RoseChartSector) => `label-${d.id}`)
         .join(
             (enter) => {
                 return enter
@@ -150,15 +134,15 @@ export function render(hierarchy: d3.HierarchyNode<RoseChartHierarchyNode>, sett
                     .attr("font-size", settings.style.label.size)
                     .attr("font-style", settings.style.label.style)
                     .attr("font-weight", settings.style.label.weight)
-                    .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
+                    .attr("fill", (d) => getTextColor(d.color))
                     .attr("font-family", settings.style.label.fontFamily)
-                    .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
+                    .text((d) => settings.getLabel(d, d.y1 - d.y0))
                     .call((enter) =>
                         enter
                             .transition("add labels")
                             .duration(animationSpeed)
                             .style("opacity", (d) =>
-                                d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
+                            (d.y0 + d.y1) / 2 * radius * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
                             )
                             .attrTween("transform", tweenTransform)
                     );
@@ -168,11 +152,11 @@ export function render(hierarchy: d3.HierarchyNode<RoseChartHierarchyNode>, sett
                     update
                         .transition("update labels")
                         .duration(animationSpeed)
-                        .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
+                        .attr("fill", (d) => getTextColor(d.color))
                         .style("opacity", (d) =>
-                            d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
+                            (d.y0 + d.y1) / 2 * radius * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
                         )
-                        .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
+                        .text((d) => settings.getLabel(d, d.y1 - d.y0))
                         .attrTween("transform", tweenTransform)
                 ),
             (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
@@ -218,7 +202,7 @@ export function render(hierarchy: d3.HierarchyNode<RoseChartHierarchyNode>, sett
 
     function labelPosition(d: any) {
         const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-        const y = d.value / settings.totalSize * radius - 50;
+        const y = ((d.y0 + d.y1) / 2) * radius;
         return { x, y };
     }
 
