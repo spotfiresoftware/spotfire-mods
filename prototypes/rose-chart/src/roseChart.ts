@@ -56,9 +56,9 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         var start = polarToCartesian(0, 0, d.r, d.x1);
         var end = polarToCartesian(0, 0, d.r, d.x0);
 
-        var largeArcFlag = (d.x1 - d.x0) / 2 <= Math.PI ? 1 : 0;
+        var flag = 0;
 
-        return ["M", start.x, start.y, "A", d.r, d.r, 0, 0, 0, end.x, end.y].join(" ") + "Z";
+        return ["M", start.x, start.y, "A", d.r, d.r, flag, flag, 0, end.x, end.y].join(" ");
     }
 
     const svg = d3
@@ -177,8 +177,8 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .call((enter) => enter.transition("add labels").duration(animationSpeed).style("opacity", 1))
                     .append("textPath")
                     .attr("href", (d) => "#label-" + btoa(d.id))
-                    .attr("startOffset", "25%")
-                    .style("text-anchor", "start")
+                    .attr("startOffset", "50%")
+                    .style("text-anchor", "center")
                     .text((d) => d.label);
             },
             (update) =>
