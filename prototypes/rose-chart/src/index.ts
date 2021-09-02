@@ -1,4 +1,4 @@
-import { render, RoseChartHierarchyNode, RoseChartSettings } from "./sunburst";
+import { render, RoseChartHierarchyNode, RoseChartSettings } from "./roseChart";
 import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Size } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import * as d3 from "d3";
