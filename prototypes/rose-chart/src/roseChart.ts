@@ -135,7 +135,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         if (midX <= Math.PI / 2 || midX >= (3 * Math.PI) / 2) {
             return `scale(-1,1), rotate(-${2 * Math.round((midX * 180) / Math.PI)})`;
         }
-        
+
         return "";
     }
 
@@ -169,7 +169,6 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
             (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
         );
     svg.select("g#labels")
-        .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
         .selectAll<any, RoseChartSlice>("text")
         .data(slices, (d: RoseChartSlice) => `label-${d.id}`)
@@ -177,6 +176,8 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
             (enter) => {
                 return enter
                     .append("text")
+                    .on("click", d => d.mark())
+                    .attr("class", "label")
                     .style("opacity", 0)
                     .attr("dy", "0.35em")
                     .attr("font-size", settings.style.label.size)
@@ -205,7 +206,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
         mark: (d: RoseChartSector) => d.mark(),
-        ignoredClickClasses: "sector",
+        ignoredClickClasses: ["sector", "label"],
         classesToMark: "sector"
     });
 

@@ -3,7 +3,7 @@ import * as d3 from "d3";
 export interface MarkingSettings {
     clearMarking(): void;
     mark(data: unknown): void;
-    ignoredClickClasses: string;
+    ignoredClickClasses: string[];
     classesToMark: string;
 }
 
@@ -32,7 +32,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
 
         // Ignore rectangular markings that were just a click.
         if (Math.abs(start[0] - end[0]) < 4 || Math.abs(start[1] - end[1]) < 4) {
-            if (!firstTarget?.classList?.contains(settings.ignoredClickClasses)) {
+            if (Array.from(firstTarget?.classList).findIndex((c:any) => settings.ignoredClickClasses.includes(c)) >= 0) {
                 settings.clearMarking();
             }
 

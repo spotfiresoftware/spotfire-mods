@@ -105,13 +105,20 @@ function buildSectors(rootNode: DataViewHierarchyNode, hasSizeExpression: boolea
         return {
             id: leaf.key != null ? "key:" + leaf.key : "null",
             label: leaf.formattedPath(),
-            mark: leaf.mark,
+            mark() {
+                if (d3.event.ctrlKey) {
+                    leaf.mark("ToggleOrAdd");
+                    return;
+                }
+
+                leaf.mark();
+            },
             sectors: leaf.rows().map(createSector),
             x0: x0,
             x1: x1
-        }
+        };
 
-        function createSector(row: DataViewRow) : RoseChartSector {
+        function createSector(row: DataViewRow): RoseChartSector {
             const value = getAbsSize(row);
 
             let y1 = y0 + value / maxLeafSum;
