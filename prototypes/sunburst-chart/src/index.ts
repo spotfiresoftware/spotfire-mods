@@ -1,8 +1,8 @@
-import { render, SunBurstHierarchyNode, SunBurstSettings } from "./sunburst";
+import * as d3 from "d3";
 import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Size } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
-import * as d3 from "d3";
 import { interactionLock } from "./interactionLock";
+import { render, SunBurstHierarchyNode, SunBurstSettings } from "./sunburst";
 
 const hierarchyAxisName = "Hierarchy";
 const colorAxisName = "Color";
@@ -18,13 +18,31 @@ window.Spotfire.initialize(async (mod) => {
         mod.visualization.axis(colorAxisName),
         mod.visualization.axis(sizeAxisName),
         mod.property<string>("labels"),
-        mod.property<boolean>("showNullValues")
+        mod.property<boolean>("showNullValues"),
+        mod.property<string>("interactionMode"),
+        mod.property<string>("rootNode")
     );
 
     let interaction = interactionLock();
     reader.subscribe(generalErrorHandler(mod, 10000, interaction)(onChange));
 
     let totalSize = 0;
+
+    function findNode(jsonPath: string | null, rootNode: DataViewHierarchyNode | null) {
+        if (jsonPath == null || rootNode == null) {
+            return undefined;
+        }
+        let path = jsonToPath(jsonPath);
+        let node: DataViewHierarchyNode | undefined = rootNode;
+        if (path.length == 0) {
+            return undefined;
+        }
+
+        path.forEach((key) => {
+            node = node?.children?.find((c) => c.key == key);
+        });
+        return node;
+    }
 
     async function onChange(
         dataView: DataView,
@@ -33,18 +51,23 @@ window.Spotfire.initialize(async (mod) => {
         colorAxis: Axis,
         sizeAxis: Axis,
         labels: ModProperty<string>,
-        showNullValues: ModProperty<boolean>
+        showNullValues: ModProperty<boolean>,
+        interactionMode: ModProperty<string>,
+        rootNodePath: ModProperty<string>
     ) {
         const hasSizeExpression = !!sizeAxis.parts.length;
         const hasHierarchyExpression = !!hierarchyAxis.parts.length;
         const hasColorHierarchy = !!colorAxis.parts.length && colorAxis.isCategorical;
 
-        let rootNode: DataViewHierarchyNode;
+        let hierarchyRoot = await (await dataView.hierarchy(hierarchyAxisName))!.root();
+        let rootNode = findNode(rootNodePath.value(), hierarchyRoot);
 
-        if (hasHierarchyExpression) {
-            rootNode = (await (await dataView.hierarchy(hierarchyAxisName))!.root()) as DataViewHierarchyNode;
-        } else {
-            rootNode = (await dataView.allRows())?.[0]?.leafNode(hierarchyAxisName) as DataViewHierarchyNode;
+        if (!rootNode) {
+            if (hasHierarchyExpression && hierarchyRoot) {
+                rootNode = hierarchyRoot;
+            } else {
+                rootNode = (await dataView.allRows())?.[0]?.leafNode(hierarchyAxisName) as DataViewHierarchyNode;
+            }
         }
 
         const plotWarnings = validateDataView(
@@ -94,15 +117,8 @@ window.Spotfire.initialize(async (mod) => {
                 d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
 
                 if (!d.key) {
-                    // The entire path of keys is needed to identify a node.
-                    let calculatedKey = "";
-                    let currentNode: SunBurstHierarchyNode | undefined = d;
-                    while (currentNode) {
-                        calculatedKey += (currentNode.key ? `key:${currentNode.key}` : "null") + "|";
-                        currentNode = currentNode.parent;
-                    }
-
-                    d.key = calculatedKey;
+                    // The entire path of keys is needed to identify a n
+                    //d.key = btoa(pathToJson(getPathToNode(d)));
                 }
             })
             .sum((d: SunBurstHierarchyNode) =>
@@ -114,14 +130,23 @@ window.Spotfire.initialize(async (mod) => {
         const settings: SunBurstSettings = {
             containerSelector: "#mod-container",
             size: windowSize,
-            clearMarking: dataView.clearMarking,
-            mark(node: SunBurstHierarchyNode) {
-                if (d3.event.ctrlKey) {
-                    node.mark("ToggleOrAdd");
-                    return;
+            clearMarking: () => {
+                var currentPath = rootNodePath.value();
+                if (currentPath) {
+                    let json = JSON.parse(currentPath) as { path: (string | null)[] };
+                    json.path.pop();
+                    rootNodePath.set(JSON.stringify(json));
                 }
+            },
+            mark(node: SunBurstHierarchyNode) {
+                if (node.children && node.children.length) {
+                    rootNodePath.set(JSON.stringify({ path: getPathToNode(node) }));
+                } // if (d3.event.ctrlKey) {
+                //     node.mark("ToggleOrAdd");
+                //     return;
+                // }
 
-                node.mark();
+                // node.mark();
             },
             getFill(node: SunBurstHierarchyNode) {
                 let rows = node.rows();
@@ -152,7 +177,7 @@ window.Spotfire.initialize(async (mod) => {
                 if (node.level + 1 <= coloringFromLevel) {
                     if (
                         node.rows().findIndex((r) => r.isMarked()) >= 0 ||
-                        rootNode.rows().findIndex((r) => r.isMarked()) == -1
+                        rootNode?.rows().findIndex((r) => r.isMarked()) == -1
                     ) {
                         // Any child marked or no marked rows in the data view;
                         return "rgb(208,208,208)";
@@ -234,6 +259,25 @@ window.Spotfire.initialize(async (mod) => {
     }
 });
 
+function jsonToPath(str: string): (string | null)[] {
+    let json = JSON.parse(str) as { path: (string | null)[] };
+    return json.path;
+}
+
+function pathToJson(path: (string | null)[]): string {
+    return JSON.stringify({ path });
+}
+
+function getPathToNode(d: SunBurstHierarchyNode): (string | null)[] {
+    let path = [d.key];
+    let node = d.parent as SunBurstHierarchyNode | undefined;
+    while (node && node.level >= 0) {
+        path.push(node.key);
+        node = node.parent;
+    }
+    return path.reverse();
+}
+
 /**
  * Validate that no empty path element is followed by a value and that all values are positive.
  * @param rootNode - The hierarchy root.
@@ -296,16 +340,10 @@ function getColoringStartLevel(
 ) {
     let coloringStartLevel = 0;
 
-    // If the color axis is empty the coloring starts from the root.
-    if (!colorAxis.parts.length) {
+    // If the color axis is continuous or empty, the coloring starts from the root.
+    if (!colorAxis.parts.length || !colorAxis.isCategorical) {
         return 0;
     }
-
-    // If the color axis is continuous, only color leaf nodes.
-    if (!colorAxis.isCategorical) {
-        return hierarchyAxis.parts.length - 1;
-    }
-
 
     const uniqueCount = (arr?: number[]) => arr?.filter((item, i, a) => a.indexOf(item) === i).length || 0;
 

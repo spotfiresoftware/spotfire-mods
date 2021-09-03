@@ -14,6 +14,16 @@
             "name": "showNullValues",
             "type": "boolean",
             "defaultValue": false
+        },
+        {
+            "name": "interactionMode",
+            "defaultValue": "mark",
+            "type": "string"
+        },
+        {
+            "name": "rootNode",
+            "type": "string",
+            "defaultValue": null
         }
     ],
     "dataViewDefinition": {
