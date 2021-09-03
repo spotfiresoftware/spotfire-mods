@@ -2,6 +2,8 @@ import * as d3 from "d3";
 import { rectangularSelection } from "./rectangularMarking";
 
 const animationSpeed = 250;
+const sectorPadding = 5;
+
 
 export interface RoseChartSettings {
     style: {
@@ -91,7 +93,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         .transition("circles")
         .duration(animationSpeed)
         .attr("r", function (d: number, i: number) {
-            return ((radius + 5) / 9) * d;
+            return ((radius + sectorPadding) / 9) * d;
         })
         .style("stroke", settings.style.circles.color)
         .style("opacity", "0.7");
@@ -118,7 +120,6 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         .style("opacity", 0)
         .attr("fill", (d: any) => d.color);
 
-    const padding = 5;
     sectors
         .merge(newSectors)
         .attr("class", (d: any) => (d.data && d.data.actualValue < 0 ? "negative sector" : "sector"))
@@ -126,8 +127,8 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         .attr(
             "transform",
             (d) =>
-                `translate(${Math.cos((d.x0 + d.x1) / 2 - Math.PI / 2) * padding}, ${
-                    Math.sin((d.x0 + d.x1) / 2 - Math.PI / 2) * padding
+                `translate(${Math.cos((d.x0 + d.x1) / 2 - Math.PI / 2) * sectorPadding}, ${
+                    Math.sin((d.x0 + d.x1) / 2 - Math.PI / 2) * sectorPadding
                 })`
         )
         .duration(animationSpeed)
