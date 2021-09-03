@@ -18,6 +18,7 @@ export interface SunBurstHierarchyNode {
     rows: () => DataViewRow[];
     virtualLeaf?: boolean;
     actualValue?: number;
+    fill?: string;
 }
 
 export interface SunBurstSettings {
@@ -30,7 +31,6 @@ export interface SunBurstSettings {
     onMouseLeave?(): void;
     containerSelector: string;
     size: { width: number; height: number };
-    getFill(data: unknown): string;
     getId(data: unknown): string;
     getLabel(data: unknown, availablePixels: number): string;
     /** Text to place in the center while hovering sectors. */
@@ -70,7 +70,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     const visibleSectors = partitionLayout
         .descendants()
-        .filter((d) => (d.depth || showOnlyRoot) && settings.getFill(d.data) !== "transparent");
+        .filter((d: any) => (d.depth || showOnlyRoot) && d.data.fill !== "transparent");
 
     const sectors = svg
         .select("g#sectors")
@@ -91,7 +91,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .attr("class", "sector")
         .style("stroke-width", 1)
         .style("opacity", 0)
-        .attr("fill", (d: any) => settings.getFill(d.data));
+        .attr("fill", (d: any) => d.data.fill);
 
     sectors
         .merge(newSectors)
@@ -106,17 +106,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .duration(animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
-        .attr("fill", (d: any) => settings.getFill(d.data));
-    // .end()
-    // .then(
-    //     () => {},
-    //     () => {
-    //         // This happens when a new dataView is rendered while the transition is in progress.
-    //     }
-    // )
-    // .finally(() => {
-    //     d3.select("#container").on("mouseleave", onMouseleave);
-    // });
+        .attr("fill", (d: any) => d.data.fill);
 
     sectors
         .exit()
@@ -144,7 +134,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                     .attr("font-size", settings.style.label.size)
                     .attr("font-style", settings.style.label.style)
                     .attr("font-weight", settings.style.label.weight)
-                    .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
+                    .attr("fill", (d:any) => getTextColor(d.data.fill))
                     .attr("font-family", settings.style.label.fontFamily)
                     .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
                     .call((enter) =>
@@ -162,7 +152,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                     update
                         .transition("update labels")
                         .duration(animationSpeed)
-                        .attr("fill", (d) => getTextColor(settings.getFill(d.data)))
+                        .attr("fill", (d:any) => getTextColor(d.data.fill))
                         .style("opacity", (d) =>
                             d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
                         )

@@ -25,7 +25,8 @@ window.Spotfire.initialize(async (mod) => {
         mod.property<string>("labels"),
         mod.property<boolean>("showNullValues"),
         mod.property<string>("interactionMode"),
-        mod.property<string>("rootNode")
+        mod.property<string>("rootNode"),
+        mod.property<boolean>("sortByValue")
     );
 
     let interaction = interactionLock();
@@ -49,6 +50,20 @@ window.Spotfire.initialize(async (mod) => {
         return node;
     }
 
+    function getSortedRows(startNode: SunBurstHierarchyNode): DataViewRow[] {
+        let rows: DataViewRow[] = [];
+        appendRecurive(startNode);
+        return rows;
+
+        function appendRecurive(node: SunBurstHierarchyNode) {
+            if (node.children) {
+                node.children.forEach(appendRecurive);
+            } else {
+                return rows.push(...node.rows());
+            }
+        }
+    }
+
     async function onChange(
         dataView: DataView,
         windowSize: Size,
@@ -58,7 +73,8 @@ window.Spotfire.initialize(async (mod) => {
         labels: ModProperty<string>,
         showNullValues: ModProperty<boolean>,
         interactionMode: ModProperty<string>,
-        rootNodePath: ModProperty<string>
+        rootNodePath: ModProperty<string>,
+        sortByValue: ModProperty<boolean>
     ) {
         const hasSizeExpression = !!sizeAxis.parts.length;
         const hasHierarchyExpression = !!hierarchyAxis.parts.length;
@@ -88,49 +104,22 @@ window.Spotfire.initialize(async (mod) => {
         const getRealSize = (r: DataViewRow) =>
             hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
 
-        function currentInteractionMode(): InteractionMode {
-            if (interactionMode.value() == InteractionMode.drilldown) {
-                return d3.event.altKey ? InteractionMode.mark : InteractionMode.drilldown;
-            }
-            return d3.event.altKey ? InteractionMode.drilldown : InteractionMode.mark;
-        }
-
-        function flattenColorsIfColorSplits(node: SunBurstHierarchyNode): any {
-            if (!hasHierarchyExpression && hasColorHierarchy && !node.virtualLeaf) {
-                const fakeNodes = node.rows().map((r) => rowToSunBurstHierarchyLeaf(r, node));
-                node.hasVirtualChildren = true;
-                return fakeNodes;
-            }
-
-            return node.level == hierarchyAxis.parts.length - 2 && hasColorHierarchy
-                ? node.children?.flatMap((child) => child.rows().map((r) => rowToSunBurstHierarchyLeaf(r, child)))
-                : node.children;
-
-            function rowToSunBurstHierarchyLeaf(r: DataViewRow, child: SunBurstHierarchyNode) {
-                return {
-                    formattedPath: () => child.formattedPath(),
-                    formattedValue: () => child.formattedValue(),
-                    key: r.elementId(),
-                    leafCount: () => 1,
-                    level: node.level + 1,
-                    mark: (operation?: any) => r.mark(operation),
-                    markedRowCount: () => (r.isMarked() ? 1 : 0),
-                    parent: node,
-                    rows: () => [r],
-                    virtualLeaf: true
-                } as SunBurstHierarchyNode;
-            }
-        }
-
-        const hierarchy: d3.HierarchyNode<SunBurstHierarchyNode> = d3
+        let hierarchy: d3.HierarchyNode<SunBurstHierarchyNode> = d3
             .hierarchy<SunBurstHierarchyNode>(rootNode, flattenColorsIfColorSplits)
-            .eachAfter((n) => {
-                var d = n.data;
-                d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
-            })
             .sum((d: SunBurstHierarchyNode) =>
                 !d.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getAbsSize(c), 0) : 0
             );
+
+        if (sortByValue.value()) {
+            hierarchy.sort((a, b) => (b.value || 0) - (a.value || 0));
+        }
+
+        // Compute fill color after sorting
+        hierarchy.eachAfter((n) => {
+            var d = n.data;
+            d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
+            n.data.fill = getFillColor(n);
+        });
 
         totalSize = hierarchy.value || 0;
 
@@ -159,53 +148,6 @@ window.Spotfire.initialize(async (mod) => {
                         node.mark();
                     }
                 }
-            },
-            getFill(node: SunBurstHierarchyNode) {
-                let rows = node.rows();
-
-                // Empty leaf nodes are empty
-                if (!rows.length) {
-                    return "transparent";
-                }
-
-                // Use faux color leaf node to retrieve color
-                if (!hasHierarchyExpression) {
-                    return node.rows()[0].color().hexCode;
-                }
-
-                // When the path has empty values, make sure all children are transparent. This is also a warning.
-                if (
-                    showNullValues.value() &&
-                    rows[0]
-                        .categorical(hierarchyAxisName)
-                        .value()
-                        .slice(0, node.level + 1)
-                        .find((pathElement) => pathElement.value() == null)
-                ) {
-                    return "transparent";
-                }
-
-                // This node does not have a unique color amongst its children.
-                if (node.level + 1 <= coloringFromLevel) {
-                    if (
-                        node.rows().findIndex((r) => r.isMarked()) >= 0 ||
-                        rootNode?.rows().findIndex((r) => r.isMarked()) == -1
-                    ) {
-                        // Any child marked or no marked rows in the data view;
-                        return "rgb(208,208,208)";
-                    }
-
-                    // Dataview has marked rows, but not any rows for this node.
-                    return "rgba(208,208,208, 0.2)";
-                }
-
-                // Attempt to use the marked color if any of the underlying rows are marked.
-                let firstMarkedRow = node.rows().findIndex((r) => r.isMarked());
-                if (firstMarkedRow == -1) {
-                    firstMarkedRow = 0;
-                }
-
-                return node.rows()[firstMarkedRow].color().hexCode;
             },
             getId(node: SunBurstHierarchyNode) {
                 function hash(s: string) {
@@ -270,12 +212,122 @@ window.Spotfire.initialize(async (mod) => {
 
         render(hierarchy, settings);
 
-        renderSettingsButton(mod, labels, showNullValues, interactionMode);
+        renderSettingsButton(mod, labels, showNullValues, interactionMode, sortByValue);
         renderWarningsIcon(mod, plotWarnings);
 
         context.signalRenderComplete();
+
+        function currentInteractionMode(): InteractionMode {
+            if (interactionMode.value() == InteractionMode.drilldown) {
+                return d3.event.altKey ? InteractionMode.mark : InteractionMode.drilldown;
+            }
+            return d3.event.altKey ? InteractionMode.drilldown : InteractionMode.mark;
+        }
+
+        function flattenColorsIfColorSplits(node: SunBurstHierarchyNode): any {
+            if (!hasHierarchyExpression && hasColorHierarchy && !node.virtualLeaf) {
+                const fakeNodes = node.rows().map((r) => rowToSunBurstHierarchyLeaf(r, node));
+                node.hasVirtualChildren = true;
+                return fakeNodes;
+            }
+
+            return node.level == hierarchyAxis.parts.length - 2 && hasColorHierarchy
+                ? node.children?.flatMap((child) => child.rows().map((r) => rowToSunBurstHierarchyLeaf(r, child)))
+                : node.children;
+
+            function rowToSunBurstHierarchyLeaf(r: DataViewRow, child: SunBurstHierarchyNode) {
+                return {
+                    formattedPath: () => child.formattedPath(),
+                    formattedValue: () => child.formattedValue(),
+                    key: r.elementId(),
+                    leafCount: () => 1,
+                    level: node.level + 1,
+                    mark: (operation?: any) => r.mark(operation),
+                    markedRowCount: () => (r.isMarked() ? 1 : 0),
+                    parent: node,
+                    rows: () => [r],
+                    virtualLeaf: true
+                } as SunBurstHierarchyNode;
+            }
+        }
+
+        function getFillColor(d3Node: d3.HierarchyNode<SunBurstHierarchyNode>) {
+            let node = d3Node.data;
+            let rows = node.rows();
+
+            // Empty leaf nodes are empty
+            if (!rows.length) {
+                return "transparent";
+            }
+
+            // Use faux color leaf node to retrieve color
+            if (!hasHierarchyExpression) {
+                return node.rows()[0].color().hexCode;
+            }
+
+            // When the path has empty values, make sure all children are transparent. This is also a warning.
+            if (
+                showNullValues.value() &&
+                rows[0]
+                    .categorical(hierarchyAxisName)
+                    .value()
+                    .slice(0, node.level + 1)
+                    .find((pathElement) => pathElement.value() == null)
+            ) {
+                return "transparent";
+            }
+
+            const hasMarking = rootNode!.rows().findIndex((r) => r.isMarked()) >= 0;
+            // This node does not have a unique color amongst its children.
+            if (node.level + 1 <= coloringFromLevel) {
+                if (node.rows().findIndex((r) => r.isMarked()) >= 0 || !hasMarking) {
+                    // Any child marked or no marked rows in the data view;
+                    return "rgb(208,208,208)";
+                }
+
+                // Dataview has marked rows, but not any rows for this node.
+                return "rgba(208,208,208, 0.2)";
+            }
+
+            if (hasMarking) {
+                let firstMarkedInTree = findFirstRow(d3Node, (r) => r.isMarked());
+                if (firstMarkedInTree) {
+                    return firstMarkedInTree.color().hexCode;
+                }
+            }
+
+            let colorAsNode = d3Node;
+            while (colorAsNode.children) {
+                colorAsNode = colorAsNode.children[0];
+            }
+
+            // Attempt to use the marked color if any of the underlying rows are marked.
+            let firstMarkedRow = colorAsNode.data.rows().findIndex((r) => r.isMarked());
+            if (firstMarkedRow == -1) {
+                firstMarkedRow = 0;
+            }
+
+            return colorAsNode.data.rows()[firstMarkedRow].color().hexCode;
+        }
     }
 });
+
+function findFirstRow(
+    node: d3.HierarchyNode<SunBurstHierarchyNode>,
+    predicate: (row: DataViewRow) => boolean
+): DataViewRow | undefined {
+    if (!node.children) {
+        return node.data.rows().find(predicate);
+    }
+
+    let found: DataViewRow | undefined;
+    node.children.every((c) => {
+        found = findFirstRow(c, predicate);
+        return !found;
+    });
+
+    return found;
+}
 
 function jsonToPath(str: string): (string | null)[] {
     let json = JSON.parse(str) as { path: (string | null)[] };
@@ -403,7 +455,8 @@ function renderSettingsButton(
     mod: Mod,
     labels: ModProperty<string>,
     showNullValues: ModProperty<boolean>,
-    interactionMode: ModProperty<string>
+    interactionMode: ModProperty<string>,
+    sortByValue: ModProperty<boolean>
 ) {
     let settingsButton = document.querySelector<HTMLElement>(".settings");
     settingsButton?.classList.toggle("visible", mod.getRenderContext().isEditing);
@@ -425,6 +478,9 @@ function renderSettingsButton(
                     }
                     if (event.name == "interactionMode") {
                         interactionMode.set(event.value);
+                    }
+                    if (event.name == "sortByValue") {
+                        sortByValue.set(event.value);
                     }
                 }
             },
@@ -483,6 +539,16 @@ function renderSettingsButton(
                             name: "showNullValues",
                             checked: showNullValues.value() || false,
                             text: "Show empty values as missing"
+                        })
+                    ]
+                }),
+                mod.controls.popout.section({
+                    children: [
+                        mod.controls.popout.components.checkbox({
+                            enabled: true,
+                            name: "sortByValue",
+                            checked: sortByValue.value() || false,
+                            text: "Sort sectors by value"
                         })
                     ]
                 })

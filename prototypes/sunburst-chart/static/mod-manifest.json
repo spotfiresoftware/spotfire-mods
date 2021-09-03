@@ -24,6 +24,11 @@
             "name": "rootNode",
             "type": "string",
             "defaultValue": null
+        },
+        {
+            "name": "sortByValue",
+            "type": "boolean",
+            "defaultValue": false
         }
     ],
     "dataViewDefinition": {
