@@ -174,8 +174,8 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
-        mark: settings.mark,
-        ignoredClickClasses: "sector",
+        mark: (d: any) => settings.mark(d.data),
+        ignoredClickClasses: ["sector"],
         classesToMark: "sector"
     });
 
