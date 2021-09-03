@@ -69,7 +69,7 @@ window.Spotfire.initialize(async (mod) => {
             onMouseLeave: mod.controls.tooltip.hide
         };
 
-        let data = buildSectors(rootNode, hasSizeExpression, hasColorExpression, labels);
+        let data = buildChartSlices(rootNode, hasSizeExpression, hasColorExpression, labels);
         render(data, settings);
 
         renderSettingsButton(mod, labels, showCircles);
@@ -79,7 +79,7 @@ window.Spotfire.initialize(async (mod) => {
     }
 });
 
-function buildSectors(
+function buildChartSlices(
     rootNode: DataViewHierarchyNode,
     hasSizeExpression: boolean,
     hasColorExpression: boolean,
@@ -182,61 +182,6 @@ function validateDataView(rootNode: DataViewHierarchyNode, validateSize: boolean
     }
 
     return warnings;
-}
-
-/**
- * Get the coloring start level. This is the level where all rows for the child nodes share coloring.
- * @param colorAxis - The color axis.
- * @param hierarchyAxis The hierarchy axis.
- * @returns The level from which to start coloring in the sunburst chart.
- */
-function getColoringStartLevel(
-    rootNode: DataViewHierarchyNode,
-    colorAxis: Axis,
-    hierarchyAxis: Axis,
-    warnings: string[]
-) {
-    let coloringStartLevel = 0;
-
-    // If the color axis is continuous or empty the coloring starts from the root.
-    if (!colorAxis.isCategorical || !colorAxis.parts.length) {
-        return 0;
-    }
-
-    const uniqueCount = (arr?: number[]) => arr?.filter((item, i, a) => a.indexOf(item) === i).length || 0;
-
-    const firstLevelWithUniqueColoring = (node: DataViewHierarchyNode): number => {
-        if (!node.children) {
-            return node.level + 1;
-        }
-
-        if (
-            Math.max(
-                ...node.children
-                    .map((child) => child.rows().map((r) => r.categorical(colorAxisName).leafIndex))
-                    .map(uniqueCount)
-            ) <= 1
-        ) {
-            // Every child has a unique color. Apply the color information on from the next level.
-            return node.level + 1;
-        }
-
-        // Recursively find the appropriate level
-        return Math.max(...node.children.map(firstLevelWithUniqueColoring));
-    };
-
-    // Find the matching expression in the hierarchy axis and use its level as a starting point for the coloring.
-    coloringStartLevel = firstLevelWithUniqueColoring(rootNode);
-
-    // Make sure there is an available coloring level.
-    if (coloringStartLevel == hierarchyAxis.parts.length) {
-        coloringStartLevel = hierarchyAxis.parts.length - 1;
-        warnings.push(
-            "The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times."
-        );
-    }
-
-    return coloringStartLevel;
 }
 
 function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showCircles: ModProperty<boolean>) {

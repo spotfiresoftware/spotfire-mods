@@ -48,26 +48,6 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         .innerRadius((d) => d.y0 * radius)
         .outerRadius((d) => d.y1 * radius);
 
-    function polarToCartesian(centerX: number, centerY: number, radius: number, angleInRadians: number) {
-        return {
-            x: centerX + radius * Math.cos(angleInRadians - Math.PI / 2),
-            y: centerY + radius * Math.sin(angleInRadians - Math.PI / 2)
-        };
-    }
-
-    function describeArc(d: { r: number; x0: number; x1: number }) {
-        let midX = (d.x1 + d.x0) / 2;
-        let start = polarToCartesian(0, 0, d.r, d.x0);
-        let end = polarToCartesian(0, 0, d.r, d.x1);
-
-        let flipText = midX > Math.PI / 2 && midX < (3 * Math.PI) / 2;
-        if (flipText) {
-            [start, end] = [end, start];
-        }
-
-        return ["M", start.x, start.y, "A", d.r, d.r, 0, 0, flipText ? 0 : 1, end.x, end.y].join(" ");
-    }
-
     const svg = d3
         .select(settings.containerSelector)
         .select("svg#svg")
@@ -251,19 +231,39 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         var i = d3.interpolate(prevValue, newValue);
 
         return function (value: any) {
-            return describeArc(i(value))!;
+            return labelArc(i(value))!;
         };
     }
 
-    function onMouseleave(d: any) {
+    function onMouseleave() {
         d3.select("#explanation").style("visibility", "hidden");
         d3.selectAll(".sector").style("stroke", null);
         settings.onMouseLeave?.();
     }
-    
+
     function onMouseover(this: any, d: any) {
         settings.onMouseover?.(d);
         d3.selectAll(".sector").style("stroke", null);
         d3.select(this).style("stroke", settings.style.marking.color);
     }
+}
+
+function polarToCartesian(centerX: number, centerY: number, radius: number, angleInRadians: number) {
+    return {
+        x: centerX + radius * Math.cos(angleInRadians - Math.PI / 2),
+        y: centerY + radius * Math.sin(angleInRadians - Math.PI / 2)
+    };
+}
+
+function labelArc(d: { r: number; x0: number; x1: number }) {
+    let midX = (d.x1 + d.x0) / 2;
+    let start = polarToCartesian(0, 0, d.r, d.x0);
+    let end = polarToCartesian(0, 0, d.r, d.x1);
+
+    let flipText = midX > Math.PI / 2 && midX < (3 * Math.PI) / 2;
+    if (flipText) {
+        [start, end] = [end, start];
+    }
+
+    return ["M", start.x, start.y, "A", d.r, d.r, 0, 0, flipText ? 0 : 1, end.x, end.y].join(" ");
 }
