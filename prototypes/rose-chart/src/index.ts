@@ -141,9 +141,12 @@ function buildChartSlices(
                 y1: y1,
                 color: row.color().hexCode,
                 id: row.elementId(),
-                label: hasColorExpression
-                    ? row.categorical(colorAxisName).formattedValue()
-                    : row.categorical(hierarchyAxisName).formattedValue(),
+                label:
+                    (hasColorExpression
+                        ? row.categorical(colorAxisName).formattedValue()
+                        : row.categorical(hierarchyAxisName).formattedValue()) +
+                    ": " +
+                    (hasSizeExpression ? row.continuous(sizeAxisName).formattedValue() : 1),
                 value: value,
                 mark() {
                     if (d3.event.ctrlKey) {
