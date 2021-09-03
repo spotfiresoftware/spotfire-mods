@@ -127,11 +127,6 @@ window.Spotfire.initialize(async (mod) => {
             .eachAfter((n) => {
                 var d = n.data;
                 d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
-
-                if (!d.key) {
-                    // The entire path of keys is needed to identify a n
-                    //d.key = btoa(pathToJson(getPathToNode(d)));
-                }
             })
             .sum((d: SunBurstHierarchyNode) =>
                 !d.children && !d.hasVirtualChildren ? d!.rows().reduce((p, c) => p + getAbsSize(c), 0) : 0
@@ -213,7 +208,13 @@ window.Spotfire.initialize(async (mod) => {
                 return node.rows()[firstMarkedRow].color().hexCode;
             },
             getId(node: SunBurstHierarchyNode) {
-                return btoa(pathToJson(getPathToNode(node)));
+                function hash(s: string) {
+                    return s.split("").reduce(function (a, b) {
+                        a = (a << 5) - a + b.charCodeAt(0);
+                        return a & a;
+                    }, 0);
+                }
+                return hash(pathToJson(getPathToNode(node))).toString();
             },
             getLabel(node: SunBurstHierarchyNode, availablePixels: number) {
                 if (labels.value() == "off") {
