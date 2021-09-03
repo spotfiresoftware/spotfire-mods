@@ -13,8 +13,8 @@ export interface RoseChartSettings {
     };
     containerSelector: string;
     size: { width: number; height: number };
-    onMouseover?(sector: RoseChartSector): void;
-    onMouseLeave?(): void;
+    onMouseover(sector: RoseChartSector | RoseChartSlice): void;
+    onMouseLeave(): void;
     clearMarking(): void;
 }
 
@@ -155,14 +155,9 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
             (update) =>
                 update
                     .call((update) =>
-                        update
-                            .transition("update paths")
-                            .duration(animationSpeed)
-                            .text((d) => d.label)
-                            .attrTween("d", tweenArcForLabelPath)
+                        update.transition("update paths").duration(animationSpeed).attrTween("d", tweenArcForLabelPath)
                     )
-                    .select("textPath")
-                    .text((d) => d.label),
+                    .select("textPath"),
             (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
         );
     svg.select("g#labels")
@@ -174,6 +169,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                 return enter
                     .append("text")
                     .on("click", (d) => d.mark())
+                    .on("mouseover.hover", (d) => settings.onMouseover(d))
                     .attr("class", "label")
                     .style("opacity", 0)
                     .attr("dy", "0.35em")
@@ -188,7 +184,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .attr("startOffset", "50%")
                     .attr("class", "label-path")
                     .style("text-anchor", "center")
-                    .text((d) => d.label);
+                    .text(label);
             },
             (update) =>
                 update
@@ -199,10 +195,27 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                             .transition("update labels")
                             .duration(animationSpeed)
                             .style("opacity", (d) => 1)
-                            .text((d) => d.label)
+                            .text(label)
                     ),
             (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
         );
+
+    function label(d: RoseChartSlice) {
+        let arc = createArcArgument(d);
+        let availableRadians = arc.x1 - arc.x0;
+
+        let availablePixels = arc.r * availableRadians;
+
+        const fontSize = settings.style.label.size;
+        const fontWidth = fontSize * 0.7;
+
+        let label = d.label;
+        if (label.length > availablePixels / fontWidth) {
+            return label.slice(0, Math.max(1, availablePixels / fontWidth - 2)) + "…";
+        }
+
+        return label;
+    }
 
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,

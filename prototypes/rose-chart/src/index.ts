@@ -63,7 +63,7 @@ window.Spotfire.initialize(async (mod) => {
                     weight: context.styling.general.font.fontWeight
                 }
             },
-            onMouseover(node: RoseChartSector) {
+            onMouseover(node: RoseChartSector | RoseChartSlice) {
                 mod.controls.tooltip.show(node.label);
             },
             onMouseLeave: mod.controls.tooltip.hide
