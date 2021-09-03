@@ -17,6 +17,8 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         return "M" + [x, y] + " l" + [w, 0] + " l" + [0, h] + " l" + [-w, 0] + "z";
     }
 
+    d3.select(".rectangle").remove();
+
     const rectangle = svg.append("path").attr("class", "rectangle").attr("visibility", "hidden");
 
     const startSelection = function (start: [number, number]) {
@@ -32,7 +34,9 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
 
         // Ignore rectangular markings that were just a click.
         if (Math.abs(start[0] - end[0]) < 4 || Math.abs(start[1] - end[1]) < 4) {
-            if (Array.from(firstTarget?.classList).findIndex((c:any) => settings.ignoredClickClasses.includes(c)) >= 0) {
+            if (
+                Array.from(firstTarget?.classList).findIndex((c: any) => settings.ignoredClickClasses.includes(c)) == -1
+            ) {
                 settings.clearMarking();
             }
 
@@ -57,7 +61,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         }
 
         markedSectors.each((n: any) => {
-            settings.mark(n.data);
+            settings.mark(n);
         });
     };
 

@@ -179,24 +179,28 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .append("textPath")
                     .attr("href", (d) => "#label-" + btoa(d.id))
                     .attr("startOffset", "50%")
+                    .attr("class", "label-path")
                     .style("text-anchor", "center")
                     .text((d) => d.label);
             },
             (update) =>
-                update.select("textPath").call((update) =>
-                    update
-                        .transition("update labels")
-                        .duration(animationSpeed)
-                        .style("opacity", (d) => 1)
-                        .text((d) => d.label)
-                ),
+                update
+                    .on("click", (d) => d.mark())
+                    .select("textPath")
+                    .call((update) =>
+                        update
+                            .transition("update labels")
+                            .duration(animationSpeed)
+                            .style("opacity", (d) => 1)
+                            .text((d) => d.label)
+                    ),
             (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
         );
 
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
         mark: (d: RoseChartSector) => d.mark(),
-        ignoredClickClasses: ["sector", "label"],
+        ignoredClickClasses: ["sector", "label", "label-path"],
         classesToMark: "sector"
     });
 
