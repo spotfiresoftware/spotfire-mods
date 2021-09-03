@@ -257,13 +257,13 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
 
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
-        d3.selectAll("path").transition("mouse leave").duration(200).style("stroke", null);
+        d3.selectAll(".sector").style("stroke", null);
         settings.onMouseLeave?.();
     }
-
+    
     function onMouseover(this: any, d: any) {
         settings.onMouseover?.(d);
-
+        d3.selectAll(".sector").style("stroke", null);
         d3.select(this).style("stroke", settings.style.marking.color);
     }
 }
