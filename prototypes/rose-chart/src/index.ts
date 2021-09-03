@@ -68,7 +68,7 @@ window.Spotfire.initialize(async (mod) => {
             onMouseLeave: mod.controls.tooltip.hide
         };
 
-        let data = buildSectors(rootNode, hasSizeExpression);
+        let data = buildSectors(rootNode, hasSizeExpression, labels);
         render(data, settings);
 
         renderSettingsButton(mod, labels, showCircles);
@@ -78,7 +78,11 @@ window.Spotfire.initialize(async (mod) => {
     }
 });
 
-function buildSectors(rootNode: DataViewHierarchyNode, hasSizeExpression: boolean): RoseChartSlice[] {
+function buildSectors(
+    rootNode: DataViewHierarchyNode,
+    hasSizeExpression: boolean,
+    labels: ModProperty<string>
+): RoseChartSlice[] {
     let sectorSize = (2 * Math.PI) / rootNode.leaves().length;
     let pos = 0;
 
@@ -111,7 +115,7 @@ function buildSectors(rootNode: DataViewHierarchyNode, hasSizeExpression: boolea
         let y0 = 0;
         return {
             id: createId(leaf),
-            label: leaf.formattedPath(),
+            label: labels.value() == "all" ? leaf.formattedPath() : "",
             mark() {
                 if (d3.event.ctrlKey) {
                     leaf.mark("ToggleOrAdd");
@@ -261,13 +265,6 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showCircles
                             value: "all",
                             checked: labels.value() == "all",
                             text: "All"
-                        }),
-                        mod.controls.popout.components.radioButton({
-                            enabled: true,
-                            name: "labels",
-                            value: "marked",
-                            checked: labels.value() == "marked",
-                            text: "Marked"
                         }),
                         mod.controls.popout.components.radioButton({
                             enabled: true,
