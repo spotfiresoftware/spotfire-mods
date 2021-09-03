@@ -8,6 +8,11 @@ const hierarchyAxisName = "Hierarchy";
 const colorAxisName = "Color";
 const sizeAxisName = "Size";
 
+enum InteractionMode {
+    drilldown = "drilldown",
+    mark = "mark"
+}
+
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
@@ -83,6 +88,13 @@ window.Spotfire.initialize(async (mod) => {
         const getRealSize = (r: DataViewRow) =>
             hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
 
+        function currentInteractionMode(): InteractionMode {
+            if (interactionMode.value() == InteractionMode.drilldown) {
+                return d3.event.altKey ? InteractionMode.mark : InteractionMode.drilldown;
+            }
+            return d3.event.altKey ? InteractionMode.drilldown : InteractionMode.mark;
+        }
+
         function flattenColorsIfColorSplits(node: SunBurstHierarchyNode): any {
             if (!hasHierarchyExpression && hasColorHierarchy && !node.virtualLeaf) {
                 const fakeNodes = node.rows().map((r) => rowToSunBurstHierarchyLeaf(r, node));
@@ -131,22 +143,27 @@ window.Spotfire.initialize(async (mod) => {
             containerSelector: "#mod-container",
             size: windowSize,
             clearMarking: () => {
-                var currentPath = rootNodePath.value();
-                if (currentPath) {
-                    let json = JSON.parse(currentPath) as { path: (string | null)[] };
-                    json.path.pop();
-                    rootNodePath.set(JSON.stringify(json));
-                }
+                if (currentInteractionMode() == InteractionMode.drilldown) {
+                    var currentPath = rootNodePath.value();
+                    if (currentPath) {
+                        let json = JSON.parse(currentPath) as { path: (string | null)[] };
+                        json.path.pop();
+                        rootNodePath.set(JSON.stringify(json));
+                    }
+                } else dataView.clearMarking();
             },
             mark(node: SunBurstHierarchyNode) {
-                if (node.children && node.children.length) {
-                    rootNodePath.set(JSON.stringify({ path: getPathToNode(node) }));
-                } // if (d3.event.ctrlKey) {
-                //     node.mark("ToggleOrAdd");
-                //     return;
-                // }
-
-                // node.mark();
+                if (currentInteractionMode() == InteractionMode.drilldown) {
+                    if (node.children && node.children.length) {
+                        rootNodePath.set(JSON.stringify({ path: getPathToNode(node) }));
+                    }
+                } else {
+                    if (d3.event.ctrlKey) {
+                        node.mark("ToggleOrAdd");
+                    } else {
+                        node.mark();
+                    }
+                }
             },
             getFill(node: SunBurstHierarchyNode) {
                 let rows = node.rows();
@@ -196,7 +213,7 @@ window.Spotfire.initialize(async (mod) => {
                 return node.rows()[firstMarkedRow].color().hexCode;
             },
             getId(node: SunBurstHierarchyNode) {
-                return node.key;
+                return btoa(pathToJson(getPathToNode(node)));
             },
             getLabel(node: SunBurstHierarchyNode, availablePixels: number) {
                 if (labels.value() == "off") {
@@ -252,7 +269,7 @@ window.Spotfire.initialize(async (mod) => {
 
         render(hierarchy, settings);
 
-        renderSettingsButton(mod, labels, showNullValues);
+        renderSettingsButton(mod, labels, showNullValues, interactionMode);
         renderWarningsIcon(mod, plotWarnings);
 
         context.signalRenderComplete();
@@ -381,7 +398,12 @@ function getColoringStartLevel(
     return coloringStartLevel;
 }
 
-function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullValues: ModProperty<boolean>) {
+function renderSettingsButton(
+    mod: Mod,
+    labels: ModProperty<string>,
+    showNullValues: ModProperty<boolean>,
+    interactionMode: ModProperty<string>
+) {
     let settingsButton = document.querySelector<HTMLElement>(".settings");
     settingsButton?.classList.toggle("visible", mod.getRenderContext().isEditing);
     let pos = settingsButton!.getBoundingClientRect();
@@ -399,6 +421,9 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullVal
                     }
                     if (event.name == "showNullValues") {
                         showNullValues.set(event.value);
+                    }
+                    if (event.name == "interactionMode") {
+                        interactionMode.set(event.value);
                     }
                 }
             },
@@ -426,6 +451,25 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullVal
                             name: "labels",
                             checked: labels.value() == "off",
                             text: "Off"
+                        })
+                    ]
+                }),
+                mod.controls.popout.section({
+                    heading: "Interaction mode",
+                    children: [
+                        mod.controls.popout.components.radioButton({
+                            enabled: true,
+                            name: "interactionMode",
+                            value: InteractionMode.mark,
+                            checked: interactionMode.value() != InteractionMode.drilldown,
+                            text: "Mark"
+                        }),
+                        mod.controls.popout.components.radioButton({
+                            enabled: true,
+                            name: "interactionMode",
+                            value: InteractionMode.drilldown,
+                            checked: interactionMode.value() == InteractionMode.drilldown,
+                            text: "Drill down"
                         })
                     ]
                 }),

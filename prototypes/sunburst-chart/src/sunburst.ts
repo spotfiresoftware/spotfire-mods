@@ -51,7 +51,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .startAngle((d) => d.x0)
         .endAngle((d) => d.x1)
         .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.01))
-        .padRadius(radius / 2 * hierarchy.depth )
+        .padRadius((radius / 2) * hierarchy.depth)
         .innerRadius((d) => (showOnlyRoot ? radius / 2 : d.y0))
         .outerRadius((d) => d.y1 - 1);
 
@@ -64,7 +64,9 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .select("svg#svg")
         .attr("width", size.width)
         .attr("height", size.height);
-    svg.select("g#container").attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
+    svg.select("g#container")
+        .attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")")
+        .on("mouseleave", onMouseleave);
 
     const visibleSectors = partitionLayout
         .descendants()
@@ -87,10 +89,6 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .enter()
         .append("svg:path")
         .attr("class", "sector")
-        .on("click", (d) => {
-            settings.mark(d.data);
-            d3.event.stopPropagation();
-        })
         .style("stroke-width", 1)
         .style("opacity", 0)
         .attr("fill", (d: any) => settings.getFill(d.data));
@@ -98,24 +96,39 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
     sectors
         .merge(newSectors)
         .attr("class", (d: any) => (d.data && d.data.actualValue < 0 ? "negative sector" : "sector"))
+        .on("click", (d) => {
+            console.log("Marking");
+            settings.mark(d.data);
+            d3.event.stopPropagation();
+        })
+        .on("mouseover.hover", onMouseover)
         .transition("add sectors")
         .duration(animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
-        .attr("fill", (d: any) => settings.getFill(d.data))
+        .attr("fill", (d: any) => settings.getFill(d.data));
+    // .end()
+    // .then(
+    //     () => {},
+    //     () => {
+    //         // This happens when a new dataView is rendered while the transition is in progress.
+    //     }
+    // )
+    // .finally(() => {
+    //     d3.select("#container").on("mouseleave", onMouseleave);
+    // });
+
+    sectors
+        .exit()
+        .style("stroke", "transparent")
+        .transition("remove sectors")
+        .duration(animationSpeed)
+        .attr("fill", "transparent")
         .end()
         .then(
-            () => {},
-            () => {
-                // This happens when a new dataView is rendered while the transition is in progress.
-            }
-        )
-        .finally(() => {
-            newSectors.on("mouseover.hover", onMouseover);
-            d3.select("#container").on("mouseleave", onMouseleave);
-        });
-
-    sectors.exit().transition("remove sectors").duration(animationSpeed).attr("fill", "transparent").remove();
+            () => sectors.exit().remove(),
+            () => sectors.exit().remove()
+        );
 
     svg.select("g#labels")
         .attr("pointer-events", "none")
@@ -230,7 +243,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
-        d3.selectAll("path").transition("mouse leave").duration(200).style("stroke", null);
+        d3.selectAll("path").transition("sector hover").duration(animationSpeed).style("stroke", "transparent");
         settings.onMouseLeave?.();
     }
 
@@ -243,9 +256,10 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         d3.select("#value").text(texts.text);
 
         let ancestors = getAncestors(d);
+        console.log(ancestors);
 
-        d3.selectAll("path").style("stroke", (d: any) =>
-            ancestors.indexOf(d) >= 0 ? settings.style.marking.color : null
+        d3.selectAll("path").transition("sector hover").duration(100).style("stroke", (d: any) =>
+            ancestors.indexOf(d) >= 0 ? settings.style.marking.color : "transparent"
         );
     }
 }
