@@ -4,7 +4,6 @@ import { rectangularSelection } from "./rectangularMarking";
 const animationSpeed = 250;
 const sectorPadding = 5;
 
-
 export interface RoseChartSettings {
     style: {
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
@@ -12,10 +11,10 @@ export interface RoseChartSettings {
         background: { color: string };
         circles: { color: string };
     };
-    onMouseover?(data: unknown): void;
-    onMouseLeave?(): void;
     containerSelector: string;
     size: { width: number; height: number };
+    onMouseover?(sector: RoseChartSector): void;
+    onMouseLeave?(): void;
     clearMarking(): void;
 }
 
@@ -29,6 +28,7 @@ export interface RoseChartSlice {
 }
 export interface RoseChartSector {
     value: number;
+    label: string;
     y0: number;
     y1: number;
     color: string;
@@ -262,7 +262,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     }
 
     function onMouseover(this: any, d: any) {
-        settings.onMouseover?.(d.data);
+        settings.onMouseover?.(d);
 
         d3.select(this).style("stroke", settings.style.marking.color);
     }

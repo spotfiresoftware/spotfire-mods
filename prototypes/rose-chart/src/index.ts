@@ -34,6 +34,7 @@ window.Spotfire.initialize(async (mod) => {
         showCircles: ModProperty<boolean>
     ) {
         const hasSizeExpression = !!sizeAxis.parts.length;
+        const hasColorExpression = !!colorAxis.parts.length;
         const hasHierarchyExpression = !!hierarchyAxis.parts.length;
 
         let rootNode: DataViewHierarchyNode;
@@ -62,13 +63,13 @@ window.Spotfire.initialize(async (mod) => {
                     weight: context.styling.general.font.fontWeight
                 }
             },
-            onMouseover(node: RoseChartSector | RoseChartSector) {
-                // mod.controls.tooltip.show(node.formattedPath());
+            onMouseover(node: RoseChartSector) {
+                mod.controls.tooltip.show(node.label);
             },
             onMouseLeave: mod.controls.tooltip.hide
         };
 
-        let data = buildSectors(rootNode, hasSizeExpression, labels);
+        let data = buildSectors(rootNode, hasSizeExpression, hasColorExpression, labels);
         render(data, settings);
 
         renderSettingsButton(mod, labels, showCircles);
@@ -81,6 +82,7 @@ window.Spotfire.initialize(async (mod) => {
 function buildSectors(
     rootNode: DataViewHierarchyNode,
     hasSizeExpression: boolean,
+    hasColorExpression: boolean,
     labels: ModProperty<string>
 ): RoseChartSlice[] {
     let sectorSize = (2 * Math.PI) / rootNode.leaves().length;
@@ -139,6 +141,9 @@ function buildSectors(
                 y1: y1,
                 color: row.color().hexCode,
                 id: row.elementId(),
+                label: hasColorExpression
+                    ? row.categorical(colorAxisName).formattedValue()
+                    : row.categorical(hierarchyAxisName).formattedValue(),
                 value: value,
                 mark() {
                     if (d3.event.ctrlKey) {
