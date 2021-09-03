@@ -34,7 +34,7 @@ window.Spotfire.initialize(async (mod) => {
         showCircles: ModProperty<boolean>
     ) {
         const hasSizeExpression = !!sizeAxis.parts.length;
-        const hasColorExpression = !!colorAxis.parts.length;
+        const hasColorExpression = !!colorAxis.parts.length && colorAxis.isCategorical;
         const hasHierarchyExpression = !!hierarchyAxis.parts.length;
 
         let rootNode: DataViewHierarchyNode;
