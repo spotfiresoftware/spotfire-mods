@@ -11,7 +11,7 @@
             "defaultValue": "all"
         },
         {
-            "name": "showNullValues",
+            "name": "showCircles",
             "type": "boolean",
             "defaultValue": false
         }

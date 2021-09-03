@@ -18,7 +18,7 @@ window.Spotfire.initialize(async (mod) => {
         mod.visualization.axis(colorAxisName),
         mod.visualization.axis(sizeAxisName),
         mod.property<string>("labels"),
-        mod.property<boolean>("showNullValues")
+        mod.property<boolean>("showCircles")
     );
 
     let interaction = interactionLock();
@@ -31,11 +31,10 @@ window.Spotfire.initialize(async (mod) => {
         colorAxis: Axis,
         sizeAxis: Axis,
         labels: ModProperty<string>,
-        showNullValues: ModProperty<boolean>
+        showCircles: ModProperty<boolean>
     ) {
         const hasSizeExpression = !!sizeAxis.parts.length;
         const hasHierarchyExpression = !!hierarchyAxis.parts.length;
-        const hasColorHierarchy = !!colorAxis.parts.length && colorAxis.isCategorical;
 
         let rootNode: DataViewHierarchyNode;
 
@@ -45,11 +44,7 @@ window.Spotfire.initialize(async (mod) => {
             rootNode = (await dataView.allRows())?.[0]?.leafNode(hierarchyAxisName) as DataViewHierarchyNode;
         }
 
-        const plotWarnings = validateDataView(
-            rootNode,
-            !!showNullValues.value() && hasHierarchyExpression,
-            hasSizeExpression
-        );
+        const plotWarnings = validateDataView(rootNode, hasSizeExpression);
 
         const settings: RoseChartSettings = {
             containerSelector: "#mod-container",
@@ -58,6 +53,7 @@ window.Spotfire.initialize(async (mod) => {
             style: {
                 marking: { color: context.styling.scales.font.color },
                 background: { color: context.styling.general.backgroundColor },
+                circles: { color: showCircles.value() ? context.styling.scales.line.stroke : "transparent" },
                 label: {
                     fontFamily: context.styling.general.font.fontFamily,
                     color: context.styling.general.font.color,
@@ -75,7 +71,7 @@ window.Spotfire.initialize(async (mod) => {
         let data = buildSectors(rootNode, hasSizeExpression);
         render(data, settings);
 
-        renderSettingsButton(mod, labels, showNullValues);
+        renderSettingsButton(mod, labels, showCircles);
         renderWarningsIcon(mod, plotWarnings);
 
         context.signalRenderComplete();
@@ -162,41 +158,15 @@ function buildSectors(rootNode: DataViewHierarchyNode, hasSizeExpression: boolea
  * @param rootNode - The hierarchy root.
  * @param warnings - The warnings array
  */
-function validateDataView(rootNode: DataViewHierarchyNode, validateHierarchy: boolean, validataSize: boolean) {
+function validateDataView(rootNode: DataViewHierarchyNode, validateSize: boolean) {
     let warnings: string[] = [];
-    let issues = 0;
     let rows = rootNode.rows();
 
-    if (validateHierarchy) {
-        rowLoop: for (let row of rows) {
-            let path = row.categorical(hierarchyAxisName).value().slice();
-            let length = path.length;
-            let currentIndex = length - 1;
-            while (currentIndex >= 1) {
-                if (path[currentIndex].value() && !path[currentIndex - 1].value()) {
-                    issues++;
-                    warnings.push(
-                        "Some elements are not visualized. The following path has holes in it: " +
-                            row.categorical(hierarchyAxisName).formattedValue()
-                    );
-
-                    if (issues == 3) {
-                        break rowLoop;
-                    }
-
-                    break;
-                }
-
-                currentIndex--;
-            }
-        }
-    }
-
-    if (validataSize) {
+    if (validateSize) {
         rowLoop: for (let row of rows) {
             const size = row.continuous(sizeAxisName).value();
             if (typeof size == "number" && size < 0) {
-                warnings.push("The plot contains negative values. These nodes have a red outline.");
+                warnings.push("The plot contains negative values.");
                 break rowLoop;
             }
         }
@@ -260,7 +230,7 @@ function getColoringStartLevel(
     return coloringStartLevel;
 }
 
-function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullValues: ModProperty<boolean>) {
+function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showCircles: ModProperty<boolean>) {
     let settingsButton = document.querySelector<HTMLElement>(".settings");
     settingsButton?.classList.toggle("visible", mod.getRenderContext().isEditing);
     let pos = settingsButton!.getBoundingClientRect();
@@ -276,8 +246,8 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullVal
                     if (event.name == "labels") {
                         labels.set(event.value);
                     }
-                    if (event.name == "showNullValues") {
-                        showNullValues.set(event.value);
+                    if (event.name == "showCircles") {
+                        showCircles.set(event.value);
                     }
                 }
             },
@@ -312,9 +282,9 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullVal
                     children: [
                         mod.controls.popout.components.checkbox({
                             enabled: true,
-                            name: "showNullValues",
-                            checked: showNullValues.value() || false,
-                            text: "Show empty values as missing"
+                            name: "showCircles",
+                            checked: showCircles.value() || false,
+                            text: "Show circles"
                         })
                     ]
                 })

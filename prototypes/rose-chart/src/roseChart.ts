@@ -8,6 +8,7 @@ export interface RoseChartSettings {
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
         marking: { color: string };
         background: { color: string };
+        circles: { color: string };
     };
     onMouseover?(data: unknown): void;
     onMouseLeave?(): void;
@@ -71,6 +72,31 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         .attr("width", size.width)
         .attr("height", size.height);
     svg.select("g#container").attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")");
+
+    let circles = svg
+        .select("g#circles")
+        .selectAll(".grid-circle")
+        .data(d3.range(1, 10).reverse(), (d: any) => d);
+
+    let newCircles = circles
+        .enter()
+        .append("circle")
+        .attr("class", "grid-circle")
+        .style("fill-opacity", 0)
+        .style("opacity", "0")
+        .style("stroke", "transparent");
+
+    circles
+        .merge(newCircles as any)
+        .transition("circles")
+        .duration(animationSpeed)
+        .attr("r", function (d: number, i: number) {
+            return ((radius + 5) / 9) * d;
+        })
+        .style("stroke", settings.style.circles.color)
+        .style("opacity", "0.7");
+
+    circles.exit().remove();
 
     const sectors = svg
         .select("g#sectors")

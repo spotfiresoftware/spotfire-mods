@@ -32,6 +32,10 @@ path.sector.negative {
     stroke: red;
 }
 
+.grid-circle {
+    pointer-events: none;
+}
+
 #explanation #percentage {
     font-size: max(5vmin, 10px);
     white-space: nowrap;
