@@ -47,7 +47,11 @@ window.Spotfire.initialize(async (mod) => {
             rootNode = (await dataView.allRows())?.[0]?.leafNode(hierarchyAxisName) as DataViewHierarchyNode;
         }
 
-        const plotWarnings = validateDataView(rootNode, !!showNullValues.value() && hasHierarchyExpression, hasSizeExpression);
+        const plotWarnings = validateDataView(
+            rootNode,
+            !!showNullValues.value() && hasHierarchyExpression,
+            hasSizeExpression
+        );
 
         const coloringFromLevel = getColoringStartLevel(rootNode, colorAxis, hierarchyAxis, plotWarnings);
 
@@ -78,16 +82,13 @@ window.Spotfire.initialize(async (mod) => {
                     markedRowCount: () => (r.isMarked() ? 1 : 0),
                     parent: node,
                     rows: () => [r],
-                    virtualLeaf: true,
+                    virtualLeaf: true
                 } as SunBurstHierarchyNode;
             }
         }
 
         const hierarchy: d3.HierarchyNode<SunBurstHierarchyNode> = d3
-            .hierarchy<SunBurstHierarchyNode>(
-                rootNode,
-                flattenColorsIfColorSplits
-            )
+            .hierarchy<SunBurstHierarchyNode>(rootNode, flattenColorsIfColorSplits)
             .eachAfter((n) => {
                 var d = n.data;
                 d.actualValue = d!.rows().reduce((p, c) => p + getRealSize(c), 0);
@@ -136,7 +137,8 @@ window.Spotfire.initialize(async (mod) => {
                 }
 
                 // When the path has empty values, make sure all children are transparent. This is also a warning.
-                if (showNullValues.value() &&
+                if (
+                    showNullValues.value() &&
                     rows[0]
                         .categorical(hierarchyAxisName)
                         .value()
@@ -237,11 +239,7 @@ window.Spotfire.initialize(async (mod) => {
  * @param rootNode - The hierarchy root.
  * @param warnings - The warnings array
  */
-function validateDataView(
-    rootNode: DataViewHierarchyNode,
-    validateHierarchy: boolean,
-    validataSize: boolean
-) {
+function validateDataView(rootNode: DataViewHierarchyNode, validateHierarchy: boolean, validataSize: boolean) {
     let warnings: string[] = [];
     let issues = 0;
     let rows = rootNode.rows();
@@ -290,13 +288,24 @@ function validateDataView(
  * @param hierarchyAxis The hierarchy axis.
  * @returns The level from which to start coloring in the sunburst chart.
  */
-function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis, hierarchyAxis: Axis, warnings: string[]) {
+function getColoringStartLevel(
+    rootNode: DataViewHierarchyNode,
+    colorAxis: Axis,
+    hierarchyAxis: Axis,
+    warnings: string[]
+) {
     let coloringStartLevel = 0;
 
-    // If the color axis is continuous or empty the coloring starts from the root.
-    if (!colorAxis.isCategorical || !colorAxis.parts.length) {
+    // If the color axis is empty the coloring starts from the root.
+    if (!colorAxis.parts.length) {
         return 0;
     }
+
+    // If the color axis is continuous, only color leaf nodes.
+    if (!colorAxis.isCategorical) {
+        return hierarchyAxis.parts.length - 1;
+    }
+
 
     const uniqueCount = (arr?: number[]) => arr?.filter((item, i, a) => a.indexOf(item) === i).length || 0;
 
@@ -326,7 +335,9 @@ function getColoringStartLevel(rootNode: DataViewHierarchyNode, colorAxis: Axis,
     // Make sure there is an available coloring level.
     if (coloringStartLevel == hierarchyAxis.parts.length) {
         coloringStartLevel = hierarchyAxis.parts.length - 1;
-        warnings.push("The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times.")
+        warnings.push(
+            "The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times."
+        );
     }
 
     return coloringStartLevel;
@@ -348,8 +359,7 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullVal
                     if (event.name == "labels") {
                         labels.set(event.value);
                     }
-                    if (event.name == "showNullValues")
-                    {
+                    if (event.name == "showNullValues") {
                         showNullValues.set(event.value);
                     }
                 }
@@ -391,7 +401,6 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showNullVal
                         })
                     ]
                 })
-
             ]
         );
     };
