@@ -341,7 +341,7 @@ function findFirstRow(
 
 function jsonToPath(str: string): (string | null)[] {
     let json = JSON.parse(str) as { path: (string | null)[] };
-    return json.path;
+    return json.path || [];
 }
 
 function pathToJson(path: (string | null)[]): string {
