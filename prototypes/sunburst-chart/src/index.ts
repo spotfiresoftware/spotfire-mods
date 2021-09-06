@@ -136,6 +136,13 @@ window.Spotfire.initialize(async (mod) => {
                 } else dataView.clearMarking();
             },
             mark(node: SunBurstHierarchyNode) {
+                if (d3.event.ctrlKey) {
+                    node.mark("ToggleOrAdd");
+                } else {
+                    node.mark();
+                }
+            },
+            click(node: SunBurstHierarchyNode) {
                 if (currentInteractionMode() == InteractionMode.drilldown) {
                     if (node.children && node.children.length) {
                         rootNodePath.set(JSON.stringify({ path: getPathToNode(node) }));

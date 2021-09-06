@@ -36,6 +36,7 @@ export interface SunBurstSettings {
     /** Text to place in the center while hovering sectors. */
     getCenterText(data: unknown): { value: string; text: string };
     mark(data: unknown): void;
+    click(data: unknown): void;
     clearMarking(): void;
     breadcrumbs: (string | null)[];
     breadCrumbClick(index: number): void;
@@ -108,8 +109,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .merge(newSectors)
         .attr("class", (d: any) => (d.data && d.data.actualValue < 0 ? "negative sector" : "sector"))
         .on("click", (d) => {
-            console.log("Marking");
-            settings.mark(d.data);
+            settings.click(d.data);
             d3.event.stopPropagation();
         })
         .on("mouseover.hover", onMouseover)
