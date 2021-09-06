@@ -132,7 +132,7 @@ window.Spotfire.initialize(async (mod) => {
             breadcrumbs: breadcrumbs,
             breadCrumbClick(i) {
                 const p = breadcrumbs.slice(0, i + 1);
-                
+
                 // Remove (all) from path.
                 p.shift();
                 rootNodePath.set(JSON.stringify({ path: p }));
@@ -309,9 +309,13 @@ window.Spotfire.initialize(async (mod) => {
                 }
             }
 
-            let colorAsNode = d3Node;
-            while (colorAsNode.children) {
-                colorAsNode = colorAsNode.children[0];
+            let colorAsNode: d3.HierarchyNode<SunBurstHierarchyNode> | undefined = d3Node;
+            while (colorAsNode && colorAsNode.children) {
+                colorAsNode = colorAsNode.children.find((n) => n.data.rows().length > 0);
+            }
+
+            if (!colorAsNode) {
+                colorAsNode = d3Node;
             }
 
             // Attempt to use the marked color if any of the underlying rows are marked.
