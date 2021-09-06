@@ -55,14 +55,6 @@ path.sector.negative {
     }
 }
 
-body {
-    font-family: "Open Sans", sans-serif;
-    font-size: 11px;
-    font-weight: 300;
-    text-align: center;
-    cursor: default;
-}
-
 .x-axis-labels-editable {
     cursor: pointer;
 }
@@ -166,4 +158,40 @@ svg {
 
 .settings:hover {
     color: #ddd;
+}
+
+#breadcrumbs {
+    position: absolute;
+    left: 32px;
+    right: 32px;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.breadcrumb {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 4px;
+    cursor: pointer;
+    line-height: 1em;
+    white-space: pre;
+    border-color: inherit;
+}
+
+.breadcrumb::after {
+    content: " »";
+}
+
+.breadcrumb:first-of-type {
+    flex-shrink: 0;
+}
+
+.breadcrumb:last-of-type {
+    border-width: 0;
+}
+
+.breadcrumb:last-of-type::after{
+    content: "";
 }

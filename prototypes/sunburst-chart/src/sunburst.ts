@@ -37,6 +37,8 @@ export interface SunBurstSettings {
     getCenterText(data: unknown): { value: string; text: string };
     mark(data: unknown): void;
     clearMarking(): void;
+    breadcrumbs: (string | null)[];
+    breadCrumbClick(index: number): void;
 }
 
 export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, settings: SunBurstSettings) {
@@ -44,7 +46,10 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     const showOnlyRoot = hierarchy.height ? false : true;
 
-    const radius = Math.min(size.width, size.height) / 2;
+    const breadcrumbsHeight = settings.breadcrumbs.length ? settings.style.label.size + 14 : 0;
+    const availableHeight = size.height - breadcrumbsHeight;
+
+    const radius = Math.min(size.width, availableHeight) / 2;
 
     const arc = d3
         .arc<{ x0: number; y0: number; x1: number; y1: number }>()
@@ -59,14 +64,20 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     const partitionLayout = partition(hierarchy);
 
-    const svg = d3
-        .select(settings.containerSelector)
-        .select("svg#svg")
+    const svg = d3.select(settings.containerSelector).select("svg#svg");
+
+    let hasPreviousTransform = !!svg.select("g#container").attr("transform");
+
+    svg.transition("resize")
+        .duration(hasPreviousTransform ? animationSpeed : 0)
         .attr("width", size.width)
         .attr("height", size.height);
+
     svg.select("g#container")
-        .attr("transform", "translate(" + size.width / 2 + "," + size.height / 2 + ")")
-        .on("mouseleave", onMouseleave);
+        .on("mouseleave", onMouseleave)
+        .transition("move")
+        .duration(hasPreviousTransform ? animationSpeed : 0)
+        .attr("transform", "translate(" + size.width / 2 + "," + (availableHeight / 2 + breadcrumbsHeight) + ")");
 
     const visibleSectors = partitionLayout
         .descendants()
@@ -134,16 +145,14 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                     .attr("font-size", settings.style.label.size)
                     .attr("font-style", settings.style.label.style)
                     .attr("font-weight", settings.style.label.weight)
-                    .attr("fill", (d:any) => getTextColor(d.data.fill))
+                    .attr("fill", (d: any) => getTextColor(d.data.fill))
                     .attr("font-family", settings.style.label.fontFamily)
                     .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
                     .call((enter) =>
                         enter
                             .transition("add labels")
                             .duration(animationSpeed)
-                            .style("opacity", (d) =>
-                                d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
-                            )
+                            .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < settings.style.label.size + 4 ? 0 : 1))
                             .attrTween("transform", tweenTransform)
                     );
             },
@@ -152,7 +161,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                     update
                         .transition("update labels")
                         .duration(animationSpeed)
-                        .attr("fill", (d:any) => getTextColor(d.data.fill))
+                        .attr("fill", (d: any) => getTextColor(d.data.fill))
                         .style("opacity", (d) =>
                             d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
                         )
@@ -160,6 +169,26 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                         .attrTween("transform", tweenTransform)
                 ),
             (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
+        );
+
+    d3.select("#breadcrumbs")
+        .selectAll("div.breadcrumb")
+        .data(settings.breadcrumbs)
+        .join(
+            (enter) => {
+                return enter
+                    .append("div")
+                    .attr("class", "breadcrumb")
+                    .style("font-size", settings.style.label.size)
+                    .style("font-style", settings.style.label.style)
+                    .style("font-weight", settings.style.label.weight)
+                    .style("font-family", settings.style.label.fontFamily)
+                    .on("click", (d, i) => settings.breadCrumbClick(i))
+                    .text((d) => d);
+            },
+            (update) =>
+                update.call((update) => update.on("click", (d, i) => settings.breadCrumbClick(i)).text((d) => d)),
+            (exit) => exit.remove()
         );
 
     rectangularSelection(svg, {
@@ -248,9 +277,10 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         let ancestors = getAncestors(d);
         console.log(ancestors);
 
-        d3.selectAll("path").transition("sector hover").duration(100).style("stroke", (d: any) =>
-            ancestors.indexOf(d) >= 0 ? settings.style.marking.color : "transparent"
-        );
+        d3.selectAll("path")
+            .transition("sector hover")
+            .duration(100)
+            .style("stroke", (d: any) => (ancestors.indexOf(d) >= 0 ? settings.style.marking.color : "transparent"));
     }
 }
 

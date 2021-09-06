@@ -123,7 +123,20 @@ window.Spotfire.initialize(async (mod) => {
 
         totalSize = hierarchy.value || 0;
 
+        const breadcrumbs = jsonToPath(rootNodePath.value() || "{}");
+        if (breadcrumbs.length) {
+            breadcrumbs.unshift("(All)");
+        }
+
         const settings: SunBurstSettings = {
+            breadcrumbs: breadcrumbs,
+            breadCrumbClick(i) {
+                const p = breadcrumbs.slice(0, i + 1);
+                
+                // Remove (all) from path.
+                p.shift();
+                rootNodePath.set(JSON.stringify({ path: p }));
+            },
             containerSelector: "#mod-container",
             size: windowSize,
             clearMarking: () => {
@@ -182,7 +195,7 @@ window.Spotfire.initialize(async (mod) => {
                 label: {
                     fontFamily: context.styling.general.font.fontFamily,
                     color: context.styling.general.font.color,
-                    size: context.styling.general.font.fontSize,
+                    size: parseInt("" + context.styling.general.font.fontSize),
                     style: context.styling.general.font.fontStyle,
                     weight: context.styling.general.font.fontWeight
                 }

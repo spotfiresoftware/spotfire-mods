@@ -28,6 +28,7 @@
     <div class="icon-button warnings">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" display="block"><path fill="currentColor" d="M12.83 11.08l-2.64-4.72-2.63-4.72a1.2 1.2 0 0 0-1.65-.49 1.26 1.26 0 0 0-.48.49L2.8 6.36.17 11.08a1.29 1.29 0 0 0 .46 1.75 1.19 1.19 0 0 0 .61.17h10.52A1.27 1.27 0 0 0 13 11.7a1.23 1.23 0 0 0-.17-.62zM7 11H6V9h1zm0-3H6V4h1z"></path></svg>
     </div>
+    <div id="breadcrumbs"></div>
 
     <script
         id="spotfire-loader">var Spotfire = function ( e ) { "use strict"; return e.initialize = function ( e ) { var t = "sfTemp" + 1e4 * Math.random() + "Cb", a = window; a[t] = e; var r = { subject: "GetUrl", callbackId: -1, options: { cbId: t } }; a.addEventListener( "message", function e( t ) { if ( t.source === a.parent && t.data.src ) { a.removeEventListener( "message", e ); var r = document, n = r.createElement( "script" ); n.src = t.data.src, ( r.head || r.body ).appendChild( n ) } } ), a.parent.postMessage( r, "*" ) }, e }( {} );</script>
