@@ -462,6 +462,7 @@ function renderSettingsButton(
                             name: "interactionMode",
                             value: InteractionMode.mark,
                             checked: interactionMode.value() != InteractionMode.drilldown,
+                            tooltip: "Mark data when clicking a sector. 'Alt' click for the opposite behavior",
                             text: "Mark"
                         }),
                         mod.controls.popout.components.radioButton({
@@ -469,6 +470,7 @@ function renderSettingsButton(
                             name: "interactionMode",
                             value: InteractionMode.drilldown,
                             checked: interactionMode.value() == InteractionMode.drilldown,
+                            tooltip: "Drill down when clicking a sector. 'Alt' click for the opposite behavior",
                             text: "Drill down"
                         })
                     ]
