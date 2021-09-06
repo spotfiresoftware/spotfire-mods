@@ -50,20 +50,6 @@ window.Spotfire.initialize(async (mod) => {
         return node;
     }
 
-    function getSortedRows(startNode: SunBurstHierarchyNode): DataViewRow[] {
-        let rows: DataViewRow[] = [];
-        appendRecurive(startNode);
-        return rows;
-
-        function appendRecurive(node: SunBurstHierarchyNode) {
-            if (node.children) {
-                node.children.forEach(appendRecurive);
-            } else {
-                return rows.push(...node.rows());
-            }
-        }
-    }
-
     async function onChange(
         dataView: DataView,
         windowSize: Size,
