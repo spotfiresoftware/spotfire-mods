@@ -179,6 +179,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                 return enter
                     .append("div")
                     .attr("class", "breadcrumb")
+                    .attr("title", (d) => d)
                     .style("font-size", settings.style.label.size)
                     .style("font-style", settings.style.label.style)
                     .style("font-weight", settings.style.label.weight)
@@ -187,7 +188,12 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                     .text((d) => d);
             },
             (update) =>
-                update.call((update) => update.on("click", (d, i) => settings.breadCrumbClick(i)).text((d) => d)),
+                update.call((update) =>
+                    update
+                        .on("click", (_, i) => settings.breadCrumbClick(i))
+                        .attr("title", (d) => d)
+                        .text((d) => d)
+                ),
             (exit) => exit.remove()
         );
 
