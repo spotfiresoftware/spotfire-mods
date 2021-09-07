@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import { DataViewRow } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
 
-const animationSpeed = 250;
 
 export interface SunBurstHierarchyNode {
     hasVirtualChildren?: boolean;
@@ -40,6 +39,7 @@ export interface SunBurstSettings {
     clearMarking(): void;
     breadcrumbs: (string | null)[];
     breadCrumbClick(index: number): void;
+    animationSpeed: number;
 }
 
 export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, settings: SunBurstSettings) {
@@ -70,14 +70,14 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
     let hasPreviousTransform = !!svg.select("g#container").attr("transform");
 
     svg.transition("resize")
-        .duration(hasPreviousTransform ? animationSpeed : 0)
+        .duration(hasPreviousTransform ? settings.animationSpeed : 0)
         .attr("width", size.width)
         .attr("height", size.height);
 
     svg.select("g#container")
         .on("mouseleave", onMouseleave)
         .transition("move")
-        .duration(hasPreviousTransform ? animationSpeed : 0)
+        .duration(hasPreviousTransform ? settings.animationSpeed : 0)
         .attr("transform", "translate(" + size.width / 2 + "," + (availableHeight / 2 + breadcrumbsHeight) + ")");
 
     const visibleSectors = partitionLayout
@@ -114,7 +114,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         })
         .on("mouseover.hover", onMouseover)
         .transition("add sectors")
-        .duration(animationSpeed)
+        .duration(settings.animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
         .attr("fill", (d: any) => d.data.fill);
@@ -123,7 +123,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .exit()
         .style("stroke", "transparent")
         .transition("remove sectors")
-        .duration(animationSpeed)
+        .duration(settings.animationSpeed)
         .attr("fill", "transparent")
         .end()
         .then(
@@ -151,7 +151,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                     .call((enter) =>
                         enter
                             .transition("add labels")
-                            .duration(animationSpeed)
+                            .duration(settings.animationSpeed)
                             .style("opacity", (d) => (d.y0 * (d.x1 - d.x0) < settings.style.label.size + 4 ? 0 : 1))
                             .attrTween("transform", tweenTransform)
                     );
@@ -160,7 +160,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                 update.call((update) =>
                     update
                         .transition("update labels")
-                        .duration(animationSpeed)
+                        .duration(settings.animationSpeed)
                         .attr("fill", (d: any) => getTextColor(d.data.fill))
                         .style("opacity", (d) =>
                             d.y0 * (d.x1 - d.x0) < parseInt("" + settings.style.label.size) + 4 ? 0 : 1
@@ -168,7 +168,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
                         .text((d) => settings.getLabel(d.data, d.y1 - d.y0))
                         .attrTween("transform", tweenTransform)
                 ),
-            (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
+            (exit) => exit.transition("remove labels").duration(settings.animationSpeed).style("opacity", 0).remove()
         );
 
     d3.select("#breadcrumbs")
@@ -268,7 +268,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
-        d3.selectAll("path").transition("sector hover").duration(animationSpeed).style("stroke", "transparent");
+        d3.selectAll("path").transition("sector hover").duration(settings.animationSpeed).style("stroke", "transparent");
         settings.onMouseLeave?.();
     }
 

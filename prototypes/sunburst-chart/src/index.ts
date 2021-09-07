@@ -115,6 +115,7 @@ window.Spotfire.initialize(async (mod) => {
         }
 
         const settings: SunBurstSettings = {
+            animationSpeed: context.interactive ? 250 : 0,
             breadcrumbs: breadcrumbs,
             breadCrumbClick(i) {
                 const p = breadcrumbs.slice(0, i + 1);
@@ -569,7 +570,7 @@ function renderSettingsButton(
 
 function renderWarningsIcon(mod: Mod, warnings: string[]) {
     let warningButton = document.querySelector<HTMLElement>(".warnings");
-    warningButton?.classList.toggle("visible", !!warnings.length);
+    warningButton?.classList.toggle("visible", mod.getRenderContext().interactive && !!warnings.length );
 
     warningButton!.onmouseenter = () => {
         mod.controls.tooltip.show("Warnings:\n" + warnings.join("\n"));
