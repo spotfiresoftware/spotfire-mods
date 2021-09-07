@@ -26,7 +26,7 @@ window.Spotfire.initialize(async (mod) => {
     );
 
     let interaction = interactionLock();
-    reader.subscribe(generalErrorHandler(mod, 1000000, interaction)(onChange));
+    reader.subscribe(onChange);
 
     async function onChange(
         dataView: DataView,
@@ -41,10 +41,14 @@ window.Spotfire.initialize(async (mod) => {
         mod.controls.errorOverlay.hide("Measures");
 
         if (measureAxis.parts.length > 1 && measureNamesAxis.expression != "<[Axis.Default.Names]>") {
-            mod.controls.errorOverlay.show(
-                "Incorrect measure names expression. TODO - Button to set correct expression",
-                "MeasureNames"
-            );
+            resetMandatoryExpressions();
+            return;
+        }
+
+        let error = await dataView.getErrors();
+        if (error.find(e => e.includes("basetrowid")))
+        {
+            showIdentifierSelection();
             return;
         }
 
@@ -74,5 +78,27 @@ window.Spotfire.initialize(async (mod) => {
 
         render(data);
         context.signalRenderComplete();
+    }
+
+    function showMeasureSelection()
+    {
+
+    }
+
+    function showIdentifierSelection()
+    {
+
+    }
+
+    function resetMandatoryExpressions()
+    {
+        const div = document.getElementById("resetMandatoryExpressions")!;
+        div.style.display = "block"
+        div.querySelector("button")?.addEventListener("click", () => {
+            div.style.display = "none";
+            mod.visualization.axis(measureNamesAxisName).setExpression("<[Axis.Default.Names]>");
+
+        })
+
     }
 });

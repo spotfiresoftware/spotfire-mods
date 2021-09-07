@@ -5,7 +5,7 @@
 html,
 body,
 #border,
-#pairplot {
+#correlogram {
     position: absolute;
     margin: 0;
     height: 100%;
@@ -20,4 +20,13 @@ body,
     fill-opacity: 0.3;
     stroke-opacity: 0.7;
     stroke-width: 2;
+}
+
+.hidden {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: justify;
+    margin: auto;
+    display: none;
 }
