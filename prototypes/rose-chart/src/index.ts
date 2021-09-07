@@ -48,6 +48,7 @@ window.Spotfire.initialize(async (mod) => {
         const plotWarnings = validateDataView(rootNode, hasSizeExpression);
 
         const settings: RoseChartSettings = {
+            animationSpeed: context.interactive ? 250 : 0,
             containerSelector: "#mod-container",
             size: windowSize,
             clearMarking: dataView.clearMarking,
@@ -245,7 +246,7 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showCircles
 
 function renderWarningsIcon(mod: Mod, warnings: string[]) {
     let warningButton = document.querySelector<HTMLElement>(".warnings");
-    warningButton?.classList.toggle("visible", !!warnings.length);
+    warningButton?.classList.toggle("visible", mod.getRenderContext().interactive && !!warnings.length);
 
     warningButton!.onmouseenter = () => {
         mod.controls.tooltip.show("Warnings:\n" + warnings.join("\n"));

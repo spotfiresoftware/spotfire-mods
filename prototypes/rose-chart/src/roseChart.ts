@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import { rectangularSelection } from "./rectangularMarking";
 
-const animationSpeed = 250;
 const sectorPadding = 5;
 
 export interface RoseChartSettings {
@@ -16,6 +15,7 @@ export interface RoseChartSettings {
     onMouseover(sector: RoseChartSector | RoseChartSlice): void;
     onMouseLeave(): void;
     clearMarking(): void;
+    animationSpeed: number;
 }
 
 export interface RoseChartSlice {
@@ -71,7 +71,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     circles
         .merge(newCircles as any)
         .transition("circles")
-        .duration(animationSpeed)
+        .duration(settings.animationSpeed)
         .attr("r", function (d: number, i: number) {
             return ((radius + sectorPadding) / 9) * d;
         })
@@ -111,7 +111,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     Math.sin((d.x0 + d.x1) / 2 - Math.PI / 2) * sectorPadding
                 })`
         )
-        .duration(animationSpeed)
+        .duration(settings.animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
         .attr("fill", (d: any) => d.color)
@@ -127,7 +127,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
             d3.select("#container").on("mouseleave", onMouseleave);
         });
 
-    sectors.exit().transition("remove sectors").duration(animationSpeed).attr("fill", "transparent").remove();
+    sectors.exit().transition("remove sectors").duration(settings.animationSpeed).attr("fill", "transparent").remove();
 
     function createArcArgument(d: RoseChartSlice) {
         let lastSector = d.sectors[d.sectors.length - 1];
@@ -148,17 +148,17 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .append("path")
                     .attr("fill", "none")
                     .call((enter) =>
-                        enter.transition("create paths").duration(animationSpeed).attrTween("d", tweenArcForLabelPath)
+                        enter.transition("create paths").duration(settings.animationSpeed).attrTween("d", tweenArcForLabelPath)
                     )
                     .attr("id", (d) => "label-" + btoa(d.id));
             },
             (update) =>
                 update
                     .call((update) =>
-                        update.transition("update paths").duration(animationSpeed).attrTween("d", tweenArcForLabelPath)
+                        update.transition("update paths").duration(settings.animationSpeed).attrTween("d", tweenArcForLabelPath)
                     )
                     .select("textPath"),
-            (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
+            (exit) => exit.transition("remove labels").duration(settings.animationSpeed).style("opacity", 0).remove()
         );
     svg.select("g#labels")
         .attr("text-anchor", "middle")
@@ -178,7 +178,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .attr("font-weight", settings.style.label.weight)
                     .attr("fill", settings.style.label.color)
                     .attr("font-family", settings.style.label.fontFamily)
-                    .call((enter) => enter.transition("add labels").duration(animationSpeed).style("opacity", 1))
+                    .call((enter) => enter.transition("add labels").duration(settings.animationSpeed).style("opacity", 1))
                     .append("textPath")
                     .attr("href", (d) => "#label-" + btoa(d.id))
                     .attr("startOffset", "50%")
@@ -193,11 +193,11 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .call((update) =>
                         update
                             .transition("update labels")
-                            .duration(animationSpeed)
+                            .duration(settings.animationSpeed)
                             .style("opacity", (d) => 1)
                             .text(label)
                     ),
-            (exit) => exit.transition("remove labels").duration(animationSpeed).style("opacity", 0).remove()
+            (exit) => exit.transition("remove labels").duration(settings.animationSpeed).style("opacity", 0).remove()
         );
 
     function label(d: RoseChartSlice) {
