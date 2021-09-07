@@ -18,18 +18,18 @@ export function render(data: PairPlotData) {
     plot.innerHTML = "";
     const svg = d3.select("#correlogram");
 
-    let cells = data.measures.flatMap((_, row) =>
+    let cells = data.measures.flatMap((_, x) =>
         data.measures
-            .map((_, col) => ({
-                row,
-                col
+            .map((_, y) => ({
+                x,
+                y
             }))
-            .filter((d) => d.col != d.row)
+            .filter((d) => d.x != d.y)
     );
 
     const scales = data.measures
         .map((_, i) => data.points.map((p) => p[i]).filter((v) => v != null))
-        .map((values, index) => {
+        .map((values) => {
             const min = Math.min(...(values as number[]));
             const max = Math.max(...(values as number[]));
             return {
@@ -52,7 +52,7 @@ export function render(data: PairPlotData) {
         .append("svg:g")
         .attr("class", "scatterCell")
         .style("outline", "1px solid #bbb")
-        .attr("transform", (d) => `translate(${d.row * width} ${d.col * height}) `)
+        .attr("transform", (d) => `translate(${d.x * width} ${d.y * height}) `)
         .attr("width", width)
         .attr("height", height);
 
@@ -77,16 +77,14 @@ export function render(data: PairPlotData) {
         .text((d, i) => "Y scale for " + data.measures[i])
         .attr("transform", `translate(${width - 20} 4) rotate(90)`);
 
-
     const d3Circles = scatterCell
         .selectAll("circle")
         .data((d) =>
             data.points
-                .filter((_) => d.col != d.row)
                 .map((p, index) => {
-                    const x = p[d.col];
-                    const y = p[d.row];
-                    return x && y ? { x: scales[d.col].xScale(x), y: scales[d.row].yScale(y), index } : null;
+                    const x = p[d.x];
+                    const y = p[d.y];
+                    return x && y ? { x: scales[d.x].xScale(x), y: scales[d.y].yScale(y), index } : null;
                 })
                 .filter((p) => p != null)
         )
