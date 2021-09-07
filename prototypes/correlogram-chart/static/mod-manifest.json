@@ -1,0 +1,43 @@
+{
+    "apiVersion": "1.2",
+    "version": "1.1",
+    "name": "Correlogram chart",
+    "id": "spotfire-correlogram-prototype-mod",
+    "icon": "icon.svg",
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "dual",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            },
+            "automaticConfiguration": { "expressionHeuristics": "none" }
+        },
+        "axes": [
+            {
+                "name": "Measures",
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                },
+                "mode": "continuous",
+                "allowMultipleMeasures": true,
+                "allowNonAggregatingMeasures": true,
+                "placement": "bottom"
+            },
+            {
+                "name": "MarkerBy",
+                "mode": "categorical",
+                "automaticConfiguration": {"expressionHeuristics": "default","priority": "0"}
+            },
+            {
+                "name": "MeasureNames",
+                "mode": "categorical",
+                "placement": "none",
+                "legendItem": { "defaultVisibility": "hidden" },
+                "propertyControl": { "visibility": "visible" },
+                "automaticConfiguration": { "expressionHeuristics": "none", "priority": "100" }
+            }
+        ]
+    },
+    "files": ["index.html", "main.css", "bundle.js"]
+}
