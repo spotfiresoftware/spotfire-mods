@@ -69,8 +69,8 @@ export function render(data: PairPlotData) {
         .style("fill", "transparent");
 
     var axes = scales.map((a, i) => ({
-        xAxis: i == 0 ? d3.axisTop(a.xScale) : d3.axisBottom(a.xScale),
-        yAxis: i == 0 ? d3.axisLeft(a.yScale) : d3.axisRight(a.yScale)
+        xAxis: (i == 0 ? d3.axisTop(a.xScale) : d3.axisBottom(a.xScale)).ticks(Math.min(5, width / 100)),
+        yAxis: (i == 0 ? d3.axisLeft(a.yScale) : d3.axisRight(a.yScale)).ticks(Math.min(5, height / 100)
     }));
 
     scales.forEach((_, i) => {
