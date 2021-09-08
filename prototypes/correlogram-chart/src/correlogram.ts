@@ -63,7 +63,6 @@ export function render(data: PairPlotData) {
         .enter()
         .append("svg:g")
         .attr("class", "diagonal")
-        .style("outline", "1px solid #bbb")
         .attr("transform", (d, i) => `translate(${i * width} ${i * height}) `)
         .attr("width", width)
         .attr("height", height);
@@ -71,12 +70,21 @@ export function render(data: PairPlotData) {
         .append("text")
         .attr("class", "xscale")
         .text((d, i) => "X scale for " + data.measures[i])
-        .attr("transform", `translate(${height * (1 - avaiableSize)} ${avaiableSize * height })`);
+        .attr(
+            "transform",
+            (d, i) => `translate(${width * 0.1} ${height * (i == 0 ? avaiableSize : 1 - avaiableSize)})`
+        );
     diagonal
         .append("text")
         .attr("class", "yscale")
         .text((d, i) => "Y scale for " + data.measures[i])
-        .attr("transform", `translate(${avaiableSize * width} ${width * (1 - avaiableSize)}) rotate(90)`);
+        .attr(
+            "transform",
+            (d, i) =>
+                `translate(${width * (i == 0 ? avaiableSize : 1 - avaiableSize)} ${
+                    height * 0.1
+                }) rotate(90)`
+        );
 
     const d3Circles = scatterCell
         .selectAll("circle")
