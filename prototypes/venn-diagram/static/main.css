@@ -1,0 +1,23 @@
+html,
+body
+ {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+}
+
+svg {
+    display: block;
+}
+
+.rectangle {
+    fill: #add8e6;
+    stroke: #add8e6;
+    fill-opacity: 0.3;
+    stroke-opacity: 0.7;
+    stroke-width: 2;
+}
