@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { rectangularSelection } from "./rectangularMarking";
 
-const avaiableSize = 0.96;
+const avaiableSize = 0.9;
 
 export interface PairPlotData {
     measures: string[];
@@ -52,39 +52,37 @@ export function render(data: PairPlotData) {
         .enter()
         .append("svg:g")
         .attr("class", "scatterCell")
-        .style("outline", "1px solid #bbb")
         .attr("transform", (d) => `translate(${d.x * width} ${d.y * height}) `)
         .attr("width", width)
         .attr("height", height);
-
-    let diagonal = svg
-        .selectAll(".diagonal")
-        .data(scales)
+    svg.selectAll(".outline")
+        .data(cells)
         .enter()
-        .append("svg:g")
-        .attr("class", "diagonal")
-        .attr("transform", (d, i) => `translate(${i * width} ${i * height}) `)
+        .append("svg:rect")
+        .attr("class", "outline")
         .attr("width", width)
-        .attr("height", height);
-    diagonal
-        .append("text")
-        .attr("class", "xscale")
-        .text((d, i) => "X scale for " + data.measures[i])
-        .attr(
-            "transform",
-            (d, i) => `translate(${width * 0.1} ${height * (i == 0 ? avaiableSize : 1 - avaiableSize)})`
-        );
-    diagonal
-        .append("text")
-        .attr("class", "yscale")
-        .text((d, i) => "Y scale for " + data.measures[i])
-        .attr(
-            "transform",
-            (d, i) =>
-                `translate(${width * (i == 0 ? avaiableSize : 1 - avaiableSize)} ${
-                    height * 0.1
-                }) rotate(90)`
-        );
+        .attr("height", height)
+        .attr("x", (d) => d.x * width)
+        .attr("y", (d) => d.y * height)
+        .style("stroke", "#bbb")
+        .style("stroke-width", 1)
+        .style("fill", "transparent");
+
+    var axes = scales.map((a, i) => ({
+        xAxis: i == 0 ? d3.axisTop(a.xScale) : d3.axisBottom(a.xScale),
+        yAxis: i == 0 ? d3.axisLeft(a.yScale) : d3.axisRight(a.yScale)
+    }));
+
+    scales.forEach((_, i) => {
+        svg.append("svg:g")
+            .attr("class", "xAxis")
+            .attr("transform", () => `translate(${i * width} ${Math.max(i, 1) * height}) `)
+            .call(axes[i].xAxis as any);
+        svg.append("svg:g")
+            .attr("class", "yAxis")
+            .attr("transform", () => `translate(${Math.max(i, 1) * width} ${i * height}) `)
+            .call(axes[i].yAxis as any);
+    });
 
     const d3Circles = scatterCell
         .selectAll("circle")
