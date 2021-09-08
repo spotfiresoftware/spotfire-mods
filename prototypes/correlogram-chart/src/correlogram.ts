@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { rectangularSelection } from "./rectangularMarking";
 
-const padding = 4;
+const avaiableSize = 0.96;
 
 export interface PairPlotData {
     measures: string[];
@@ -13,8 +13,9 @@ export interface PairPlotData {
 export function render(data: PairPlotData) {
     const plot = document.querySelector("#correlogram")!;
     var { clientWidth, clientHeight } = plot;
-    var width = Math.floor(clientWidth / data.measures.length);
-    var height = Math.floor(clientHeight / data.measures.length);
+
+    var width = Math.floor(clientWidth / data.measures.length) * avaiableSize;
+    var height = Math.floor(clientHeight / data.measures.length) * avaiableSize;
     plot.innerHTML = "";
     const svg = d3.select("#correlogram");
 
@@ -36,11 +37,11 @@ export function render(data: PairPlotData) {
                 xScale: d3
                     .scaleLinear()
                     .domain([min, max])
-                    .rangeRound([padding, width - padding]),
+                    .range([width - width * avaiableSize, width * avaiableSize]),
                 yScale: d3
                     .scaleLinear()
                     .domain([max, min])
-                    .rangeRound([padding, width - padding])
+                    .range([height - height * avaiableSize, height * avaiableSize])
             };
         });
 
@@ -70,12 +71,12 @@ export function render(data: PairPlotData) {
         .append("text")
         .attr("class", "xscale")
         .text((d, i) => "X scale for " + data.measures[i])
-        .attr("transform", `translate(4 ${height - 20})`);
+        .attr("transform", `translate(${height * (1 - avaiableSize)} ${avaiableSize * height })`);
     diagonal
         .append("text")
         .attr("class", "yscale")
         .text((d, i) => "Y scale for " + data.measures[i])
-        .attr("transform", `translate(${width - 20} 4) rotate(90)`);
+        .attr("transform", `translate(${avaiableSize * width} ${width * (1 - avaiableSize)}) rotate(90)`);
 
     const d3Circles = scatterCell
         .selectAll("circle")
@@ -84,6 +85,8 @@ export function render(data: PairPlotData) {
                 .map((p, index) => {
                     const x = p[d.x];
                     const y = p[d.y];
+                    const rangeY = Math.abs(scales[d.y].yScale.domain()[1] - scales[d.y].yScale.domain()[0]);
+                    const rangeX = Math.abs(scales[d.x].xScale.domain()[1] - scales[d.x].xScale.domain()[0]);
                     return x && y ? { x: scales[d.x].xScale(x), y: scales[d.y].yScale(y), index } : null;
                 })
                 .filter((p) => p != null)
@@ -93,8 +96,10 @@ export function render(data: PairPlotData) {
         .attr("class", "circle")
         .attr("cx", (d) => d!.x!)
         .attr("cy", (d) => d!.y!)
-        .attr("r", 2)
+        .attr("r", Math.min(width, height) / 50)
         .attr("fill", (d) => data.colors[d!.index])
+        .attr("stroke", "black")
+        .attr("stroke-width", Math.min(2, Math.min(width, height) / 500))
         .on("click", (d) => data.mark(d!.index));
 
     scatterCell.exit().remove();
