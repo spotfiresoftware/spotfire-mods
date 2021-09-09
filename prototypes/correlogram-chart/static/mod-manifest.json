@@ -25,17 +25,25 @@
                 "placement": "bottom"
             },
             {
-                "name": "MarkerBy",
-                "mode": "categorical",
-                "automaticConfiguration": {"expressionHeuristics": "default","priority": "0"}
-            },
-            {
                 "name": "MeasureNames",
                 "mode": "categorical",
                 "placement": "none",
                 "legendItem": { "defaultVisibility": "hidden" },
                 "propertyControl": { "visibility": "visible" },
                 "automaticConfiguration": { "expressionHeuristics": "none", "priority": "100" }
+            },
+            {
+                "name": "MarkerBy",
+                "mode": "categorical",
+                "automaticConfiguration": { "expressionHeuristics": "default", "priority": "0" }
+            },
+            {
+                "name": "Count",
+                "mode": "continuous",
+                "placement": "none",
+                "legendItem": { "defaultVisibility": "hidden" },
+                "propertyControl": { "visibility": "visible" },
+                "automaticConfiguration": { "expressionHeuristics": "none" }
             }
         ]
     },
