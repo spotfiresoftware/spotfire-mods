@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { rectangularSelection } from "./rectangularMarking";
 
-const avaiableSize = 0.9;
+const padding = 0.1;
 
 export interface PairPlotData {
     measures: string[];
@@ -14,8 +14,9 @@ export function render(data: PairPlotData) {
     const plot = document.querySelector("#correlogram")!;
     var { clientWidth, clientHeight } = plot;
 
-    var width = Math.floor(clientWidth / data.measures.length) * avaiableSize;
-    var height = Math.floor(clientHeight / data.measures.length) * avaiableSize;
+    const width = Math.floor(clientWidth / data.measures.length);
+    const height = Math.floor(clientHeight / data.measures.length);
+
     plot.innerHTML = "";
     const svg = d3.select("#correlogram");
 
@@ -37,11 +38,11 @@ export function render(data: PairPlotData) {
                 xScale: d3
                     .scaleLinear()
                     .domain([min, max])
-                    .range([width - width * avaiableSize, width * avaiableSize]),
+                    .range([0, width * (1 - 2 * padding)]),
                 yScale: d3
                     .scaleLinear()
                     .domain([max, min])
-                    .range([height - height * avaiableSize, height * avaiableSize])
+                    .range([0, height * (1 - 2 * padding)])
             };
         });
 
@@ -52,9 +53,9 @@ export function render(data: PairPlotData) {
         .enter()
         .append("svg:g")
         .attr("class", "scatterCell")
-        .attr("transform", (d) => `translate(${d.x * width} ${d.y * height}) `)
-        .attr("width", width)
-        .attr("height", height);
+        .attr("transform", (d) => `translate(${d.x * width + padding * width} ${d.y * height + padding * height}) `)
+        .attr("width", width * (1 - 2 * padding))
+        .attr("height", height * (1 - 2 * padding));
     svg.selectAll(".outline")
         .data(cells)
         .enter()
@@ -69,19 +70,27 @@ export function render(data: PairPlotData) {
         .style("fill", "transparent");
 
     var axes = scales.map((a, i) => ({
-        xAxis: (i == 0 ? d3.axisTop(a.xScale) : d3.axisBottom(a.xScale)).ticks(Math.min(5, width / 100)),
-        yAxis: (i == 0 ? d3.axisLeft(a.yScale) : d3.axisRight(a.yScale)).ticks(Math.min(5, height / 100))
+        xAxis: (i == 0 ? d3.axisTop(a.xScale) : d3.axisBottom(a.xScale)).ticks(Math.max(2, Math.min(5, width / 100))),
+        yAxis: (i == 0 ? d3.axisLeft(a.yScale) : d3.axisRight(a.yScale)).ticks(Math.max(2, Math.min(5, height / 100)))
     }));
 
     scales.forEach((_, i) => {
         svg.append("svg:g")
             .attr("class", "xAxis")
-            .attr("transform", () => `translate(${i * width} ${Math.max(i, 1) * height}) `)
+            .attr("transform", () => `translate(${i * width + padding * width} ${Math.max(i, 1) * height}) `)
             .call(axes[i].xAxis as any);
         svg.append("svg:g")
             .attr("class", "yAxis")
-            .attr("transform", () => `translate(${Math.max(i, 1) * width} ${i * height}) `)
+            .attr("transform", () => `translate(${Math.max(i, 1) * width} ${i * height + padding * height}) `)
             .call(axes[i].yAxis as any);
+        svg.append("svg:g")
+            .attr("class", "measureName")
+            .append("svg:text")
+            .attr("x", () => `${Math.round(((2 * i + 1) / (2 * data.measures.length)) * 100)}%`)
+            .attr("y", () => `${Math.round(((2 * i + 1) / (2 * data.measures.length)) * 100)}%`)
+            .attr("dominant-baseline", "bottom")
+            .attr("text-anchor", "middle")
+            .text(data.measures[i]);
     });
 
     const d3Circles = scatterCell
@@ -91,8 +100,6 @@ export function render(data: PairPlotData) {
                 .map((p, index) => {
                     const x = p[d.x];
                     const y = p[d.y];
-                    const rangeY = Math.abs(scales[d.y].yScale.domain()[1] - scales[d.y].yScale.domain()[0]);
-                    const rangeX = Math.abs(scales[d.x].xScale.domain()[1] - scales[d.x].xScale.domain()[0]);
                     return x && y ? { x: scales[d.x].xScale(x), y: scales[d.y].yScale(y), index } : null;
                 })
                 .filter((p) => p != null)
