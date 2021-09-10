@@ -80,7 +80,7 @@ window.Spotfire.initialize(async (mod) => {
 
         const plotWarnings = validateDataView(
             rootNode,
-            !!showNullValues.value() && hasHierarchyExpression,
+            !showNullValues.value() && hasHierarchyExpression,
             hasSizeExpression
         );
 
@@ -275,7 +275,7 @@ window.Spotfire.initialize(async (mod) => {
 
             // When the path has empty values, make sure all children are transparent. This is also a warning.
             if (
-                showNullValues.value() &&
+                !showNullValues.value() &&
                 rows[0]
                     .categorical(hierarchyAxisName)
                     .value()

@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import { DataViewRow } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
 
-
 export interface SunBurstHierarchyNode {
     hasVirtualChildren?: boolean;
     mark: (operation?: any) => void;
@@ -59,7 +58,10 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .innerRadius((d) => (showOnlyRoot ? radius / 2 : d.y0))
         .outerRadius((d) => d.y1 - 1);
 
-    const partition = d3.partition().size([Math.PI * 2, radius]).padding(0.002);
+    const partition = d3
+        .partition()
+        .size([Math.PI * 2, radius])
+        .padding(0.002);
 
     const partitionLayout = partition(hierarchy);
 
@@ -266,7 +268,10 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
-        d3.selectAll("path").transition("sector hover").duration(settings.animationSpeed).style("stroke", "transparent");
+        d3.selectAll("path")
+            .transition("sector hover")
+            .duration(settings.animationSpeed)
+            .style("stroke", "transparent");
         settings.onMouseLeave?.();
     }
 

@@ -10,7 +10,7 @@ export const resources = {
     popoutInteractionModeMarkTooltip: "Mark data when clicking a sector. ‘Alt’ click for the opposite behavior.",
     popoutInteractionModeDrillDown: "Drill down",
     popoutInteractionModeDrillDownTooltip: "Drill down when clicking a sector. ‘Alt’ click for the opposite behavior.",
-    popoutShowNullValues: "Exclude sector segments with empty values",
+    popoutShowNullValues: "Display segments with empty values",
     popoutSortByValue: "Sort segments by value",
     warningsTooltip: (warnings: string[]) => "Warnings:\n" + warnings.join("\n"),
     breadCrumbRoot: "(All)"

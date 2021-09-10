@@ -136,6 +136,7 @@ svg {
     display: block;
     width: 21px;
     height: 21px;
+    fill: currentColor;
 }
 
 .visible {
