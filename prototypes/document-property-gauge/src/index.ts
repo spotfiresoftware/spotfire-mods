@@ -1,6 +1,5 @@
-import { Data, Settings, render } from "./render";
+import { Data, Settings, render, Gauge } from "./render";
 import { AxisPart, DataView, DataViewHierarchyNode, Mod, Size, ModProperty } from "spotfire-api";
-
 
 const Spotfire = window.Spotfire;
 const DEBUG = true;
@@ -13,10 +12,9 @@ Spotfire.initialize(async (mod) => {
      */
     const reader = mod.createReader(
         mod.visualization.data(),
-        mod.windowSize(),
-        mod.document.property<number>("gauge-max"),
+        mod.windowSize()
+        // mod.document.property<number>("gauge-max"),
     );
-
 
     /**
      * Creates a function that is part of the main read-render loop.
@@ -33,14 +31,19 @@ Spotfire.initialize(async (mod) => {
      * @param {Size} windowSize
      * @param {ModProperty} max
      */
-    async function onChange(
-        dataView: DataView,
-        windowSize: Spotfire.Size,
-        max: ModProperty<number>,
-    ) {
-        
+    async function onChange(dataView: DataView, windowSize: Spotfire.Size, max: ModProperty<number>) {
+        let gaugeRoot = await (await dataView.hierarchy("X"))?.root();
 
-        render();
+
+        let a = (gaugeRoot?.rows().reduce((p, c) => Math.max(p, c.continuous("Y").value() || 0), 0) || 0) * 1.1
+
+        let gauges: Gauge[] = gaugeRoot!.leaves().map((leaf) => ({
+            label: leaf.formattedValue(),
+            color: leaf.rows()[0].color().hexCode,
+            value: leaf.rows().reduce((p, c) => p + (c.continuous("Y").value<number>() || 0), 0)
+        }));
+
+        render(gauges, { size: windowSize, maxValue: max?.value() || a });
 
         context.signalRenderComplete();
     }
