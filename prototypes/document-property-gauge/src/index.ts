@@ -41,11 +41,19 @@ Spotfire.initialize(async (mod) => {
             label: row.categorical("X").formattedValue(),
             formattedValue: row.continuous("Y").formattedValue(),
             color: row.color().hexCode,
+            mark: () => row.mark(),
             percent: (row.continuous("Y").value<number>() || 0) / (max.value() || 0),
             value: row.continuous("Y").value<number>() || 0
         }));
 
         render(gauges, {
+            click(d) {
+                if (d) {
+                    d.mark();
+                } else {
+                    dataView.clearMarking();
+                }
+            },
             size: windowSize,
             maxValue: max.value() || 0,
             animationSpeed: 250,

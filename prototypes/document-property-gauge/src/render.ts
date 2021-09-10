@@ -7,6 +7,7 @@ import * as d3 from "d3";
 const svg = d3.select("#mod-container").append("svg").attr("xmlns", "http://www.w3.org/2000/svg");
 
 export interface Settings {
+    click(d: Gauge | null): void;
     animationSpeed: number;
     size: { width: number; height: number };
     maxValue: number;
@@ -19,6 +20,7 @@ export interface Settings {
 }
 
 export interface Gauge {
+    mark(): void;
     label: string;
     percent: number;
     value: number;
@@ -30,7 +32,10 @@ export async function render(gauges: Gauge[], settings: Settings) {
     let gaugeWidth = settings.size.width / gauges.length;
     let padding = settings.size.width / 50;
 
-    let radius = Math.min(settings.size.width / gauges.length / 2 - padding / 2, settings.size.height / 2);
+    let radius = Math.min(
+        settings.size.width / gauges.length / 2 - padding / 2,
+        settings.size.height / 2 - settings.style.label.size
+    );
 
     const shiftAngle = Math.PI - 5 / 8;
     const maxAngle = Math.PI - 5 / 8;
@@ -43,7 +48,9 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .innerRadius((d) => radius - radius * 0.2)
         .outerRadius((d) => radius);
 
-    svg.attr("width", settings.size.width).attr("height", settings.size.height);
+    svg.attr("width", settings.size.width)
+        .attr("height", settings.size.height)
+        .on("click", () => settings.click(null));
 
     let gaugesPaths = svg.selectAll<any, Gauge>("g.gauge").data(gauges, (d: Gauge) => d.label);
 
@@ -105,12 +112,41 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     update
         .select("path.value")
+        .on("click", (d) => {
+            d3.event.stopPropagation();
+            return d.mark();
+        })
         .transition("add sectors")
         .duration(settings.animationSpeed)
         .attrTween("d", tweenArc)
         .attr("stroke", (d) => ((scale(d.percent) || 0) > maxAngle ? "red" : "transparent"))
         .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
+
+    update
+        .select("text.label-value")
+        .attr("dy", "0.35em")
+        .attr("font-size", settings.style.value.size)
+        .attr("font-style", settings.style.value.style)
+        .attr("font-weight", settings.style.value.weight)
+        .attr("fill", (d: any) => settings.style.value.color)
+        .attr("font-family", settings.style.value.fontFamily)
+        .attr("text-anchor", "middle")
+        .attr("y", 0)
+        .attr("x", 0)
+        .text((d) => d.formattedValue);
+
+    update
+        .select("text.label")
+        .attr("font-size", settings.style.label.size)
+        .attr("font-style", settings.style.label.style)
+        .attr("font-weight", settings.style.label.weight)
+        .attr("fill", (d: any) => settings.style.label.color)
+        .attr("font-family", settings.style.label.fontFamily)
+        .attr("text-anchor", "middle")
+        .attr("y", radius)
+        .attr("x", 0)
+        .text((d) => d.label);
 
     gaugesPaths.exit().remove();
 
@@ -127,7 +163,3 @@ export async function render(gauges: Gauge[], settings: Settings) {
     }
 }
 
-function getTransformData(data: any) {
-    // d3.interpolate should not try to interpolate other properties
-    return (({ value, percent }) => ({ value, percent }))(data);
-}
