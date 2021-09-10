@@ -1,5 +1,5 @@
-import { Data, Settings, render, Gauge } from "./render";
-import { AxisPart, DataView, DataViewHierarchyNode, Mod, Size, ModProperty } from "spotfire-api";
+import { render, Gauge } from "./render";
+import { DataView, ModProperty } from "spotfire-api";
 
 const Spotfire = window.Spotfire;
 const DEBUG = true;
@@ -12,8 +12,8 @@ Spotfire.initialize(async (mod) => {
      */
     const reader = mod.createReader(
         mod.visualization.data(),
-        mod.windowSize()
-        // mod.document.property<number>("gauge-max"),
+        mod.windowSize(),
+        mod.document.property<number>("gaugeMax")
     );
 
     /**
@@ -21,7 +21,9 @@ Spotfire.initialize(async (mod) => {
      * It checks for valid data and will print errors in case of bad data or bad renders.
      * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
      */
-    reader.subscribe(generalErrorHandler(mod)(onChange));
+    reader.subscribe(generalErrorHandler(mod)(onChange), (err) => {
+        mod.controls.errorOverlay.show(err);
+    });
 
     /**
      * The function that is part of the main read-render loop.
@@ -32,20 +34,21 @@ Spotfire.initialize(async (mod) => {
      * @param {ModProperty} max
      */
     async function onChange(dataView: DataView, windowSize: Spotfire.Size, max: ModProperty<number>) {
+        mod.controls.errorOverlay.hide();
         let gaugeRoot = await (await dataView.hierarchy("X"))?.root();
-
-        let a = (gaugeRoot?.rows().reduce((p, c) => Math.max(p, c.continuous("Y").value() || 0), 0) || 0) * 1.1;
 
         let gauges: Gauge[] = gaugeRoot!.rows().map((row) => ({
             label: row.categorical("X").formattedValue(),
             formattedValue: row.continuous("Y").formattedValue(),
             color: row.color().hexCode,
+            percent: (row.continuous("Y").value<number>() || 0) / (max.value() || 0),
             value: row.continuous("Y").value<number>() || 0
         }));
 
         render(gauges, {
             size: windowSize,
-            maxValue: max?.value() || a,
+            maxValue: max.value() || 0,
+            animationSpeed: 250,
             style: {
                 marking: { color: context.styling.scales.font.color },
                 background: { color: context.styling.general.backgroundColor },
@@ -62,7 +65,7 @@ Spotfire.initialize(async (mod) => {
                     size: parseInt("" + context.styling.scales.font.fontSize),
                     style: context.styling.scales.font.fontStyle,
                     weight: context.styling.scales.font.fontWeight
-                },
+                }
             }
         });
 

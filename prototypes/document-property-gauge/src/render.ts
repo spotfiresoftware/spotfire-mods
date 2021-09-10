@@ -7,6 +7,7 @@ import * as d3 from "d3";
 const svg = d3.select("#mod-container").append("svg").attr("xmlns", "http://www.w3.org/2000/svg");
 
 export interface Settings {
+    animationSpeed: number;
     size: { width: number; height: number };
     maxValue: number;
     style: {
@@ -19,6 +20,7 @@ export interface Settings {
 
 export interface Gauge {
     label: string;
+    percent: number;
     value: number;
     formattedValue: string;
     color: string;
@@ -30,25 +32,16 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     let radius = settings.size.width / gauges.length / 2 - padding / 2;
 
-    console.log(gauges);
-
-    // settings.maxValue = 100;
-
-    // gauges[0].value = 25;
-    // gauges[1].value = 50;
-    // gauges[2].value = 75;
-    // gauges[3].value = 100;
-
     const shiftAngle = Math.PI - 5 / 8;
     let scale = d3
         .scaleLinear()
         .range([-shiftAngle, Math.PI - 5 / 8])
-        .domain([0, settings.maxValue]);
+        .domain([0, 1]);
 
     const arc = d3
-        .arc<{ value: number }>()
+        .arc<{ percent: number }>()
         .startAngle((d) => 0 - shiftAngle)
-        .endAngle((d) => scale(d.value) || 0)
+        .endAngle((d) => scale(d.percent) || 0)
         .innerRadius((d) => radius - radius * 0.2)
         .outerRadius((d) => radius);
 
@@ -66,13 +59,15 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .append("path")
         .attr("class", "bg")
         .attr("opacity", 0.1)
-        .attr("d", (d) => arc({ value: settings.maxValue }))
+        .attr("d", (d) => arc({ percent: 1 }))
         .attr("fill", (d) => d.color);
 
     newGauge
         .append("path")
         .attr("class", "value")
-        .attr("d", arc)
+        .transition("add sectors")
+        .duration(settings.animationSpeed)
+        .attrTween("d", tweenArc)
         .attr("fill", (d) => d.color);
 
     newGauge
@@ -86,11 +81,10 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("font-family", settings.style.value.fontFamily)
         .attr("text-anchor", "middle")
         .attr("y", 0)
-        .attr("x", 0 )
+        .attr("x", 0)
         .text((d) => d.formattedValue);
 
-
-        newGauge
+    newGauge
         .append("text")
         .attr("class", "label")
         .attr("dy", "0.35em")
@@ -101,7 +95,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "middle")
         .attr("y", radius)
-        .attr("x", 0 )
+        .attr("x", 0)
         .text((d) => d.label);
 
     let update = gaugesPaths
@@ -110,37 +104,34 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     update
         .select("path.bg")
-        .attr("d", (d) => arc({ value: settings.maxValue }))
+        .transition("add sectors")
+        .duration(settings.animationSpeed)
+        .attrTween("d", tweenArc.bind({}, { percent: 1 }))
         .attr("fill", (d) => d.color);
 
     update
         .select("path.value")
-        .attr("d", arc)
+        .transition("add sectors")
+        .duration(settings.animationSpeed)
+        .attrTween("d", tweenArc)
         .attr("fill", (d) => d.color);
 
     gaugesPaths.exit().remove();
+
+    function tweenArc(this: any, data: any) {
+        let prevValue = this.__prev ? this.__prev : { percent: 1 };
+
+        this.__prev = data;
+
+        var i = d3.interpolate(prevValue, data);
+
+        return function (value: any) {
+            return arc(i(value))!;
+        };
+    }
 }
 
 function getTransformData(data: any) {
     // d3.interpolate should not try to interpolate other properties
-    return (({ value, x0, x1, y0, y1 }) => ({ value, x0, x1, y0, y1 }))(data);
-}
-
-function labelPosition(d: any) {
-    const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-    const y = (d.y0 + d.y1) / 2;
-    return { x, y };
-}
-
-function tweenTransform(this: any, data: any) {
-    let prevValue = this.__prev ? getTransformData(this.__prev) : {};
-    let newValue = getTransformData(data);
-    this.__prev = newValue;
-
-    var i = d3.interpolate(prevValue, newValue);
-
-    return function (value: any) {
-        var { x, y } = labelPosition(i(value));
-        return `rotate(${x - 90}) translate(${y},0) rotate(${Math.sin((Math.PI * x) / 180) >= 0 ? 0 : 180})`;
-    };
+    return (({ value, percent }) => ({ value, percent }))(data);
 }
