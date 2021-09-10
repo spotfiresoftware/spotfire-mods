@@ -34,16 +34,37 @@ Spotfire.initialize(async (mod) => {
     async function onChange(dataView: DataView, windowSize: Spotfire.Size, max: ModProperty<number>) {
         let gaugeRoot = await (await dataView.hierarchy("X"))?.root();
 
+        let a = (gaugeRoot?.rows().reduce((p, c) => Math.max(p, c.continuous("Y").value() || 0), 0) || 0) * 1.1;
 
-        let a = (gaugeRoot?.rows().reduce((p, c) => Math.max(p, c.continuous("Y").value() || 0), 0) || 0) * 1.1
-
-        let gauges: Gauge[] = gaugeRoot!.leaves().map((leaf) => ({
-            label: leaf.formattedValue(),
-            color: leaf.rows()[0].color().hexCode,
-            value: leaf.rows().reduce((p, c) => p + (c.continuous("Y").value<number>() || 0), 0)
+        let gauges: Gauge[] = gaugeRoot!.rows().map((row) => ({
+            label: row.categorical("X").formattedValue(),
+            formattedValue: row.continuous("Y").formattedValue(),
+            color: row.color().hexCode,
+            value: row.continuous("Y").value<number>() || 0
         }));
 
-        render(gauges, { size: windowSize, maxValue: max?.value() || a });
+        render(gauges, {
+            size: windowSize,
+            maxValue: max?.value() || a,
+            style: {
+                marking: { color: context.styling.scales.font.color },
+                background: { color: context.styling.general.backgroundColor },
+                value: {
+                    fontFamily: context.styling.general.font.fontFamily,
+                    color: context.styling.general.font.color,
+                    size: parseInt("" + context.styling.general.font.fontSize),
+                    style: context.styling.general.font.fontStyle,
+                    weight: context.styling.general.font.fontWeight
+                },
+                label: {
+                    fontFamily: context.styling.scales.font.fontFamily,
+                    color: context.styling.scales.font.color,
+                    size: parseInt("" + context.styling.scales.font.fontSize),
+                    style: context.styling.scales.font.fontStyle,
+                    weight: context.styling.scales.font.fontWeight
+                },
+            }
+        });
 
         context.signalRenderComplete();
     }
