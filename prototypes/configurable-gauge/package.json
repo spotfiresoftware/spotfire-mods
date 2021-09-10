@@ -10,7 +10,7 @@
         "start": "npm run build-watch",
         "test": "jest --watchAll"
     },
-    "author": "objerke",
+    "author": "objerke, ebrandin",
     "license": "ISC",
     "devDependencies": {
         "@tibco/spotfire-mods-dev-server": "^1.0.0",
