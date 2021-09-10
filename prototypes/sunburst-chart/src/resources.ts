@@ -4,13 +4,13 @@ export const resources = {
     warningSplittingColorAxis:
         "The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times.",
     popoutLabelsAll: "All",
-    popoutLabelsMarked: "Marked",
+    popoutLabelsMarked: "Marked rows",
     popoutLabelsNone: "None",
     popoutInteractionModeMark: "Mark",
-    popoutInteractionModeMarkTooltip: "Mark data when clicking a sector. 'Alt' click for the opposite behavior",
+    popoutInteractionModeMarkTooltip: "Mark data when clicking a sector. ‘Alt’ click for the opposite behavior.",
     popoutInteractionModeDrillDown: "Drill down",
-    popoutInteractionModeDrillDownTooltip: "Drill down when clicking a sector. 'Alt' click for the opposite behavior",
-    popoutShowNullValues: "Show empty values as missing",
+    popoutInteractionModeDrillDownTooltip: "Drill down when clicking a sector. ‘Alt’ click for the opposite behavior.",
+    popoutShowNullValues: "Exclude sector segments with empty values",
     popoutSortByValue: "Sort segments by value",
     warningsTooltip: (warnings: string[]) => "Warnings:\n" + warnings.join("\n"),
     breadCrumbRoot: "(All)"
