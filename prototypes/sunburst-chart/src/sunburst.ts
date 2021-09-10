@@ -56,12 +56,10 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .arc<{ x0: number; y0: number; x1: number; y1: number }>()
         .startAngle((d) => d.x0)
         .endAngle((d) => d.x1)
-        .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.01))
-        .padRadius((radius / 2) * hierarchy.depth)
         .innerRadius((d) => (showOnlyRoot ? radius / 2 : d.y0))
         .outerRadius((d) => d.y1 - 1);
 
-    const partition = d3.partition().size([Math.PI * 2, radius]);
+    const partition = d3.partition().size([Math.PI * 2, radius]).padding(0.002);
 
     const partitionLayout = partition(hierarchy);
 
