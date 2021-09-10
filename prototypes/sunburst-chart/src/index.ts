@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, Size } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import { interactionLock } from "./interactionLock";
+import { resources } from "./resources";
 import { render, SunBurstHierarchyNode, SunBurstSettings } from "./sunburst";
 
 const hierarchyAxisName = "Hierarchy";
@@ -111,7 +112,7 @@ window.Spotfire.initialize(async (mod) => {
 
         const breadcrumbs = jsonToPath(rootNodePath.value() || "{}");
         if (breadcrumbs.length) {
-            breadcrumbs.unshift("(All)");
+            breadcrumbs.unshift(resources.breadCrumbRoot);
         }
 
         const settings: SunBurstSettings = {
@@ -377,10 +378,7 @@ function validateDataView(rootNode: DataViewHierarchyNode, validateHierarchy: bo
             while (currentIndex >= 1) {
                 if (path[currentIndex].value() && !path[currentIndex - 1].value()) {
                     issues++;
-                    warnings.push(
-                        "Some elements are not visualized. The following path has holes in it: " +
-                            row.categorical(hierarchyAxisName).formattedValue()
-                    );
+                    warnings.push(resources.warningEmptyPath(row.categorical(hierarchyAxisName).formattedValue()));
 
                     if (issues == 3) {
                         break rowLoop;
@@ -398,7 +396,7 @@ function validateDataView(rootNode: DataViewHierarchyNode, validateHierarchy: bo
         rowLoop: for (let row of rows) {
             const size = row.continuous(sizeAxisName).value();
             if (typeof size == "number" && size < 0) {
-                warnings.push("The plot contains negative values. These nodes have a red outline.");
+                warnings.push(resources.warningNegativeValues);
                 break rowLoop;
             }
         }
@@ -454,9 +452,7 @@ function getColoringStartLevel(
     // Make sure there is an available coloring level.
     if (coloringStartLevel == hierarchyAxis.parts.length) {
         coloringStartLevel = hierarchyAxis.parts.length - 1;
-        warnings.push(
-            "The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times."
-        );
+        warnings.push(resources.warningSplittingColorAxis);
     }
 
     return coloringStartLevel;
@@ -504,21 +500,21 @@ function renderSettingsButton(
                             name: "labels",
                             value: "all",
                             checked: labels.value() == "all",
-                            text: "All"
+                            text: resources.popoutLabelsAll
                         }),
                         mod.controls.popout.components.radioButton({
                             enabled: true,
                             name: "labels",
                             value: "marked",
                             checked: labels.value() == "marked",
-                            text: "Marked"
+                            text: resources.popoutLabelsMarked
                         }),
                         mod.controls.popout.components.radioButton({
                             enabled: true,
                             value: "off",
                             name: "labels",
                             checked: labels.value() == "off",
-                            text: "Off"
+                            text: resources.popoutLabelsNone
                         })
                     ]
                 }),
@@ -530,16 +526,16 @@ function renderSettingsButton(
                             name: "interactionMode",
                             value: InteractionMode.mark,
                             checked: interactionMode.value() != InteractionMode.drilldown,
-                            tooltip: "Mark data when clicking a sector. 'Alt' click for the opposite behavior",
-                            text: "Mark"
+                            tooltip: resources.popoutInteractionModeMarkTooltip,
+                            text: resources.popoutInteractionModeMark
                         }),
                         mod.controls.popout.components.radioButton({
                             enabled: true,
                             name: "interactionMode",
                             value: InteractionMode.drilldown,
                             checked: interactionMode.value() == InteractionMode.drilldown,
-                            tooltip: "Drill down when clicking a sector. 'Alt' click for the opposite behavior",
-                            text: "Drill down"
+                            tooltip: resources.popoutInteractionModeDrillDownTooltip,
+                            text: resources.popoutInteractionModeDrillDown
                         })
                     ]
                 }),
@@ -549,7 +545,7 @@ function renderSettingsButton(
                             enabled: true,
                             name: "showNullValues",
                             checked: showNullValues.value() || false,
-                            text: "Show empty values as missing"
+                            text: resources.popoutShowNullValues
                         })
                     ]
                 }),
@@ -559,7 +555,7 @@ function renderSettingsButton(
                             enabled: true,
                             name: "sortByValue",
                             checked: sortByValue.value() || false,
-                            text: "Sort sectors by value"
+                            text: resources.popoutSortByValue
                         })
                     ]
                 })
@@ -570,10 +566,10 @@ function renderSettingsButton(
 
 function renderWarningsIcon(mod: Mod, warnings: string[]) {
     let warningButton = document.querySelector<HTMLElement>(".warnings");
-    warningButton?.classList.toggle("visible", mod.getRenderContext().interactive && !!warnings.length );
+    warningButton?.classList.toggle("visible", mod.getRenderContext().interactive && !!warnings.length);
 
     warningButton!.onmouseenter = () => {
-        mod.controls.tooltip.show("Warnings:\n" + warnings.join("\n"));
+        mod.controls.tooltip.show(resources.warningsTooltip(warnings));
     };
     warningButton!.onmouseleave = () => {
         mod.controls.tooltip.hide();
