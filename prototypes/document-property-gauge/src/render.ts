@@ -30,18 +30,16 @@ export async function render(gauges: Gauge[], settings: Settings) {
     let gaugeWidth = settings.size.width / gauges.length;
     let padding = settings.size.width / 50;
 
-    let radius = settings.size.width / gauges.length / 2 - padding / 2;
+    let radius = Math.min(settings.size.width / gauges.length / 2 - padding / 2, settings.size.height / 2);
 
     const shiftAngle = Math.PI - 5 / 8;
-    let scale = d3
-        .scaleLinear()
-        .range([-shiftAngle, Math.PI - 5 / 8])
-        .domain([0, 1]);
+    const maxAngle = Math.PI - 5 / 8;
+    let scale = d3.scaleLinear().range([-shiftAngle, maxAngle]).domain([0, 1]);
 
     const arc = d3
         .arc<{ percent: number }>()
         .startAngle((d) => 0 - shiftAngle)
-        .endAngle((d) => scale(d.percent) || 0)
+        .endAngle((d) => Math.min(scale(d.percent) || 0, maxAngle))
         .innerRadius((d) => radius - radius * 0.2)
         .outerRadius((d) => radius);
 
@@ -49,11 +47,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     let gaugesPaths = svg.selectAll<any, Gauge>("g.gauge").data(gauges, (d: Gauge) => d.label);
 
-    let newGauge = gaugesPaths
-        .enter()
-        .append("g")
-        .attr("class", "gauge")
-        .attr("transform", (d, i) => `translate(${i * gaugeWidth + gaugeWidth / 2}, 200)`);
+    let newGauge = gaugesPaths.enter().append("g").attr("class", "gauge");
 
     newGauge
         .append("path")
@@ -100,7 +94,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     let update = gaugesPaths
         .merge(newGauge)
-        .attr("transform", (d, i) => `translate(${i * gaugeWidth + gaugeWidth / 2}, 200)`);
+        .attr("transform", (d, i) => `translate(${i * gaugeWidth + gaugeWidth / 2}, ${settings.size.height / 2})`);
 
     update
         .select("path.bg")
@@ -114,6 +108,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .transition("add sectors")
         .duration(settings.animationSpeed)
         .attrTween("d", tweenArc)
+        .attr("stroke", (d) => ((scale(d.percent) || 0) > maxAngle ? "red" : "transparent"))
+        .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
 
     gaugesPaths.exit().remove();
