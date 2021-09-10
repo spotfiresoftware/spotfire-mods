@@ -33,3 +33,47 @@ svg {
     stroke-opacity: 0.7;
     stroke-width: 2;
 }
+
+.settings-area {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input {
+    border: 1px solid currentColor;
+    padding: 5px;
+}
+
+.icon-button {
+    padding: 5px;
+    position: absolute;
+    top: 0;
+    width: 31px;
+    cursor: pointer;
+    height: 31px;
+    display: block;
+}
+
+.icon-button svg {
+    display: block;
+    width: 21px;
+    height: 21px;
+}
+
+.hidden {
+    display: none;
+}
+
+.settings {
+    right: 0;
+    color: #ccc;
+}
+
+.settings:hover {
+    color: #ddd;
+}

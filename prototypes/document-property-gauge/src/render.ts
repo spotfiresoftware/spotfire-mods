@@ -11,6 +11,7 @@ export interface Settings {
     animationSpeed: number;
     size: { width: number; height: number };
     maxValue: number;
+    width: number;
     style: {
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
         value: { size: number; weight: string; style: string; color: string; fontFamily: string };
@@ -40,12 +41,17 @@ export async function render(gauges: Gauge[], settings: Settings) {
     const shiftAngle = Math.PI - 5 / 8;
     const maxAngle = Math.PI - 5 / 8;
     let scale = d3.scaleLinear().range([-shiftAngle, maxAngle]).domain([0, 1]);
+    let negScale = d3.scaleLinear().range([maxAngle, -shiftAngle]).domain([0, 1]);
 
     const arc = d3
         .arc<{ percent: number }>()
-        .startAngle((d) => 0 - shiftAngle)
-        .endAngle((d) => Math.min(scale(d.percent) || 0, maxAngle))
-        .innerRadius((d) => radius - radius * 0.2)
+        .startAngle((d) => (d.percent < 0 ? negScale(0) || 0 : scale(0) || 0))
+        .endAngle((d) =>
+            d.percent < 0
+                ? Math.max(negScale(Math.abs(d.percent)) || 0, -shiftAngle)
+                : Math.min(scale(d.percent) || 0, maxAngle)
+        )
+        .innerRadius((d) => radius - (radius * settings.width) / 100)
         .outerRadius((d) => radius);
 
     svg.attr("width", settings.size.width)
@@ -119,7 +125,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .transition("add sectors")
         .duration(settings.animationSpeed)
         .attrTween("d", tweenArc)
-        .attr("stroke", (d) => ((scale(d.percent) || 0) > maxAngle ? "red" : "transparent"))
+        .attr("stroke", (d) => ((scale(Math.abs(d.percent)) || 0) > maxAngle ? "red" : "transparent"))
         .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
 
@@ -162,4 +168,3 @@ export async function render(gauges: Gauge[], settings: Settings) {
         };
     }
 }
-

@@ -13,7 +13,8 @@ Spotfire.initialize(async (mod) => {
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
-        mod.document.property<number>("gaugeMax")
+        mod.property<number>("gaugeMax"),
+        mod.property<number>("gaugeWidth")
     );
 
     /**
@@ -31,9 +32,15 @@ Spotfire.initialize(async (mod) => {
      * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
      * @param {DataView} dataView
      * @param {Size} windowSize
-     * @param {ModProperty} max
+     * @param {ModProperty} maxProp
+     * @param {ModProperty} widthProp
      */
-    async function onChange(dataView: DataView, windowSize: Spotfire.Size, max: ModProperty<number>) {
+    async function onChange(
+        dataView: DataView,
+        windowSize: Spotfire.Size,
+        maxProp: ModProperty<number>,
+        widthProp: ModProperty<number>
+    ) {
         mod.controls.errorOverlay.hide();
         let gaugeRoot = await (await dataView.hierarchy("X"))?.root();
 
@@ -42,7 +49,7 @@ Spotfire.initialize(async (mod) => {
             formattedValue: row.continuous("Y").formattedValue(),
             color: row.color().hexCode,
             mark: () => row.mark(),
-            percent: (row.continuous("Y").value<number>() || 0) / (max.value() || 0),
+            percent: (row.continuous("Y").value<number>() || 0) / (maxProp.value() || 0),
             value: row.continuous("Y").value<number>() || 0
         }));
 
@@ -55,7 +62,8 @@ Spotfire.initialize(async (mod) => {
                 }
             },
             size: windowSize,
-            maxValue: max.value() || 0,
+            maxValue: maxProp.value() || 0,
+            width: widthProp.value() || 20,
             animationSpeed: 250,
             style: {
                 marking: { color: context.styling.scales.font.color },
@@ -76,6 +84,45 @@ Spotfire.initialize(async (mod) => {
                 }
             }
         });
+
+        let settingsIcon = document.querySelector(".settings") as HTMLDivElement;
+        let settingsArea = document.querySelector(".settings-area") as HTMLDivElement;
+        let maxValueInput = document.querySelector("#gaugeMax") as HTMLInputElement;
+        let widthRangeSlider = document.querySelector("#width") as HTMLInputElement;
+
+        settingsIcon?.classList.toggle("hidden", !context.isEditing);
+
+        let currentFocus = document.querySelector(":focus");
+        if (currentFocus != maxValueInput) {
+            maxValueInput.value = "" + maxProp.value();
+        }
+
+        if (currentFocus != widthRangeSlider) {
+            widthRangeSlider.value = "" + widthProp.value();
+        }
+
+        settingsIcon.onclick = () => {
+            settingsArea.classList.toggle("hidden");
+            maxValueInput.onchange = () => {
+                if (!maxValueInput.value) {
+                    return;
+                }
+
+                maxProp.set(parseInt(maxValueInput.value) || maxProp.value() || 0);
+            };
+
+            maxValueInput.onblur = (e) => {
+                settingsArea.classList.add("hidden");
+            };
+
+            widthRangeSlider.onchange = () => {
+                widthProp.set(parseInt(widthRangeSlider.value) || widthProp.value() || 0);
+            };
+
+            widthRangeSlider.onblur = (e) => {
+                settingsArea.classList.add("hidden");
+            };
+        };
 
         context.signalRenderComplete();
     }
