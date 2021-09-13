@@ -28,6 +28,7 @@ export interface RoseChartSlice {
 }
 export interface RoseChartSector {
     value: number;
+    isNegative: boolean;
     label: string;
     y0: number;
     y1: number;
@@ -103,6 +104,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     sectors
         .merge(newSectors)
         .attr("class", (d: any) => (d.data && d.data.actualValue < 0 ? "negative sector" : "sector"))
+        .attr("stroke", d => d.isNegative ? "red" :"transparent")
         .transition("add sectors")
         .attr(
             "transform",

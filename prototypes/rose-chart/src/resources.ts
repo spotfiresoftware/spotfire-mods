@@ -1,5 +1,5 @@
 export const resources = {
-    warningNegativeValues: "The plot contains negative values.",
+    warningNegativeValues: "Some segments represent negative values. These segments are shown with red outlines.",
     warningsTooltip: (w : string[]) => "Warnings:\n" + w.join("\n"),
 
     popoutLabelsHeading: "Labels",

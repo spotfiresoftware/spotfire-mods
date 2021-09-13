@@ -90,8 +90,9 @@ function buildChartSlices(
     let sectorSize = (2 * Math.PI) / rootNode.leaves().length;
     let pos = 0;
 
-    const getAbsSize = (r: DataViewRow) =>
-        hasSizeExpression ? Math.abs(r.continuous(sizeAxisName).value<number>() || 0) : 1;
+    const getSize = (r: DataViewRow) =>
+        hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
+    const getAbsSize = (r: DataViewRow) =>Math.abs(getSize(r));
     let maxLeafSum = (rootNode.leaves() || []).reduce((pMax, node) => {
         let sum = node.rows().reduce((p, c) => p + getAbsSize(c), 0);
         if (sum > pMax) {
@@ -154,6 +155,7 @@ function buildChartSlices(
                     ": " +
                     (hasSizeExpression ? row.continuous(sizeAxisName).formattedValue() : 1),
                 value: value,
+                isNegative: getSize(row) < 0,
                 mark() {
                     if (d3.event.ctrlKey) {
                         row.mark("ToggleOrAdd");
