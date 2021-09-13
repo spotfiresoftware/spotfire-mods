@@ -90,9 +90,8 @@ function buildChartSlices(
     let sectorSize = (2 * Math.PI) / rootNode.leaves().length;
     let pos = 0;
 
-    const getSize = (r: DataViewRow) =>
-        hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1;
-    const getAbsSize = (r: DataViewRow) =>Math.abs(getSize(r));
+    const getSize = (r: DataViewRow) => (hasSizeExpression ? r.continuous(sizeAxisName).value<number>() || 0 : 1);
+    const getAbsSize = (r: DataViewRow) => Math.abs(getSize(r));
     let maxLeafSum = (rootNode.leaves() || []).reduce((pMax, node) => {
         let sum = node.rows().reduce((p, c) => p + getAbsSize(c), 0);
         if (sum > pMax) {
@@ -120,7 +119,7 @@ function buildChartSlices(
         let y0 = 0;
 
         let hasMarkedRows = leaf.markedRowCount() > 0;
-        let displayLabels = labels.value() == "all" || (labels.value() == "marked" && hasMarkedRows)
+        let displayLabels = labels.value() == "all" || (labels.value() == "marked" && hasMarkedRows);
 
         return {
             id: createId(leaf),
@@ -225,14 +224,14 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showCircles
                             name: "labels",
                             value: "all",
                             checked: labels.value() == "all",
-                            text: resources.popoutLabelsAll,
+                            text: resources.popoutLabelsAll
                         }),
                         mod.controls.popout.components.radioButton({
                             enabled: true,
                             name: "labels",
                             value: "marked",
                             checked: labels.value() == "marked",
-                            text: resources.popoutLabelsMarked,
+                            text: resources.popoutLabelsMarked
                         }),
                         mod.controls.popout.components.radioButton({
                             enabled: true,

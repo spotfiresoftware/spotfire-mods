@@ -26,6 +26,7 @@ export interface RoseChartSlice {
     mark(): void;
     sectors: RoseChartSector[];
 }
+
 export interface RoseChartSector {
     value: number;
     isNegative: boolean;
@@ -104,7 +105,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     sectors
         .merge(newSectors)
         .attr("class", (d: any) => (d.data && d.data.actualValue < 0 ? "negative sector" : "sector"))
-        .attr("stroke", d => d.isNegative ? "red" :"transparent")
+        .attr("stroke", (d) => (d.isNegative ? "red" : "transparent"))
         .transition("add sectors")
         .attr(
             "transform",
@@ -150,14 +151,20 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .append("path")
                     .attr("fill", "none")
                     .call((enter) =>
-                        enter.transition("create paths").duration(settings.animationSpeed).attrTween("d", tweenArcForLabelPath)
+                        enter
+                            .transition("create paths")
+                            .duration(settings.animationSpeed)
+                            .attrTween("d", tweenArcForLabelPath)
                     )
                     .attr("id", (d) => "label-" + btoa(d.id));
             },
             (update) =>
                 update
                     .call((update) =>
-                        update.transition("update paths").duration(settings.animationSpeed).attrTween("d", tweenArcForLabelPath)
+                        update
+                            .transition("update paths")
+                            .duration(settings.animationSpeed)
+                            .attrTween("d", tweenArcForLabelPath)
                     )
                     .select("textPath"),
             (exit) => exit.transition("remove labels").duration(settings.animationSpeed).style("opacity", 0).remove()
@@ -180,7 +187,9 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                     .attr("font-weight", settings.style.label.weight)
                     .attr("fill", settings.style.label.color)
                     .attr("font-family", settings.style.label.fontFamily)
-                    .call((enter) => enter.transition("add labels").duration(settings.animationSpeed).style("opacity", 1))
+                    .call((enter) =>
+                        enter.transition("add labels").duration(settings.animationSpeed).style("opacity", 1)
+                    )
                     .append("textPath")
                     .attr("href", (d) => "#label-" + btoa(d.id))
                     .attr("startOffset", "50%")
