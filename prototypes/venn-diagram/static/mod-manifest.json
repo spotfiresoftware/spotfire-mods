@@ -12,18 +12,14 @@
         }
     ],
     "dataViewDefinition": {
+        "colorAxis" : {
+            "mode": "categorical"
+            
+        },
         "axes": [
+          
             {
-                "name": "Circles",
-                "mode": "categorical",
-                "placement": "bottom",
-                "dropTarget": {
-                    "icon": "XAxis3D",
-                    "description": "Use {0} on the mod's Circle axis"
-                }
-            },
-            {
-                "name": "Entity",
+                "name": "Overlap",
                 "mode": "categorical",
                 "placement": "left",
                 "dropTarget": {
