@@ -156,7 +156,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                             .duration(settings.animationSpeed)
                             .attrTween("d", tweenArcForLabelPath)
                     )
-                    .attr("id", (d) => "label-" + btoa(d.id));
+                    .attr("id", (d) => "label-" + hash(d.id));
             },
             (update) =>
                 update
@@ -191,7 +191,7 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
                         enter.transition("add labels").duration(settings.animationSpeed).style("opacity", 1)
                     )
                     .append("textPath")
-                    .attr("href", (d) => "#label-" + btoa(d.id))
+                    .attr("href", (d) => "#label-" + hash(d.id))
                     .attr("startOffset", "50%")
                     .attr("class", "label-path")
                     .style("text-anchor", "center")
@@ -290,4 +290,11 @@ function labelArc(d: { r: number; x0: number; x1: number }) {
     }
 
     return ["M", start.x, start.y, "A", d.r, d.r, 0, 0, flipText ? 0 : 1, end.x, end.y].join(" ");
+}
+
+function hash(s: string = "") {
+    return s.split("").reduce(function (a, b) {
+        a = (a << 5) - a + b.charCodeAt(0);
+        return a & a;
+    }, 0);
 }
