@@ -1,0 +1,50 @@
+{
+    "apiVersion": "1.2",
+    "version": "1.0",
+    "name": "Gauge",
+    "id": "spotfire-configurable-gauge-prototype",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "gaugeMax",
+            "defaultValue": 100,
+            "type": "integer"
+        },
+        {
+            "name": "gaugeWidth",
+            "defaultValue": 20,
+            "type": "integer"
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "X",
+                "mode": "categorical",
+                "placement": "bottom",
+                "dropTarget": {
+                    "icon": "XAxis3D",
+                    "description": "Use {0} on the mod's X-axis"
+                }
+            },
+            {
+                "name": "Y",
+                "mode": "continuous",
+                "allowMultipleMeasures": true,
+                "placement": "left"
+            }
+        ]
+    },
+    "files": [
+        "index.html",
+        "main.css",
+        "bundle.js"
+    ]
+}

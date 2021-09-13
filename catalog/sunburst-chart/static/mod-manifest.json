@@ -1,0 +1,65 @@
+{
+    "apiVersion": "1.2",
+    "version": "1.0",
+    "name": "Sunburst chart",
+    "id": "spotfire-sunburst-chart-mod",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "labels",
+            "type": "string",
+            "defaultValue": "all"
+        },
+        {
+            "name": "showNullValues",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "interactionMode",
+            "defaultValue": "mark",
+            "type": "string"
+        },
+        {
+            "name": "rootNode",
+            "type": "string",
+            "defaultValue": null
+        },
+        {
+            "name": "sortByValue",
+            "type": "boolean",
+            "defaultValue": false
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "dual",
+            "preferredDualMode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            },
+            "automaticConfiguration": { "expressionHeuristics": "none" }
+        },
+        "axes": [
+            {
+                "name": "Hierarchy",
+                "automaticConfiguration": {
+                    "priority": "100"
+                },
+                "mode": "categorical",
+                "placement": "bottom",
+                "dropTarget": {
+                    "icon": "Hierarchy",
+                    "description": "Use {0} on the mod's Hierarchy-axis"
+                }
+            },
+            {
+                "name": "Size",
+                "mode": "continuous",
+                "placement": "left"
+            }
+        ]
+    },
+    "files": ["index.html", "main.css", "bundle.js"]
+}
