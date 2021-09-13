@@ -146,6 +146,7 @@ svg {
 
 .icon-button svg {
     display: block;
+    fill: currentColor;
     width: 21px;
     height: 21px;
 }
