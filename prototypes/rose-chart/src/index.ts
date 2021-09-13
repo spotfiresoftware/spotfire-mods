@@ -3,6 +3,7 @@ import { Axis, DataView, DataViewHierarchyNode, DataViewRow, Mod, ModProperty, S
 import { generalErrorHandler } from "./generalErrorHandler";
 import * as d3 from "d3";
 import { interactionLock } from "./interactionLock";
+import { resources } from "./resources";
 
 const hierarchyAxisName = "Hierarchy";
 const colorAxisName = "Color";
@@ -116,9 +117,13 @@ function buildChartSlices(
         pos += sectorSize;
         let x1 = pos;
         let y0 = 0;
+
+        let hasMarkedRows = leaf.markedRowCount() > 0;
+        let displayLabels = labels.value() == "all" || (labels.value() == "marked" && hasMarkedRows)
+
         return {
             id: createId(leaf),
-            label: labels.value() == "all" ? leaf.formattedPath() : "",
+            label: displayLabels ? leaf.formattedPath() : "",
             mark() {
                 if (d3.event.ctrlKey) {
                     leaf.mark("ToggleOrAdd");
@@ -179,7 +184,7 @@ function validateDataView(rootNode: DataViewHierarchyNode, validateSize: boolean
         rowLoop: for (let row of rows) {
             const size = row.continuous(sizeAxisName).value();
             if (typeof size == "number" && size < 0) {
-                warnings.push("The plot contains negative values.");
+                warnings.push(resources.warningNegativeValues);
                 break rowLoop;
             }
         }
@@ -211,21 +216,28 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showCircles
             },
             () => [
                 mod.controls.popout.section({
-                    heading: "Labels",
+                    heading: resources.popoutLabelsHeading,
                     children: [
                         mod.controls.popout.components.radioButton({
                             enabled: true,
                             name: "labels",
                             value: "all",
                             checked: labels.value() == "all",
-                            text: "All"
+                            text: resources.popoutLabelsAll,
+                        }),
+                        mod.controls.popout.components.radioButton({
+                            enabled: true,
+                            name: "labels",
+                            value: "marked",
+                            checked: labels.value() == "marked",
+                            text: resources.popoutLabelsMarked,
                         }),
                         mod.controls.popout.components.radioButton({
                             enabled: true,
                             value: "off",
                             name: "labels",
                             checked: labels.value() == "off",
-                            text: "Off"
+                            text: resources.popoutLabelsNone
                         })
                     ]
                 }),
@@ -235,7 +247,7 @@ function renderSettingsButton(mod: Mod, labels: ModProperty<string>, showCircles
                             enabled: true,
                             name: "showCircles",
                             checked: showCircles.value() || false,
-                            text: "Show circles"
+                            text: resources.popoutShowCircles
                         })
                     ]
                 })
@@ -249,7 +261,7 @@ function renderWarningsIcon(mod: Mod, warnings: string[]) {
     warningButton?.classList.toggle("visible", mod.getRenderContext().interactive && !!warnings.length);
 
     warningButton!.onmouseenter = () => {
-        mod.controls.tooltip.show("Warnings:\n" + warnings.join("\n"));
+        mod.controls.tooltip.show(resources.warningsTooltip(warnings));
     };
     warningButton!.onmouseleave = () => {
         mod.controls.tooltip.hide();
