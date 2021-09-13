@@ -28,10 +28,6 @@ body,
     align-items: center;
 }
 
-path.sector.negative {
-    stroke: red;
-}
-
 #explanation #percentage {
     font-size: max(5vmin, 10px);
     white-space: nowrap;

@@ -107,7 +107,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     sectors
         .merge(newSectors)
-        .attr("class", (d: any) => (d.data && d.data.actualValue < 0 ? "negative sector" : "sector"))
+        .attr("class", "sector")
         .on("click", (d) => {
             settings.click(d.data);
             d3.event.stopPropagation();
@@ -117,6 +117,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .duration(settings.animationSpeed)
         .attrTween("d", tweenArc)
         .style("opacity", 1)
+        .style("stroke", stroke)
         .attr("fill", (d: any) => d.data.fill);
 
     sectors
@@ -268,10 +269,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     function onMouseleave(d: any) {
         d3.select("#explanation").style("visibility", "hidden");
-        d3.selectAll("path")
-            .transition("sector hover")
-            .duration(settings.animationSpeed)
-            .style("stroke", "transparent");
+        d3.selectAll("path").transition("sector hover").duration(settings.animationSpeed).style("stroke", stroke);
         settings.onMouseLeave?.();
     }
 
@@ -289,8 +287,12 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         d3.selectAll("path")
             .transition("sector hover")
             .duration(100)
-            .style("stroke", (d: any) => (ancestors.indexOf(d) >= 0 ? settings.style.marking.color : "transparent"));
+            .style("stroke", (d: any) => (ancestors.indexOf(d) >= 0 ? settings.style.marking.color : stroke(d)));
     }
+}
+
+function stroke(d: any = {}) {
+    return d.data && d.data.actualValue < 0 ? "red" : "transparent";
 }
 
 function getAncestors(node: d3.HierarchyNode<unknown>) {
