@@ -2,7 +2,7 @@
     "apiVersion": "1.2",
     "version": "1.0",
     "name": "Rose chart",
-    "id": "spotfire-rose-chart-prototype-mod",
+    "id": "spotfire-rose-chart-chart-mod",
     "icon": "icon.svg",
     "properties": [
         {
