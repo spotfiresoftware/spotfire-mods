@@ -1,4 +1,4 @@
-import { Axis, DataView } from "spotfire-api";
+import { Axis, DataView, ModProperty } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import { interactionLock } from "./interactionLock";
 import { render, PairPlotData } from "./correlogram";
@@ -6,30 +6,36 @@ import { render, PairPlotData } from "./correlogram";
 const markerByAxisName = "MarkerBy";
 const measureNamesAxisName = "MeasureNames";
 const countAxisName = "Count";
+const diagonalPropertyName = "Diagonal";
 const colorAxisName = "Color";
 const measureAxisName = "Measures";
 
-enum InteractionMode {
-    drilldown = "drilldown",
-    mark = "mark"
-}
+type Diagonal = "measure-name" | "histogram" | "line" | "statistics" | "box-plot";
 
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
     const reader = mod.createReader(
         mod.visualization.data(),
+        mod.property(diagonalPropertyName),
         mod.visualization.axis(measureAxisName),
         mod.visualization.axis(measureNamesAxisName),
-        mod.windowSize(),
-        mod.visualization.axis(markerByAxisName),
-        mod.visualization.axis(colorAxisName)
+        mod.visualization.axis(countAxisName),
+        mod.visualization.axis(colorAxisName),
+        mod.windowSize()
     );
 
     let interaction = interactionLock();
     reader.subscribe(onChange);
 
-    async function onChange(dataView: DataView, measureAxis: Axis, measureNamesAxis: Axis) {
+    async function onChange(
+        dataView: DataView,
+        diagonalProperty: ModProperty<Diagonal>,
+        measureAxis: Axis,
+        measureNamesAxis: Axis,
+        countAxis: Axis,
+        colorAxis: Axis
+    ) {
         if (measureAxis.parts.length < 2) {
             mod.controls.errorOverlay.show("Select two or more measures.", "Measures");
             return;
@@ -37,18 +43,23 @@ window.Spotfire.initialize(async (mod) => {
 
         mod.controls.errorOverlay.hide("Measures");
 
-        if (measureAxis.parts.length > 1 && measureNamesAxis.expression != "<[Axis.Default.Names]>") {
+        if (
+            (measureAxis.parts.length > 1 && measureNamesAxis.expression != "<[Axis.Default.Names]>") ||
+            (diagonalProperty.value() != "measure-name" && countAxis.expression != "Count()")
+        ) {
             resetMandatoryExpressions();
             return;
         }
 
-        let error = await dataView.getErrors();
-        if (error.find((e) => e.includes("baserowid"))) {
-            showIdentifierSelection();
+        if (colorAxis.isCategorical && colorAxis.parts.find((p) => p.expression.includes("[Axis.Default.Names]"))) {
+            mod.controls.errorOverlay.show(
+                "'(Column Names)' is invalid as color expression since this will yield multi colored markers.",
+                "color"
+            );
             return;
         }
 
-        mod.controls.errorOverlay.hide("MeasureNames");
+        mod.controls.errorOverlay.hide("color");
 
         const measures = (await (await dataView.hierarchy(measureNamesAxisName))!.root())?.leaves();
         const columnNamesLeafIndices = measures?.map((l) => l.leafIndex) || [];
@@ -58,42 +69,41 @@ window.Spotfire.initialize(async (mod) => {
         }
 
         var measureCount = columnNamesLeafIndices.length;
-        var valueCount = rows.length / measureCount;
-        const points = transpose(
-            chunkArray(
+        var markerCount = rows.length / measureCount;
+
+        const colors = rows.slice(0, markerCount).map((r) => r.color().hexCode);
+        const count = null;countAxis.expression ? rows.slice(0, markerCount).map((r) => r.continuous(countAxisName).value() as number) : null;
+        const points = transpose<number>(
+            createChunks(
                 rows.map((r) => r.continuous(measureAxisName).value()),
-                valueCount
+                markerCount
             )
         );
-
-        // TODO Warn about column names on color.
-        // This is not possible since two different measures are combined into one element!
-        const colors = rows.slice(0, valueCount).map((r) => r.color().hexCode);
 
         var data: PairPlotData = {
             measures: measures.map((m) => m.formattedValue()),
             points,
             colors,
+            count,
             mark: (index: number) => rows![index].mark()
         };
 
         render(data);
         context.signalRenderComplete();
     }
-    function transpose(m: number[][]) {
-        return m[0].map((x, i) => m.map((x) => x[i]));
+
+    function transpose<T>(m: T[][]) {
+        return m[0].map((_, i) => m.map((x) => x[i]));
     }
-    function chunkArray(arr: any[], size: number) {
+
+    function createChunks(arr: any[], chunkSize: number) {
         var results = [];
         while (arr.length) {
-            results.push(arr.splice(0, size));
+            results.push(arr.splice(0, chunkSize));
         }
 
         return results;
     }
-    function showMeasureSelection() {}
-
-    function showIdentifierSelection() {}
 
     function resetMandatoryExpressions() {
         const div = document.getElementById("resetMandatoryExpressions")!;

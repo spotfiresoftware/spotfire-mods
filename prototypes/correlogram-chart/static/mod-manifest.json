@@ -4,6 +4,13 @@
     "name": "Correlogram chart",
     "id": "spotfire-correlogram-prototype-mod",
     "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "Diagonal", 
+            "type": "string", 
+            "defaultValue": "measure-name"
+        }
+    ],
     "dataViewDefinition": {
         "colorAxis": {
             "mode": "dual",

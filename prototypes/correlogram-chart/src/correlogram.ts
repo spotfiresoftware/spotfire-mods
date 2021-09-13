@@ -7,6 +7,7 @@ export interface PairPlotData {
     measures: string[];
     points: (number | null)[][];
     mark: (index: number) => void;
+    count: number[] | null;
     colors: string[];
 }
 
