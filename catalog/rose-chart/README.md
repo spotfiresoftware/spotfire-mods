@@ -1,6 +1,6 @@
 # Rose chart
 
-![Sunburst chart example](sunburst.png)
+![Rose chart example](rose-chart.png)
 
 This is a mod example demonstrating a rose chart written in `TypeScript`, rendered with `d3` and bundled with `Webpack`.
 
