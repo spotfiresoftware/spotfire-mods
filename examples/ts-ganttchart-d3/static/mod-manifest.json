@@ -1,0 +1,66 @@
+{
+    "apiVersion": "1.2",
+    "version": "1.0",
+    "name": "Gantt chart",
+    "id": "ts-gantt-chart",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "overdue",
+            "type": "boolean",
+            "defaultValue": "false"
+        },
+        {
+            "name": "weekend",
+            "type": "boolean",
+            "defaultValue": "true"
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "dual",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "Task",
+                "mode": "categorical",
+                "placement": "none"
+            },
+            {
+                "name": "Start",
+                "mode": "continuous",
+                "placement": "none",
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                },
+                "dataTypes": {"allowNumeric": false, "allowDateTime": true, "allowString": false}
+            },
+            {
+                "name": "End",
+                "mode": "continuous",
+                "placement": "none",
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                },
+                "dataTypes": {"allowNumeric": false, "allowDateTime": true, "allowString": false}
+            },
+            {
+                "name": "Progress",
+                "mode": "continuous",
+                "placement": "none",
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                }
+            }
+        ]
+    },
+    "files": [
+        "index.html",
+        "main.css",
+        "bundle.js"
+    ]
+}
