@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Spotfire Mod Example</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" media="all" href="main.css" />
+        <style id="extra_styling"></style>
+    </head>
+
+    <body class="body">
+        <div id="border">
+            <div id="mod-container">
+            </div>
+        </div>
+        <div class="resources">
+            <div id="play_button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320.001 320.001"><g><rect width="100%" height="100%" style="fill:none;"/><path d="M295.84 146.049l-256-144a16.026 16.026 0 0 0-15.904.128A15.986 15.986 0 0 0 16 16.001v288a15.986 15.986 0 0 0 7.936 13.824A16.144 16.144 0 0 0 32 320.001c2.688 0 5.408-.672 7.84-2.048l256-144c5.024-2.848 8.16-8.16 8.16-13.952s-3.136-11.104-8.16-13.952z"></path></g></svg></div>
+            <div id="pause_button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 477.867 477.867"><g><rect width="100%" height="100%" style="fill:none;"/><path d="M187.733 0H51.2c-9.426 0-17.067 7.641-17.067 17.067V460.8c0 9.426 7.641 17.067 17.067 17.067h136.533c9.426 0 17.067-7.641 17.067-17.067V17.067C204.8 7.641 197.159 0 187.733 0zM426.667 0H290.133c-9.426 0-17.067 7.641-17.067 17.067V460.8c0 9.426 7.641 17.067 17.067 17.067h136.533c9.426 0 17.067-7.641 17.067-17.067V17.067C443.733 7.641 436.092 0 426.667 0z"></path></g></svg></div>
+            <div id="animation_speed_button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><rect width="100%" height="100%" style="fill:none;"/><path d="M9,8.5l5.771,6.465a1.681,1.681,0,0,1-.631,2.31,1.734,1.734,0,0,1-2.345-.622"/><path d="M4.991,7.693a.545.545,0,0,0-.773.034L4.2,7.751,4.162,7.8a.554.554,0,0,0,.094.775l.021.017.209.15a.548.548,0,0,0,.745-.108h0a.556.556,0,0,0-.06-.756Z"/><path d="M4.531,18.49a.553.553,0,0,0-.725-.224l-.222.119a.552.552,0,0,0-.236.741l.014.026.029.052a.548.548,0,0,0,.754.185l.024-.015.211-.146a.55.55,0,0,0,.164-.738Z"/><path d="M6.71,6.188a.544.544,0,0,0-.758-.153l-.026.018a.394.394,0,0,0-.045.036.553.553,0,0,0-.1.772l.02.024.166.2a.546.546,0,0,0,.751.074h0a.555.555,0,0,0,.129-.743Z"/><path d="M3.7,16.582h0a.551.551,0,0,0-.651-.38l-.251.051a.553.553,0,0,0-.412.663l.007.028A.072.072,0,0,0,2.409,17a.549.549,0,0,0,.689.361l.026-.009.238-.088A.552.552,0,0,0,3.7,16.582Z"/><path d="M2.607,15.117l.26-.029a.548.548,0,0,0,.486-.57V14.5a.55.55,0,0,0-.542-.528h-.26A.546.546,0,0,0,2,14.515v.079a.549.549,0,0,0,.57.526Z"/><path d="M3.2,10.605l.237.094a.545.545,0,0,0,.7-.284h0a.554.554,0,0,0-.238-.72l-.222-.123a.544.544,0,0,0-.741.22l-.014.028-.027.045a.554.554,0,0,0,.279.729Z"/><path d="M8.736,5.15a.547.547,0,0,0-.7-.337L8,4.828l-.045.018a.553.553,0,0,0-.274.73l.012.026.115.223a.549.549,0,0,0,.711.255h0a.556.556,0,0,0,.3-.7Z"/><path d="M2.631,12.826l.258.034a.552.552,0,0,0,.609-.447V12.4a.552.552,0,0,0-.4-.641L2.851,11.7a.553.553,0,0,0-.673.4l-.007.031v.04a.557.557,0,0,0,.437.653Z"/><path d="M12,4a.681.681,0,0,0,0,1.362,8.735,8.735,0,0,1,7.167,13.575.674.674,0,0,0,.165.935l.017.012a.675.675,0,0,0,.94-.184A10.108,10.108,0,0,0,17.6,5.725,9.95,9.95,0,0,0,12,4Z"/></g></svg>            </div>
+        </div>
+    </div>
+        <script id="spotfire-loader">
+            var Spotfire = (function (e) {
+                "use strict";
+                return (
+                    (e.initialize = function (e) {
+                        var t = "sfTemp" + 1e4 * Math.random() + "Cb",
+                            a = window;
+                        a[t] = e;
+                        var r = {
+                            subject: "GetUrl",
+                            callbackId: -1,
+                            options: { cbId: t },
+                        };
+                        a.addEventListener("message", function e(t) {
+                            if (t.source === a.parent && t.data.src) {
+                                a.removeEventListener("message", e);
+                                var r = document,
+                                    n = r.createElement("script");
+                                (n.src = t.data.src),
+                                    (r.head || r.body).appendChild(n);
+                            }
+                        }),
+                            a.parent.postMessage(r, "*");
+                    }),
+                    e
+                );
+            })({});
+        </script>
+        <script src="bundle.js"></script>
+    </body>
+</html>
