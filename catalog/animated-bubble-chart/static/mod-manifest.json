@@ -1,0 +1,79 @@
+{
+    "apiVersion": "1.1",
+    "version": "1.1",
+    "name": "Animated bubble chart",
+    "id": "animated-bubble-chart",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "animationTimeMs",
+            "type": "integer",
+            "defaultValue": 1000
+        },
+        {
+            "name": "xLogScale",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "yLogScale",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "showLabels",
+            "type": "boolean",
+            "defaultValue": true
+        },
+        {
+            "name": "animationSpeed",
+            "type": "integer",
+            "defaultValue": 1000
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "dual",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "X",
+                "mode": "continuous",
+                "placement": "bottom",
+                "dropTarget": {
+                    "icon": "XAxis",
+                    "description": "Use {0} on the mod's X-axis"
+                }
+            },
+            {
+                "name": "Y",
+                "mode": "continuous",
+                "placement": "left",
+                "dropTarget": {
+                    "icon": "YAxis",
+                    "description": "Use {0} on the mod's Y-axis"
+                }
+            },
+            {
+                "name": "MarkerBy",
+                "mode": "categorical",
+                "placement": "none"
+            },
+            {
+                "name": "Size",
+                "mode": "continuous",
+                "placement": "none"
+            },
+            {
+                "name": "AnimateBy",
+                "mode": "categorical",
+                "placement": "top"
+            }
+        ]
+    },
+    "files": ["index.html", "main.css", "bundle.js", "play.svg", "pause.svg"]
+}

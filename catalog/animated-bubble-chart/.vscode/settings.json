@@ -1,0 +1,24 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": ["/mod-manifest.json"],
+            "url": "./spotfire/mod-schema.json"
+        }
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/bin": true,
+        "App_Data": true,
+        "obj": true,
+        "build-temp": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "build-temp": true,
+        "build": true,
+        "**/bower_components": true,
+    }
+}
