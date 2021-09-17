@@ -493,7 +493,7 @@ function renderSettingsButton(
             },
             () => [
                 mod.controls.popout.section({
-                    heading: "Labels",
+                    heading: resources.popoutLabelsHeading,
                     children: [
                         mod.controls.popout.components.radioButton({
                             enabled: true,
@@ -519,7 +519,7 @@ function renderSettingsButton(
                     ]
                 }),
                 mod.controls.popout.section({
-                    heading: "Interaction mode",
+                    heading: resources.popoutInteractionModeHeading,
                     children: [
                         mod.controls.popout.components.radioButton({
                             enabled: true,

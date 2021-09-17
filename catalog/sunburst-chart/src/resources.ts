@@ -3,9 +3,11 @@ export const resources = {
     warningNegativeValues: "Some segments represent negative values. These segments are shown with red outlines.",
     warningSplittingColorAxis:
         "The color expression generates more values than the hierarchy expression. Some leaves in the hierarchy will appear multiple times.",
+    popoutLabelsHeading: "Show labels for",
     popoutLabelsAll: "All",
     popoutLabelsMarked: "Marked rows",
     popoutLabelsNone: "None",
+    popoutInteractionModeHeading: "Interaction",
     popoutInteractionModeMark: "Marking mode",
     popoutInteractionModeMarkTooltip: "Click segments to mark data. To drill down instead, use Alt + click.",
     popoutInteractionModeDrillDown: "Drill-down mode",
