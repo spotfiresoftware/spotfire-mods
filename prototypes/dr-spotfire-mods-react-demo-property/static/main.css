@@ -1,0 +1,136 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#chart_div td {
+    border-radius: 50%;
+}
+
+/* button {
+    border: 1px solid #f0f0f0;
+    color: #3050ef;
+    border-radius: 5px;
+    background: transparent;
+    cursor: pointer;   
+} */
+
+.button {
+    --hue: 108.65648833183903;
+    --y: -25;
+    --x: 0;
+    --rotation: 0;
+    --speed: 2;
+    --txt: "Property editor";
+    --padding: 1rem 1.25rem;
+    cursor: pointer;
+    width: 250px;
+    margin-bottom: 20px;
+    padding: var(--padding);
+    color: transparent;
+    font-weight: bold;
+    font-size: 1.25rem;
+    transition: background 0.1s ease;
+    background: hsl(var(--hue), 100%, 50%);
+    outline-color: hsl(var(--hue), 100%, 80%);
+    -webkit-animation-name: flow-and-shake;
+            animation-name: flow-and-shake;
+    -webkit-animation-duration: calc(var(--speed) * 1s);
+            animation-duration: calc(var(--speed) * 1s);
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+            animation-timing-function: ease-in-out;
+  }
+  .button:after {
+    content: var(--txt);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: var(--padding);
+    color: #fff;
+  }
+  .button:hover {
+    background: hsl(var(--hue), 100%, 40%);
+    --speed: 0.1;
+    --rotation: -1;
+    --y: -1;
+    --x: 1;
+    --txt: "Click me!";
+  }
+  .button:active {
+    --speed: 4;
+    --x: 0;
+    --y: 5;
+    --rotation: 0;
+    --txt: "Ahhhh...";
+    background: hsl(var(--hue), 100%, 30%);
+  }
+  .button__wrap {
+    position: relative;
+  }
+  .button__shadow {
+    position: absolute;
+    border-radius: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #af9d9d;
+    -webkit-animation: shadow 2s infinite ease-in-out;
+            animation: shadow 2s infinite ease-in-out;
+    z-index: -1;
+  }
+  @-webkit-keyframes shadow {
+    0%, 100% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.2;
+      transform: scaleX(0.25);
+    }
+  }
+  @keyframes shadow {
+    0%, 100% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.2;
+      transform: scaleX(0.25);
+    }
+  }
+  @-webkit-keyframes flow-and-shake {
+    0%, 100% {
+      transform: translate(calc(var(--x) * -1%), 0) rotate(calc(var(--rotation) * -1deg));
+    }
+    50% {
+      transform: translate(calc(var(--x) * 1%), calc(var(--y) * 1%)) rotate(calc(var(--rotation) * 1deg));
+    }
+  }
+  @keyframes flow-and-shake {
+    0%, 100% {
+      transform: translate(calc(var(--x) * -1%), 0) rotate(calc(var(--rotation) * -1deg));
+    }
+    50% {
+      transform: translate(calc(var(--x) * 1%), calc(var(--y) * 1%)) rotate(calc(var(--rotation) * 1deg));
+    }
+  }

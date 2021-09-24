@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "noUnusedLocals": false,
+        "allowJs": true,
+        "allowUnreachableCode": false,
+        "noImplicitAny": true,
+        "strict": false,
+        "charset": "utf8",
+        "sourceMap": true,
+        "inlineSources": true,
+        "module": "es2015",
+        "outDir": "./build/",
+        "lib": ["es2019", "dom"],
+        "baseUrl": ".",
+        "paths": {
+            "spotfire-api": ["./spotfire/spotfire-api-1-0"],
+        },
+        "typeRoots": ["./spotfire", "./node_modules/@types"]
+    },
+    "include": ["./src/**/*.ts", "./test/**/*.ts", "./spotfire/**/*.d.ts"]
+}

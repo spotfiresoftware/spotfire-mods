@@ -1,0 +1,73 @@
+html,
+body,
+#border,
+#mod-container {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-align: center;
+    cursor: default;
+    overflow: hidden;
+}
+
+svg {
+    display: block;
+}
+
+.selection {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    border: 1px solid #677085;
+    background-color: rgba(0, 90, 230, 0.17);
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+}
+
+.selection-bg {
+    visibility: hidden;
+    position: absolute;
+    background-color: rgba(200, 90, 230, 0);
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.polyline {
+    stroke: #DCDFE8;
+    stroke-width: 1px;
+    fill: none;
+}
+
+.current-day {
+    stroke: #FF911F;
+    stroke-width: 1px;
+}
+
+.bar-hover {
+    stroke-width: 0px;
+}
+
+.bar-hover:hover {
+    stroke-width: 1px;
+}
+
+.hidden-content {
+    background-image: linear-gradient(rgba(0, 0, 0, 0), currentColor);
+    height: 25px;
+    position: absolute;
+    bottom: 0;
+    opacity: 0.3;
+    left: 0;
+    right: 0;
+}

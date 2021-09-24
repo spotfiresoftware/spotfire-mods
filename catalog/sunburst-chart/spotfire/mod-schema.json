@@ -1,0 +1,387 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+
+    "definitions": {
+        "axis": {
+            "type": "object",
+            "title": "Axis definitions",
+            "description": "Specifies properties that can be used to configure Axis and ColorAxis entries.",
+            "required": ["mode"],
+            "properties": {
+                "mode": {
+                    "type": "string",
+                    "title": "Mode",
+                    "description": "Specifies what kind of expressions this axis supports: categorical, continuous or both.",
+                    "enum": ["continuous", "categorical", "dual"],
+                    "examples": ["categorical"]
+                },
+                "preferredDualMode": {
+                    "type": "string",
+                    "title": "Preferred mode for dual axis",
+                    "enum": ["continuous", "categorical"],
+                    "default": "categorical",
+                    "description": "Specifies the mode that this axis prefers to be in. This option only applies if this axis is configured with mode 'dual'."
+                },
+                "allowNonAggregatingMeasures": {
+                    "type": "boolean",
+                    "title": "Allow non-aggregating measures",
+                    "description": "Specifies if this axis supports non-aggregating expressions (expressions without an aggregation method) when it is in continuous mode.",
+                    "default": false
+                },
+                "automaticConfiguration": {
+                    "type": "object",
+                    "title": "Automatic configuration",
+                    "description": "Specifies how automatic configuration is made for this axis when the Mod Visualization is created.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "expressionHeuristics": {
+                            "type": "string",
+                            "title": "Expression heuristics",
+                            "enum": ["none", "default"],
+                            "default": "default",
+                            "description": "Specifies the heuristics to use when this axis is assigned an initial expression. Use 'none' to skip the heuristics and leave this axis with an empty expression."
+                        },
+                        "priority": {
+                            "type": "integer",
+                            "title": "Priority",
+                            "default": "0",
+                            "description": "Specifies the order in which this axis will be treated when the heuristics assigns the initial expression. A higher value means it will be treated before axes with a lower value. Two axes with the same value will be treated in undefined order."
+                        }
+                    }
+                },
+                "dataTypes": {
+                    "type": "object",
+                    "title": "Supported Data Types",
+                    "description": "Specifies which data types that this axis should support. These settings affect which expressions that Spotfire will consider valid for this axis.",
+                    "additionalProperties": false,
+                    "properties": {
+                        "allowNumeric": {
+                            "type": "boolean",
+                            "title": "Allow Numeric data types",
+                            "default": true,
+                            "description": "Specifies whether to allow expressions with numeric data types."
+                        },
+                        "allowDateTime": {
+                            "type": "boolean",
+                            "title": "Allow the Time, Date and DateTime data types",
+                            "default": false,
+                            "description": "Specifies whether to allow expressions with Time, Date and DateTime data types."
+                        },
+                        "allowTimeSpan": {
+                            "type": "boolean",
+                            "title": "Allow the TimeSpan data type",
+                            "default": false,
+                            "description": "Specifies whether to allow expressions with TimeSpan data type."
+                        },
+                        "allowString": {
+                            "type": "boolean",
+                            "title": "Allow the String data type",
+                            "default": false,
+                            "description": "Specifies whether to allow expressions with String data type."
+                        },
+                        "allowBoolean": {
+                            "type": "boolean",
+                            "title": "Allow the Boolean data type",
+                            "default": false,
+                            "description": "Specifies whether to allow expressions with Boolean data type."
+                        }
+                    }
+                },
+                "dropTarget": {
+                    "type": "object",
+                    "title": "Drop target",
+                    "description": "Specifies the drop target behavior for this axis.",
+                    "additionalProperties": false,
+                    "required": ["icon", "description"],
+                    "properties": {
+                        "icon": {
+                            "type": "string",
+                            "title": "The drop target icon",
+                            "description": "Specifies which, from a selection of built-in icons, to use as the drop target.",
+                            "enum": [
+                                "XAxis",
+                                "YAxis",
+                                "XAxis3D",
+                                "YAxis3D",
+                                "ZAxis3D",
+                                "SectorSize",
+                                "MarkerSize",
+                                "Size",
+                                "Color",
+                                "Shape",
+                                "Line",
+                                "TrellisPanels",
+                                "TrellisHorizontally",
+                                "TrellisVertically",
+                                "Column",
+                                "ColumnAxis",
+                                "RowAxis",
+                                "CellValues",
+                                "CellValuesSum",
+                                "Icon",
+                                "Tile",
+                                "Hierarchy",
+                                "Time",
+                                "Compare",
+                                "TableCategories"
+                            ],
+                            "examples": ["XAxis"]
+                        },
+                        "description": {
+                            "type": "string",
+                            "title": "The drop target description",
+                            "description": "Specifies the text to display when dragging an expression or column over the drop target. Use {0} to inject the name of the item being dragged.",
+                            "examples": ["Set {0} on the Size axis"]
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    "title": "The Spotfire mod manifest schema",
+    "type": "object",
+    "required": ["apiVersion", "version", "name", "id", "icon", "files"],
+    "additionalProperties": false,
+    "properties": {
+        "version": {
+            "type": "string",
+            "title": "Mod version.",
+            "description": "Specifies the version of this Mod.",
+            "default": "",
+            "examples": ["1.0"],
+            "pattern": "^(.*)$"
+        },
+        "apiVersion": {
+            "type": "string",
+            "title": "Mod API version.",
+            "description": "Specifies the version of the Mod JavaScript API used by the code of this Mod. Set the lowest possible version number that the Mod requires to ensure best possible backward compatibility with older Spotfire systems. Using a newer API version than specified will result in runtime errors, even if the current Spotfire system includes that API.",
+            "default": "1.0",
+            "examples": ["1.0"],
+            "pattern": "^(.*)$"
+        },
+        "name": {
+            "type": "string",
+            "title": "Name of the mod",
+            "description": "Specifies the name of this Mod. The name will be shown to the user when this Mod is handled in Spotfire.",
+            "default": "",
+            "examples": ["Spotfire mod boilerplate"],
+            "pattern": "^(.*)$"
+        },
+        "icon": {
+            "type": "string",
+            "title": "Specifies the name of the file containing the svg icon to be used for this Mod.",
+            "default": "icon.svg"
+        },
+        "id": {
+            "type": "string",
+            "title": "Mod ID. A unique string.",
+            "default": "",
+            "examples": ["spotfire-boilerplate-id"],
+            "pattern": "^(.*)$"
+        },
+        "externalResources": {
+            "type": "array",
+            "title": "Specifies external resources loaded from the mod.",
+            "description": "Only declared external resources will work in the mod. A visualization mod with external resources cannot be exported using the web client.",
+            "items": {
+                "type": "string",
+                "examples": [
+                    "https://www.example.com"
+                ]
+            }
+        },
+        "properties": {
+            "type": "array",
+            "title": "Mod Properties",
+            "description": "Specifies the properties that are stored in this Mods part of the Spotfire document. Use properties to store settings values.",
+            "default": null,
+            "items": {
+                "type": "object",
+                "title": "The Items Schema",
+                "required": ["name", "type", "defaultValue"],
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Property name",
+                        "description": "Specifies the unique name used to refer to this property from the code.",
+                        "default": "",
+                        "examples": ["width"],
+                        "pattern": "^(.*)$",
+                        "additionalProperties": false
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["integer", "double", "string", "boolean"],
+                        "title": "Value type",
+                        "description": "Specifies the type of values stored by this property.",
+                        "default": "string",
+                        "examples": ["integer"],
+                        "pattern": "^(.*)$",
+                        "additionalProperties": false
+                    },
+                    "defaultValue": {
+                        "type": ["string", "number", "boolean"],
+                        "title": "Default value",
+                        "description": "Specifies the value that this property will have when an instance of the Mod is created.",
+                        "default": "",
+                        "examples": ["3"],
+                        "pattern": "^(.*)$",
+                        "additionalProperties": false
+                    }
+                }
+            }
+        },
+        "dataViewDefinition": {
+            "type": "object",
+            "title": "Mod view definition",
+            "description": "Specifies how Spotfire computes the data consumed by the Mod.",
+            "default": {},
+            "additionalProperties": false,
+            "properties": {
+                "colorAxis": {
+                    "allOf": [
+                        { "$ref": "#/definitions/axis" },
+                        {
+                            "type": "object",
+                            "title": "ColorAxis",
+                            "description": "Specifies that the Mod shall have a color axis.",
+                            "properties": {
+                                "legendItem": {
+                                    "type": "object",
+                                    "title": "Legend Item",
+                                    "description": "Specifies behavior and properties of how this axis is shown in the legend.",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "defaultVisibility": {
+                                            "type": "string",
+                                            "title": "Default visibility",
+                                            "enum": ["visible", "hidden"],
+                                            "description": "Specifies whether to initially show or hide the item for this axis in the legend."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "axes": {
+                    "type": "array",
+                    "title": "The mod axes",
+                    "description": "Specifies the axes that defines how Spotfire computes the data view consumed by the Mod.",
+                    "items": {
+                        "allOf": [
+                            { "$ref": "#/definitions/axis" },
+                            {
+                                "type": "object",
+                                "title": "Axis",
+                                "required": ["name"],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "title": "Name",
+                                        "default": "X",
+                                        "description": "Specifies the unique named used to refer to this axis from the code.",
+                                        "examples": ["X"],
+                                        "pattern": "^(.*)$"
+                                    },
+                                    "allowMultipleMeasures": {
+                                        "type": "boolean",
+                                        "title": "Allow multiple measures",
+                                        "description": "Specifies if this axis supports having multiple measure expression when it is in continuous mode.",
+                                        "default": false
+                                    },
+                                    "placement": {
+                                        "type": "string",
+                                        "title": "Placement",
+                                        "enum": ["left", "bottom", "top", "right", "none"],
+                                        "description": "Specifies the placement of the axis tray for this axis.",
+                                        "examples": ["bottom"]
+                                    },
+                                    "legendItem": {
+                                        "type": "object",
+                                        "title": "Legend Item",
+                                        "description": "Specifies behavior and properties of how this axis is shown in the legend.",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "defaultVisibility": {
+                                                "type": "string",
+                                                "title": "Default visibility",
+                                                "enum": ["visible", "hidden"],
+                                                "default": "visible",
+                                                "description": "Specifies whether to initially show or hide the item for this axis in the legend."
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "title": "Title",
+                                                "description": "Specifies the title to show in the item for this axis in the legend."
+                                            }
+                                        }
+                                    },
+                                    "propertyControl": {
+                                        "type": "object",
+                                        "title": "Property Control",
+                                        "description": "Specifies behavior and properties of how a control for this axis is shown in the properties dialog.",
+                                        "additionalProperties": false,
+                                        "properties": {
+                                            "visibility": {
+                                                "type": "string",
+                                                "title": "Visibility",
+                                                "enum": ["visible", "hidden"],
+                                                "default": "visible",
+                                                "description": "Specifies whether to show a control for this axis in the properties dialog."
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "title": "Title",
+                                                "description": "Specifies the title of the control for this axis."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "legend": {
+            "type": "object",
+            "title": "Legend",
+            "description": "Specifies properties of the Spotfire Legend for the Mod.",
+            "default": {},
+            "additionalProperties": false,
+            "properties": {
+                "defaultPlacement": {
+                    "type": "string",
+                    "enum": ["left", "right"],
+                    "title": "Default placement of the Legend",
+                    "description": "Specifies where the Legend is initially placed. If omitted, the Legend will be placed to the right."
+                },
+                "defaultVisibility": {
+                    "type": "string",
+                    "enum": ["visible", "hidden"],
+                    "title": "Default visibility of Legend",
+                    "description": "Specifies whether to initially show or hide the Legend. If omitted, the Legend will be shown."
+                }
+            }
+        },
+        "files": {
+            "type": "array",
+            "title": "The files stored in the mod",
+            "description": "All files of a mod will be saved into Spotfire. The files array lists all files so that Spotfire can save them.",
+            "items": {
+                "type": "string",
+                "title": "The Items Schema",
+                "default": "",
+                "examples": [
+                    "index.html",
+                    "main.css",
+                    "main.js"
+                ],
+                "pattern": "^(.*)$"
+            }
+        }
+    }
+}
