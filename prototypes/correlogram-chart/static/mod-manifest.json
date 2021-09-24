@@ -1,14 +1,14 @@
 {
     "apiVersion": "1.2",
     "version": "1.1",
-    "name": "Correlogram chart",
+    "name": "Pair plot",
     "id": "spotfire-correlogram-prototype-mod",
     "icon": "icon.svg",
     "properties": [
         {
             "name": "Diagonal", 
             "type": "string", 
-            "defaultValue": "measure-name"
+            "defaultValue": "measure-names"
         }
     ],
     "dataViewDefinition": {

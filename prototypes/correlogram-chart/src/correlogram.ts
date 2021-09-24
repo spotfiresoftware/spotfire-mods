@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { createTimerLog, Diagonal } from "./index";
 import { rectangularSelection } from "./rectangularMarking";
 
 const padding = 0.1;
@@ -11,7 +12,7 @@ export interface PairPlotData {
     colors: string[];
 }
 
-export function render(data: PairPlotData) {
+export function render(data: PairPlotData, diagonal: Diagonal) {
     const plot = document.querySelector("#correlogram")!;
     var { clientWidth, clientHeight } = plot;
 
@@ -47,6 +48,32 @@ export function render(data: PairPlotData) {
             };
         });
 
+    const axes = scales.map((a, i) => ({
+        xAxis: (i == 0 ? d3.axisTop(a.xScale) : d3.axisBottom(a.xScale)).ticks(Math.max(2, Math.min(5, width / 100))),
+        yAxis: (i == 0 ? d3.axisLeft(a.yScale) : d3.axisRight(a.yScale)).ticks(Math.max(2, Math.min(5, height / 100)))
+    }));
+
+    scales.forEach((_, i) => {
+        svg.append("svg:g")
+            .attr("class", "xAxis")
+            .attr("transform", () => `translate(${i * width + padding * width} ${Math.max(i, 1) * height}) `)
+            .call(axes[i].xAxis as any);
+        svg.append("svg:g")
+            .attr("class", "yAxis")
+            .attr("transform", () => `translate(${Math.max(i, 1) * width} ${i * height + padding * height}) `)
+            .call(axes[i].yAxis as any);
+        svg.append("svg:g")
+            .attr("class", "measureName")
+            .append("svg:text")
+            .attr("x", () => `${Math.round(((2 * i + 1) / (2 * data.measures.length)) * 100)}%`)
+            .attr("y", () => `${Math.round(((2 * i + 1) / (2 * data.measures.length)) * 100)}%`)
+            .attr("dominant-baseline", "bottom")
+            .attr("text-anchor", "middle")
+            .text((_) =>
+                diagonal == "measure-names" ? data.measures[i] : `TODO - Show ${diagonal} for ${data.measures[i]}`
+            );
+    });
+
     let scatterCell = svg
         .attr("viewBox", `0 0 ${clientWidth} ${clientHeight}`)
         .selectAll(".scatterCell")
@@ -70,40 +97,18 @@ export function render(data: PairPlotData) {
         .style("stroke-width", 1)
         .style("fill", "transparent");
 
-    var axes = scales.map((a, i) => ({
-        xAxis: (i == 0 ? d3.axisTop(a.xScale) : d3.axisBottom(a.xScale)).ticks(Math.max(2, Math.min(5, width / 100))),
-        yAxis: (i == 0 ? d3.axisLeft(a.yScale) : d3.axisRight(a.yScale)).ticks(Math.max(2, Math.min(5, height / 100)))
-    }));
-
-    scales.forEach((_, i) => {
-        svg.append("svg:g")
-            .attr("class", "xAxis")
-            .attr("transform", () => `translate(${i * width + padding * width} ${Math.max(i, 1) * height}) `)
-            .call(axes[i].xAxis as any);
-        svg.append("svg:g")
-            .attr("class", "yAxis")
-            .attr("transform", () => `translate(${Math.max(i, 1) * width} ${i * height + padding * height}) `)
-            .call(axes[i].yAxis as any);
-        svg.append("svg:g")
-            .attr("class", "measureName")
-            .append("svg:text")
-            .attr("x", () => `${Math.round(((2 * i + 1) / (2 * data.measures.length)) * 100)}%`)
-            .attr("y", () => `${Math.round(((2 * i + 1) / (2 * data.measures.length)) * 100)}%`)
-            .attr("dominant-baseline", "bottom")
-            .attr("text-anchor", "middle")
-            .text(data.measures[i]);
-    });
-
     const d3Circles = scatterCell
         .selectAll("circle")
-        .data((d) =>
-            data.points
-                .map((p, index) => {
-                    const x = p[d.x];
-                    const y = p[d.y];
-                    return x && y ? { x: scales[d.x].xScale(x), y: scales[d.y].yScale(y), index } : null;
-                })
-                .filter((p) => p != null)
+        .data(
+            (d) =>
+                data.points
+                    .map((p, index) => {
+                        const x = p[d.x];
+                        const y = p[d.y];
+                        return x && y ? { x: scales[d.x].xScale(x), y: scales[d.y].yScale(y), index } : null;
+                    })
+                    .filter((p) => p != null),
+            (d) => ""
         )
         .enter()
         .append("svg:circle")

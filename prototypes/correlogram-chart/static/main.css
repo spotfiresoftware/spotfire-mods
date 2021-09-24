@@ -22,11 +22,50 @@ body,
     stroke-width: 2;
 }
 
-.hidden {
-    position: absolute;
+.full-screen {
     width: 100%;
     height: 100%;
-    text-align: justify;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.full-screen div {
+    margin: 8px;
+}
+
+.full-screen button {
+    padding: 4px;
+    background-color: white;
+    border-radius: 4px;
+    border: solid 1px black;
+    cursor: pointer;
+}
+
+.icon-button {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    color: currentColor;
+    opacity: 0.8;
+}
+
+.icon-button:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.settings {
+    top: 8px;
+    right: 8px;
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+.hidden {
     display: none;
 }
