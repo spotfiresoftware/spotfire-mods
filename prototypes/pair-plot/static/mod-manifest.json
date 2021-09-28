@@ -37,7 +37,7 @@
                 "placement": "none",
                 "legendItem": { "defaultVisibility": "hidden" },
                 "propertyControl": { "visibility": "visible" },
-                "automaticConfiguration": { "expressionHeuristics": "none", "priority": "100" }
+                "automaticConfiguration": { "expressionHeuristics": "none", "priority": "100"    }
             },
             {
                 "name": "MarkerBy",
