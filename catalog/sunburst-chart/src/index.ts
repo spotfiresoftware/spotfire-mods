@@ -213,8 +213,13 @@ window.Spotfire.initialize(async (mod) => {
                 };
             },
             onMouseover(node: SunBurstHierarchyNode) {
-                mod.controls.tooltip.show(node.formattedPath());
+                if (node.level == hierarchy.depth) {
+                    mod.controls.tooltip.show(node.rows()[0]);
+                } else {
+                    node.formattedPath();
+                }
             },
+
             onMouseLeave: mod.controls.tooltip.hide
         };
 

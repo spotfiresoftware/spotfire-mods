@@ -10,7 +10,7 @@ body,
     margin: 0;
     height: 100%;
     width: 100%;
-    user-select: none;
+    /* user-select: none; */
     padding: 0;
 }
 
@@ -43,6 +43,9 @@ body,
     cursor: pointer;
 }
 
+circle {
+    cursor: pointer;
+}
 .icon-button {
     width: 16px;
     height: 16px;

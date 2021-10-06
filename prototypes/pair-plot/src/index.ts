@@ -1,11 +1,7 @@
 import { Axis, DataView, Mod, ModProperty } from "spotfire-api";
-import { generalErrorHandler } from "./generalErrorHandler";
-import { interactionLock } from "./interactionLock";
-import { render, PairPlotData } from "./correlogram";
-import { stratify } from "d3-hierarchy";
+import { render, PairPlotData } from "./pair-plot";
 import { resources } from "./resources";
 
-const markerByAxisName = "MarkerBy";
 const measureNamesAxisName = "MeasureNames";
 const countAxisName = "Count";
 const diagonalPropertyName = "Diagonal";
@@ -100,6 +96,7 @@ window.Spotfire.initialize(async (mod) => {
         var markerCount = rows!.length / measureCount;
 
         const colors = rows!.slice(0, markerCount).map((r) => r.color().hexCode);
+        const tooltips = rows!.slice(0, markerCount).map((r) => (() => mod.controls.tooltip.show(r)));
         timerLog.add("Read colors");
         const count = null;
         countAxis.expression
@@ -117,7 +114,8 @@ window.Spotfire.initialize(async (mod) => {
             points,
             colors,
             count,
-            mark: (index: number) => rows![index].mark()
+            mark: (index: number) => rows![index].mark(),
+            tooltips
         };
         timerLog.add("Transpose");
 

@@ -1,8 +1,8 @@
 /*
- * Copyright © 2020. TIBCO Software Inc.
- * This file is subject to the license terms contained
- * in the license file that is distributed with this file.
- */
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
 export as namespace Spotfire;
 
 /**
@@ -16,8 +16,7 @@ export declare type AbortPredicate = (currentRowCount: number) => boolean;
  * These can be either document properties, data table properties or data column properties.
  * @public
  */
-export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>
-    extends AnalysisPropertyValue<T> {
+export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType> extends AnalysisPropertyValue<T> {
     /**
      * Set the value of this instance.
      * @param value - The value to set.
@@ -257,19 +256,7 @@ export declare interface DataType {
     /**
      * Gets the name of this DataType.
      */
-    name:
-        | "String"
-        | "Integer"
-        | "LongInteger"
-        | "Real"
-        | "SingleReal"
-        | "Currency"
-        | "Boolean"
-        | "Date"
-        | "DateTime"
-        | "Time"
-        | "TimeSpan"
-        | "Binary";
+    name: "String" | "Integer" | "LongInteger" | "Real" | "SingleReal" | "Currency" | "Boolean" | "Date" | "DateTime" | "Time" | "TimeSpan" | "Binary";
     /**
      * Gets a value indicating whether the data type is numeric or not, that is,
      * Integer, Currency, Real, LongInteger, or SingleReal.
@@ -729,9 +716,7 @@ export declare interface ErrorOverlay {
  * @public
  */
 export declare type ExtractValueType<readableArray extends ReadonlyArray<Readable<any>>> = {
-    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType>
-        ? readableNameType
-        : never;
+    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType> ? readableNameType : never;
 };
 
 /**
@@ -1322,8 +1307,7 @@ export declare interface Readable<T = any> extends Promise<T> {
  * A full node will be created by using a {@link Reader}.
  * @public
  */
-export declare type ReadableProxy<Node> = Readable<Node> &
-    Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
+export declare type ReadableProxy<Node> = Readable<Node> & Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
 
 /**
  * The reader is responsible for combining multiple {@link Readable}s and scheduling a callback to be invoked
@@ -1373,6 +1357,24 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
      * readables specified when the reader was created.
      */
     hasExpired(): Promise<boolean>;
+    /**
+     * Check whether one or more passed arguments are new since the last time the subscribe loop was called.
+     *
+     * @example Check if the data view has changed in the subscribe loop.
+     *
+     * ```
+     * let reader = mod.createReader(mod.visualization.data(), mod.windowSize());
+     * reader.subscribe((dataView, size) => {
+     *    console.log(reader.hasValueChanged(dataView));
+     * });
+     * ```
+     *
+     * @param value - Value from `subscribe` or `once` arguments.
+     * @param values - Additional values from `subscribe` or `once` arguments.
+     * @returns true if any of the values are new, otherwise false.
+     * @version 1.3
+     */
+    hasValueChanged(value: UnionFromTupleTypes<T>, ...values: UnionFromTupleTypes<T>[]): boolean;
 }
 
 /**
@@ -1482,9 +1484,7 @@ export declare interface SpotfireDocument {
     /**
      * Provides access to the `Document Property` with the specified `name` in the Spotfire Document.
      */
-    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(
-        name: string
-    ): ReadableProxy<AnalysisProperty<T>>;
+    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(name: string): ReadableProxy<AnalysisProperty<T>>;
     /**
      * Provides access to the {@link Page}s in the Spotfire document.
      */
@@ -1594,14 +1594,34 @@ export declare interface Tooltip {
      * The tooltip is shown using the same style and initial delay as native Spotfire visualizations.
      * Once shown, the tooltip will follow the mouse around until {@link Tooltip.hide} is called.
      *
-     * Subsequent calls to `show`can be made to update the tooltip text.
+     * Subsequent calls to `show` can be made to update the tooltip text.
      * @param content - The text to show in the tooltip.
      */
     show(content: string): void;
+    /**
+     * Shows a tooltip for the specified `row` as it has been configured in the properties panel.
+     *
+     * The tooltip is shown using the same style and initial delay as native Spotfire visualizations.
+     * Once shown, the tooltip will follow the mouse around until {@link Tooltip.hide} is called.
+     *
+     * Subsequent calls to `show` can be made to update the tooltip text.
+     *
+     * @note For this feature to work, the dataViewDefinition.tooltip.enabled in the mod-manifest.json needs to be set to true.
+     *
+     * @param row - The row to show text for in the tooltip.
+     * @version 1.3
+     */
+    show(row: DataViewRow): void;
     /**
      * Hides the tooltip that is currently being showed, if any.
      */
     hide(): void;
 }
 
-export {};
+/**
+ * Extract all possible types in a Tuple type.
+ * @public
+ */
+export declare type UnionFromTupleTypes<T extends readonly any[], U = never> = T[number] | U;
+
+export { }
