@@ -42,9 +42,9 @@ Spotfire.initialize(async (mod) => {
         widthProp: ModProperty<number>
     ) {
         mod.controls.errorOverlay.hide();
-        let gaugeRoot = await (await dataView.hierarchy("X"))?.root();
+        let colorRoot = await (await dataView.hierarchy("Color"))?.root();
 
-        let gauges: Gauge[] = gaugeRoot!.rows().map((row) => ({
+        let gauges: Gauge[] = colorRoot!.rows().map((row) => ({
             label: row.categorical("X").formattedValue(),
             formattedValue: row.continuous("Y").formattedValue(),
             color: row.color().hexCode,
