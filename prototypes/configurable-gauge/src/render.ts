@@ -1,5 +1,6 @@
 // @ts-ignore
 import * as d3 from "d3";
+import { grid } from "./layout";
 
 /**
  * Main svg container
@@ -30,12 +31,17 @@ export interface Gauge {
 }
 
 export async function render(gauges: Gauge[], settings: Settings) {
-    let gaugeWidth = settings.size.width / gauges.length;
     let padding = settings.size.width / 50;
 
+    const gaugeCount = gauges.length;
+    let [rowCount, colCount] = grid(settings.size.width - padding, settings.size.height - padding, gaugeCount);
+
+    let gaugeWidth = settings.size.width / colCount;
+    let gaugeHeight = settings.size.height / rowCount;
+
     let radius = Math.min(
-        settings.size.width / gauges.length / 2 - padding / 2,
-        settings.size.height / 2 - settings.style.label.size
+        settings.size.width / colCount / 2 - padding / 2,
+        settings.size.height / rowCount / 2 - settings.style.label.size
     );
 
     const shiftAngle = Math.PI - 5 / 8;
@@ -107,7 +113,13 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     let update = gaugesPaths
         .merge(newGauge)
-        .attr("transform", (d, i) => `translate(${i * gaugeWidth + gaugeWidth / 2}, ${settings.size.height / 2})`);
+        .attr(
+            "transform",
+            (d, i) =>
+                `translate(${Math.floor(i % colCount) * gaugeWidth + gaugeWidth / 2}, ${
+                    Math.floor(i / colCount) * gaugeHeight + gaugeHeight / 2
+                })`
+        );
 
     update
         .select("path.bg")
