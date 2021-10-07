@@ -8,7 +8,7 @@ export interface Serie {
 }
 
 export interface Point {
-    tooltip(): string;
+    tooltip(): DataViewRow;
     mark(mode?: MarkingOperation): void;
     xIndex: number;
     index: number;
@@ -23,7 +23,7 @@ export function buildColorSeries(
     colorLeaves: DataViewHierarchyNode[],
     xLeaves: DataViewHierarchyNode[],
     hasX: boolean,
-    getTooltip: (point: Point) => string,
+    getTooltip: (point: Point) => DataViewRow,
     yMinValue: number
 ): Serie[] {
     const numberOrZero = (val: any) => (typeof val == "number" ? val : 0);
@@ -69,7 +69,7 @@ export function buildColorSeries(
     function createPoint(row: DataViewRow, colorLeaf: DataViewHierarchyNode): Point {
         return {
             tooltip() {
-                return getTooltip(this);
+                return row;
             },
             mark: (m) => row.mark(m),
             xIndex: hasX ? row.categorical("X").leafIndex : 0,

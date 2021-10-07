@@ -1,6 +1,6 @@
 {
-    "apiVersion": "1.2",
-    "version": "1.0",
+    "apiVersion": "1.3",
+    "version": "1.1",
     "name": "Bar Chart",
     "id": "js-dev-barchart",
     "icon": "icon.svg",
@@ -17,6 +17,7 @@
         }
     ],
     "dataViewDefinition": {
+        "tooltip": { "enabled": true },
         "colorAxis": {
             "mode": "dual",
             "dropTarget": {

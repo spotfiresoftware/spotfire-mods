@@ -282,8 +282,7 @@ Spotfire.initialize(function (mod) {
                 // Hide tooltip for non leaf nodes.
                 mod.controls.tooltip.hide();
             } else {
-                const size = sizeAxis !== null ? getRow(sfNode).continuous("Size").formattedValue() : "";
-                mod.controls.tooltip.show(sfNode.formattedPath() + "\r\n" + size);
+                mod.controls.tooltip.show(getRow(sfNode));
             }
         });
 

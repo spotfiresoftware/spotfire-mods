@@ -1,5 +1,5 @@
 {
-    "apiVersion": "1.2",
+    "apiVersion": "1.3",
     "version": "1.0",
     "name": "Spider chart",
     "id": "spotfire-spider-chart-mod",
@@ -27,6 +27,7 @@
         }
     ],
     "dataViewDefinition": {
+        "tooltip": { "enabled": true },
         "colorAxis": {
             "mode": "categorical",
             "dropTarget": {

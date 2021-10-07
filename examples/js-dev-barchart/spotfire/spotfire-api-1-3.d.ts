@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020. TIBCO Software Inc.
+ * Copyright © 2021. TIBCO Software Inc.
  * This file is subject to the license terms contained
  * in the license file that is distributed with this file.
  */
@@ -1373,6 +1373,24 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
      * readables specified when the reader was created.
      */
     hasExpired(): Promise<boolean>;
+    /**
+     * Check whether one or more passed arguments are new since the last time the subscribe loop was called.
+     *
+     * @example Check if the data view has changed in the subscribe loop.
+     *
+     * ```
+     * let reader = mod.createReader(mod.visualization.data(), mod.windowSize());
+     * reader.subscribe((dataView, size) => {
+     *    console.log(reader.hasValueChanged(dataView));
+     * });
+     * ```
+     *
+     * @param value - Value from `subscribe` or `once` arguments.
+     * @param values - Additional values from `subscribe` or `once` arguments.
+     * @returns true if any of the values are new, otherwise false.
+     * @version 1.3
+     */
+    hasValueChanged(value: UnionFromTupleTypes<T>, ...values: UnionFromTupleTypes<T>[]): boolean;
 }
 
 /**
@@ -1594,14 +1612,34 @@ export declare interface Tooltip {
      * The tooltip is shown using the same style and initial delay as native Spotfire visualizations.
      * Once shown, the tooltip will follow the mouse around until {@link Tooltip.hide} is called.
      *
-     * Subsequent calls to `show`can be made to update the tooltip text.
+     * Subsequent calls to `show` can be made to update the tooltip text.
      * @param content - The text to show in the tooltip.
      */
     show(content: string): void;
+    /**
+     * Shows a tooltip for the specified `row` as it has been configured in the properties panel.
+     *
+     * The tooltip is shown using the same style and initial delay as native Spotfire visualizations.
+     * Once shown, the tooltip will follow the mouse around until {@link Tooltip.hide} is called.
+     *
+     * Subsequent calls to `show` can be made to update the tooltip text.
+     *
+     * @note For this feature to work, the dataViewDefinition.tooltip.enabled in the mod-manifest.json needs to be set to true.
+     *
+     * @param row - The row to show text for in the tooltip.
+     * @version 1.3
+     */
+    show(row: DataViewRow): void;
     /**
      * Hides the tooltip that is currently being showed, if any.
      */
     hide(): void;
 }
 
-export {};
+/**
+ * Extract all possible types in a Tuple type.
+ * @public
+ */
+export declare type UnionFromTupleTypes<T extends readonly any[], U = never> = T[number] | U;
+
+export { }
