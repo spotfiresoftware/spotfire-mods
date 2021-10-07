@@ -15,5 +15,12 @@ export function grid(width: number, height: number, count: number) {
         rowCount++;
     }
 
-    return isWide ? [rowCount, Math.ceil(count / rowCount)] : [Math.ceil(count / rowCount), rowCount];
+    let colCount = Math.ceil(count / rowCount);
+
+    while (count % colCount == 1 && rowCount > 1) {
+        rowCount--;
+        colCount = Math.ceil(count / rowCount);
+    }
+
+    return isWide ? [rowCount, colCount] : [colCount, rowCount];
 }
