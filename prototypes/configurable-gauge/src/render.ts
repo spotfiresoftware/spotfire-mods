@@ -119,7 +119,11 @@ export async function render(gauges: Gauge[], settings: Settings) {
                 `translate(${Math.floor(i % colCount) * gaugeWidth + gaugeWidth / 2}, ${
                     Math.floor(i / colCount) * gaugeHeight + gaugeHeight / 2
                 })`
-        );
+        )
+        .on("click", function (d) {
+            d3.event.stopPropagation();
+            d.mark();
+        });
 
     update
         .select("path.bg")
@@ -130,10 +134,6 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     update
         .select("path.value")
-        .on("click", (d) => {
-            d3.event.stopPropagation();
-            return d.mark();
-        })
         .transition("add sectors")
         .duration(settings.animationSpeed)
         .attrTween("d", tweenArc)
