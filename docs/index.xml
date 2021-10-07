@@ -114,10 +114,12 @@
         mod.controls.errorOverlay.hide();
 
         /**
-         * Get rows from dataView
+         * Get the hierarchy of the categorical X-axis.
          */
-        const rows = await dataView.allRows();
-        if (rows == null) {
+        const xHierarchy = await dataView.hierarchy(&amp;#34;X&amp;#34;);
+        const xRoot = await xHierarchy.root();
+
+        if (xRoot == null) {
             // User interaction caused the data view to expire.
             // Don&amp;#39;t clear the mod content here to avoid flickering.
             return;
@@ -271,8 +273,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorLeafNodes = (await colorHierarchy.root()).leaves();
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorDomain = colorHierarchy.isEmpty ? [&amp;#34;All Values&amp;#34;] : colorLeafNodes.map((node) =&amp;gt; node.formattedPath());
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#00a000&#34;&gt;+        const xHierarchy = await dataView.hierarchy(&amp;#34;X&amp;#34;);
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xLeafNodes = (await xHierarchy.root()).leaves();
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const xLeafNodes = (await xHierarchy.root()).leaves();
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const xDomain = xLeafNodes.map(node =&amp;gt; node.formattedValue());
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
 &lt;span style=&#34;color:#00a000&#34;&gt;+        const dataColumns = [&amp;#34;Columns&amp;#34;];
@@ -319,7 +320,7 @@
 &lt;h3 id=&#34;4-selectionmarking&#34;&gt;4. Selection/marking&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Add selection/marking logic. We listen for &amp;ldquo;&lt;em&gt;select&lt;/em&gt;&amp;rdquo; event and extract X and Color values (&lt;em&gt;not css-color!&lt;/em&gt;) by index in their respective domains. The Color index is halved because we have 2 times as many columns due to styling being applied (see table above).&lt;/li&gt;
-&lt;li&gt;We loop over the rows array and mark the rows that match our selection. An obvious optimization would be to store the rows as a hash map to eliminate redundancy.&lt;/li&gt;
+&lt;li&gt;The rows (in this case there will be only one row) to mark will be in the intersection of the set of rows for the marked color and the set of rows for the marked x value. An obvious optimization would be to store the rows as a hash map to eliminate redundancy.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;
          var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
@@ -333,17 +334,11 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const xIndex = row;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const colorIndex = (column - 1) / 2;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            selectRow({ xIndex, colorIndex });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            intersection(xLeafNodes[xIndex].rows(), colorLeafNodes[colorIndex].rows()).forEach((r) =&amp;gt; r.mark());
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+       });
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function selectRow({ xIndex, colorIndex }) {
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            rows.forEach((row) =&amp;gt; {
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                var rowColorIndex = !colorHierarchy.isEmpty ? row.categorical(&amp;#34;Color&amp;#34;).leafIndex : 0;
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                var rowXIndex = !xHierarchy.isEmpty ? row.categorical(&amp;#34;X&amp;#34;).leafIndex : 0;
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                if (rowXIndex == xIndex &amp;amp;&amp;amp; rowColorIndex == colorIndex) {
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                    row.mark();
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                }
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            });
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function intersection(rows1, rows2) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            return rows1.filter((r) =&amp;gt; rows2.indexOf(r) &amp;gt; -1);
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
 
@@ -351,13 +346,8 @@
 &lt;ul&gt;
 &lt;li&gt;To clear all marking on background click, as native Spotfire visualizations do, we listen for &amp;ldquo;click&amp;rdquo; event and check its target id.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;        function selectRow({ x, color }) {
-            rows.forEach(row =&amp;gt; {
-                if (row.get(&amp;#34;X&amp;#34;).getValue() == x &amp;amp;&amp;amp; row.get(&amp;#34;Color&amp;#34;).getValue() == color) {
-                    row.mark();
-                }
-            });
-        }
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;        function intersection(rows1, rows2) {
+            return rows1.filter((r) =&amp;gt; rows2.indexOf(r) &amp;gt; -1);
 &lt;span style=&#34;color:#00a000&#34;&gt;+
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        google.visualization.events.addListener(chart, &amp;#34;click&amp;#34;, ({ targetID, x, y }) =&amp;gt; {
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (targetID == &amp;#34;chartarea&amp;#34;) {
@@ -627,6 +617,9 @@
 &lt;li&gt;Go to &lt;em&gt;File &amp;gt; Export &amp;gt; Visualization to PDF&lt;/em&gt; to test the export feature&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;./images/step7.PNG&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Note that this example Mod is using external resources, hence it will not be possible to export using the web client, see the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/docs/using-the-api/mod-schema/&#34;&gt;manifest schema documentation&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
 
       </description>
     </item>

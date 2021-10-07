@@ -21,7 +21,7 @@
 ">
 <meta itemprop="datePublished" content="2020-11-06T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-11-06T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2466">
+<meta itemprop="wordCount" content="2472">
 
 
 
@@ -450,10 +450,12 @@
         mod.controls.errorOverlay.hide();
 
         /**
-         * Get rows from dataView
+         * Get the hierarchy of the categorical X-axis.
          */
-        const rows = await dataView.allRows();
-        if (rows == null) {
+        const xHierarchy = await dataView.hierarchy(&#34;X&#34;);
+        const xRoot = await xHierarchy.root();
+
+        if (xRoot == null) {
             // User interaction caused the data view to expire.
             // Don&#39;t clear the mod content here to avoid flickering.
             return;
@@ -607,8 +609,7 @@
 </span><span style="color:#00a000">+        const colorLeafNodes = (await colorHierarchy.root()).leaves();
 </span><span style="color:#00a000">+        const colorDomain = colorHierarchy.isEmpty ? [&#34;All Values&#34;] : colorLeafNodes.map((node) =&gt; node.formattedPath());
 </span><span style="color:#00a000"></span>
-<span style="color:#00a000">+        const xHierarchy = await dataView.hierarchy(&#34;X&#34;);
-</span><span style="color:#00a000">+        const xLeafNodes = (await xHierarchy.root()).leaves();
+<span style="color:#00a000">+        const xLeafNodes = (await xHierarchy.root()).leaves();
 </span><span style="color:#00a000">+        const xDomain = xLeafNodes.map(node =&gt; node.formattedValue());
 </span><span style="color:#00a000"></span>
 <span style="color:#00a000">+        const dataColumns = [&#34;Columns&#34;];
@@ -655,7 +656,7 @@
 <h3 id="4-selectionmarking">4. Selection/marking</h3>
 <ul>
 <li>Add selection/marking logic. We listen for &ldquo;<em>select</em>&rdquo; event and extract X and Color values (<em>not css-color!</em>) by index in their respective domains. The Color index is halved because we have 2 times as many columns due to styling being applied (see table above).</li>
-<li>We loop over the rows array and mark the rows that match our selection. An obvious optimization would be to store the rows as a hash map to eliminate redundancy.</li>
+<li>The rows (in this case there will be only one row) to mark will be in the intersection of the set of rows for the marked color and the set of rows for the marked x value. An obvious optimization would be to store the rows as a hash map to eliminate redundancy.</li>
 </ul>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">
          var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
@@ -669,17 +670,11 @@
 </span><span style="color:#00a000">+            const xIndex = row;
 </span><span style="color:#00a000">+            const colorIndex = (column - 1) / 2;
 </span><span style="color:#00a000">+
-</span><span style="color:#00a000">+            selectRow({ xIndex, colorIndex });
+</span><span style="color:#00a000">+            intersection(xLeafNodes[xIndex].rows(), colorLeafNodes[colorIndex].rows()).forEach((r) =&gt; r.mark());
 </span><span style="color:#00a000">+       });
 </span><span style="color:#00a000">+
-</span><span style="color:#00a000">+        function selectRow({ xIndex, colorIndex }) {
-</span><span style="color:#00a000">+            rows.forEach((row) =&gt; {
-</span><span style="color:#00a000">+                var rowColorIndex = !colorHierarchy.isEmpty ? row.categorical(&#34;Color&#34;).leafIndex : 0;
-</span><span style="color:#00a000">+                var rowXIndex = !xHierarchy.isEmpty ? row.categorical(&#34;X&#34;).leafIndex : 0;
-</span><span style="color:#00a000">+                if (rowXIndex == xIndex &amp;&amp; rowColorIndex == colorIndex) {
-</span><span style="color:#00a000">+                    row.mark();
-</span><span style="color:#00a000">+                }
-</span><span style="color:#00a000">+            });
+</span><span style="color:#00a000">+        function intersection(rows1, rows2) {
+</span><span style="color:#00a000">+            return rows1.filter((r) =&gt; rows2.indexOf(r) &gt; -1);
 </span><span style="color:#00a000">+        }
 </span><span style="color:#00a000"></span>     }
 
@@ -687,13 +682,8 @@
 <ul>
 <li>To clear all marking on background click, as native Spotfire visualizations do, we listen for &ldquo;click&rdquo; event and check its target id.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">        function selectRow({ x, color }) {
-            rows.forEach(row =&gt; {
-                if (row.get(&#34;X&#34;).getValue() == x &amp;&amp; row.get(&#34;Color&#34;).getValue() == color) {
-                    row.mark();
-                }
-            });
-        }
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">        function intersection(rows1, rows2) {
+            return rows1.filter((r) =&gt; rows2.indexOf(r) &gt; -1);
 <span style="color:#00a000">+
 </span><span style="color:#00a000">+        google.visualization.events.addListener(chart, &#34;click&#34;, ({ targetID, x, y }) =&gt; {
 </span><span style="color:#00a000">+            if (targetID == &#34;chartarea&#34;) {
@@ -963,6 +953,9 @@
 <li>Go to <em>File &gt; Export &gt; Visualization to PDF</em> to test the export feature</li>
 </ul>
 <p><img src="./images/step7.PNG" alt=""></p>
+<ul>
+<li>Note that this example Mod is using external resources, hence it will not be possible to export using the web client, see the <a href="https://tibcosoftware.github.io/spotfire-mods/docs/using-the-api/mod-schema/">manifest schema documentation</a>.</li>
+</ul>
 
 	
 		<style>
