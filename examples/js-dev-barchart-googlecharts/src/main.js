@@ -59,27 +59,29 @@ Spotfire.initialize(async (mod) => {
         mod.controls.errorOverlay.hide();
 
         /**
-         * Get the color hierarchy.
+         * Get the hierarchy of the categorical X-axis.
          */
-        const colorHierarchy = await dataView.hierarchy("Color");
-        const colorRoot = await colorHierarchy.root();
+        const xHierarchy = await dataView.hierarchy("X");
+        const xRoot = await xHierarchy.root();
 
-        if (colorRoot == null) {
+        if (xRoot == null) {
             // User interaction caused the data view to expire.
             // Don't clear the mod content here to avoid flickering.
             return;
         }
 
+        const xLeafNodes = xRoot.leaves();
+
+        /**
+         * Get the color hierarchy.
+         */
+        const colorHierarchy = await dataView.hierarchy("Color");
+        const colorRoot = await colorHierarchy.root();
+
         const colorLeafNodes = colorRoot.leaves();
         const colorDomain = colorHierarchy.isEmpty
             ? ["All Values"]
             : colorLeafNodes.map((node) => node.formattedPath());
-
-        /**
-         * Get the x hierarchy.
-         */
-        const xHierarchy = await dataView.hierarchy("X");
-        const xLeafNodes = (await xHierarchy.root()).leaves();
 
         /**
          * Convert rows to a data table format expected by google chart
