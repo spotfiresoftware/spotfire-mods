@@ -499,7 +499,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
 
         function handleMouseOverPoint(data) {
             g.attr("visibility", "visible");
-            tooltip.show(createPointTooltip(data));
+            tooltip.show(data.tooltip);
         }
 
         function handleMouseOut() {
@@ -650,56 +650,6 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         return nodeFormattedPathAsArray(colorLeaves[colorIndex])
             .map((val, i) => colorAxisMeta.parts[i].displayName + ": " + val)
             .join("\n");
-    }
-
-    /**
-     * Mimic the built in Spotfire tooltip
-     * @param {Point} point
-     * @returns {string}
-     */
-    function createPointTooltip(point) {
-        const separator = "\n";
-        let colorValues = getFormattedValues(colorLeaves[point.colorIndex]);
-        let xValues = getFormattedValues(xLeaves[point.xIndex]);
-        let yDisplayName = yAxisMeta.parts[0].displayName;
-
-        if (yAxisMeta.parts.length > 1) {
-            // Find the corresponding display name for the y axis value for multiple measures.
-            let colorLevelForColumnNames = colorAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
-            let xLevelForColumnNames = xAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
-            if (colorLevelForColumnNames >= 0) {
-                yDisplayName = colorValues[colorLevelForColumnNames];
-            }
-
-            if (xLevelForColumnNames >= 0) {
-                yDisplayName = xValues[xLevelForColumnNames];
-            }
-        }
-
-        let xLabel =
-            createAxisTooltip(
-                xAxisMeta.parts.map((p) => p.displayName),
-                xValues,
-                separator
-            ) ||
-            (xAxisMeta.parts.length
-                ? createAxisTooltip([xAxisMeta.name + " axis"], [xLeaves[point.xIndex].formattedPath()], separator)
-                : "");
-        let colorLabel =
-            createAxisTooltip(
-                colorAxisMeta.parts.map((p) => p.displayName),
-                colorValues,
-                separator
-            ) ||
-            (colorAxisMeta.parts.length
-                ? createAxisTooltip(
-                      [colorAxisMeta.name + " axis"],
-                      [colorLeaves[point.colorIndex].formattedPath()],
-                      separator
-                  )
-                : "");
-
-        return [xLabel, yDisplayName + ": " + point.Y_Formatted, colorLabel].join(separator);
     }
 
     /**

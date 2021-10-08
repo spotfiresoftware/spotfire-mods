@@ -25,6 +25,7 @@
  *          y1: number;
  *          marked: boolean;
  *          gapFilled: boolean;
+ *          tooltip: Spotfire.DataViewRow;
  *          }} Point
  */
 
@@ -58,7 +59,8 @@ export function buildColorSeries(colorLeaves, xLeaves, hasX, hasY, stackMode, ga
             marked: row.isMarked(),
             color: row.color().hexCode,
             colorIndex: colorLeaf.leafIndex,
-            gapFilled: false
+            gapFilled: false,
+            tooltip: row
         }))
     }));
 
@@ -85,7 +87,8 @@ export function buildColorSeries(colorLeaves, xLeaves, hasX, hasY, stackMode, ga
                         colorIndex: serie.colorIndex,
                         marked: allMarked,
                         color: !leftPoint.marked ? leftPoint.color : rightPoint.color,
-                        gapFilled: true
+                        gapFilled: true,
+                        tooltip: undefined
                     });
                 }
             }
