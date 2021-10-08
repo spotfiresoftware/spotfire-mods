@@ -48,6 +48,7 @@ Spotfire.initialize(async (mod) => {
             label: row.categorical("X").formattedValue(),
             formattedValue: row.continuous("Y").formattedValue(),
             color: row.color().hexCode,
+            key: row.elementId(),
             mark: () => row.mark(),
             percent: (row.continuous("Y").value<number>() || 0) / (maxProp.value() || 0),
             value: row.continuous("Y").value<number>() || 0
