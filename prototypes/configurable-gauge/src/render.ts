@@ -12,7 +12,7 @@ export interface Settings {
     animationSpeed: number;
     size: { width: number; height: number };
     maxValue: number;
-    width: number;
+    gaugeWidth: number;
     style: {
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
         value: { size: number; weight: string; style: string; color: string; fontFamily: string };
@@ -57,7 +57,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
                 ? Math.max(negScale(Math.abs(d.percent)) || 0, -shiftAngle)
                 : Math.min(scale(d.percent) || 0, maxAngle)
         )
-        .innerRadius((d) => radius - (radius * settings.width) / 100)
+        .innerRadius((d) => radius - (radius * settings.gaugeWidth) / 100)
         .outerRadius((d) => radius);
 
     svg.attr("width", settings.size.width)
