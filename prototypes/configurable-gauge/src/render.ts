@@ -90,6 +90,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
                 })`
         );
 
+    newGauge.append("circle").attr("class", "click-zone");
     newGauge.append("path").attr("class", "bg");
     newGauge.append("path").attr("class", "value");
     newGauge.append("text").attr("class", "label-value");
@@ -127,6 +128,13 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("stroke", (d) => ((scale(Math.abs(d.percent)) || 0) > maxAngle ? "red" : "transparent"))
         .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
+
+    update
+        .select("circle.click-zone")
+        .transition("add sectors")
+        .duration(settings.animationSpeed)
+        .attr("r", radius)
+        .attr("fill", "transparent");
 
     update
         .select("text.label-value")
