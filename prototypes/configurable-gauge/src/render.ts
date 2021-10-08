@@ -31,6 +31,11 @@ export interface Gauge {
     color: string;
 }
 
+interface internalGauge extends Gauge {
+    innerRadius: number;
+    radius: number;
+}
+
 export async function render(gauges: Gauge[], settings: Settings) {
     let padding = settings.size.width / 50;
 
@@ -45,21 +50,27 @@ export async function render(gauges: Gauge[], settings: Settings) {
         settings.size.height / rowCount / 2 - settings.style.label.size
     );
 
+    const innerRadius = radius - (radius * settings.gaugeWidth) / 100;
+    (gauges as internalGauge[]).forEach((g) => {
+        g.innerRadius = innerRadius;
+        g.radius = radius;
+    });
+
     const shiftAngle = Math.PI - 5 / 8;
     const maxAngle = Math.PI - 5 / 8;
     let scale = d3.scaleLinear().range([-shiftAngle, maxAngle]).domain([0, 1]);
     let negScale = d3.scaleLinear().range([maxAngle, -shiftAngle]).domain([0, 1]);
 
     const arc = d3
-        .arc<{ percent: number }>()
+        .arc<internalGauge>()
         .startAngle((d) => (d.percent < 0 ? negScale(0) || 0 : scale(0) || 0))
         .endAngle((d) =>
             d.percent < 0
                 ? Math.max(negScale(Math.abs(d.percent)) || 0, -shiftAngle)
                 : Math.min(scale(d.percent) || 0, maxAngle)
         )
-        .innerRadius((d) => radius - (radius * settings.gaugeWidth) / 100)
-        .outerRadius((d) => radius);
+        .innerRadius((d) => d.innerRadius)
+        .outerRadius((d) => d.radius);
 
     svg.attr("width", settings.size.width)
         .attr("height", settings.size.height)
@@ -105,14 +116,14 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("opacity", 0.1)
         .transition("add sectors")
         .duration(settings.animationSpeed)
-        .attrTween("d", tweenArc({ percent: 1 }).bind({}, { percent: 1 }))
+        .attrTween("d", tweenArc({ percent: 1, radius, innerRadius }, 1))
         .attr("fill", (d) => d.color);
 
     update
         .select("path.value")
         .transition("add sectors")
         .duration(settings.animationSpeed)
-        .attrTween("d", tweenArc({ percent: 0 }))
+        .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }))
         .attr("stroke", (d) => ((scale(Math.abs(d.percent)) || 0) > maxAngle ? "red" : "transparent"))
         .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
@@ -120,6 +131,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
     update
         .select("text.label-value")
         .attr("dy", "0.35em")
+        .transition("add label value")
+        .duration(settings.animationSpeed)
         .attr("font-size", settings.style.value.size)
         .attr("font-style", settings.style.value.style)
         .attr("font-weight", settings.style.value.weight)
@@ -133,6 +146,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
     update
         .select("text.label")
         .attr("dy", "0.35em")
+        .transition("add labels")
+        .duration(settings.animationSpeed)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
@@ -143,11 +158,20 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("x", 0)
         .text((d) => d.label);
 
-    gaugesPaths.exit().transition("add sectors").duration(settings.animationSpeed).style("opacity", 0).remove();
+    gaugesPaths
+        .exit()
+        .transition("add sectors")
+        .duration(settings.animationSpeed / 2)
+        .style("opacity", 0)
+        .remove();
 
-    function tweenArc(defaultPrevValue = { percent: 0 }) {
+    function tweenArc(defaultPrevValue: Partial<internalGauge>, overridePercent?: number) {
         return function tweenArc(this: any, data: any) {
             let prevValue = this.__prev ? this.__prev : defaultPrevValue;
+
+            if (overridePercent != undefined) {
+                data = { ...data, percent: overridePercent };
+            }
 
             this.__prev = data;
 
