@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import { render, Gauge } from "./render";
 import { DataView, ModProperty } from "spotfire-api";
 
@@ -49,7 +50,13 @@ Spotfire.initialize(async (mod) => {
             formattedValue: row.continuous("Y").formattedValue(),
             color: row.color().hexCode,
             key: row.elementId(),
-            mark: () => row.mark(),
+            mark: () => {
+                if (d3.event.ctrlKey) {
+                    row.mark("ToggleOrAdd");
+                } else {
+                    row.mark();
+                }
+            },
             percent: (row.continuous("Y").value<number>() || 0) / (maxProp.value() || 0),
             value: row.continuous("Y").value<number>() || 0
         }));
