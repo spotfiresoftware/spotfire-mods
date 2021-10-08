@@ -363,7 +363,7 @@ Spotfire.initialize(async (mod) => {
                 segment.style.backgroundColor = row.color().hexCode;
 
                 segment.onmouseover = (e) => {
-                    mod.controls.tooltip.show(xLeafNode.formattedPath() + ": " + y.formattedValue());
+                    mod.controls.tooltip.show(row);
                 };
                 segment.onmouseout = (e) => {
                     mod.controls.tooltip.hide();
