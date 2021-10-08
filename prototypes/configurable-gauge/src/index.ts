@@ -63,7 +63,7 @@ Spotfire.initialize(async (mod) => {
             },
             size: windowSize,
             maxValue: maxProp.value() || 0,
-            width: widthProp.value() || 20,
+            gaugeWidth: widthProp.value() || 20,
             animationSpeed: 250,
             style: {
                 marking: { color: context.styling.scales.font.color },
