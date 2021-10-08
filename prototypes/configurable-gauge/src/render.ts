@@ -9,6 +9,7 @@ const svg = d3.select("#mod-container").append("svg").attr("xmlns", "http://www.
 
 export interface Settings {
     click(d: Gauge | null): void;
+    mouseLeave?(): void;
     animationSpeed: number;
     size: { width: number; height: number };
     maxValue: number;
@@ -23,6 +24,7 @@ export interface Settings {
 
 export interface Gauge {
     mark(): void;
+    mouseOver?(): void;
     label: string;
     key: string;
     percent: number;
@@ -96,17 +98,25 @@ export async function render(gauges: Gauge[], settings: Settings) {
     newGauge.append("text").attr("class", "label-value");
     newGauge.append("text").attr("class", "label");
 
-    let update = gaugesPaths.merge(newGauge).on("click", function (d) {
-        d3.event.stopPropagation();
-        d.mark();
-    });
+    let update = gaugesPaths
+        .merge(newGauge)
+        .on("click", function (d) {
+            d3.event.stopPropagation();
+            d.mark();
+        })
+        .on("mouseleave", (d) => {
+            settings.mouseLeave?.();
+        })
+        .on("mouseenter", (d) => {
+            d.mouseOver?.();
+        });
 
     update
         .transition("Position gauges")
         .duration(settings.animationSpeed)
         .attr(
             "transform",
-            (d, i) =>
+            (_, i) =>
                 `translate(${Math.floor(i % colCount) * gaugeWidth + gaugeWidth / 2}, ${
                     Math.floor(i / colCount) * gaugeHeight + gaugeHeight / 2
                 })`

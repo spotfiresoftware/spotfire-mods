@@ -57,6 +57,9 @@ Spotfire.initialize(async (mod) => {
                     row.mark();
                 }
             },
+            mouseOver() {
+                mod.controls.tooltip.show(row);
+            },
             percent: (row.continuous("Y").value<number>() || 0) / (maxProp.value() || 0),
             value: row.continuous("Y").value<number>() || 0
         }));
@@ -68,6 +71,9 @@ Spotfire.initialize(async (mod) => {
                 } else {
                     dataView.clearMarking();
                 }
+            },
+            mouseLeave() {
+                mod.controls.tooltip.hide();
             },
             size: windowSize,
             maxValue: maxProp.value() || 0,

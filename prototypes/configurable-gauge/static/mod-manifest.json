@@ -1,5 +1,5 @@
 {
-    "apiVersion": "1.2",
+    "apiVersion": "1.3",
     "version": "1.0",
     "name": "Gauge",
     "id": "spotfire-configurable-gauge-prototype",
@@ -17,6 +17,9 @@
         }
     ],
     "dataViewDefinition": {
+        "tooltip": {
+            "enabled": true
+        },
         "colorAxis": {
             "mode": "categorical",
             "dropTarget": {
