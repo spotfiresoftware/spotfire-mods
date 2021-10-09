@@ -15,7 +15,8 @@ Spotfire.initialize(async (mod) => {
         mod.visualization.data(),
         mod.windowSize(),
         mod.property<number>("gaugeMax"),
-        mod.property<number>("gaugeWidth")
+        mod.property<number>("gaugeWidth"),
+        mod.property<boolean>("showPercent")
     );
 
     /**
@@ -31,38 +32,46 @@ Spotfire.initialize(async (mod) => {
      * The function that is part of the main read-render loop.
      * It checks for valid data and will print errors in case of bad data or bad renders.
      * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
-     * @param {DataView} dataView
-     * @param {Size} windowSize
-     * @param {ModProperty} maxProp
-     * @param {ModProperty} widthProp
+     * @param dataView
+     * @param windowSize
+     * @param maxProp
+     * @param widthProp
+     * @param showPercent
      */
     async function onChange(
         dataView: DataView,
         windowSize: Spotfire.Size,
         maxProp: ModProperty<number>,
-        widthProp: ModProperty<number>
+        widthProp: ModProperty<number>,
+        showPercent: ModProperty<boolean>
     ) {
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy("Color"))?.root();
 
-        let gauges: Gauge[] = colorRoot!.rows().map((row) => ({
-            label: row.categorical("X").formattedValue(),
-            formattedValue: row.continuous("Y").formattedValue(),
-            color: row.color().hexCode,
-            key: row.elementId(),
-            mark: () => {
-                if (d3.event.ctrlKey) {
-                    row.mark("ToggleOrAdd");
-                } else {
-                    row.mark();
-                }
-            },
-            mouseOver() {
-                mod.controls.tooltip.show(row);
-            },
-            percent: (row.continuous("Y").value<number>() || 0) / (maxProp.value() || 0),
-            value: row.continuous("Y").value<number>() || 0
-        }));
+        let gauges: Gauge[] = colorRoot!.rows().map((row) => {
+            const percent = (row.continuous("Y").value<number>() || 0) / (maxProp.value() || 0);
+            const formattedValue = showPercent.value()
+                ? `${(percent * 100).toPrecision(3)}%`
+                : row.continuous("Y").formattedValue();
+
+            return {
+                label: row.categorical("X").formattedValue(),
+                formattedValue,
+                color: row.color().hexCode,
+                key: row.elementId(),
+                mark: () => {
+                    if (d3.event.ctrlKey) {
+                        row.mark("ToggleOrAdd");
+                    } else {
+                        row.mark();
+                    }
+                },
+                mouseOver() {
+                    mod.controls.tooltip.show(row);
+                },
+                percent
+            } as Gauge;
+        });
 
         render(gauges, {
             click(d) {
@@ -103,6 +112,7 @@ Spotfire.initialize(async (mod) => {
         let settingsArea = document.querySelector(".settings-area") as HTMLDivElement;
         let maxValueInput = document.querySelector("#gaugeMax") as HTMLInputElement;
         let widthRangeSlider = document.querySelector("#width") as HTMLInputElement;
+        let showPercentCheckbox = document.querySelector("#showPercent") as HTMLInputElement;
 
         settingsIcon?.classList.toggle("hidden", !context.isEditing);
 
@@ -113,6 +123,10 @@ Spotfire.initialize(async (mod) => {
 
         if (currentFocus != widthRangeSlider) {
             widthRangeSlider.value = "" + widthProp.value();
+        }
+
+        if (currentFocus != showPercentCheckbox) {
+            showPercentCheckbox.checked = showPercent.value()!;
         }
 
         settingsIcon.onclick = () => {
@@ -131,6 +145,10 @@ Spotfire.initialize(async (mod) => {
 
             widthRangeSlider.onchange = () => {
                 widthProp.set(parseInt(widthRangeSlider.value) || widthProp.value() || 0);
+            };
+
+            showPercentCheckbox.onchange = () => {
+                showPercent.set(showPercentCheckbox.checked);
             };
 
             widthRangeSlider.onblur = (e) => {

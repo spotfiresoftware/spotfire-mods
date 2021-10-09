@@ -28,7 +28,6 @@ export interface Gauge {
     label: string;
     key: string;
     percent: number;
-    value: number;
     formattedValue: string;
     color: string;
 }
