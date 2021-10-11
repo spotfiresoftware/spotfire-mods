@@ -93,6 +93,9 @@ Spotfire.initialize(async (mod) => {
             gaugeWidth: widthProp.value() || 20,
             animationSpeed: 250,
             style: {
+                gauge: {
+                    background: context.styling.scales.line.stroke
+                },
                 marking: { color: context.styling.scales.font.color },
                 background: { color: context.styling.general.backgroundColor },
                 value: {
@@ -142,7 +145,7 @@ Spotfire.initialize(async (mod) => {
 
         settingsArea.onclick = () => {
             settingsArea.classList.remove("tucked-away");
-        }
+        };
 
         settingsIcon.onclick = () => {
             settingsArea.classList.toggle("tucked-away");

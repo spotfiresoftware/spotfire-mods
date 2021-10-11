@@ -15,6 +15,9 @@ export interface Settings {
     maxValue: number;
     gaugeWidth: number;
     style: {
+        gauge: {
+            background: string;
+        };
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
         value: { size: number; weight: string; style: string; color: string; fontFamily: string };
         marking: { color: string };
@@ -123,11 +126,11 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     update
         .select("path.bg")
-        .attr("opacity", 0.1)
+        .attr("opacity", 1)
         .transition("add sectors")
         .duration(settings.animationSpeed)
         .attrTween("d", tweenArc({ percent: 1, radius, innerRadius }, 1))
-        .attr("fill", (d) => d.color);
+        .attr("fill", (d) => settings.style.gauge.background);
 
     update
         .select("path.value")
