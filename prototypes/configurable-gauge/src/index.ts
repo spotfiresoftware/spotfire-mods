@@ -140,8 +140,12 @@ Spotfire.initialize(async (mod) => {
             showPercentCheckbox.checked = showPercent.value()!;
         }
 
+        settingsArea.onclick = () => {
+            settingsArea.classList.remove("tucked-away");
+        }
+
         settingsIcon.onclick = () => {
-            settingsArea.classList.toggle("hidden");
+            settingsArea.classList.toggle("tucked-away");
             minValueInput.onchange = () => {
                 if (!minValueInput.value) {
                     return;
@@ -159,7 +163,7 @@ Spotfire.initialize(async (mod) => {
             };
 
             maxValueInput.onblur = (e) => {
-                settingsArea.classList.add("hidden");
+                settingsArea.classList.add("tucked-away");
             };
 
             widthRangeSlider.onchange = () => {
@@ -171,7 +175,7 @@ Spotfire.initialize(async (mod) => {
             };
 
             widthRangeSlider.onblur = (e) => {
-                settingsArea.classList.add("hidden");
+                settingsArea.classList.add("tucked-away");
             };
         };
 
