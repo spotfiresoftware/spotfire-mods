@@ -89,7 +89,8 @@ Spotfire.initialize(async (mod) => {
                 mod.controls.tooltip.hide();
             },
             size: windowSize,
-            maxValue: maxProp.value() || 0,
+            minValue: minProp.value()!,
+            maxValue: maxProp.value()!,
             gaugeWidth: widthProp.value() || 20,
             animationSpeed: 250,
             style: {
@@ -150,19 +151,19 @@ Spotfire.initialize(async (mod) => {
         settingsIcon.onclick = () => {
             settingsArea.classList.toggle("tucked-away");
             minValueInput.onchange = () => {
-                if (!minValueInput.value) {
+                if (!minValueInput.value.length) {
                     return;
                 }
 
-                minProp.set(parseInt(minValueInput.value) || minProp.value() || 0);
+                minProp.set(parseInt(minValueInput.value) ?? minProp.value() ?? 0);
             };
 
             maxValueInput.onchange = () => {
-                if (!maxValueInput.value) {
+                if (!maxValueInput.value.length) {
                     return;
                 }
 
-                maxProp.set(parseInt(maxValueInput.value) || maxProp.value() || 0);
+                maxProp.set(parseInt(maxValueInput.value) ?? maxProp.value() ?? 0);
             };
 
             maxValueInput.onblur = (e) => {

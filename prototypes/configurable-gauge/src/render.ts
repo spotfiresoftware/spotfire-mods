@@ -13,6 +13,7 @@ export interface Settings {
     animationSpeed: number;
     size: { width: number; height: number };
     maxValue: number;
+    minValue: number;
     gaugeWidth: number;
     style: {
         gauge: {
@@ -99,6 +100,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
     newGauge.append("path").attr("class", "value");
     newGauge.append("text").attr("class", "label-value");
     newGauge.append("text").attr("class", "label");
+    newGauge.append("text").attr("class", "min-label");
+    newGauge.append("text").attr("class", "max-label");
 
     let update = gaugesPaths
         .merge(newGauge)
@@ -165,7 +168,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     update
         .select("text.label")
-        .attr("dy", "0.35em")
+        .attr("dy", "1em")
         .transition("add labels")
         .duration(settings.animationSpeed)
         .attr("font-size", settings.style.label.size)
@@ -174,9 +177,39 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "middle")
-        .attr("y", radius)
+        .attr("y", -Math.cos(maxAngle) * radius + settings.style.label.size)
         .attr("x", 0)
         .text((d) => d.label);
+
+    update
+        .select("text.max-label")
+        .attr("dy", "1em")
+        .transition("add labels")
+        .duration(settings.animationSpeed)
+        .attr("font-size", settings.style.label.size)
+        .attr("font-style", settings.style.label.style)
+        .attr("font-weight", settings.style.label.weight)
+        .attr("fill", (d: any) => settings.style.label.color)
+        .attr("font-family", settings.style.label.fontFamily)
+        .attr("text-anchor", "start")
+        .attr("y", -Math.cos(maxAngle) * radius)
+        .attr("x", Math.sin(maxAngle) * radius)
+        .text((d) => settings.maxValue);
+
+    update
+        .select("text.min-label")
+        .attr("dy", "1em")
+        .transition("add labels")
+        .duration(settings.animationSpeed)
+        .attr("font-size", settings.style.label.size)
+        .attr("font-style", settings.style.label.style)
+        .attr("font-weight", settings.style.label.weight)
+        .attr("fill", (d: any) => settings.style.label.color)
+        .attr("font-family", settings.style.label.fontFamily)
+        .attr("text-anchor", "end")
+        .attr("y", -Math.cos(maxAngle) * radius)
+        .attr("x", -Math.sin(maxAngle) * radius)
+        .text((d) => settings.minValue);
 
     gaugesPaths
         .exit()
