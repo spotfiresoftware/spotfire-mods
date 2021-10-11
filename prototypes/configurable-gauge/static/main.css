@@ -69,6 +69,7 @@ svg {
     width: 31px;
     cursor: pointer;
     height: 31px;
+    fill: currentColor;
     display: block;
 }
 
