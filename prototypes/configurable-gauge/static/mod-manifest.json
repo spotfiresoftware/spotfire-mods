@@ -6,6 +6,11 @@
     "icon": "icon.svg",
     "properties": [
         {
+            "name": "gaugeMin",
+            "defaultValue": 0,
+            "type": "integer"
+        },
+        {
             "name": "gaugeMax",
             "defaultValue": 100,
             "type": "integer"

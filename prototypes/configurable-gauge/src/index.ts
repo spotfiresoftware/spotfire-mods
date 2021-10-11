@@ -14,6 +14,7 @@ Spotfire.initialize(async (mod) => {
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
+        mod.property<number>("gaugeMin"),
         mod.property<number>("gaugeMax"),
         mod.property<number>("gaugeWidth"),
         mod.property<boolean>("showPercent")
@@ -34,6 +35,7 @@ Spotfire.initialize(async (mod) => {
      * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
      * @param dataView
      * @param windowSize
+     * @param minProp
      * @param maxProp
      * @param widthProp
      * @param showPercent
@@ -41,6 +43,7 @@ Spotfire.initialize(async (mod) => {
     async function onChange(
         dataView: DataView,
         windowSize: Spotfire.Size,
+        minProp: ModProperty<number>,
         maxProp: ModProperty<number>,
         widthProp: ModProperty<number>,
         showPercent: ModProperty<boolean>
@@ -49,7 +52,8 @@ Spotfire.initialize(async (mod) => {
         let colorRoot = await (await dataView.hierarchy("Color"))?.root();
 
         let gauges: Gauge[] = colorRoot!.rows().map((row) => {
-            const percent = (row.continuous("Y").value<number>() || 0) / (maxProp.value() || 0);
+            const percent =
+                ((row.continuous("Y").value<number>() || 0) - minProp.value()!) / (maxProp.value()! - minProp.value()!);
             const formattedValue = showPercent.value()
                 ? `${(percent * 100).toPrecision(3)}%`
                 : row.continuous("Y").formattedValue();
@@ -110,6 +114,8 @@ Spotfire.initialize(async (mod) => {
 
         let settingsIcon = document.querySelector(".settings") as HTMLDivElement;
         let settingsArea = document.querySelector(".settings-area") as HTMLDivElement;
+
+        let minValueInput = document.querySelector("#gaugeMin") as HTMLInputElement;
         let maxValueInput = document.querySelector("#gaugeMax") as HTMLInputElement;
         let widthRangeSlider = document.querySelector("#width") as HTMLInputElement;
         let showPercentCheckbox = document.querySelector("#showPercent") as HTMLInputElement;
@@ -117,6 +123,11 @@ Spotfire.initialize(async (mod) => {
         settingsIcon?.classList.toggle("hidden", !context.isEditing);
 
         let currentFocus = document.querySelector(":focus");
+
+        if (currentFocus != maxValueInput) {
+            minValueInput.value = "" + minProp.value();
+        }
+
         if (currentFocus != maxValueInput) {
             maxValueInput.value = "" + maxProp.value();
         }
@@ -131,6 +142,14 @@ Spotfire.initialize(async (mod) => {
 
         settingsIcon.onclick = () => {
             settingsArea.classList.toggle("hidden");
+            minValueInput.onchange = () => {
+                if (!minValueInput.value) {
+                    return;
+                }
+
+                minProp.set(parseInt(minValueInput.value) || minProp.value() || 0);
+            };
+
             maxValueInput.onchange = () => {
                 if (!maxValueInput.value) {
                     return;
