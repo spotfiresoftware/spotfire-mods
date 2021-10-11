@@ -17,6 +17,7 @@ Spotfire.initialize(async (mod) => {
         mod.property<number>("gaugeMin"),
         mod.property<number>("gaugeMax"),
         mod.property<number>("gaugeWidth"),
+        mod.property<number>("gaugeOpacity"),
         mod.property<boolean>("showPercent")
     );
 
@@ -38,6 +39,7 @@ Spotfire.initialize(async (mod) => {
      * @param minProp
      * @param maxProp
      * @param widthProp
+     * @param opacityProp
      * @param showPercent
      */
     async function onChange(
@@ -46,6 +48,7 @@ Spotfire.initialize(async (mod) => {
         minProp: ModProperty<number>,
         maxProp: ModProperty<number>,
         widthProp: ModProperty<number>,
+        opacityProp: ModProperty<number>,
         showPercent: ModProperty<boolean>
     ) {
         mod.controls.errorOverlay.hide();
@@ -95,6 +98,7 @@ Spotfire.initialize(async (mod) => {
             animationSpeed: 250,
             style: {
                 gauge: {
+                    backgroundOpacity: opacityProp.value()!,
                     background: context.styling.scales.line.stroke
                 },
                 marking: { color: context.styling.scales.font.color },
@@ -122,6 +126,7 @@ Spotfire.initialize(async (mod) => {
         let minValueInput = document.querySelector("#gaugeMin") as HTMLInputElement;
         let maxValueInput = document.querySelector("#gaugeMax") as HTMLInputElement;
         let widthRangeSlider = document.querySelector("#width") as HTMLInputElement;
+        let gaugeOpacitySlider = document.querySelector("#gaugeOpacity") as HTMLInputElement;
         let showPercentCheckbox = document.querySelector("#showPercent") as HTMLInputElement;
 
         settingsIcon?.classList.toggle("hidden", !context.isEditing);
@@ -138,6 +143,10 @@ Spotfire.initialize(async (mod) => {
 
         if (currentFocus != widthRangeSlider) {
             widthRangeSlider.value = "" + widthProp.value();
+        }
+
+        if (currentFocus != widthRangeSlider) {
+            gaugeOpacitySlider.value = "" + opacityProp.value();
         }
 
         if (currentFocus != showPercentCheckbox) {
@@ -171,7 +180,11 @@ Spotfire.initialize(async (mod) => {
             };
 
             widthRangeSlider.onchange = () => {
-                widthProp.set(parseInt(widthRangeSlider.value) || widthProp.value() || 0);
+                widthProp.set(parseInt(widthRangeSlider.value));
+            };
+
+            gaugeOpacitySlider.onchange = () => {
+                opacityProp.set(parseInt(gaugeOpacitySlider.value) || 0);
             };
 
             showPercentCheckbox.onchange = () => {
