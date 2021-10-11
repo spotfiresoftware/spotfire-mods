@@ -17,6 +17,7 @@ export interface Settings {
     gaugeWidth: number;
     style: {
         gauge: {
+            backgroundOpacity: number,
             background: string;
         };
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
@@ -129,7 +130,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     update
         .select("path.bg")
-        .attr("opacity", 1)
+        .attr("opacity", settings.style.gauge.backgroundOpacity / 100)
         .transition("add sectors")
         .duration(settings.animationSpeed)
         .attrTween("d", tweenArc({ percent: 1, radius, innerRadius }, 1))

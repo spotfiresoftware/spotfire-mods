@@ -21,6 +21,11 @@
             "type": "integer"
         },
         {
+            "name": "gaugeOpacity",
+            "defaultValue": 100,
+            "type": "integer"
+        },
+        {
             "name": "showPercent",
             "defaultValue": "false",
             "type": "boolean"
