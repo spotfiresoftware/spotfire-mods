@@ -187,7 +187,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("text-anchor", "middle")
         .attr("y", -Math.cos(maxAngle) * radius + (settings.showMinMax ? settings.style.label.size : 3))
         .attr("x", 0)
-        .text((d) => d.label);
+        .text(label);
 
     update
         .select("text.max-label")
@@ -227,6 +227,18 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .duration(settings.animationSpeed / 2)
         .style("opacity", 0)
         .remove();
+
+    function label(d: Gauge) {
+        const fontSize = settings.style.label.size;
+        const fontWidth = fontSize * 0.7;
+
+        let label = d.label;
+        if (label.length > gaugeWidth / fontWidth) {
+            return label.slice(0, Math.max(1, gaugeWidth / fontWidth - 2)) + "…";
+        }
+
+        return d.label;
+    }
 
     function tweenArc(defaultPrevValue: Partial<internalGauge>, overridePercent?: number) {
         return function tweenArc(this: any, data: any) {
