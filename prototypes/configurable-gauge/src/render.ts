@@ -15,6 +15,7 @@ export interface Settings {
     minValue: number;
     maxValue: number;
     showMinMax: boolean;
+    showShake: boolean;
     gaugeWidth: number;
     style: {
         gauge: {
@@ -129,11 +130,15 @@ export async function render(gauges: Gauge[], settings: Settings) {
                 })`
         );
 
+    let shake = (className: string) => (d: Gauge) =>
+        className + " " + (settings.showShake && d.percent > 1 ? "shake" : "");
+
     update
         .select("path.bg")
         .attr("opacity", settings.style.gauge.backgroundOpacity / 100)
         .transition("add sectors")
         .duration(settings.animationSpeed)
+        .attr("class", shake("bg"))
         .attrTween("d", tweenArc({ percent: 1, radius, innerRadius }, 1))
         .attr("fill", (d) => settings.style.gauge.background);
 
@@ -141,6 +146,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .select("path.value")
         .transition("add sectors")
         .duration(settings.animationSpeed)
+        .attr("class", shake("value"))
         .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }))
         .attr("stroke", (d) => ((scale(Math.abs(d.percent)) || 0) > maxAngle ? "red" : "transparent"))
         .attr("stroke-width", 2)

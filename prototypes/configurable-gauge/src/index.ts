@@ -17,7 +17,8 @@ Spotfire.initialize(async (mod) => {
         mod.property<number>("gaugeWidth"),
         mod.property<number>("gaugeOpacity"),
         mod.property<boolean>("showPercent"),
-        mod.property<boolean>("showMinMax")
+        mod.property<boolean>("showMinMax"),
+        mod.property<boolean>("showShake")
     );
 
     reader.subscribe(generalErrorHandler(mod)(onChange), (err) => {
@@ -32,7 +33,8 @@ Spotfire.initialize(async (mod) => {
         widthProp: ModProperty<number>,
         opacityProp: ModProperty<number>,
         showPercent: ModProperty<boolean>,
-        showMinMax: ModProperty<boolean>
+        showMinMax: ModProperty<boolean>,
+        showShake: ModProperty<boolean>
     ) {
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy("Color"))?.root();
@@ -78,6 +80,7 @@ Spotfire.initialize(async (mod) => {
             minValue: minProp.value()!,
             maxValue: maxProp.value()!,
             showMinMax: showMinMax.value()!,
+            showShake: showShake.value()!,
             gaugeWidth: widthProp.value() || 20,
             animationSpeed: 250,
             style: {
@@ -111,7 +114,8 @@ Spotfire.initialize(async (mod) => {
                 { label: "Arc width:", type: "range", property: widthProp, max: 100, min: 2, step: 2 },
                 { label: "Background opacity:", type: "range", property: opacityProp, max: 100, min: 0, step: 2 },
                 { label: "Show percent:", type: "checkbox", property: showPercent },
-                { label: "Show min and max:", type: "checkbox", property: showMinMax }
+                { label: "Show min and max:", type: "checkbox", property: showMinMax },
+                { label: "Shake when full:", type: "checkbox", property: showShake }
             ]);
         }
 
