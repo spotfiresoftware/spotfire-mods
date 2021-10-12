@@ -12,12 +12,13 @@ export interface Settings {
     mouseLeave?(): void;
     animationSpeed: number;
     size: { width: number; height: number };
-    maxValue: number;
     minValue: number;
+    maxValue: number;
+    showMinMax: boolean;
     gaugeWidth: number;
     style: {
         gauge: {
-            backgroundOpacity: number,
+            backgroundOpacity: number;
             background: string;
         };
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
@@ -178,7 +179,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "middle")
-        .attr("y", -Math.cos(maxAngle) * radius + settings.style.label.size)
+        .attr("y", -Math.cos(maxAngle) * radius + (settings.showMinMax ? settings.style.label.size : 3))
         .attr("x", 0)
         .text((d) => d.label);
 
@@ -187,6 +188,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("dy", "1em")
         .transition("add labels")
         .duration(settings.animationSpeed)
+        .style("opacity", settings.showMinMax ? 1 : 0)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
@@ -202,6 +204,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("dy", "1em")
         .transition("add labels")
         .duration(settings.animationSpeed)
+        .style("opacity", settings.showMinMax ? 1 : 0)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
