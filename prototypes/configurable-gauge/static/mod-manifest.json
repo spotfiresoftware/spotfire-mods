@@ -29,6 +29,11 @@
             "name": "showPercent",
             "defaultValue": "false",
             "type": "boolean"
+        },
+        {
+            "name": "showMinMax",
+            "defaultValue": "false",
+            "type": "boolean"
         }
     ],
     "dataViewDefinition": {

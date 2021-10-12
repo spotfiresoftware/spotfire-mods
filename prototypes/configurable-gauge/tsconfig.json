@@ -1,6 +1,9 @@
 {
     "compilerOptions": {
         "target": "es5",
+        "jsx": "react-jsx",
+        "jsxImportSource": "preact",
+        "moduleResolution": "node",
         "noUnusedLocals": true,
         "allowJs": false,
         "allowUnreachableCode": false,
@@ -19,6 +22,6 @@
         },
         "typeRoots": ["./spotfire", "./node_modules/@types"]
     },
-    "include": ["./src/**/*.ts", "./test/**/*.ts", "./spotfire/**/*.d.ts"],
+    "include": ["./src/**/*.ts", "./src/**/*.tsx", "./test/**/*.ts", "./spotfire/**/*.d.ts"],
     "exclude": ["../node_modules"]
 }

@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { render, Gauge } from "./render";
 import { DataView, ModProperty } from "spotfire-api";
+import { renderSettings } from "./settings";
 
 const Spotfire = window.Spotfire;
 const DEBUG = true;
@@ -8,9 +9,6 @@ const DEBUG = true;
 Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
-    /**
-     * Create reader function which is actually a one time listener for the provided values.
-     */
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
@@ -18,30 +16,14 @@ Spotfire.initialize(async (mod) => {
         mod.property<number>("gaugeMax"),
         mod.property<number>("gaugeWidth"),
         mod.property<number>("gaugeOpacity"),
-        mod.property<boolean>("showPercent")
+        mod.property<boolean>("showPercent"),
+        mod.property<boolean>("showMinMax")
     );
 
-    /**
-     * Creates a function that is part of the main read-render loop.
-     * It checks for valid data and will print errors in case of bad data or bad renders.
-     * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
-     */
     reader.subscribe(generalErrorHandler(mod)(onChange), (err) => {
         mod.controls.errorOverlay.show(err);
     });
 
-    /**
-     * The function that is part of the main read-render loop.
-     * It checks for valid data and will print errors in case of bad data or bad renders.
-     * It calls the listener (reader) created earlier and adds itself as a callback to complete the loop.
-     * @param dataView
-     * @param windowSize
-     * @param minProp
-     * @param maxProp
-     * @param widthProp
-     * @param opacityProp
-     * @param showPercent
-     */
     async function onChange(
         dataView: DataView,
         windowSize: Spotfire.Size,
@@ -49,7 +31,8 @@ Spotfire.initialize(async (mod) => {
         maxProp: ModProperty<number>,
         widthProp: ModProperty<number>,
         opacityProp: ModProperty<number>,
-        showPercent: ModProperty<boolean>
+        showPercent: ModProperty<boolean>,
+        showMinMax: ModProperty<boolean>
     ) {
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy("Color"))?.root();
@@ -94,6 +77,7 @@ Spotfire.initialize(async (mod) => {
             size: windowSize,
             minValue: minProp.value()!,
             maxValue: maxProp.value()!,
+            showMinMax: showMinMax.value()!,
             gaugeWidth: widthProp.value() || 20,
             animationSpeed: 250,
             style: {
@@ -120,81 +104,16 @@ Spotfire.initialize(async (mod) => {
             }
         });
 
-        let settingsIcon = document.querySelector(".settings") as HTMLDivElement;
-        let settingsArea = document.querySelector(".settings-area") as HTMLDivElement;
-
-        let minValueInput = document.querySelector("#gaugeMin") as HTMLInputElement;
-        let maxValueInput = document.querySelector("#gaugeMax") as HTMLInputElement;
-        let widthRangeSlider = document.querySelector("#width") as HTMLInputElement;
-        let gaugeOpacitySlider = document.querySelector("#gaugeOpacity") as HTMLInputElement;
-        let showPercentCheckbox = document.querySelector("#showPercent") as HTMLInputElement;
-
-        settingsIcon?.classList.toggle("hidden", !context.isEditing);
-
-        let currentFocus = document.querySelector(":focus");
-
-        if (currentFocus != maxValueInput) {
-            minValueInput.value = "" + minProp.value();
+        if (context.isEditing) {
+            renderSettings([
+                { label: "Scale min value:", type: "text", property: minProp },
+                { label: "Scale max value:", type: "text", property: maxProp },
+                { label: "Arc width:", type: "range", property: widthProp, max: 100, min: 2, step: 2 },
+                { label: "Background opacity:", type: "range", property: opacityProp, max: 100, min: 0, step: 2 },
+                { label: "Show percent:", type: "checkbox", property: showPercent },
+                { label: "Show min and max:", type: "checkbox", property: showMinMax }
+            ]);
         }
-
-        if (currentFocus != maxValueInput) {
-            maxValueInput.value = "" + maxProp.value();
-        }
-
-        if (currentFocus != widthRangeSlider) {
-            widthRangeSlider.value = "" + widthProp.value();
-        }
-
-        if (currentFocus != widthRangeSlider) {
-            gaugeOpacitySlider.value = "" + opacityProp.value();
-        }
-
-        if (currentFocus != showPercentCheckbox) {
-            showPercentCheckbox.checked = showPercent.value()!;
-        }
-
-        settingsArea.onclick = () => {
-            settingsArea.classList.remove("tucked-away");
-        };
-
-        settingsIcon.onclick = () => {
-            settingsArea.classList.toggle("tucked-away");
-            minValueInput.onchange = () => {
-                if (!minValueInput.value.length) {
-                    return;
-                }
-
-                minProp.set(parseInt(minValueInput.value) ?? minProp.value() ?? 0);
-            };
-
-            maxValueInput.onchange = () => {
-                if (!maxValueInput.value.length) {
-                    return;
-                }
-
-                maxProp.set(parseInt(maxValueInput.value) ?? maxProp.value() ?? 0);
-            };
-
-            maxValueInput.onblur = (e) => {
-                settingsArea.classList.add("tucked-away");
-            };
-
-            widthRangeSlider.onchange = () => {
-                widthProp.set(parseInt(widthRangeSlider.value));
-            };
-
-            gaugeOpacitySlider.onchange = () => {
-                opacityProp.set(parseInt(gaugeOpacitySlider.value) || 0);
-            };
-
-            showPercentCheckbox.onchange = () => {
-                showPercent.set(showPercentCheckbox.checked);
-            };
-
-            widthRangeSlider.onblur = (e) => {
-                settingsArea.classList.add("tucked-away");
-            };
-        };
 
         context.signalRenderComplete();
     }
