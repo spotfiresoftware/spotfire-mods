@@ -104,3 +104,56 @@ body,
     text-overflow: ellipsis;
     text-align: center;
 }
+
+#overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#overlay > div {
+    line-height: 2em;
+}
+
+#overlay.visible {
+    display: flex;
+}
+
+#overlay .hidden 
+{
+    display: none;
+}
+
+.icon-button {
+    padding: 5px;
+    position: absolute;
+    top: 0;
+    width: 31px;
+    cursor: pointer;
+    height: 31px;
+    display: none;
+    opacity: 0.6;
+}
+
+.icon-button svg {
+    fill: currentColor;
+    width: 21px;
+    height: 21px;
+}
+
+.icon-button:hover {
+    opacity: 1;
+}
+
+.icon-button.visible {
+    display: block;
+}
+
+#settings {
+    right: 0;
+}
