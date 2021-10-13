@@ -22,6 +22,10 @@ export interface Settings {
             backgroundOpacity: number;
             background: string;
         };
+        ticks: {
+            backgroundOpacity: number;
+            background: string;
+        };
         label: { size: number; weight: string; style: string; color: string; fontFamily: string };
         value: { size: number; weight: string; style: string; color: string; fontFamily: string };
         marking: { color: string };
@@ -242,10 +246,10 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .transition("ticks")
         .duration(settings.animationSpeed)
         .attr("d", (d) => scaleArc(d))
+        .style("opacity", settings.style.ticks.backgroundOpacity / 100)
         .attr("fill", function (d) {
             let g: Gauge = this.parentNode.parentNode.__data__;
-
-            return scale(g.percent)! > d.x0 ? g.color : settings.style.label.color;
+            return scale(g.percent)! > d.x0 ? g.color : settings.style.ticks.background;
         });
 
     gaugesPaths
