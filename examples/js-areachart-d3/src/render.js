@@ -49,9 +49,8 @@ const xLabelsContainer = modContainer.append("div").attr("class", "x-axis-label-
  * @param {Spotfire.ModProperty<string>} chartType - chartType
  * @param {Spotfire.ModProperty<boolean>} roundedCurves - roundedCurves
  * @param {Spotfire.ModProperty<boolean>} gapfill - gapfill
- * @param {Spotfire.ModProperty<boolean>} limitless - limitless
  */
-export async function render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill, limitless) {
+export async function render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill) {
     if (state.preventRender) {
         // Early return if the state currently disallows rendering.
         return;
@@ -81,45 +80,24 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
 
     mod.controls.errorOverlay.hide("dataView");
 
-    if (context.isEditing) {
-        document.querySelector("#settings").classList.add("visible");
-    } else {
-        document.querySelector("#settings").classList.remove("visible");
-    }
-
-    document.querySelector("#settings").addEventListener("click", showSettings);
-
     // Return and wait for next call to render when reading data was aborted.
     // Last rendered data view is still valid from a users perspective since
     // a document modification was made during a progress indication.
     // Hard abort if row count exceeds an arbitrary selected limit
-    const xLimit = 10000;
+    const xLimit = 1250;
     const colorLimit = 100;
-
-    const xHierarchy = await dataView.hierarchy("X");
-    const colorHierarchy = await dataView.hierarchy("Color");
-
-    const colorCount = colorHierarchy.leafCount;
-    const xCount = xHierarchy.leafCount;
-    if (!limitless.value() && (colorCount > colorLimit || xCount > xLimit)) {
+    const colorCount = (await dataView.hierarchy("Color")).leafCount;
+    const xCount = (await dataView.hierarchy("X")).leafCount;
+    if (colorCount > colorLimit || xCount > xLimit) {
         svg.selectAll("*").remove();
-        xLabelsContainer.selectAll("*").remove();
-        if (context.isEditing) {
-            document.querySelector("#overlay").classList.add("visible");
-            document.querySelector("#xCount").classList.toggle("hidden", xCount <= xLimit);
-            document.querySelector("#xLevels").classList.toggle("hidden", xCount <= xLimit || xHierarchy.levels.length < 2);
-            document.querySelector("#colorCount").classList.toggle("hidden", colorCount <= colorLimit);
-        } else {
-            mod.controls.errorOverlay.show(
-                `Exceeded data size limit (colors: ${colorLimit}, x: ${xLimit})`,
-                "rowCount"
-            );
-        }
+        mod.controls.errorOverlay.show(`Exceeded data size limit (colors: ${colorLimit}, x: ${xLimit})`, "rowCount");
         return;
     } else {
-        document.querySelector("#overlay").classList.remove("visible");
         mod.controls.errorOverlay.hide("rowCount");
     }
+
+    const colorHierarchy = await dataView.hierarchy("Color");
+    const xHierarchy = await dataView.hierarchy("X");
 
     // By awaiting one hierarchy root, all rows will be fetched.
     const colorRoot = await colorHierarchy.root();
@@ -143,6 +121,8 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         gapfill.value()
     );
 
+    const xAxisMeta = await mod.visualization.axis("X");
+    const yAxisMeta = await mod.visualization.axis("Y");
     const colorAxisMeta = await mod.visualization.axis("Color");
 
     const margin = { top: 20, right: 40, bottom: 40, left: 80 };
@@ -675,65 +655,51 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     /**
      * Popout content
      */
-    function popoutContent() {
-        return [
-            section({
-                heading: "Chart Type",
-                children: [
-                    radioButton({
-                        name: chartType.name,
-                        text: "Overlapping",
-                        value: "overlapping",
-                        checked: chartType.value() == "overlapping"
-                    }),
-                    radioButton({
-                        name: chartType.name,
-                        text: "Stacked",
-                        value: "stacked",
-                        checked: chartType.value() == "stacked"
-                    }),
-                    radioButton({
-                        name: chartType.name,
-                        text: "100% Stacked",
-                        value: "percentStacked",
-                        checked: chartType.value() == "percentStacked"
-                    })
-                ]
-            }),
-            section({
-                heading: "Appearance",
-                children: [
-                    checkbox({
-                        name: roundedCurves.name,
-                        text: "Rounded curves",
-                        checked: roundedCurves.value(),
-                        enabled: true,
-                        tooltip: "Create rounded curves (cubic splines) when creating the areas."
-                    }),
-                    checkbox({
-                        name: gapfill.name,
-                        text: "Fill gap on empty or missing value",
-                        checked: gapfill.value(),
-                        enabled: true,
-                        tooltip:
-                            "Fill gaps in the X axis when the data contains empty (null) values or when there is no data point."
-                    })
-                ]
-            }),
-            section({
-                heading: "Performance",
-                children: [
-                    checkbox({
-                        name: limitless.name,
-                        text: "Bypass rowcount limit",
-                        checked: limitless.value(),
-                        enabled: true,
-                        tooltip: "Bypass rowcount limit. This may impact the overall performance of Spotfire."
-                    })
-                ]
-            })
-        ];
-    }
+    const popoutContent = () => [
+        section({
+            heading: "Chart Type",
+            children: [
+                radioButton({
+                    name: chartType.name,
+                    text: "Overlapping",
+                    value: "overlapping",
+                    checked: chartType.value() == "overlapping"
+                }),
+                radioButton({
+                    name: chartType.name,
+                    text: "Stacked",
+                    value: "stacked",
+                    checked: chartType.value() == "stacked"
+                }),
+                radioButton({
+                    name: chartType.name,
+                    text: "100% Stacked",
+                    value: "percentStacked",
+                    checked: chartType.value() == "percentStacked"
+                })
+            ]
+        }),
+        section({
+            heading: "Appearance",
+            children: [
+                checkbox({
+                    name: roundedCurves.name,
+                    text: "Rounded curves",
+                    checked: roundedCurves.value(),
+                    enabled: true,
+                    tooltip: "Create rounded curves (cubic splines) when creating the areas."
+                }),
+                checkbox({
+                    name: gapfill.name,
+                    text: "Fill gap on empty or missing value",
+                    checked: gapfill.value(),
+                    enabled: true,
+                    tooltip:
+                        "Fill gaps in the X axis when the data contains empty (null) values or when there is no data point."
+                })
+            ]
+        })
+    ];
 
     /**
      * Creates a curve function based on curve type.
@@ -804,7 +770,13 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         return { xScale, yScale, line, area, fillOpacity, yScaleTickFormat };
     }
 
-    function showSettings(e) {
+    /**
+     * Show popup on X axis click
+     * @type {HTMLElement}
+     */
+    const labelContainer = document.querySelector(".x-axis-label-container");
+    labelContainer.classList.toggle("editable", context.isEditing);
+    labelContainer.onclick = (e) => {
         if (!context.isEditing) {
             return;
         }
@@ -813,18 +785,17 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         popout.show(
             {
                 x: e.x,
-                y: e.y,
+                y: windowSize.height - margin.bottom,
                 autoClose: true,
-                alignment: "Top",
+                alignment: "Bottom",
                 onChange: (event) => {
                     const { name, value } = event;
                     name == roundedCurves.name && roundedCurves.set(value);
                     name == chartType.name && chartType.set(value);
                     name == gapfill.name && gapfill.set(value);
-                    name == limitless.name && limitless.set(value);
                 }
             },
             popoutContent
         );
-    }
+    };
 }

@@ -35,8 +35,7 @@ Spotfire.initialize(async (mod) => {
         mod.windowSize(),
         mod.property("chartType"),
         mod.property("roundedCurves"),
-        mod.property("gapfill"),
-        mod.property("limitless")
+        mod.property("gapfill")
     );
 
     /**
@@ -58,11 +57,10 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.AnalysisProperty<string>} chartType
      * @param {Spotfire.AnalysisProperty<boolean>} roundedCurves
      * @param {Spotfire.AnalysisProperty<boolean>} gapfill
-     * @param {Spotfire.AnalysisProperty<boolean>} limitless
      */
-    async function onChange(dataView, windowSize, chartType, roundedCurves, gapfill, limitless) {
+    async function onChange(dataView, windowSize, chartType, roundedCurves, gapfill) {
         try {
-            await render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill, limitless);
+            await render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill);
 
             context.signalRenderComplete();
 
