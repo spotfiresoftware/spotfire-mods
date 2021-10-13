@@ -63,9 +63,9 @@ export async function render(gauges: Gauge[], settings: Settings) {
             (settings.showMinMax ? settings.style.label.size * 2 : settings.style.label.size)
     );
 
-    const lockTickRadius = radius;
+    const longTickRadius = radius;
     // Shrink radius to make room for ticks
-    radius = radius - 10;
+    radius = radius - Math.min(radius / 10, 10);
 
     const innerRadius = radius - (radius * settings.gaugeWidth) / 100;
     (gauges as internalGauge[]).forEach((g) => {
@@ -84,13 +84,13 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .innerRadius((d) => d.innerRadius)
         .outerRadius((d) => d.radius);
 
-    const tickWidth = (2 * Math.PI) / 720;
+    const tickWidth = (2 * Math.PI) / 360;
     const scaleArc = d3
         .arc<{ x0: number; height: number }>()
         .startAngle((d) => d.x0 - tickWidth / 2)
         .endAngle((d) => d.x0 + tickWidth / 2)
         .innerRadius((d) => innerRadius)
-        .outerRadius((d) => (d.height ? lockTickRadius : radius));
+        .outerRadius((d) => (d.height ? longTickRadius : radius));
 
     svg.attr("width", settings.size.width)
         .attr("height", settings.size.height)
@@ -198,7 +198,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "middle")
-        .attr("y", -Math.cos(maxAngle) * radius + (settings.showMinMax ? settings.style.label.size : 3))
+        .attr("y", -Math.cos(maxAngle) * longTickRadius + (settings.showMinMax ? settings.style.label.size : 3))
         .attr("x", 0)
         .text(label);
 
@@ -214,8 +214,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "start")
-        .attr("y", -Math.cos(maxAngle) * radius)
-        .attr("x", Math.sin(maxAngle) * radius)
+        .attr("y", -Math.cos(maxAngle) * longTickRadius)
+        .attr("x", Math.sin(maxAngle) * longTickRadius)
         .text((d) => settings.maxValue);
 
     update
@@ -230,8 +230,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "end")
-        .attr("y", -Math.cos(maxAngle) * radius)
-        .attr("x", -Math.sin(maxAngle) * radius)
+        .attr("y", -Math.cos(maxAngle) * longTickRadius)
+        .attr("x", -Math.sin(maxAngle) * longTickRadius)
         .text((d) => settings.minValue);
 
     let ticks = update
