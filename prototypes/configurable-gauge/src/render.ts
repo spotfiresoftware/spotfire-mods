@@ -59,6 +59,10 @@ export async function render(gauges: Gauge[], settings: Settings) {
             (settings.showMinMax ? settings.style.label.size * 2 : settings.style.label.size)
     );
 
+    const lockTickRadius = radius;
+    // Shrink radius to make room for ticks
+    radius = radius - 10;
+
     const innerRadius = radius - (radius * settings.gaugeWidth) / 100;
     (gauges as internalGauge[]).forEach((g) => {
         g.innerRadius = innerRadius;
@@ -75,6 +79,14 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .endAngle((d) => Math.min(scale(Math.max(d.percent, 0)) || 0, maxAngle))
         .innerRadius((d) => d.innerRadius)
         .outerRadius((d) => d.radius);
+
+    const tickWidth = (2 * Math.PI) / 720;
+    const scaleArc = d3
+        .arc<{ x0: number; height: number }>()
+        .startAngle((d) => d.x0 - tickWidth / 2)
+        .endAngle((d) => d.x0 + tickWidth / 2)
+        .innerRadius((d) => innerRadius)
+        .outerRadius((d) => (d.height ? lockTickRadius : radius));
 
     svg.attr("width", settings.size.width)
         .attr("height", settings.size.height)
@@ -96,6 +108,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     newGauge.append("circle").attr("class", "click-zone");
     newGauge.append("path").attr("class", "bg");
+    newGauge.append("g").attr("class", "scale").style("cursor", "default").style("user-select", "none");
     newGauge.append("path").attr("class", "value");
     newGauge.append("text").attr("class", "label-value");
     newGauge.append("text").attr("class", "label");
@@ -216,6 +229,24 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("y", -Math.cos(maxAngle) * radius)
         .attr("x", -Math.sin(maxAngle) * radius)
         .text((d) => settings.minValue);
+
+    let ticks = update
+        .select<any>("g.scale")
+        .selectAll<any, any>("path")
+        .data(scale.ticks(20).map((a, i) => ({ x0: scale(a)!, height: (i + 1) % 2 })));
+
+    let newTicks = ticks.enter().append("path").attr("class", "tick");
+
+    ticks
+        .merge(newTicks)
+        .transition("ticks")
+        .duration(settings.animationSpeed)
+        .attr("d", (d) => scaleArc(d))
+        .attr("fill", function (d) {
+            let g: Gauge = this.parentNode.parentNode.__data__;
+
+            return scale(g.percent)! > d.x0 ? g.color : settings.style.label.color;
+        });
 
     gaugesPaths
         .exit()
