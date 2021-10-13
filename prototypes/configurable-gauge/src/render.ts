@@ -55,7 +55,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     let radius = Math.min(
         settings.size.width / colCount / 2 - padding / 2,
-        settings.size.height / rowCount / 2 - settings.style.label.size
+        settings.size.height / rowCount / 2 -
+            (settings.showMinMax ? settings.style.label.size * 2 : settings.style.label.size)
     );
 
     const innerRadius = radius - (radius * settings.gaugeWidth) / 100;
