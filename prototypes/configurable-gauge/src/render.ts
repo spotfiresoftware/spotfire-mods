@@ -67,16 +67,11 @@ export async function render(gauges: Gauge[], settings: Settings) {
     const shiftAngle = Math.PI - 5 / 8;
     const maxAngle = Math.PI - 5 / 8;
     let scale = d3.scaleLinear().range([-shiftAngle, maxAngle]).domain([0, 1]);
-    let negScale = d3.scaleLinear().range([maxAngle, -shiftAngle]).domain([0, 1]);
 
     const arc = d3
         .arc<internalGauge>()
-        .startAngle((d) => (d.percent < 0 ? negScale(0) || 0 : scale(0) || 0))
-        .endAngle((d) =>
-            d.percent < 0
-                ? Math.max(negScale(Math.abs(d.percent)) || 0, -shiftAngle)
-                : Math.min(scale(d.percent) || 0, maxAngle)
-        )
+        .startAngle((d) => scale(0)!)
+        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0)) || 0, maxAngle))
         .innerRadius((d) => d.innerRadius)
         .outerRadius((d) => d.radius);
 
@@ -148,7 +143,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .duration(settings.animationSpeed)
         .attr("class", shake("value"))
         .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }))
-        .attr("stroke", (d) => ((scale(Math.abs(d.percent)) || 0) > maxAngle ? "red" : "transparent"))
+        .attr("stroke", (d) => ((scale(Math.max(d.percent, 0)) || 0) > maxAngle ? "red" : "transparent"))
         .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
 
