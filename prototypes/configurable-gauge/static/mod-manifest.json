@@ -26,6 +26,11 @@
             "type": "integer"
         },
         {
+            "name": "ticksOpacity",
+            "defaultValue": 100,
+            "type": "integer"
+        },
+        {
             "name": "showPercent",
             "defaultValue": "false",
             "type": "boolean"

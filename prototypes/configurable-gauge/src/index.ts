@@ -16,6 +16,7 @@ Spotfire.initialize(async (mod) => {
         mod.property<number>("gaugeMax"),
         mod.property<number>("gaugeWidth"),
         mod.property<number>("gaugeOpacity"),
+        mod.property<number>("ticksOpacity"),
         mod.property<boolean>("showPercent"),
         mod.property<boolean>("showMinMax"),
         mod.property<boolean>("showShake")
@@ -32,6 +33,7 @@ Spotfire.initialize(async (mod) => {
         maxProp: ModProperty<number>,
         widthProp: ModProperty<number>,
         opacityProp: ModProperty<number>,
+        ticksOpacityProp: ModProperty<number>,
         showPercent: ModProperty<boolean>,
         showMinMax: ModProperty<boolean>,
         showShake: ModProperty<boolean>
@@ -88,6 +90,10 @@ Spotfire.initialize(async (mod) => {
                     backgroundOpacity: opacityProp.value()!,
                     background: context.styling.scales.line.stroke
                 },
+                ticks: {
+                    backgroundOpacity: ticksOpacityProp.value()!,
+                    background: context.styling.scales.line.stroke
+                },
                 marking: { color: context.styling.scales.font.color },
                 background: { color: context.styling.general.backgroundColor },
                 value: {
@@ -113,6 +119,7 @@ Spotfire.initialize(async (mod) => {
                 { label: "Scale max value:", type: "text", property: maxProp },
                 { label: "Arc width:", type: "range", property: widthProp, max: 100, min: 2, step: 2 },
                 { label: "Background opacity:", type: "range", property: opacityProp, max: 100, min: 0, step: 2 },
+                { label: "Scale ticks opacity:", type: "range", property: ticksOpacityProp, max: 100, min: 0, step: 2 },
                 { label: "Show percent:", type: "checkbox", property: showPercent },
                 { label: "Show min and max:", type: "checkbox", property: showMinMax },
                 { label: "Shake when full:", type: "checkbox", property: showShake }
