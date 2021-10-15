@@ -88,7 +88,7 @@ Spotfire.initialize(async (mod) => {
             showMinMax: showMinMax.value()!,
             showShake: showShake.value()!,
             arcWidth: widthProp.value() || 20,
-            animationSpeed: 250,
+            animationSpeed: context.interactive ? 250 : 0,
             style: {
                 gauge: {
                     backgroundOpacity: opacityProp.value()!,
