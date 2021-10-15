@@ -9,6 +9,8 @@ const DEBUG = true;
 Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
+    const svg = d3.select("#mod-container").append("svg").attr("xmlns", "http://www.w3.org/2000/svg");
+
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
@@ -71,6 +73,7 @@ Spotfire.initialize(async (mod) => {
         });
 
         render(gauges, {
+            svg,
             click(d) {
                 if (d) {
                     d.mark();
@@ -84,7 +87,7 @@ Spotfire.initialize(async (mod) => {
             size: windowSize,
             showMinMax: showMinMax.value()!,
             showShake: showShake.value()!,
-            gaugeWidth: widthProp.value() || 20,
+            arcWidth: widthProp.value() || 20,
             animationSpeed: 250,
             style: {
                 gauge: {

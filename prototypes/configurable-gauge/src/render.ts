@@ -2,19 +2,15 @@
 import * as d3 from "d3";
 import { grid } from "./layout";
 
-/**
- * Main svg container
- */
-const svg = d3.select("#mod-container").append("svg").attr("xmlns", "http://www.w3.org/2000/svg");
-
 export interface Settings {
-    click(d: Gauge | null): void;
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
+    click?(d: Gauge | null): void;
     mouseLeave?(): void;
-    animationSpeed: number;
-    size: { width: number; height: number };
-    showMinMax: boolean;
-    showShake: boolean;
-    gaugeWidth: number;
+    animationSpeed?: number;
+    size?: { width: number; height: number };
+    showMinMax?: boolean;
+    showShake?: boolean;
+    arcWidth?: number;
     style: {
         gauge: {
             backgroundOpacity: number;
@@ -49,25 +45,28 @@ interface internalGauge extends Gauge {
 }
 
 export async function render(gauges: Gauge[], settings: Settings) {
-    let padding = settings.size.width / 50;
+    const { size = { width: 50, height: 50 } } = settings;
+    const { animationSpeed = 0 } = settings;
+    const { arcWidth = 10 } = settings;
+
+    let padding = size.width / 50;
 
     const gaugeCount = gauges.length;
-    let [rowCount, colCount] = grid(settings.size.width - padding, settings.size.height - padding, gaugeCount);
+    let [rowCount, colCount] = grid(size.width - padding, size.height - padding, gaugeCount);
 
-    let gaugeWidth = settings.size.width / colCount;
-    let gaugeHeight = settings.size.height / rowCount;
+    let gaugeWidth = size.width / colCount;
+    let gaugeHeight = size.height / rowCount;
 
     let radius = Math.min(
-        settings.size.width / colCount / 2 - padding / 2,
-        settings.size.height / rowCount / 2 -
-            (settings.showMinMax ? settings.style.label.size * 2 : settings.style.label.size)
+        size.width / colCount / 2 - padding / 2,
+        size.height / rowCount / 2 - (settings.showMinMax ? settings.style.label.size * 2 : settings.style.label.size)
     );
 
     const longTickRadius = radius;
     // Shrink radius to make room for ticks
     radius = radius - Math.min(radius / 10, 10);
 
-    const innerRadius = radius - (radius * settings.gaugeWidth) / 100;
+    const innerRadius = radius - (radius * arcWidth) / 100;
     (gauges as internalGauge[]).forEach((g) => {
         g.innerRadius = innerRadius;
         g.radius = radius;
@@ -92,11 +91,12 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .innerRadius((d) => innerRadius)
         .outerRadius((d) => (d.height ? longTickRadius : radius));
 
-    svg.attr("width", settings.size.width)
-        .attr("height", settings.size.height)
-        .on("click", () => settings.click(null));
+    settings.svg
+        .attr("width", size.width)
+        .attr("height", size.height)
+        .on("click", () => settings.click?.(null));
 
-    let gaugesPaths = svg.selectAll<any, Gauge>("g.gauge").data(gauges, (d: Gauge) => d.key);
+    let gaugesPaths = settings.svg.selectAll<any, Gauge>("g.gauge").data(gauges, (d: Gauge) => d.key);
 
     let newGauge = gaugesPaths
         .enter()
@@ -134,7 +134,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     update
         .transition("Position gauges")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .attr(
             "transform",
             (_, i) =>
@@ -150,7 +150,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .select("path.bg")
         .attr("opacity", settings.style.gauge.backgroundOpacity / 100)
         .transition("add sectors")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .attr("class", shake("bg"))
         .attrTween("d", tweenArc({ percent: 1, radius, innerRadius }, 1))
         .attr("fill", (d) => settings.style.gauge.background);
@@ -158,7 +158,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
     update
         .select("path.value")
         .transition("add sectors")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .attr("class", shake("value"))
         .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }))
         .attr("stroke", (d) => ((scale(Math.max(d.percent, 0)) || 0) > maxAngle ? "red" : "transparent"))
@@ -168,7 +168,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
     update
         .select("circle.click-zone")
         .transition("add sectors")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .attr("r", radius)
         .attr("fill", "transparent");
 
@@ -176,7 +176,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .select("text.label-value")
         .attr("dy", "0.35em")
         .transition("add label value")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .attr("font-size", settings.style.value.size)
         .attr("font-style", settings.style.value.style)
         .attr("font-weight", settings.style.value.weight)
@@ -191,7 +191,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .select("text.label")
         .attr("dy", "1em")
         .transition("add labels")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
@@ -206,7 +206,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .select("text.max-label")
         .attr("dy", "1em")
         .transition("add labels")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .style("opacity", settings.showMinMax ? 1 : 0)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
@@ -222,7 +222,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .select("text.min-label")
         .attr("dy", "1em")
         .transition("add labels")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .style("opacity", settings.showMinMax ? 1 : 0)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
@@ -244,7 +244,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
     ticks
         .merge(newTicks)
         .transition("ticks")
-        .duration(settings.animationSpeed)
+        .duration(animationSpeed)
         .attr("d", (d) => scaleArc(d))
         .style("opacity", settings.style.ticks.backgroundOpacity / 100)
         .attr("fill", function (d) {
@@ -255,7 +255,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
     gaugesPaths
         .exit()
         .transition("add sectors")
-        .duration(settings.animationSpeed / 2)
+        .duration(animationSpeed / 2)
         .style("opacity", 0)
         .remove();
 
