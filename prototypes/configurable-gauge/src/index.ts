@@ -47,7 +47,7 @@ Spotfire.initialize(async (mod) => {
             const percent = (value - min) / (max - min);
             const formattedValue = showPercent.value()
                 ? `${(percent * 100).toPrecision(3)}%`
-                : row.continuous("Y").formattedValue();
+                : row.continuous("Value").formattedValue();
 
             return {
                 label: row.categorical("Gauge").formattedValue(),
