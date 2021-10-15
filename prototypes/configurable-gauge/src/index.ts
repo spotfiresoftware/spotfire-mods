@@ -12,8 +12,6 @@ Spotfire.initialize(async (mod) => {
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
-        mod.property<number>("gaugeMin"),
-        mod.property<number>("gaugeMax"),
         mod.property<number>("gaugeWidth"),
         mod.property<number>("gaugeOpacity"),
         mod.property<number>("ticksOpacity"),
@@ -29,8 +27,6 @@ Spotfire.initialize(async (mod) => {
     async function onChange(
         dataView: DataView,
         windowSize: Spotfire.Size,
-        minProp: ModProperty<number>,
-        maxProp: ModProperty<number>,
         widthProp: ModProperty<number>,
         opacityProp: ModProperty<number>,
         ticksOpacityProp: ModProperty<number>,
@@ -41,15 +37,20 @@ Spotfire.initialize(async (mod) => {
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy("Color"))?.root();
 
+        let maxValue = colorRoot!.rows().reduce((p, r) => Math.max(p, r.continuous("Max").value() || 0), 0);
+
         let gauges: Gauge[] = colorRoot!.rows().map((row) => {
-            const percent =
-                ((row.continuous("Y").value<number>() || 0) - minProp.value()!) / (maxProp.value()! - minProp.value()!);
+            let min = row.continuous("Min").value<number>() || 0;
+            let max = row.continuous("Max").value<number>() || maxValue;
+            let value = row.continuous("Value").value<number>() || 0;
+
+            const percent = (value - min) / (max - min);
             const formattedValue = showPercent.value()
                 ? `${(percent * 100).toPrecision(3)}%`
                 : row.continuous("Y").formattedValue();
 
             return {
-                label: row.categorical("X").formattedValue(),
+                label: row.categorical("Gauge").formattedValue(),
                 formattedValue,
                 color: row.color().hexCode,
                 key: row.elementId(),
@@ -63,7 +64,9 @@ Spotfire.initialize(async (mod) => {
                 mouseOver() {
                     mod.controls.tooltip.show(row);
                 },
-                percent
+                percent,
+                minLabel: row.continuous("Min").formattedValue(),
+                maxLabel: row.continuous("Max").formattedValue()
             } as Gauge;
         });
 
@@ -79,8 +82,6 @@ Spotfire.initialize(async (mod) => {
                 mod.controls.tooltip.hide();
             },
             size: windowSize,
-            minValue: minProp.value()!,
-            maxValue: maxProp.value()!,
             showMinMax: showMinMax.value()!,
             showShake: showShake.value()!,
             gaugeWidth: widthProp.value() || 20,
@@ -115,8 +116,6 @@ Spotfire.initialize(async (mod) => {
 
         if (context.isEditing) {
             renderSettings([
-                { label: "Scale min value:", type: "text", property: minProp },
-                { label: "Scale max value:", type: "text", property: maxProp },
                 { label: "Arc width:", type: "range", property: widthProp, max: 100, min: 2, step: 2 },
                 { label: "Background opacity:", type: "range", property: opacityProp, max: 100, min: 0, step: 2 },
                 { label: "Scale ticks opacity:", type: "range", property: ticksOpacityProp, max: 100, min: 0, step: 2 },

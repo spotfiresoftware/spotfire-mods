@@ -12,8 +12,6 @@ export interface Settings {
     mouseLeave?(): void;
     animationSpeed: number;
     size: { width: number; height: number };
-    minValue: number;
-    maxValue: number;
     showMinMax: boolean;
     showShake: boolean;
     gaugeWidth: number;
@@ -39,6 +37,8 @@ export interface Gauge {
     label: string;
     key: string;
     percent: number;
+    minLabel: string;
+    maxLabel: string;
     formattedValue: string;
     color: string;
 }
@@ -216,7 +216,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("text-anchor", "start")
         .attr("y", -Math.cos(maxAngle) * longTickRadius)
         .attr("x", Math.sin(maxAngle) * longTickRadius)
-        .text((d) => settings.maxValue);
+        .text((d) => d.maxLabel);
 
     update
         .select("text.min-label")
@@ -232,7 +232,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("text-anchor", "end")
         .attr("y", -Math.cos(maxAngle) * longTickRadius)
         .attr("x", -Math.sin(maxAngle) * longTickRadius)
-        .text((d) => settings.minValue);
+        .text((d) => d.minLabel);
 
     let ticks = update
         .select<any>("g.scale")
