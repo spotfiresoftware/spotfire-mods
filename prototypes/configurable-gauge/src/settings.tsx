@@ -1,4 +1,5 @@
-import { render, Component, ComponentChildren } from "preact";
+//@ts-ignore
+import { render, Component, ComponentChildren, h } from "preact";
 import { useState } from "preact/hooks";
 import { ModProperty } from "spotfire-api";
 
