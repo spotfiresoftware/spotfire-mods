@@ -6,12 +6,38 @@
         {
             "label": "Start ",
             "type": "shell",
-            "command": "npm start",
+            "command": "ls",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
+            "dependsOn": ["TypeScript watcher", "Development server", "Bundle"]
+        },
+        {
+            "label": "Bundle",
+            "type": "shell",
+            "command": "npm start"            
+        },
+        {
+            "label": "TypeScript watcher",
+            "type": "shell",
+            "command": "npm run ts-watch",            
+            "problemMatcher": ["$tsc"],
+        },
+        {
+            "label": "Development server",
+            "type": "shell",
+            "command": "npm run server",            
             "problemMatcher": ["$tsc"]
+        },
+        {
+            "label": "Unit tests",
+            "type": "shell",
+            "group": {
+                "kind": "test",
+                "isDefault": true, 
+            },
+            "command": "npm start"            
         }
     ]
 }
