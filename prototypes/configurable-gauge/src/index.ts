@@ -11,9 +11,19 @@ Spotfire.initialize(async (mod) => {
 
     const svg = d3.select("#mod-container").append("svg").attr("xmlns", "http://www.w3.org/2000/svg");
 
+    const gaugeAxisName = "Gauge";
+    const minAxisName = "Min";
+    const maxAxisName = "Max";
+    const valueAxisName = "Value";
+    const colorAxisName = "Color";
+
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.windowSize(),
+        mod.visualization.axis(gaugeAxisName),
+        mod.visualization.axis(valueAxisName),
+        mod.visualization.axis(minAxisName),
+        mod.visualization.axis(maxAxisName),
         mod.property<number>("gaugeWidth"),
         mod.property<number>("gaugeOpacity"),
         mod.property<number>("ticksOpacity"),
@@ -29,6 +39,10 @@ Spotfire.initialize(async (mod) => {
     async function onChange(
         dataView: DataView,
         windowSize: Spotfire.Size,
+        gaugeAxis: Spotfire.Axis,
+        valueAxis: Spotfire.Axis,
+        minAxis: Spotfire.Axis,
+        maxAxis: Spotfire.Axis,
         widthProp: ModProperty<number>,
         opacityProp: ModProperty<number>,
         ticksOpacityProp: ModProperty<number>,
@@ -37,22 +51,44 @@ Spotfire.initialize(async (mod) => {
         showShake: ModProperty<boolean>
     ) {
         mod.controls.errorOverlay.hide();
-        let colorRoot = await (await dataView.hierarchy("Color"))?.root();
+        let colorRoot = await (await dataView.hierarchy(colorAxisName))?.root();
 
-        let maxValue = colorRoot!.rows().reduce((p, r) => Math.max(p, r.continuous("Max").value() || 0), 0);
+        let maxValue = colorRoot!
+            .rows()
+            .reduce(
+                (p, r) => Math.max(p, r.continuous(maxAxis.parts.length ? maxAxisName : valueAxisName).value() || 0),
+                0
+            );
+
+        let warnings: string[] = [];
 
         let gauges: Gauge[] = colorRoot!.rows().map((row) => {
-            let min = row.continuous("Min").value<number>() || 0;
-            let max = row.continuous("Max").value<number>() || maxValue;
-            let value = row.continuous("Value").value<number>() || 0;
+            const label = row.categorical(gaugeAxis.parts.length ? gaugeAxisName : colorAxisName).formattedValue();
+            const minLabel = minAxis.parts.length ? row.continuous(minAxisName).formattedValue() : "0";
+            const maxLabel = maxAxis.parts.length ? row.continuous(maxAxisName).formattedValue() : maxValue;
+
+            let min = minAxis.parts.length ? row.continuous(minAxisName).value<number>() || 0 : 0;
+            let max = maxAxis.parts.length ? row.continuous(maxAxisName).value<number>() || 0 : maxValue;
+            let value = valueAxis.parts.length ? row.continuous(valueAxisName).value<number>() || 0 : 0;
+
+            if (min > max) {
+                warnings.push(
+                    `${label} has a min value (${minLabel}) that is greater than its max value (${maxLabel})`
+                );
+            }
 
             const percent = (value - min) / (max - min);
             const formattedValue = showPercent.value()
                 ? `${(percent * 100).toPrecision(3)}%`
-                : row.continuous("Value").formattedValue();
+                : valueAxis.parts.length
+                ? row.continuous(valueAxisName).formattedValue()
+                : 0;
 
             return {
-                label: row.categorical("Gauge").formattedValue(),
+                label,
+                minLabel: minLabel,
+                maxLabel: maxLabel,
+                percent,
                 formattedValue,
                 color: row.color().hexCode,
                 key: row.elementId(),
@@ -65,12 +101,15 @@ Spotfire.initialize(async (mod) => {
                 },
                 mouseOver() {
                     mod.controls.tooltip.show(row);
-                },
-                percent,
-                minLabel: row.continuous("Min").formattedValue(),
-                maxLabel: row.continuous("Max").formattedValue()
+                }
             } as Gauge;
         });
+
+        if (warnings.length) {
+            mod.controls.errorOverlay.show(warnings, "warnings");
+        } else {
+            mod.controls.errorOverlay.hide("warnings");
+        }
 
         render(gauges, {
             svg,
