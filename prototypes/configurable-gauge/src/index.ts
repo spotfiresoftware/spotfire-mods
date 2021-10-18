@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { render, Gauge } from "./render";
 import { DataView, ModProperty } from "spotfire-api";
 import { renderSettings } from "./settings";
+import { resources } from "./resources";
 
 const Spotfire = window.Spotfire;
 const DEBUG = true;
@@ -72,9 +73,11 @@ Spotfire.initialize(async (mod) => {
             let value = valueAxis.parts.length ? row.continuous(valueAxisName).value<number>() || 0 : 0;
 
             if (min > max) {
-                warnings.push(
-                    `${label} has a min value (${minLabel}) that is greater than its max value (${maxLabel})`
-                );
+                warnings.push(resources.warningMinGreaterThanMax(label, minLabel, maxLabel));
+            }
+
+            if (min == max) {
+                warnings.push(resources.warningMinEqualToMax(label, minLabel, maxLabel));
             }
 
             const percent = (value - min) / (max - min);
@@ -158,12 +161,26 @@ Spotfire.initialize(async (mod) => {
 
         if (context.isEditing) {
             renderSettings([
-                { label: "Arc width:", type: "range", property: widthProp, max: 100, min: 2, step: 2 },
-                { label: "Background opacity:", type: "range", property: opacityProp, max: 100, min: 0, step: 2 },
-                { label: "Scale ticks opacity:", type: "range", property: ticksOpacityProp, max: 100, min: 0, step: 2 },
-                { label: "Show percent:", type: "checkbox", property: showPercent },
-                { label: "Show min and max:", type: "checkbox", property: showMinMax },
-                { label: "Shake when full:", type: "checkbox", property: showShake }
+                { label: resources.settingArcWidth, type: "range", property: widthProp, max: 100, min: 2, step: 2 },
+                {
+                    label: resources.settingsBackgroundOpacity,
+                    type: "range",
+                    property: opacityProp,
+                    max: 100,
+                    min: 0,
+                    step: 2
+                },
+                {
+                    label: resources.settingsScaleTicksOpacity,
+                    type: "range",
+                    property: ticksOpacityProp,
+                    max: 100,
+                    min: 0,
+                    step: 2
+                },
+                { label: resources.settingsShowPercent, type: "checkbox", property: showPercent },
+                { label: resources.settingsShowMinMax, type: "checkbox", property: showMinMax },
+                { label: resources.settingsShakeWhenFull, type: "checkbox", property: showShake }
             ]);
         }
 
