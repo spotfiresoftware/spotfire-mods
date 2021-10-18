@@ -51,7 +51,9 @@ export async function render(gauges: Gauge[], settings: Settings) {
     const { arcWidth = 10 } = settings;
 
     let verticalPadding = size.width / 50;
-    let horizontalPadding = settings.showMinMax ? Math.min(size.width / 5, 120) : size.width / 50;
+    let horizontalPadding = settings.showMinMax
+        ? Math.min(size.width / 5, settings.style.label.size * 0.7 * 8)
+        : size.width / 50;
 
     const gaugeCount = gauges.length;
     let [rowCount, colCount] = grid(size.width - horizontalPadding, size.height - verticalPadding, gaugeCount);
