@@ -11,6 +11,7 @@ export interface Settings {
     showMinMax?: boolean;
     showShake?: boolean;
     arcWidth?: number;
+    padAngle?: number;
     style: {
         gauge: {
             backgroundOpacity: number;
@@ -72,8 +73,9 @@ export async function render(gauges: Gauge[], settings: Settings) {
         g.radius = radius;
     });
 
-    const shiftAngle = Math.PI - 5 / 8;
-    const maxAngle = Math.PI - 5 / 8;
+    const paddingAngle = ((settings.padAngle ?? 40) * 2 * Math.PI) / 360;
+    const shiftAngle = Math.PI - paddingAngle;
+    const maxAngle = Math.PI - paddingAngle;
     let scale = d3.scaleLinear().range([-shiftAngle, maxAngle]).domain([0, 1]);
 
     const arc = d3
@@ -174,7 +176,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     update
         .select("text.label-value")
-        .attr("dy", "0.35em")
+        .attr("dy", "1em")
         .transition("add label value")
         .duration(animationSpeed)
         .attr("font-size", settings.style.value.size)
@@ -183,7 +185,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("fill", (d: any) => settings.style.value.color)
         .attr("font-family", settings.style.value.fontFamily)
         .attr("text-anchor", "middle")
-        .attr("y", 0)
+        .attr("y", -Math.cos(Math.PI / 2) * innerRadius - settings.style.value.size * (Math.PI / 2 / maxAngle - 0.01))
         .attr("x", 0)
         .text((d) => d.formattedValue);
 

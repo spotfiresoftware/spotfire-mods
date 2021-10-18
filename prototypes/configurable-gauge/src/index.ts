@@ -26,6 +26,7 @@ Spotfire.initialize(async (mod) => {
         mod.visualization.axis(minAxisName),
         mod.visualization.axis(maxAxisName),
         mod.property<number>("gaugeWidth"),
+        mod.property<number>("gaugeAngle"),
         mod.property<number>("gaugeOpacity"),
         mod.property<number>("ticksOpacity"),
         mod.property<boolean>("showPercent"),
@@ -45,6 +46,7 @@ Spotfire.initialize(async (mod) => {
         minAxis: Spotfire.Axis,
         maxAxis: Spotfire.Axis,
         widthProp: ModProperty<number>,
+        gaugeAngle: ModProperty<number>,
         opacityProp: ModProperty<number>,
         ticksOpacityProp: ModProperty<number>,
         showPercent: ModProperty<boolean>,
@@ -127,6 +129,7 @@ Spotfire.initialize(async (mod) => {
                 mod.controls.tooltip.hide();
             },
             size: windowSize,
+            padAngle: gaugeAngle.value()!,
             showMinMax: showMinMax.value()!,
             showShake: showShake.value()!,
             arcWidth: widthProp.value() || 20,
@@ -162,6 +165,7 @@ Spotfire.initialize(async (mod) => {
         if (context.isEditing) {
             renderSettings([
                 { label: resources.settingArcWidth, type: "range", property: widthProp, max: 100, min: 2, step: 2 },
+                { label: resources.settingAngle, type: "range", property: gaugeAngle, max: 90, min: 0, step: 2 },
                 {
                     label: resources.settingsBackgroundOpacity,
                     type: "range",
