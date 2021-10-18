@@ -177,7 +177,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("dy", "0.35em")
         .transition("add label value")
         .duration(animationSpeed)
-        .attr("font-size", settings.style.value.size * 2)
+        .attr("font-size", settings.style.value.size)
         .attr("font-style", settings.style.value.style)
         .attr("font-weight", settings.style.value.weight)
         .attr("fill", (d: any) => settings.style.value.color)
