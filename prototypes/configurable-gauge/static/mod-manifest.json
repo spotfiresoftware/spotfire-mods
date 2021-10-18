@@ -53,32 +53,50 @@
                 "mode": "categorical",
                 "placement": "bottom",
                 "dropTarget": {
-                    "icon": "XAxis3D",
-                    "description": "Use {0} on the mod's X-axis"
-                }
-            },
-            {
-                "name": "Min",
-                "mode": "continuous",
-                "allowMultipleMeasures": true,
-                "placement": "none",
-                "legendItem": {
-                    "title": "Min value"
+                    "icon": "Tile",
+                    "description": "Use {0} on the mod's Gauge-axis"
                 }
             },
             {
                 "name": "Value",
                 "mode": "continuous",
-                "allowMultipleMeasures": true,
-                "placement": "left"
+                "allowMultipleMeasures": false,
+                "placement": "left",
+                "automaticConfiguration": {
+                    "priority": "100"
+                },
+                "dropTarget": {
+                    "icon": "YAxis",
+                    "description": "Use {0} on the mod's Value-axis"
+                }
+            },
+            {
+                "name": "Min",
+                "mode": "continuous",
+                "allowMultipleMeasures": false,
+                "placement": "none",
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                },
+                "legendItem": {
+                    "title": "Min value"
+                },
+                "dropTarget": {
+                    "icon": "Compare",
+                    "description": "Use {0} on the Min value-axis"
+                }
             },
             {
                 "name": "Max",
                 "mode": "continuous",
-                "allowMultipleMeasures": true,
+                "allowMultipleMeasures": false,
                 "placement": "none",
                 "legendItem": {
                     "title": "Max value"
+                },
+                "dropTarget": {
+                    "icon": "Compare",
+                    "description": "Use {0} on the Max value-axis"
                 }
             }
         ]
