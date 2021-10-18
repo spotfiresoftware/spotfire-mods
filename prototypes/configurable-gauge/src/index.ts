@@ -141,7 +141,7 @@ Spotfire.initialize(async (mod) => {
                 },
                 ticks: {
                     backgroundOpacity: ticksOpacityProp.value()!,
-                    background: context.styling.scales.line.stroke
+                    background: context.styling.scales.tick.stroke
                 },
                 marking: { color: context.styling.scales.font.color },
                 background: { color: context.styling.general.backgroundColor },
