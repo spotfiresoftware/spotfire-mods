@@ -16,6 +16,11 @@
             "type": "integer"
         },
         {
+            "name": "gaugeAngle",
+            "defaultValue": 40,
+            "type": "integer"
+        },
+        {
             "name": "ticksOpacity",
             "defaultValue": 100,
             "type": "integer"
