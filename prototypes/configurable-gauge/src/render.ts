@@ -50,16 +50,17 @@ export async function render(gauges: Gauge[], settings: Settings) {
     const { animationSpeed = 0 } = settings;
     const { arcWidth = 10 } = settings;
 
-    let padding = size.width / 50;
+    let verticalPadding = size.width / 50;
+    let horizontalPadding = settings.showMinMax ? Math.min(size.width / 5, 120) : size.width / 50;
 
     const gaugeCount = gauges.length;
-    let [rowCount, colCount] = grid(size.width - padding, size.height - padding, gaugeCount);
+    let [rowCount, colCount] = grid(size.width - horizontalPadding, size.height - verticalPadding, gaugeCount);
 
     let gaugeWidth = size.width / colCount;
     let gaugeHeight = size.height / rowCount;
 
     let radius = Math.min(
-        size.width / colCount / 2 - padding / 2,
+        size.width / colCount / 2 - horizontalPadding / 2,
         size.height / rowCount / 2 - (settings.showMinMax ? settings.style.label.size * 2 : settings.style.label.size)
     );
 
@@ -72,6 +73,9 @@ export async function render(gauges: Gauge[], settings: Settings) {
         g.innerRadius = innerRadius;
         g.radius = radius;
     });
+
+    const valueFontSize = Math.min(settings.style.value.size, innerRadius / 1.4);
+    const showLabels = valueFontSize == settings.style.value.size && settings.showMinMax;
 
     const paddingAngle = ((settings.padAngle ?? 40) * 2 * Math.PI) / 360;
     const shiftAngle = Math.PI - paddingAngle;
@@ -179,15 +183,15 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("dy", "1em")
         .transition("add label value")
         .duration(animationSpeed)
-        .attr("font-size", settings.style.value.size)
+        .attr("font-size", valueFontSize)
         .attr("font-style", settings.style.value.style)
         .attr("font-weight", settings.style.value.weight)
         .attr("fill", (d: any) => settings.style.value.color)
         .attr("font-family", settings.style.value.fontFamily)
         .attr("text-anchor", "middle")
-        .attr("y", -Math.cos(Math.PI / 2) * innerRadius - settings.style.value.size * (Math.PI / 2 / maxAngle - 0.01))
+        .attr("y", -Math.cos(Math.PI / 2) * innerRadius - valueFontSize * (Math.PI / 2 / maxAngle - 0.01))
         .attr("x", 0)
-        .text((d) => d.formattedValue);
+        .text(label("formattedValue", innerRadius, valueFontSize));
 
     update
         .select("text.label")
@@ -200,16 +204,16 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "middle")
-        .attr("y", -Math.cos(maxAngle) * longTickRadius + (settings.showMinMax ? settings.style.label.size : 3))
+        .attr("y", -Math.cos(maxAngle) * longTickRadius + (showLabels ? settings.style.label.size : 3))
         .attr("x", 0)
-        .text(label);
+        .text(label("label", gaugeWidth, settings.style.label.size));
 
     update
         .select("text.max-label")
         .attr("dy", "1em")
         .transition("add labels")
         .duration(animationSpeed)
-        .style("opacity", settings.showMinMax ? 1 : 0)
+        .style("opacity", showLabels ? 1 : 0)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
@@ -218,14 +222,14 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("text-anchor", "start")
         .attr("y", -Math.cos(maxAngle) * longTickRadius)
         .attr("x", Math.sin(maxAngle) * longTickRadius)
-        .text((d) => d.maxLabel);
+        .text(label("maxLabel", gaugeWidth / 2 - Math.sin(maxAngle) * longTickRadius, settings.style.label.size));
 
     update
         .select("text.min-label")
         .attr("dy", "1em")
         .transition("add labels")
         .duration(animationSpeed)
-        .style("opacity", settings.showMinMax ? 1 : 0)
+        .style("opacity", showLabels ? 1 : 0)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
@@ -234,7 +238,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("text-anchor", "end")
         .attr("y", -Math.cos(maxAngle) * longTickRadius)
         .attr("x", -Math.sin(maxAngle) * longTickRadius)
-        .text((d) => d.minLabel);
+        .text(label("minLabel", gaugeWidth / 2 - Math.sin(maxAngle) * longTickRadius, settings.style.label.size));
 
     let ticks = update
         .select<any>("g.scale")
@@ -261,16 +265,17 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .style("opacity", 0)
         .remove();
 
-    function label(d: Gauge) {
-        const fontSize = settings.style.label.size;
-        const fontWidth = fontSize * 0.7;
+    function label(p: keyof Gauge, width: number, size: number) {
+        return function (d: Gauge) {
+            const fontSize = size;
+            const fontWidth = fontSize * 0.7;
+            let label = ("" + d[p]) as string;
+            if (label.length > width / fontWidth) {
+                return label.slice(0, Math.max(1, width / fontWidth - 2)) + "…";
+            }
 
-        let label = d.label;
-        if (label.length > gaugeWidth / fontWidth) {
-            return label.slice(0, Math.max(1, gaugeWidth / fontWidth - 2)) + "…";
-        }
-
-        return d.label;
+            return d[p] as string;
+        };
     }
 
     function tweenArc(defaultPrevValue: Partial<internalGauge>, overridePercent?: number) {
