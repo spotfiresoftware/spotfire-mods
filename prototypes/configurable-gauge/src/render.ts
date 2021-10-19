@@ -169,7 +169,6 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .duration(animationSpeed)
         .attr("class", shake("value"))
         .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }))
-        .attr("stroke", (d) => ((scale(Math.max(d.percent, 0)) || 0) > maxAngle ? "red" : "transparent"))
         .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
 
