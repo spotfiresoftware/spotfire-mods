@@ -84,6 +84,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
     const maxAngle = Math.PI - paddingAngle;
     let scale = d3.scaleLinear().range([-shiftAngle, maxAngle]).domain([0, 1]);
 
+    const labelPadding = 10 * (1 - paddingAngle / (Math.PI / 2));
+
     const arc = d3
         .arc<internalGauge>()
         .startAngle((d) => scale(0)!)
@@ -222,7 +224,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "start")
         .attr("y", -Math.cos(maxAngle) * longTickRadius)
-        .attr("x", Math.sin(maxAngle) * longTickRadius)
+        .attr("x", Math.sin(maxAngle) * longTickRadius + labelPadding)
         .text(label("maxLabel", gaugeWidth / 2 - Math.sin(maxAngle) * longTickRadius, settings.style.label.size));
 
     update
@@ -238,7 +240,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "end")
         .attr("y", -Math.cos(maxAngle) * longTickRadius)
-        .attr("x", -Math.sin(maxAngle) * longTickRadius)
+        .attr("x", -Math.sin(maxAngle) * longTickRadius - labelPadding)
         .text(label("minLabel", gaugeWidth / 2 - Math.sin(maxAngle) * longTickRadius, settings.style.label.size));
 
     let ticks = update
