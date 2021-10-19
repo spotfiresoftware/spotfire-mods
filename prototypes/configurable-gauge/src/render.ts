@@ -63,7 +63,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     let radius = Math.min(
         size.width / colCount / 2 - horizontalPadding / 2,
-        size.height / rowCount / 2 - (settings.showMinMax ? settings.style.label.size * 2 : settings.style.label.size)
+        size.height / rowCount / 2 -
+            (settings.showMinMax ? settings.style.label.size * 2.4 : settings.style.label.size * 1.4)
     );
 
     const longTickRadius = radius;
@@ -194,7 +195,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .attr("text-anchor", "middle")
         .attr("y", -Math.cos(Math.PI / 2) * innerRadius - valueFontSize * (Math.PI / 2 / maxAngle - 0.01))
         .attr("x", 0)
-        .text(label("formattedValue", innerRadius, valueFontSize));
+        .text(label("formattedValue", innerRadius * 2, valueFontSize));
 
     update
         .select("text.label")
