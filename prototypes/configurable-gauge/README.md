@@ -4,6 +4,17 @@ This is a mod example demonstrating a gauge written in `TypeScript`, rendered wi
 
 All source code for the mod example can be found in the `src` folder. Other necessary files reside in the `static` folder. Read below for further explanation.
 
+## Configurable settings
+
+- Arc width.
+- Min and Max values via continuous axes. 
+- Start and end angle.
+- Opacity of background arc.
+- Opacity of scale ticks.
+- Show gauge value as percent
+- Shake overfull gauge.
+- Show min and max labels.
+
 ## Prerequisites
 
 These instructions assume that you have [Node.js](https://nodejs.org/en/) (which includes npm) installed.
