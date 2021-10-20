@@ -22,6 +22,7 @@ Spotfire.initialize(async (mod) => {
         mod.visualization.data(),
         mod.windowSize(),
         mod.visualization.axis(gaugeAxisName),
+        mod.visualization.axis(colorAxisName),
         mod.visualization.axis(valueAxisName),
         mod.visualization.axis(minAxisName),
         mod.visualization.axis(maxAxisName),
@@ -42,6 +43,7 @@ Spotfire.initialize(async (mod) => {
         dataView: DataView,
         windowSize: Spotfire.Size,
         gaugeAxis: Spotfire.Axis,
+        colorAxis: Spotfire.Axis,
         valueAxis: Spotfire.Axis,
         minAxis: Spotfire.Axis,
         maxAxis: Spotfire.Axis,
@@ -66,7 +68,13 @@ Spotfire.initialize(async (mod) => {
         let warnings: string[] = [];
 
         let gauges: Gauge[] = colorRoot!.rows().map((row) => {
-            const label = row.categorical(gaugeAxis.parts.length ? gaugeAxisName : colorAxisName).formattedValue();
+            let label: string;
+            if (!gaugeAxis.parts.length && !colorAxis.parts.length) {
+                label = valueAxis.parts.map((p) => p.displayName).join(" ");
+            } else {
+                label = row.categorical(gaugeAxis.parts.length ? gaugeAxisName : colorAxisName).formattedValue();
+            }
+
             const minLabel = minAxis.parts.length ? row.continuous(minAxisName).formattedValue() : "0";
             const maxLabel = maxAxis.parts.length ? row.continuous(maxAxisName).formattedValue() : maxValue;
 
