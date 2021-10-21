@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { DataViewRow, ReadableProxy, Size } from "spotfire-api";
+import { ReadableProxy, Size } from "spotfire-api";
 import { highlight, markingHandler, markRowforAllTimes } from "./modutils";
 import { Grid } from "./Grid";
 import { animationControl } from "./animationControl";
@@ -86,8 +86,31 @@ export function clearCanvas() {
     markerLayer.selectAll("*").remove(); // clear graph display area
 }
 
+export interface Bubble {
+    x: number;
+    y: number;
+    size: number;
+    color: string;
+    id: string;
+    label: string;
+    isMarked: boolean;
+    mark(): void;
+}
+
+export interface NumericScale {
+    min: number;
+    max: number;
+}
+
 export async function render(
     dataView: Spotfire.DataView,
+    frame: Bubble[],
+    scales: {
+        y: NumericScale;
+        x: NumericScale;
+        size: NumericScale;
+    },
+    animation: boolean,
     windowSize: Size,
     toolTipDisplayAxes: Spotfire.Axis[],
     mod: Spotfire.Mod,
@@ -115,23 +138,7 @@ export async function render(
     #animationSpeedLabel { color: ${context.styling.general.font.color}; font-size: ${context.styling.general.font.fontSize}px; font-weight: ${context.styling.general.font.fontWeight}; font-style: ${context.styling.general.font.fontStyle};}
     `;
 
-    const hasSize = !!(await dataView.continuousAxis("Size"));
-    const hasX = !!(await dataView.continuousAxis("X"));
-    const hasY = !!(await dataView.continuousAxis("Y"));
-
-    //Read the data and meta data
-    const rows = (await dataView.allRows())?.filter(rowFilter);
-    if (!rows || rows.length < 1) {
-        clearCanvas();
-        return;
-    }
-
-    rows.forEach((r) => ((r as any).key = r.elementId(true, ["AnimateBy"])));
-
-    let animateLeaves = (
-        await (await dataView.hierarchy("AnimateBy"))?.root()
-    )?.leaves();
-    if (!animateLeaves || animateLeaves.length == 0) {
+    if (!frame.length) {
         clearCanvas();
         return;
     }
@@ -144,7 +151,7 @@ export async function render(
     let innerMargin = maxMarkerSize;
 
     let animationControlHeight = 0;
-    if (animateLeaves.length > 1) {
+    if (animation) { // TODO Check if an animation axis exists
         animationControlHeight = defaultAnimationControlHeight;
     } else {
         animationControlHeight = 0;
@@ -165,34 +172,15 @@ export async function render(
 
     // set the viewbox of the svg element to match the available drawing area
     svg.attr("viewBox", "0 0 " + modWidth + " " + modHeight);
-    async function minValue(axis: string) {
-        if (!(await dataView.continuousAxis(axis))) {
-            return 0;
-        }
 
-        return rows!
-            .map((r) => r.continuous<number>(axis).value() || 0)
-            .reduce((p, c) => (c < p ? c : p), Infinity);
-    }
-
-    async function maxValue(axis: string) {
-        if (!(await dataView.continuousAxis(axis))) {
-            return 0;
-        }
-
-        return rows!
-            .map((r) => r.continuous<number>(axis).value() || 0)
-            .reduce((p, c) => (c > p ? c : p), -Infinity);
-    }
-
-    // Calculate x-axis scale
-    var xmin = await minValue("X");
-    var xmax = await maxValue("X");
     var xScale = xLogScale
-        ? d3.scaleLog().domain([xmin, xmax]).range([0, xAxesArea.width])
+        ? d3
+              .scaleLog()
+              .domain([scales.x.min, scales.x.max])
+              .range([0, xAxesArea.width])
         : d3
               .scaleLinear()
-              .domain([xmin, xmax])
+              .domain([scales.x.min, scales.x.max])
               .range([0, xAxesArea.width])
               .nice();
 
@@ -237,14 +225,14 @@ export async function render(
             ]) as FIX_TYPE
         );
 
-    // Calculate y-axis scale
-    var ymin = await minValue("Y");
-    var ymax = await maxValue("Y");
     var yScale = yLogScale
-        ? d3.scaleLog().domain([ymin, ymax]).range([yAxisArea.height, 0])
+        ? d3
+              .scaleLog()
+              .domain([scales.y.min, scales.y.max])
+              .range([yAxisArea.height, 0])
         : d3
               .scaleLinear()
-              .domain([ymin, ymax])
+              .domain([scales.y.min, scales.y.max])
               .range([yAxisArea.height, 0])
               .nice();
 
@@ -312,15 +300,12 @@ export async function render(
         );
 
     // Calculate markersize scale
-    var smin = await minValue("Size");
-    var smax = await maxValue("Size");
     var sizeScale = d3
         .scaleSqrt()
-        .domain([smin, smax])
+        .domain([scales.size.min, scales.size.max])
         .range([2, maxMarkerSize]);
 
-    let animationEnabled = animateLeaves.length > 1;
-    let animationIndex = 0;
+    let animationEnabled = animation;
 
     if (animationEnabled) {
         animationControlGroup.attr("class", "enabled");
@@ -328,7 +313,7 @@ export async function render(
         // render animation scale
         let animationScale = d3
             .scaleLinear()
-            .domain([0, animateLeaves.length - 1])
+            .domain([0, 10 - 1]) // TODO animation scale
             .range([0, animationControlArea.width])
             .clamp(true);
 
@@ -338,8 +323,6 @@ export async function render(
             AnimationValueChanged,
             animationSpeed
         );
-
-        animationIndex = animationControlInstance?.getIndex() || 0;
 
         // render animation controls
         animationControlGroup
@@ -362,7 +345,6 @@ export async function render(
         value: number,
         changedByUser: boolean
     ) {
-        animationIndex = value;
         try {
             if (changedByUser) {
                 await updateBubbleChart();
@@ -376,28 +358,6 @@ export async function render(
 
     function getKey(row: any): string {
         return row.key;
-    }
-
-    /** Filter out rows that can't be visualized.
-     * This includes null values and 0 for log scales */
-    function rowFilter(row: Spotfire.DataViewRow) {
-        if (
-            !hasX ||
-            (xLogScale && !row.continuous("X").value()) ||
-            row.continuous("X").value() == null
-        ) {
-            return false;
-        }
-
-        if (
-            !hasY ||
-            (yLogScale && !row.continuous("Y").value()) ||
-            row.continuous("Y").value() == null
-        ) {
-            return false;
-        }
-
-        return true;
     }
 
     function showMessage(message: String) {
@@ -416,16 +376,9 @@ export async function render(
     }
 
     function updateBubbleChart(transitionDuration = defaultTransitionSpeed) {
-        // Add dots
-        // sort the rows by size if sizeByAxis is used
-        // to make small dots draw on top of larger ones
-        if ((animateLeaves?.length || 0) <= animationIndex) {
-            return Promise.resolve();
-        }
+        let displayRows = frame;
 
-        let displayRows = animateLeaves![animationIndex]
-            .rows()
-            .filter(rowFilter);
+        // animateLeaves![animationIndex].rows().filter(rowFilter);
 
         let rowCount = displayRows.length;
         if (rowCount > displayedRowsLimit) {
@@ -437,13 +390,9 @@ export async function render(
         }
         hideMessage();
 
-        if (hasSize) {
-            displayRows.sort(sortContinuousAxis("Size"));
-        }
-
         let allOrNoneMarked = !(
-            displayRows.find((r) => r.isMarked()) &&
-            displayRows.find((r) => !r.isMarked())
+            displayRows.find((r) => r.isMarked) &&
+            displayRows.find((r) => !r.isMarked)
         );
         let opacity = allOrNoneMarked ? defaultOpacity : markingOpacity;
 
@@ -462,8 +411,8 @@ export async function render(
 
         function updateBackground() {
             let bgText =
-                animateLeaves!.length > 1
-                    ? animateLeaves![animationIndex].formattedPath()
+                animation
+                    ? "TODO Label for animation"
                     : "";
 
             backgroundLayer
@@ -491,23 +440,15 @@ export async function render(
 
         function updateDots() {
             let dots = markerLayer
-                .selectAll<SVGCircleElement, DataViewRow>(".dot")
+                .selectAll<SVGCircleElement, Bubble>(".dot")
                 .data(displayRows, getKey);
 
             // add new dots if needed
             let newdots = dots
                 .enter()
                 .append("circle")
-                .attr(
-                    "cx",
-                    (row: DataViewRow) =>
-                        xScale(row.continuous("X").value<number>() || 0) || 0
-                )
-                .attr(
-                    "cy",
-                    (row: DataViewRow) =>
-                        yScale(row.continuous("Y").value<number>() || 0) || 0
-                )
+                .attr("cx", (row: Bubble) => xScale(row.x) || 0)
+                .attr("cy", (row: Bubble) => yScale(row.y) || 0)
                 .attr("r", 0)
                 .attr("fill", "transparent");
 
@@ -517,7 +458,7 @@ export async function render(
             // update attributes on all dots
             let transitionEnd = allDots
                 .attr("id", getKey)
-                .attr("class", (r) => `dot ${r.isMarked() ? "marked" : ""}`)
+                .attr("class", (r) => `dot ${r.isMarked ? "marked" : ""}`)
                 .call(
                     markingHandler(
                         svg,
@@ -530,25 +471,17 @@ export async function render(
                 .transition()
                 .ease(d3.easeLinear)
                 .duration(transitionDuration)
-                .attr(
-                    "cx",
-                    (row: DataViewRow) =>
-                        xScale(Number(row.continuous<number>("X").value())) || 0
-                )
-                .attr(
-                    "cy",
-                    (row: DataViewRow) =>
-                        yScale(Number(row.continuous<number>("Y").value())) || 0
-                )
+                .attr("cx", (row: Bubble) => xScale(row.x) || 0)
+                .attr("cy", (row: Bubble) => yScale(row.y) || 0)
                 .attr("r", radius)
-                .style("fill", (row: DataViewRow) => row.color().hexCode)
+                .style("fill", (row: Bubble) => row.color)
                 .end()
                 .catch(() => {
                     // Interrupted transitions lead to a rejected promise.
                 });
 
             allDots
-                .on("click", function (row: DataViewRow) {
+                .on("click", function (row: Bubble) {
                     setIdle();
                     markRowforAllTimes(
                         row,
@@ -561,7 +494,7 @@ export async function render(
                 .call(hl);
 
             // move marked elements to the top
-            allDots.filter((row: DataViewRow) => row.isMarked()).raise();
+            allDots.filter((row: Bubble) => row.isMarked).raise();
 
             // remove any dots no longer needed.
             dots.exit()
@@ -573,30 +506,28 @@ export async function render(
             return transitionEnd;
         }
 
-        function radius(row: DataViewRow) {
-            return hasSize
-                ? sizeScale(Number(row.continuous<number>("Size").value())) || 0
-                : 8;
+        function radius(row: Bubble) {
+            return sizeScale(row.size) || 0;
         }
 
         function updateLabels() {
-            const labelDX = (row: DataViewRow) =>
+            const labelDX = (row: Bubble) =>
                 radius(row) +
-                (xScale(row.continuous("X").value<number>() || 0) || 0);
+                (xScale(row.x) || 0);
 
-            const labelDY = (row: DataViewRow) =>
-                (yScale(Number(row.continuous<number>("Y").value())) || 0) -
+            const labelDY = (row: Bubble) =>
+                (yScale(row.y) || 0) -
                 radius(row);
 
-            const labelText = (row: DataViewRow) => {
-                return showLabels && row.isMarked()
-                    ? row.leafNode("MarkerBy")!.formattedPath()
+            const labelText = (row: Bubble) => {
+                return showLabels && row.isMarked
+                    ? row.label
                     : "";
             };
 
             //re-use current labels
             let labels = markerLayer
-                .selectAll<SVGTextElement, DataViewRow>(".label")
+                .selectAll<SVGTextElement, Bubble>(".label")
                 .data(displayRows, (d) => getKey(d) + "_label");
 
             // add new dots if needed
@@ -613,7 +544,7 @@ export async function render(
             // update attributes on all labels
             allLabels
                 .attr("id", (d) => getKey(d) + "_label")
-                .attr("class", (r) => `label ${r.isMarked() ? "marked" : ""}`)
+                .attr("class", (r) => `label ${r.isMarked ? "marked" : ""}`)
                 .call(
                     markingHandler(
                         svg,
@@ -631,27 +562,21 @@ export async function render(
                 .text(labelText);
 
             allLabels
-                .on("click", function (row: DataViewRow) {
-                    markRowforAllTimes(
-                        row,
-                        dataView,
-                        d3.event.ctrlKey || d3.event.metaKey
-                    );
+                .on("click", function (row: Bubble) {
+                    row.mark();
+                    // markRowforAllTimes(
+                    //     row,
+                    //     dataView,
+                    //     d3.event.ctrlKey || d3.event.metaKey
+                    // );
                 })
                 .call(hl);
 
             // move marked elements to the top
-            allLabels.filter((row: DataViewRow) => row.isMarked()).raise();
+            allLabels.filter((row: Bubble) => row.isMarked).raise();
 
             // remove any labels no longer needed.
             labels.exit().remove();
         }
     }
-}
-function sortContinuousAxis(
-    axisName: string
-): (a: DataViewRow, b: DataViewRow) => number {
-    return (a, b) =>
-        (b.continuous<number>(axisName).value() || 0) -
-        (a.continuous<number>(axisName).value() || 0);
 }

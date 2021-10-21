@@ -1,6 +1,7 @@
 // @ts-ignore
 import * as d3 from "d3";
 import { DataViewRow } from "spotfire-api";
+import { Bubble } from "./index";
 import { setBusy, setIdle } from "./interactionLock";
 
 // /**
@@ -186,30 +187,30 @@ export function markingHandler(
 }
 
 export async function markRowforAllTimes(
-    row: DataViewRow,
+    row: Bubble,
     dataView: Spotfire.DataView,
     toggle: boolean
 ) {
-    let mode: Spotfire.MarkingOperation = toggle ? "ToggleOrAdd" : "Replace";
+    // let mode: Spotfire.MarkingOperation = toggle ? "ToggleOrAdd" : "Replace";
 
-    if (!(await dataView.categoricalAxis("AnimateBy"))) {
-        row.mark(mode);
-    }
+    // if (!(await dataView.categoricalAxis("AnimateBy"))) {
+    //     row.mark();
+    // }
 
-    const axes = (await dataView.axes())
-        .filter((a) => a.isCategorical && a.name != "AnimateBy")
-        .map((a) => a.name);
-    (await dataView.allRows())
-        ?.filter((sibling) => {
-            for (var i = 0; i < axes.length; i++) {
-                if (
-                    row.categorical(axes[i]).leafIndex !=
-                    sibling.categorical(axes[i]).leafIndex
-                ) {
-                    return false;
-                }
-            }
-            return true;
-        })
-        .forEach((r) => r.mark(mode));
+    // const axes = (await dataView.axes())
+    //     .filter((a) => a.isCategorical && a.name != "AnimateBy")
+    //     .map((a) => a.name);
+    // (await dataView.allRows())
+    //     ?.filter((sibling) => {
+    //         for (var i = 0; i < axes.length; i++) {
+    //             if (
+    //                 row.categorical(axes[i]).leafIndex !=
+    //                 sibling.categorical(axes[i]).leafIndex
+    //             ) {
+    //                 return false;
+    //             }
+    //         }
+    //         return true;
+    //     })
+    //     .forEach((r) => r.mark(mode));
 }
