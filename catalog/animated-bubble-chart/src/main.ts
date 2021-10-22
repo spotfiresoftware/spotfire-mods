@@ -1,4 +1,5 @@
 import { DataViewRow } from "spotfire-api";
+import { animationControl } from "./animationControl";
 import { Bubble, clearCanvas, render } from "./index";
 import { continueOnIdle } from "./interactionLock";
 import { createLabelPopout } from "./popout";
@@ -23,6 +24,8 @@ window.Spotfire.initialize(async (mod) => {
         mod.visualization.axis("MarkerBy"),
         mod.visualization.axis("Size")
     );
+
+    let ac = animationControl(animationSpeedProperty);
 
     /**
      * Creates a function that is part of the main read-render loop.
@@ -54,29 +57,6 @@ window.Spotfire.initialize(async (mod) => {
                     const hasY = !!(await dataView.continuousAxis("Y"));
                     const hasSize = !!(await dataView.continuousAxis("Size"));
 
-                    async function minMax(axisName: string) {
-                        if (!(await dataView.continuousAxis(axisName))) {
-                            return { min: 0, max: 0 };
-                        }
-
-                        let min = Infinity;
-                        let max = -Infinity;
-
-                        for (const row of (await dataView.allRows()) || []) {
-                            let v =
-                                row.continuous<number>(axisName).value() || 0;
-                            if (v < min) {
-                                min = v;
-                            }
-
-                            if (v > max) {
-                                max = v;
-                            }
-                        }
-
-                        return { min, max };
-                    }
-
                     let animateLeaves =
                         (
                             await (
@@ -84,11 +64,70 @@ window.Spotfire.initialize(async (mod) => {
                             )?.root()
                         )?.leaves() || [];
 
-                    let bubbles = animateLeaves[0]
-                        .rows()
-                        .filter(rowFilter)
-                        .sort(sortContinuousAxis("Size"))
-                        .map(rowToBubble);
+                    let start = performance.now();
+                    let frames = animateLeaves.map((l) => ({
+                        name: l.formattedValue(),
+                        bubbleFactory: () =>
+                            l
+                                .rows()
+                                .filter(rowFilter)
+                                .sort(sortContinuousAxis("Size"))
+                                .map(rowToBubble),
+                    }));
+
+                    console.log("frames", performance.now() - start);
+
+                    function rowToBubble(row: DataViewRow): Bubble {
+                        return {
+                            id: row.elementId(false, ["AnimateBy"]),
+                            x: hasX
+                                ? row.continuous<number>("X").value() || 0
+                                : 0,
+                            y: hasY
+                                ? row.continuous<number>("Y").value() || 0
+                                : 0,
+                            size: hasSize
+                                ? row.continuous<number>("Size").value() || 0
+                                : 0,
+                            label: row.leafNode("MarkerBy")!.formattedPath(),
+                            isMarked: row.isMarked(),
+                            color: row.color().hexCode,
+                            mark() {
+                                row.leafNode("MarkerBy")?.mark();
+                            },
+                        };
+                    }
+
+                    let scales = await minMax(["X", "Y", "Size"]);
+
+                    console.log("scales", performance.now() - start);
+
+                    ac.speed(context.interactive ? animationSpeed.value()! : 0);
+                    ac.update(frames, (a) => {
+                        return render(
+                            dataView,
+                            scales,
+                            a,
+                            windowSize,
+                            axes,
+                            mod,
+                            !!showLabels.value(),
+                            !!xLogScale.value(),
+                            !!yLogScale.value(),
+                            createLabelPopout(
+                                mod.controls,
+                                showLabels,
+                                xLogScale,
+                                yLogScale
+                            )
+                        );
+                    });
+
+                    console.log("render", performance.now() - start);
+
+                    context.signalRenderComplete();
+
+                    mod.controls.errorOverlay.hide("General");
 
                     /** Filter out rows that can't be visualized.
                      * This includes null values and 0 for log scales */
@@ -122,56 +161,6 @@ window.Spotfire.initialize(async (mod) => {
                             (b.continuous<number>(axisName).value() || 0) -
                             (a.continuous<number>(axisName).value() || 0);
                     }
-
-                    function rowToBubble(row: DataViewRow): Bubble {
-                        return {
-                            id: row.elementId(false, ["AnimateBy"]),
-                            x: hasX
-                                ? row.continuous<number>("X").value() || 0
-                                : 0,
-                            y: hasY
-                                ? row.continuous<number>("Y").value() || 0
-                                : 0,
-                            size: hasSize
-                                ? row.continuous<number>("Size").value() || 0
-                                : 0,
-                            label: row.leafNode("MarkerBy")!.formattedPath(),
-                            isMarked: row.isMarked(),
-                            color: row.color().hexCode,
-                            mark() {},
-                        };
-                    }
-
-                    let scales = {
-                        x: await minMax("X"),
-                        y: await minMax("Y"),
-                        size: await minMax("Size"),
-                    };
-
-                    await render(
-                        dataView,
-                        bubbles,
-                        scales,
-                        true,
-                        windowSize,
-                        axes,
-                        mod,
-                        !!showLabels.value(),
-                        !!xLogScale.value(),
-                        !!yLogScale.value(),
-                        animationSpeedProperty,
-                        animationSpeed.value() || 1000,
-                        createLabelPopout(
-                            mod.controls,
-                            showLabels,
-                            xLogScale,
-                            yLogScale
-                        )
-                    );
-
-                    context.signalRenderComplete();
-
-                    mod.controls.errorOverlay.hide("General");
                 }
             } catch (e: any) {
                 console.error(e);
@@ -180,6 +169,57 @@ window.Spotfire.initialize(async (mod) => {
                         "☹️ Something went wrong, check developer console",
                     "General"
                 );
+            }
+
+            async function minMax<T extends ReadonlyArray<string>>(
+                axisNames: T
+            ): Promise<{
+                X: { min: number; max: number };
+                Y: { min: number; max: number };
+                Size: { min: number; max: number };
+            }> {
+                let scales: {
+                    [K: string]: { min: number; max: number };
+                } = {};
+                let m: {
+                    [K: string]: { min: number; max: number };
+                } = {};
+
+                let exists = await Promise.all(
+                    axisNames.map(async (a) => dataView.continuousAxis(a))
+                );
+
+                for (const a of axisNames) {
+                    scales[a] = { min: 0, max: 0 };
+                    m[a] = { min: Infinity, max: -Infinity };
+                }
+
+                for (const row of (await dataView.allRows()) || []) {
+                    for (const a of exists) {
+                        if (a) {
+                            let v = row.continuous<number>(a.name).value() || 0;
+                            const name = a.name;
+                            if (v < m[name].min) {
+                                m[name].min = v;
+                            }
+
+                            if (v > m[name].max) {
+                                m[name].max = v;
+                            }
+                        }
+                    }
+                }
+
+                for (const a of exists) {
+                    if (a) {
+                        const name = a.name;
+
+                        scales[name].min = m[name].min;
+                        scales[name].max = m[name].max;
+                    }
+                }
+
+                return scales as any;
             }
         }
     );

@@ -1,8 +1,11 @@
 import * as d3 from "d3";
-import { ReadableProxy, Size } from "spotfire-api";
+import { Size } from "spotfire-api";
 import { highlight, markingHandler, markRowforAllTimes } from "./modutils";
 import { Grid } from "./Grid";
-import { animationControl } from "./animationControl";
+import {
+    AnimationControl,
+    renderAnimationControl,
+} from "./animationControl";
 import { setIdle } from "./interactionLock";
 
 /**
@@ -78,8 +81,6 @@ const markingOverlay: any = svg
 // Layer 6: Message overlay
 const messageLayer: any = svg.append("g").attr("id", "messageOverlay");
 
-let animationControlInstance: ReturnType<typeof animationControl>;
-
 type FIX_TYPE = any;
 
 export function clearCanvas() {
@@ -97,32 +98,38 @@ export interface Bubble {
     mark(): void;
 }
 
+export interface FrameFactory {
+    name: string;
+    bubbleFactory(): Bubble[];
+    bubbles?: Bubble[];
+}
+
+export interface Frame {
+    name: string;
+    bubbles: Bubble[];
+}
+
 export interface NumericScale {
     min: number;
     max: number;
 }
 
-export async function render(
+export function render(
     dataView: Spotfire.DataView,
-    frame: Bubble[],
     scales: {
-        y: NumericScale;
-        x: NumericScale;
-        size: NumericScale;
+        Y: NumericScale;
+        X: NumericScale;
+        Size: NumericScale;
     },
-    animation: boolean,
+    animation: AnimationControl,
     windowSize: Size,
     toolTipDisplayAxes: Spotfire.Axis[],
     mod: Spotfire.Mod,
     showLabels: boolean,
     xLogScale: boolean,
     yLogScale: boolean,
-    animationSpeedProperty: ReadableProxy<Spotfire.ModProperty<number>>,
-    animationSpeed: number,
     onScaleClick: (x: number, y: number, axis: "X" | "Y") => void
 ) {
-    animationControlInstance =
-        animationControlInstance || animationControl(animationSpeedProperty);
     let context = mod.getRenderContext();
     document.querySelector("#extra_styling")!.innerHTML = `
     .tick { color: ${context.styling.scales.tick.stroke} }
@@ -138,11 +145,6 @@ export async function render(
     #animationSpeedLabel { color: ${context.styling.general.font.color}; font-size: ${context.styling.general.font.fontSize}px; font-weight: ${context.styling.general.font.fontWeight}; font-style: ${context.styling.general.font.fontStyle};}
     `;
 
-    if (!frame.length) {
-        clearCanvas();
-        return;
-    }
-
     //Calculate positions for all elements of the visualization
     let modHeight = windowSize.height;
     let modWidth = windowSize.width;
@@ -150,12 +152,9 @@ export async function render(
         (relativeMarkerSize * Math.min(modHeight, modWidth)) / 2;
     let innerMargin = maxMarkerSize;
 
-    let animationControlHeight = 0;
-    if (animation) { // TODO Check if an animation axis exists
-        animationControlHeight = defaultAnimationControlHeight;
-    } else {
-        animationControlHeight = 0;
-    }
+    let animationControlHeight = animation.visible()
+        ? defaultAnimationControlHeight
+        : 0;
 
     let grid = new Grid(
         modWidth,
@@ -176,11 +175,11 @@ export async function render(
     var xScale = xLogScale
         ? d3
               .scaleLog()
-              .domain([scales.x.min, scales.x.max])
+              .domain([scales.X.min, scales.X.max])
               .range([0, xAxesArea.width])
         : d3
               .scaleLinear()
-              .domain([scales.x.min, scales.x.max])
+              .domain([scales.X.min, scales.X.max])
               .range([0, xAxesArea.width])
               .nice();
 
@@ -228,11 +227,11 @@ export async function render(
     var yScale = yLogScale
         ? d3
               .scaleLog()
-              .domain([scales.y.min, scales.y.max])
+              .domain([scales.Y.min, scales.Y.max])
               .range([yAxisArea.height, 0])
         : d3
               .scaleLinear()
-              .domain([scales.y.min, scales.y.max])
+              .domain([scales.Y.min, scales.Y.max])
               .range([yAxisArea.height, 0])
               .nice();
 
@@ -302,62 +301,28 @@ export async function render(
     // Calculate markersize scale
     var sizeScale = d3
         .scaleSqrt()
-        .domain([scales.size.min, scales.size.max])
+        .domain([scales.Size.min, scales.Size.max])
         .range([2, maxMarkerSize]);
 
-    let animationEnabled = animation;
+    let animationEnabled = animation.visible();
 
     if (animationEnabled) {
         animationControlGroup.attr("class", "enabled");
 
-        // render animation scale
-        let animationScale = d3
-            .scaleLinear()
-            .domain([0, 10 - 1]) // TODO animation scale
-            .range([0, animationControlArea.width])
-            .clamp(true);
-
-        // TODO: When can we keep the instance and when do we need to cleanup and replace?
-        animationControlInstance.update(
-            animationScale,
-            AnimationValueChanged,
-            animationSpeed
+        // render animation controls
+        let c = animationControlGroup.attr(
+            "transform",
+            `translate (${animationControlArea.x1} ${animationControlArea.y1})`
         );
 
-        // render animation controls
-        animationControlGroup
-            .attr(
-                "transform",
-                `translate (${animationControlArea.x1} ${animationControlArea.y1})`
-            )
-            .call(animationControlInstance.render);
-
+        renderAnimationControl(animation, animationControlArea, c);
         d3.scaleLinear().tickFormat(5);
     } else {
         animationControlGroup.attr("class", "disabled");
     }
 
-    await updateBubbleChart(
-        animationControlInstance.isPlaying() ? animationSpeed : 0
-    );
-
-    async function AnimationValueChanged(
-        value: number,
-        changedByUser: boolean
-    ) {
-        try {
-            if (changedByUser) {
-                await updateBubbleChart();
-            } else {
-                await updateBubbleChart(animationSpeed);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     function getKey(row: any): string {
-        return row.key;
+        return row.id;
     }
 
     function showMessage(message: String) {
@@ -375,11 +340,15 @@ export async function render(
         messageLayer.selectAll("*").remove();
     }
 
-    function updateBubbleChart(transitionDuration = defaultTransitionSpeed) {
-        let displayRows = frame;
+    return function updateBubbleChart(frame: Frame, transitionDuration = defaultTransitionSpeed) {
+        let displayRows = frame.bubbles;
 
-        // animateLeaves![animationIndex].rows().filter(rowFilter);
 
+        if (!frame.bubbles.length) {
+            clearCanvas();
+            return;
+        }
+    
         let rowCount = displayRows.length;
         if (rowCount > displayedRowsLimit) {
             markerLayer.selectAll("*").remove(); // clear all markers and labels
@@ -388,6 +357,7 @@ export async function render(
             );
             return Promise.resolve();
         }
+        
         hideMessage();
 
         let allOrNoneMarked = !(
@@ -406,14 +376,11 @@ export async function render(
 
         updateLabels();
         updateBackground();
-
-        return updateDots();
+        updateDots();
+        renderAnimationControl(animation, animationControlArea, animationControlGroup);
 
         function updateBackground() {
-            let bgText =
-                animation
-                    ? "TODO Label for animation"
-                    : "";
+            let bgText = frame.name;
 
             backgroundLayer
                 .selectAll(".backgroundText")
@@ -511,18 +478,12 @@ export async function render(
         }
 
         function updateLabels() {
-            const labelDX = (row: Bubble) =>
-                radius(row) +
-                (xScale(row.x) || 0);
+            const labelDX = (row: Bubble) => radius(row) + (xScale(row.x) || 0);
 
-            const labelDY = (row: Bubble) =>
-                (yScale(row.y) || 0) -
-                radius(row);
+            const labelDY = (row: Bubble) => (yScale(row.y) || 0) - radius(row);
 
             const labelText = (row: Bubble) => {
-                return showLabels && row.isMarked
-                    ? row.label
-                    : "";
+                return showLabels && row.isMarked ? row.label : "";
             };
 
             //re-use current labels

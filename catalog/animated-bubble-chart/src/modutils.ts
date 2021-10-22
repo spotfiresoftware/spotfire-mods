@@ -1,6 +1,5 @@
 // @ts-ignore
 import * as d3 from "d3";
-import { DataViewRow } from "spotfire-api";
 import { Bubble } from "./index";
 import { setBusy, setIdle } from "./interactionLock";
 
@@ -26,10 +25,10 @@ export function highlight(
 
     /**
      * Show the tooltip
-     * @param {Spotfire.DataViewRow} row
+     * @param {Spotfire.Bubble} row
      * @param {Int} i
      */
-    function showTooltip(this: any, row: DataViewRow) {
+    function showTooltip(this: any, row: Bubble) {
         setBusy();
         d3.select(this)
             .clone()
@@ -38,45 +37,65 @@ export function highlight(
             .style("stroke", "black")
             .classed("highlighter", true);
 
-        let tooltipItems: string[] = [];
-        tooltipDisplayAxes.forEach((axis) => {
-            if (axis.expression == "") {
-                return;
-            }
-            if (axis.expression == "<>") {
-                return;
-            }
+        // let tooltipItems: string[] = [];
+        // tooltipDisplayAxes.forEach((axis) => {
+        //     if (axis.expression == "") {
+        //         return;
+        //     }
+        //     if (axis.expression == "<>") {
+        //         return;
+        //     }
 
-            let tooltipItemText = getDisplayName(axis);
-            tooltipItemText += ": ";
+        //     let tooltipItemText = getDisplayName(axis);
+        //     tooltipItemText += ": ";
 
-            if (axis.isCategorical) {
-                tooltipItemText += row.categorical(axis.name).formattedValue();
-            } else {
-                tooltipItemText += row.continuous(axis.name).formattedValue();
-            }
-            if (!tooltipItems.includes(tooltipItemText)) {
-                tooltipItems.push(tooltipItemText);
-            }
-        });
-        let tooltipText = tooltipItems.join("\n");
+        //     if (axis.isCategorical) {
+        //         tooltipItemText += row.categorical(axis.name).formattedValue();
+        //     } else {
+        //         tooltipItemText += row.continuous(axis.name).formattedValue();
+        //     }
+        //     if (!tooltipItems.includes(tooltipItemText)) {
+        //         tooltipItems.push(tooltipItemText);
+        //     }
+        // });
+        // let tooltipText = tooltipItems.join("\n");
 
-        mod.controls.tooltip.show(tooltipText);
+        mod.controls.tooltip.show(row.label);
     }
 
-    /**
-     *
-     * @param {Spotfire.Axis} axis
-     */
-    function getDisplayName(axis: Spotfire.Axis) {
-        return axis.parts
-            .map((node) => {
-                return node.displayName;
-            })
-            .join();
-    }
+    //     /**
+    //      *
+    //      * @param {Spotfire.Axis} axis
+    //      */
+    //     function getDisplayName(axis: Spotfire.Axis) {
+    //         return axis.parts
+    //             .map((node) => {
+    //                 return node.displayName;
+    //             })
+    //             .join();
+    //     }
 
     return highlight;
+}
+
+export function throttle<T extends Function>(func: T, timeout = 50): T {
+    let timer: any;
+    let cb = () => {};
+    return ((...args: any[]) => {
+        if (!timer) {
+            func.apply(null, args);
+            timer = setTimeout(() => {
+                cb();
+                cb = () => {};
+                timer = null;
+            }, timeout);
+            return;
+        } else {
+            cb = () => {
+                func.apply(null, args);
+            };
+        }
+    }) as any;
 }
 
 // /**
@@ -191,6 +210,7 @@ export async function markRowforAllTimes(
     dataView: Spotfire.DataView,
     toggle: boolean
 ) {
+    row.mark();
     // let mode: Spotfire.MarkingOperation = toggle ? "ToggleOrAdd" : "Replace";
 
     // if (!(await dataView.categoricalAxis("AnimateBy"))) {
