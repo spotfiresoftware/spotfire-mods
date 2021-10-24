@@ -3,7 +3,6 @@ import { Size } from "spotfire-api";
 import { highlight, markingHandler, markRowforAllTimes } from "./modutils";
 import { Grid } from "./Grid";
 import { AnimationControl } from "./animationControl";
-import { setIdle } from "./interactionLock";
 
 /**
  * Constants
@@ -439,7 +438,7 @@ export function render(
             let allDots = dots.merge(newdots);
 
             // update attributes on all dots
-            let transitionEnd = allDots
+            allDots
                 .attr("id", getKey)
                 .attr("class", (r) => `dot ${r.isMarked ? "marked" : ""}`)
                 .call(
@@ -459,13 +458,12 @@ export function render(
                 .attr("r", radius)
                 .style("fill", (row: Bubble) => row.color)
                 .end()
-                .catch(() => {
+                .catch(() => {                    
                     // Interrupted transitions lead to a rejected promise.
                 });
 
             allDots
                 .on("click", function (row: Bubble) {
-                    setIdle();
                     markRowforAllTimes(
                         row,
                         dataView,
@@ -486,7 +484,6 @@ export function render(
                 .style("fill-opacity", 0)
                 .attr("r", 0)
                 .remove();
-            return transitionEnd;
         }
 
         function radius(row: Bubble) {

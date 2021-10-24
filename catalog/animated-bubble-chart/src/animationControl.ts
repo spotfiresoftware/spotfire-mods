@@ -2,7 +2,6 @@ import { Frame, FrameFactory } from "./index";
 import { continueOnIdle } from "./interactionLock";
 import { throttle } from "./modutils";
 
-
 type SetupVisualization = (animationControl: AnimationControl) => RenderFrame;
 type RenderFrame = (frame: Frame, animationSpeed: number) => void;
 
@@ -72,19 +71,23 @@ export class AnimationControl {
     }
 
     render() {
+        const emptyFrame = { name: "", bubbles: [] };
+
         if (this.animationIndex >= this.frames.length) {
             this.animationIndex = 0;
         }
 
         const frame = this.frames[this.animationIndex];
+        if (!frame) {
+            this.renderFrame(emptyFrame, 0);
+            return;
+        }
+
         if (!frame.bubbles) {
             frame.bubbles = frame.bubbleFactory();
         }
 
-        this.renderFrame(
-            (frame as Frame) || { name: "", bubbles: [] },
-            this.animationSpeed
-        );
+        this.renderFrame((frame as Frame) || emptyFrame, this.animationSpeed);
     }
 
     private pause() {

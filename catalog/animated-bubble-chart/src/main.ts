@@ -1,7 +1,6 @@
 import { DataViewRow } from "spotfire-api";
 import { AnimationControl } from "./animationControl";
 import { Bubble, clearCanvas, render } from "./index";
-import { continueOnIdle } from "./interactionLock";
 import { createLabelPopout } from "./popout";
 
 window.Spotfire.initialize(async (mod) => {
@@ -42,7 +41,6 @@ window.Spotfire.initialize(async (mod) => {
             animationSpeed,
             ...axes
         ) => {
-            await continueOnIdle();
 
             try {
                 const errors = await dataView.getErrors();

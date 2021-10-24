@@ -12,15 +12,22 @@ export function highlight(
     mod: Spotfire.Mod,
     tooltipDisplayAxes: Spotfire.Axis[]
 ) {
+    let timeout: any = null;
+
     function highlight(selection: any) {
         selection.on("mouseenter", showTooltip).on("mouseleave", hideTooltip);
     }
 
     function hideTooltip() {
-        setIdle();
-        // d3.select("#HighlightShape").remove();
-        d3.select(".highlighter").remove();
-        mod.controls.tooltip.hide();
+        d3.selectAll(".highlighter").remove();
+
+        if (!timeout) {
+            timeout = setTimeout(() => {
+                setIdle();
+                mod.controls.tooltip.hide();
+                timeout = null;
+            }, 500);
+        }
     }
 
     /**
@@ -29,12 +36,16 @@ export function highlight(
      * @param {Int} i
      */
     function showTooltip(this: any, row: Bubble) {
+        clearTimeout(timeout);
+        timeout = null;
+        d3.selectAll("svg *").transition().duration(0);
         setBusy();
         d3.select(this)
             .clone()
             .raise()
             .style("fill", "None")
             .style("stroke", "black")
+            .classed("dot", false)
             .classed("highlighter", true);
 
         // let tooltipItems: string[] = [];
