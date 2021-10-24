@@ -2,10 +2,7 @@ import * as d3 from "d3";
 import { Size } from "spotfire-api";
 import { highlight, markingHandler, markRowforAllTimes } from "./modutils";
 import { Grid } from "./Grid";
-import {
-    AnimationControl,
-    renderAnimationControl,
-} from "./animationControl";
+import { AnimationControl } from "./animationControl";
 import { setIdle } from "./interactionLock";
 
 /**
@@ -81,6 +78,19 @@ const markingOverlay: any = svg
 // Layer 6: Message overlay
 const messageLayer: any = svg.append("g").attr("id", "messageOverlay");
 
+const playButtonSvg = document.querySelector("#play_button")?.lastChild!;
+const pauseButtonSvg = document.querySelector("#pause_button")?.lastChild!;
+const animationSpeedButtonSvg = document.querySelector(
+    "#animation_speed_button g"
+)!;
+
+const speedButtonSize = 24,
+    playButtonSize = 16,
+    padding = 8,
+    progressHeight = 6,
+    progressX =
+        (Math.max(speedButtonSize, playButtonSize) - progressHeight) / 2;
+
 type FIX_TYPE = any;
 
 export function clearCanvas() {
@@ -121,7 +131,7 @@ export function render(
         X: NumericScale;
         Size: NumericScale;
     },
-    animation: AnimationControl,
+    animationControl: AnimationControl,
     windowSize: Size,
     toolTipDisplayAxes: Spotfire.Axis[],
     mod: Spotfire.Mod,
@@ -152,7 +162,7 @@ export function render(
         (relativeMarkerSize * Math.min(modHeight, modWidth)) / 2;
     let innerMargin = maxMarkerSize;
 
-    let animationControlHeight = animation.visible()
+    let animationControlHeight = animationControl.visible()
         ? defaultAnimationControlHeight
         : 0;
 
@@ -304,7 +314,7 @@ export function render(
         .domain([scales.Size.min, scales.Size.max])
         .range([2, maxMarkerSize]);
 
-    let animationEnabled = animation.visible();
+    let animationEnabled = animationControl.visible();
 
     if (animationEnabled) {
         animationControlGroup.attr("class", "enabled");
@@ -315,7 +325,7 @@ export function render(
             `translate (${animationControlArea.x1} ${animationControlArea.y1})`
         );
 
-        renderAnimationControl(animation, animationControlArea, c);
+        renderAnimationControl(animationControl, animationControlArea, c);
         d3.scaleLinear().tickFormat(5);
     } else {
         animationControlGroup.attr("class", "disabled");
@@ -340,15 +350,17 @@ export function render(
         messageLayer.selectAll("*").remove();
     }
 
-    return function updateBubbleChart(frame: Frame, transitionDuration = defaultTransitionSpeed) {
+    return function updateBubbleChart(
+        frame: Frame,
+        transitionDuration = defaultTransitionSpeed
+    ) {
         let displayRows = frame.bubbles;
-
 
         if (!frame.bubbles.length) {
             clearCanvas();
             return;
         }
-    
+
         let rowCount = displayRows.length;
         if (rowCount > displayedRowsLimit) {
             markerLayer.selectAll("*").remove(); // clear all markers and labels
@@ -357,7 +369,7 @@ export function render(
             );
             return Promise.resolve();
         }
-        
+
         hideMessage();
 
         let allOrNoneMarked = !(
@@ -377,7 +389,11 @@ export function render(
         updateLabels();
         updateBackground();
         updateDots();
-        renderAnimationControl(animation, animationControlArea, animationControlGroup);
+        renderAnimationControl(
+            animationControl,
+            animationControlArea,
+            animationControlGroup
+        );
 
         function updateBackground() {
             let bgText = frame.name;
@@ -539,5 +555,240 @@ export function render(
             // remove any labels no longer needed.
             labels.exit().remove();
         }
+    };
+}
+
+function renderAnimationControl(
+    animation: AnimationControl,
+    animationControlArea: { width: number },
+    context: d3.Selection<SVGGElement, unknown, HTMLElement, any>
+) {
+    // render animation scale
+    let animationScale = d3
+        .scaleLinear()
+        .domain(animation.domain())
+        .range([0, animationControlArea.width])
+        .clamp(true);
+
+    animationScale.range([
+        0 + playButtonSize + padding,
+        animationControlArea.width - speedButtonSize - padding,
+    ]);
+
+    let playButton: any = context.select("svg");
+    setPlaying(animation.isPlaying());
+
+    var dispatch = d3.dispatch("sliderChange");
+
+    let animationSpeedButton = context.select<SVGGElement>("#animationSpeed");
+    if (animationSpeedButton.empty()) {
+        animationSpeedButton = context.append("g");
+        animationSpeedButton
+            .attr("id", "animationSpeed")
+            .node()!
+            .append(animationSpeedButtonSvg);
     }
+
+    animationSpeedButton
+        .attr(
+            "transform",
+            `translate(${animationScale.range()[1] + padding} 0)`
+        )
+        .attr("width", speedButtonSize)
+        .attr("height", speedButtonSize)
+        .attr("class", "animationSpeed")
+        .on("click", () => showSpeedSlider(animation));
+
+    let animationSlider = context.select<SVGRectElement>("#animationSlider");
+
+    if (animationSlider.empty()) {
+        animationSlider = context.append("rect").attr("id", "animationSlider");
+    }
+
+    animationSlider
+        .attr("x", animationScale(0) || 0)
+        .attr("y", progressX)
+        .attr(
+            "width",
+            Math.max(0, animationScale.range()[1] - animationScale.range()[0])
+        )
+        .attr("height", 8)
+        .attr("class", "animation-tray")
+        .on("click", sliderclick)
+        .call(
+            d3
+                .drag<SVGRectElement, any>()
+                .on("start", function () {
+                    dispatch.call(
+                        "sliderChange",
+                        this,
+                        Math.round(
+                            animationScale.invert(
+                                d3.mouse(animationSlider.node()!)[0]
+                            )
+                        )
+                    );
+
+                    d3.event.sourceEvent.preventDefault();
+                })
+                .on("drag", function () {
+                    dispatch.call(
+                        "sliderChange",
+                        this,
+                        Math.round(
+                            animationScale.invert(
+                                d3.mouse(animationSlider.node()!)[0]
+                            )
+                        )
+                    );
+                })
+        );
+
+    dispatch.on("sliderChange.slider", function (value) {
+        setSliderValue(value);
+        animation.setIndex(value);
+    });
+
+    let animationIndicator = context.select<SVGRectElement>(
+        "#animationIndicator"
+    );
+    if (animationIndicator.empty()) {
+        animationIndicator = context
+            .append("rect")
+            .attr("id", "animationIndicator");
+    }
+
+    animationIndicator
+        .attr("x", animationScale(0) || 0)
+        .attr("y", progressX)
+        .attr(
+            "width",
+            Math.max(
+                0,
+                animationScale(animation.currentIndex())! - animationScale(0)!
+            )
+        )
+        .attr("height", 8)
+        .attr("class", "animation-indicator");
+
+    let animationHandle = context.select<SVGCircleElement>("#animationHandle");
+    if (animationHandle.empty()) {
+        animationHandle = context
+            .append("circle")
+            .attr("id", "animationHandle");
+    }
+
+    animationHandle
+        .attr("cy", progressX + 4)
+        .attr("cx", animationScale(animation.currentIndex()) || 0)
+        .attr("r", 6)
+        .attr("class", "animation-handle");
+
+    function sliderclick() {
+        let animationIndex = Math.round(
+            animationScale.invert(d3.mouse(animationSlider.node()!)[0])
+        );
+
+        animation.setIndex(animationIndex);
+    }
+
+    function setPlaying(isPlaying: boolean) {
+        let svg = (!isPlaying ? playButtonSvg : pauseButtonSvg)?.cloneNode(
+            true
+        );
+
+        if (playButton.empty()) {
+            context.attr("id", "playButton").node()!.append(svg);
+        } else {
+            context.select<SVGElement>("svg").node()!.replaceWith(svg);
+        }
+
+        playButton = context.select("svg");
+        playButton
+            .attr("x", 0)
+            .attr("y", (speedButtonSize - playButtonSize) / 2)
+            .attr("height", playButtonSize)
+            .attr("width", playButtonSize)
+            .attr("class", "playbutton")
+            .on("click", playClicked);
+    }
+
+    function playClicked() {
+        animation.isPlaying(!animation.isPlaying());
+    }
+
+    function setSliderValue(value: number, transitionduration = 0) {
+        animationIndicator
+            .attr("aria-labelledby", value)
+            .transition()
+            .ease(d3.easeLinear)
+            .duration(transitionduration)
+            .attr(
+                "width",
+                Math.max(
+                    0,
+                    (animationScale(value) || 0) - (animationScale(0) || 0)
+                )
+            );
+        animationHandle
+            .attr("aria-labelledby", value)
+            .transition()
+            .ease(d3.easeLinear)
+            .duration(transitionduration)
+            .attr("cx", animationScale(value) || 0);
+    }
+}
+
+function showSpeedSlider(animation: AnimationControl) {
+    let times = [0.1, 0.3, 0.5, 1, 3, 5, 10].reverse();
+    function toTime(index: number) {
+        return (
+            1000 *
+            (index >= 0 ? times[index] || times[times.length - 1] : times[0])
+        );
+    }
+    function toIndex(time: number) {
+        for (var i = 0; i < times.length; i++) {
+            if (time / 1000 >= times[i]) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    let current = document.getElementById("animationSpeedSlider");
+    if (current) {
+        document.body.removeChild(current);
+        document.body.removeChild(
+            document.getElementById("animationSpeedLabel")!
+        );
+        return;
+    }
+
+    let input = document.createElement("input");
+    input.id = "animationSpeedSlider";
+    input.type = "range";
+    input.style.bottom = speedButtonSize + padding + "px";
+    input["max"] = "0";
+    input["max"] = String(times.length - 1);
+    input.value = String(toIndex(animation.speed()));
+    document.body.appendChild(input);
+
+    let label = document.createElement("label");
+    label.htmlFor = "animationSpeedSlider";
+    label.id = "animationSpeedLabel";
+    label.style.bottom = speedButtonSize + 2 * padding + 100 + "px";
+    label.textContent = `${toTime(Number(input.value)) / 1000}s`;
+    document.body.appendChild(label);
+
+    input.oninput = function () {
+        label.textContent = `${toTime(Number(input.value)) / 1000}s`;
+    };
+
+    input.onchange = function () {
+        document.body.removeChild(input);
+        document.body.removeChild(label);
+        animation.speed(toTime(Number(input.value)));
+    };
 }

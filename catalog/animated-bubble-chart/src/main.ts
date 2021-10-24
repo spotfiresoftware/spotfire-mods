@@ -1,5 +1,5 @@
 import { DataViewRow } from "spotfire-api";
-import { animationControl } from "./animationControl";
+import { AnimationControl } from "./animationControl";
 import { Bubble, clearCanvas, render } from "./index";
 import { continueOnIdle } from "./interactionLock";
 import { createLabelPopout } from "./popout";
@@ -25,7 +25,7 @@ window.Spotfire.initialize(async (mod) => {
         mod.visualization.axis("Size")
     );
 
-    let ac = animationControl(animationSpeedProperty);
+    let ac = new AnimationControl(animationSpeedProperty);
 
     /**
      * Creates a function that is part of the main read-render loop.
@@ -158,8 +158,8 @@ window.Spotfire.initialize(async (mod) => {
                         axisName: string
                     ): (a: DataViewRow, b: DataViewRow) => number {
                         return (a, b) =>
-                            (b.continuous<number>(axisName).value() || 0) -
-                            (a.continuous<number>(axisName).value() || 0);
+                            hasSize ?  (b.continuous<number>(axisName).value() || 0) -
+                            (a.continuous<number>(axisName).value() || 0) : 1;
                     }
                 }
             } catch (e: any) {
