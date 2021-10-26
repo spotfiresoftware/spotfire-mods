@@ -95,7 +95,15 @@ export class AnimationControl {
         clearTimeout(this.timer);
     }
 
+    private isAtLastFrame() {
+        return this.animationIndex == this.frames.length - 1;
+    }
+
     private play() {
+        if (this.isAtLastFrame()) {
+            this.animationIndex = 0;
+        }
+
         this.playing = true;
         this.render();
         let instance = this;
@@ -105,7 +113,11 @@ export class AnimationControl {
             }
 
             await continueOnIdle();
-            instance.animationIndex++;
+            if (instance.isAtLastFrame()) {
+                instance.pause();
+            } else {
+                instance.animationIndex++;
+            }
 
             instance.render();
             instance.timer = setTimeout(next, instance.animationSpeed);
