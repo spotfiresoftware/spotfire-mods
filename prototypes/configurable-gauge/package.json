@@ -5,6 +5,7 @@
     "main": "src/index.ts",
     "scripts": {
         "server": "mods-dev-server dist",
+        "build": "gulp build",
         "build-watch": "gulp watch",
         "start": "npm run build-watch",
         "test": "jest --watchAll",
