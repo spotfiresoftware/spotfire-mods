@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Size } from "spotfire-api";
-import { highlight, markingHandler, markRowforAllTimes } from "./modutils";
+import { highlight, markingHandler } from "./modutils";
 import { Grid } from "./Grid";
 import { AnimationControl } from "./animationControl";
 
@@ -103,8 +103,9 @@ export interface Bubble {
     color: string;
     id: string;
     label: string;
+    tooltip: string;
     isMarked: boolean;
-    mark(): void;
+    mark(toggle?: boolean): void;
 }
 
 export interface FrameFactory {
@@ -132,7 +133,6 @@ export function render(
     },
     animationControl: AnimationControl,
     windowSize: Size,
-    toolTipDisplayAxes: Spotfire.Axis[],
     mod: Spotfire.Mod,
     showLabels: boolean,
     xLogScale: boolean,
@@ -378,7 +378,7 @@ export function render(
         let opacity = allOrNoneMarked ? defaultOpacity : markingOpacity;
 
         // prepare the tooltip
-        let hl = highlight(mod, toolTipDisplayAxes);
+        let hl = highlight(mod);
 
         markerLayer.attr(
             "transform",
@@ -458,18 +458,13 @@ export function render(
                 .attr("r", radius)
                 .style("fill", (row: Bubble) => row.color)
                 .end()
-                .catch(() => {                    
+                .catch(() => {
                     // Interrupted transitions lead to a rejected promise.
                 });
 
             allDots
                 .on("click", function (row: Bubble) {
-                    markRowforAllTimes(
-                        row,
-                        dataView,
-                        d3.event.ctrlKey || d3.event.metaKey
-                    );
-
+                    row.mark(d3.event.ctrlKey || d3.event.metaKey);
                     d3.event.preventDefault();
                 })
                 .call(hl);

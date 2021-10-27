@@ -1,6 +1,7 @@
 import { DataViewRow } from "spotfire-api";
 import { AnimationControl } from "./animationControl";
 import { Bubble, clearCanvas, render } from "./index";
+import { tooltip } from "./modutils";
 import { createLabelPopout } from "./popout";
 
 window.Spotfire.initialize(async (mod) => {
@@ -24,7 +25,7 @@ window.Spotfire.initialize(async (mod) => {
         mod.visualization.axis("Size")
     );
 
-    let ac = new AnimationControl(animationSpeedProperty);
+    let animationControl = new AnimationControl(animationSpeedProperty);
 
     /**
      * Creates a function that is part of the main read-render loop.
@@ -41,7 +42,6 @@ window.Spotfire.initialize(async (mod) => {
             animationSpeed,
             ...axes
         ) => {
-
             try {
                 const errors = await dataView.getErrors();
                 if (errors.length > 0) {
@@ -49,7 +49,6 @@ window.Spotfire.initialize(async (mod) => {
                     mod.controls.errorOverlay.show(errors, "DataView");
                 } else {
                     mod.controls.errorOverlay.hide("DataView");
-                    mod.controls.errorOverlay.hide("General");
 
                     const hasX = !!(await dataView.continuousAxis("X"));
                     const hasY = !!(await dataView.continuousAxis("Y"));
@@ -62,7 +61,6 @@ window.Spotfire.initialize(async (mod) => {
                             )?.root()
                         )?.leaves() || [];
 
-                    let start = performance.now();
                     let frames = animateLeaves.map((l) => ({
                         name: l.formattedValue(),
                         bubbleFactory: () =>
@@ -73,9 +71,8 @@ window.Spotfire.initialize(async (mod) => {
                                 .map(rowToBubble),
                     }));
 
-                    console.log("frames", performance.now() - start);
-
                     function rowToBubble(row: DataViewRow): Bubble {
+                        let tooltipText: string;
                         return {
                             id: row.elementId(false, ["AnimateBy"]),
                             x: hasX
@@ -90,24 +87,30 @@ window.Spotfire.initialize(async (mod) => {
                             label: row.leafNode("MarkerBy")!.formattedPath(),
                             isMarked: row.isMarked(),
                             color: row.color().hexCode,
-                            mark() {
-                                row.leafNode("MarkerBy")?.mark();
+                            mark(toggle?: boolean) {
+                                row.leafNode("MarkerBy")?.mark(
+                                    toggle ? "ToggleOrAdd" : "Replace"
+                                );
+                            },
+                            get tooltip() {
+                                if (!tooltipText) {
+                                    tooltipText = tooltip(row, axes);
+                                }
+
+                                return tooltipText;
                             },
                         };
                     }
 
                     let scales = await minMax(["X", "Y", "Size"]);
 
-                    console.log("scales", performance.now() - start);
-
-                    ac.speed(context.interactive ? animationSpeed.value()! : 0);
-                    ac.update(frames, (a) => {
+                    animationControl.speed(context.interactive ? animationSpeed.value()! : 0);
+                    animationControl.update(frames, (a) => {
                         return render(
                             dataView,
                             scales,
                             a,
                             windowSize,
-                            axes,
                             mod,
                             !!showLabels.value(),
                             !!xLogScale.value(),
@@ -121,7 +124,6 @@ window.Spotfire.initialize(async (mod) => {
                         );
                     });
 
-                    console.log("render", performance.now() - start);
 
                     context.signalRenderComplete();
 
@@ -156,8 +158,11 @@ window.Spotfire.initialize(async (mod) => {
                         axisName: string
                     ): (a: DataViewRow, b: DataViewRow) => number {
                         return (a, b) =>
-                            hasSize ?  (b.continuous<number>(axisName).value() || 0) -
-                            (a.continuous<number>(axisName).value() || 0) : 1;
+                            hasSize
+                                ? (b.continuous<number>(axisName).value() ||
+                                      0) -
+                                  (a.continuous<number>(axisName).value() || 0)
+                                : 1;
                     }
                 }
             } catch (e: any) {

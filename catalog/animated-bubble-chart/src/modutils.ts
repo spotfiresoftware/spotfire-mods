@@ -1,5 +1,6 @@
 // @ts-ignore
 import * as d3 from "d3";
+import { Axis, DataViewRow } from "spotfire-api";
 import { Bubble } from "./index";
 import { setBusy, setIdle } from "./interactionLock";
 
@@ -10,11 +11,10 @@ import { setBusy, setIdle } from "./interactionLock";
 //  */
 export function highlight(
     mod: Spotfire.Mod,
-    tooltipDisplayAxes: Spotfire.Axis[]
 ) {
     let timeout: any = null;
 
-    function highlight(selection: any) {
+    return function highlight(selection: any) {
         selection.on("mouseenter", showTooltip).on("mouseleave", hideTooltip);
     }
 
@@ -48,45 +48,8 @@ export function highlight(
             .classed("dot", false)
             .classed("highlighter", true);
 
-        // let tooltipItems: string[] = [];
-        // tooltipDisplayAxes.forEach((axis) => {
-        //     if (axis.expression == "") {
-        //         return;
-        //     }
-        //     if (axis.expression == "<>") {
-        //         return;
-        //     }
-
-        //     let tooltipItemText = getDisplayName(axis);
-        //     tooltipItemText += ": ";
-
-        //     if (axis.isCategorical) {
-        //         tooltipItemText += row.categorical(axis.name).formattedValue();
-        //     } else {
-        //         tooltipItemText += row.continuous(axis.name).formattedValue();
-        //     }
-        //     if (!tooltipItems.includes(tooltipItemText)) {
-        //         tooltipItems.push(tooltipItemText);
-        //     }
-        // });
-        // let tooltipText = tooltipItems.join("\n");
-
-        mod.controls.tooltip.show(row.label);
+        mod.controls.tooltip.show(row.tooltip);
     }
-
-    //     /**
-    //      *
-    //      * @param {Spotfire.Axis} axis
-    //      */
-    //     function getDisplayName(axis: Spotfire.Axis) {
-    //         return axis.parts
-    //             .map((node) => {
-    //                 return node.displayName;
-    //             })
-    //             .join();
-    //     }
-
-    return highlight;
 }
 
 export function throttle<T extends Function>(func: T, timeout = 50): T {
@@ -193,14 +156,9 @@ export function markingHandler(
             dataView.clearMarking();
         } else {
             nodes.forEach((element: any) => {
-                /**@type {Spotfire.DataViewRow} */
-                // @ts-ignore
-                var d = element.__data__;
-                markRowforAllTimes(
-                    d,
-                    dataView,
-                    d3.event.sourceEvent.ctrlKey || d3.event.sourceEvent.metaKey
-                );
+
+                var d : Bubble = element.__data__;
+                d.mark(d3.event.sourceEvent.ctrlKey || d3.event.sourceEvent.metaKey);
             });
         }
         markingRect.attr("class", "inactiveMarking");
@@ -216,32 +174,45 @@ export function markingHandler(
         .on("end", dragended);
 }
 
-export async function markRowforAllTimes(
-    row: Bubble,
-    dataView: Spotfire.DataView,
-    toggle: boolean
-) {
-    row.mark();
-    // let mode: Spotfire.MarkingOperation = toggle ? "ToggleOrAdd" : "Replace";
 
-    // if (!(await dataView.categoricalAxis("AnimateBy"))) {
-    //     row.mark();
-    // }
+export function tooltip(row: DataViewRow, axes: Axis[]) {
+    let tooltipItems: string[] = [];
+    axes.forEach((axis) => {
+        if (axis.expression == "") {
+            return;
+        }
+        if (axis.expression == "<>") {
+            return;
+        }
 
-    // const axes = (await dataView.axes())
-    //     .filter((a) => a.isCategorical && a.name != "AnimateBy")
-    //     .map((a) => a.name);
-    // (await dataView.allRows())
-    //     ?.filter((sibling) => {
-    //         for (var i = 0; i < axes.length; i++) {
-    //             if (
-    //                 row.categorical(axes[i]).leafIndex !=
-    //                 sibling.categorical(axes[i]).leafIndex
-    //             ) {
-    //                 return false;
-    //             }
-    //         }
-    //         return true;
-    //     })
-    //     .forEach((r) => r.mark(mode));
+        let tooltipItemText = getDisplayName(axis);
+        tooltipItemText += ": ";
+
+        if (axis.isCategorical) {
+            tooltipItemText += row
+                .categorical(axis.name)
+                .formattedValue();
+        } else {
+            tooltipItemText += row
+                .continuous(axis.name)
+                .formattedValue();
+        }
+        if (!tooltipItems.includes(tooltipItemText)) {
+            tooltipItems.push(tooltipItemText);
+        }
+    });
+
+    return tooltipItems.join("\n");
+
+    /**
+     *
+     * @param {Spotfire.Axis} axis
+     */
+    function getDisplayName(axis: Spotfire.Axis) {
+        return axis.parts
+            .map((node) => {
+                return node.displayName;
+            })
+            .join();
+    }
 }
