@@ -50,6 +50,9 @@
             "dropTarget": {
                 "icon": "Color",
                 "description": "Color by {0}"
+            },
+            "automaticConfiguration": {
+                "expressionHeuristics": "none"
             }
         },
         "axes": [
@@ -60,6 +63,9 @@
                 "dropTarget": {
                     "icon": "Tile",
                     "description": "Use {0} on the mod's Gauge-axis"
+                },
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
                 }
             },
             {
@@ -102,6 +108,9 @@
                 "dropTarget": {
                     "icon": "Compare",
                     "description": "Use {0} on the Max value-axis"
+                },
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
                 }
             }
         ]
