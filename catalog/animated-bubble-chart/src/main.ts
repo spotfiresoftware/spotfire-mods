@@ -61,10 +61,10 @@ window.Spotfire.initialize(async (mod) => {
                             )?.root()
                         )?.leaves() || [];
 
-                    let frames = animateLeaves.map((l) => ({
-                        name: l.formattedValue(),
+                    let frames = animateLeaves.map((leaf) => ({
+                        name: leaf.formattedValue(),
                         bubbleFactory: () =>
-                            l
+                            leaf
                                 .rows()
                                 .filter(rowFilter)
                                 .sort(sortContinuousAxis("Size"))
@@ -104,7 +104,9 @@ window.Spotfire.initialize(async (mod) => {
 
                     let scales = await minMax(["X", "Y", "Size"]);
 
-                    animationControl.speed(context.interactive ? animationSpeed.value()! : 0);
+                    animationControl.speed(
+                        context.interactive ? animationSpeed.value()! : 0
+                    );
                     animationControl.update(frames, (a) => {
                         return render(
                             dataView,
@@ -123,7 +125,6 @@ window.Spotfire.initialize(async (mod) => {
                             )
                         );
                     });
-
 
                     context.signalRenderComplete();
 
@@ -164,6 +165,64 @@ window.Spotfire.initialize(async (mod) => {
                                   (a.continuous<number>(axisName).value() || 0)
                                 : 1;
                     }
+
+                    async function minMax<T extends ReadonlyArray<string>>(
+                        axisNames: T
+                    ): Promise<{
+                        X: { min: number; max: number };
+                        Y: { min: number; max: number };
+                        Size: { min: number; max: number };
+                    }> {
+                        let scales: {
+                            [K: string]: { min: number; max: number };
+                        } = {};
+                        let m: {
+                            [K: string]: { min: number; max: number };
+                        } = {};
+
+                        let exists = await Promise.all(
+                            axisNames.map(async (a) =>
+                                dataView.continuousAxis(a)
+                            )
+                        );
+
+                        for (const a of axisNames) {
+                            scales[a] = { min: 0, max: 0 };
+                            m[a] = { min: Infinity, max: -Infinity };
+                        }
+
+                        for (const row of (
+                            (await dataView.allRows()) || []
+                        ).filter(rowFilter)) {
+                            for (const a of exists) {
+                                if (a) {
+                                    let v =
+                                        row
+                                            .continuous<number>(a.name)
+                                            .value() || 0;
+                                    const name = a.name;
+                                    if (v < m[name].min) {
+                                        m[name].min = v;
+                                    }
+
+                                    if (v > m[name].max) {
+                                        m[name].max = v;
+                                    }
+                                }
+                            }
+                        }
+
+                        for (const a of exists) {
+                            if (a) {
+                                const name = a.name;
+
+                                scales[name].min = m[name].min;
+                                scales[name].max = m[name].max;
+                            }
+                        }
+
+                        return scales as any;
+                    }
                 }
             } catch (e: any) {
                 console.error(e);
@@ -172,57 +231,6 @@ window.Spotfire.initialize(async (mod) => {
                         "☹️ Something went wrong, check developer console",
                     "General"
                 );
-            }
-
-            async function minMax<T extends ReadonlyArray<string>>(
-                axisNames: T
-            ): Promise<{
-                X: { min: number; max: number };
-                Y: { min: number; max: number };
-                Size: { min: number; max: number };
-            }> {
-                let scales: {
-                    [K: string]: { min: number; max: number };
-                } = {};
-                let m: {
-                    [K: string]: { min: number; max: number };
-                } = {};
-
-                let exists = await Promise.all(
-                    axisNames.map(async (a) => dataView.continuousAxis(a))
-                );
-
-                for (const a of axisNames) {
-                    scales[a] = { min: 0, max: 0 };
-                    m[a] = { min: Infinity, max: -Infinity };
-                }
-
-                for (const row of (await dataView.allRows()) || []) {
-                    for (const a of exists) {
-                        if (a) {
-                            let v = row.continuous<number>(a.name).value() || 0;
-                            const name = a.name;
-                            if (v < m[name].min) {
-                                m[name].min = v;
-                            }
-
-                            if (v > m[name].max) {
-                                m[name].max = v;
-                            }
-                        }
-                    }
-                }
-
-                for (const a of exists) {
-                    if (a) {
-                        const name = a.name;
-
-                        scales[name].min = m[name].min;
-                        scales[name].max = m[name].max;
-                    }
-                }
-
-                return scales as any;
             }
         }
     );
