@@ -17,9 +17,6 @@
 const liveServer = require("live-server");
 const path = require("path");
 const fs = require("fs");
-const { promisify } = require("util");
-const readFile = promisify(fs.readFile);
-const readdir = promisify(fs.readdir);
 
 const manifestName = "mod-manifest.json";
 
@@ -48,19 +45,21 @@ module.exports.start = startServer;
 // Run the server stand-alone as a node script
 // @ts-ignore
 if (require.main === module) {
-    startServer({
-        root: process.argv[2] || "./src/"
-    }).catch((err) => {
+    try {
+        startServer({
+            root: process.argv[2] || "./src/"
+        });
+    } catch (err) {
         console.warn(err);
         process.exit(1);
-    });
+    }
 }
 
 /**
  * Start a liver server with CSP policies mimicing the Spotfire Mod environment.
  * @param {import("live-server").LiveServerParams} partialConfig
  */
-async function startServer(partialConfig = {}) {
+function startServer(partialConfig = {}) {
     const config = {
         ...defaultConfig,
         ...partialConfig
@@ -72,26 +71,26 @@ async function startServer(partialConfig = {}) {
         throw `The path '${rootDirectoryAbsolutePath}' does not exist.`;
     }
 
-    await readExternalResourcesFromManifest(rootDirectoryAbsolutePath);
+    readExternalResourcesFromManifest(rootDirectoryAbsolutePath);
 
-    liveServer.start(config);
+    return liveServer.start(config);
 }
 
 /**
  * Read external resources from the mod manifest placed in the root directory.
  * @param {string} rootDirectoryAbsolutePath
  */
-async function readExternalResourcesFromManifest(rootDirectoryAbsolutePath) {
-    const files = await readdir(rootDirectoryAbsolutePath);
+function readExternalResourcesFromManifest(rootDirectoryAbsolutePath) {
+    const files = fs.readdirSync(rootDirectoryAbsolutePath);
 
     if (files.find((fileName) => fileName == manifestName)) {
         const manifestPath = path.join(rootDirectoryAbsolutePath, manifestName);
 
-        await readExternalResources();
+        readExternalResources();
         fs.watch(manifestPath, {}, readExternalResources);
 
         async function readExternalResources() {
-            let content = await readFile(manifestPath, { encoding: "utf-8" });
+            let content = fs.readFileSync(manifestPath, { encoding: "utf-8" });
 
             try {
                 let json = JSON.parse(content);
