@@ -9,7 +9,7 @@
     "homepage": "https://github.com/TIBCOSoftware/spotfire-mods",
     "main": "server.js",
     "bin": {
-        "mods-dev-server": "./development-server.js"
+        "mods-dev-server": "./cli.js"
     },
     "types": "server.d.ts",
     "scripts": {
