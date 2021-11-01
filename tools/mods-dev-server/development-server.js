@@ -14,7 +14,7 @@
  * The development server mimics the way the Spotfire runtime works in regards to cross origin requests and content security policies.
  */
 
-const liveServer = require("live-server");
+const devServer = require("./server");
 const path = require("path");
 const fs = require("fs");
 
@@ -35,7 +35,7 @@ const defaultConfig = {
     cors: false,
     // @ts-ignore
     open: "/" + manifestName,
-    root: "./src/",
+    root: "./test/test-files/",
     wait: 250, // Waits for all changes, before reloading. Defaults to 0 sec.
     middleware: [cacheRedirect]
 };
@@ -47,7 +47,7 @@ module.exports.start = startServer;
 if (require.main === module) {
     try {
         startServer({
-            root: process.argv[2] || "./src/"
+            // root: process.argv[2] || "./src/"
         });
     } catch (err) {
         console.warn(err);
@@ -73,7 +73,7 @@ function startServer(partialConfig = {}) {
 
     readExternalResourcesFromManifest(rootDirectoryAbsolutePath);
 
-    return liveServer.start(config);
+    return devServer.start(config);
 }
 
 /**

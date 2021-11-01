@@ -1,6 +1,7 @@
 {
     "apiVersion": "1.1",
     "version": "1.0",
+    "externalResources": ["http://example.com"],
     "name": "Test mod",
     "id": "test-mod",
     "icon": "icon.svg",

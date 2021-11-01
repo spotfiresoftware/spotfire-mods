@@ -8,6 +8,7 @@ const indexHtml = fs.readFileSync(path.join(__dirname, "test-files", "index.html
 
 const devServer = require("..").start({
     root: path.join(__dirname, "test-files"),
+    open: false
 });
 
 describe("basic get requests", function () {
@@ -17,6 +18,38 @@ describe("basic get requests", function () {
             .expect("Content-Type", "text/html; charset=UTF-8")
             .expect(/My mod/i)
             .expect(200, done);
+    });
+
+    it("should respond with index.html and html content type", function (done) {
+        test(devServer)
+            .get("/index.html")
+            .expect("Content-Type", "text/html; charset=UTF-8")
+            .expect(/My mod/i)
+            .expect(200, done);
+    });
+
+    it("should respond with index.html and html content type", function (done) {
+        test(devServer)
+            .get("/index.html?apa=bepa")
+            .expect("Content-Type", "text/html; charset=UTF-8")
+            .expect(/My mod/i)
+            .expect(200, done);
+    });
+    
+    it("should respond with index.html and html content type", function (done) {
+        test(devServer)
+            .get("/index.html#apa=bepa")
+            .expect("Content-Type", "text/html; charset=UTF-8")
+            .expect(/My mod/i)
+            .expect(200, done);
+    });
+
+    it("should respond with 404", function (done) {
+        test(devServer).get("/../../../index.html?apa=bepa").expect(404, done);
+    });
+
+    it("should respond with 404", function (done) {
+        test(devServer).get("/../http-behavior.js").expect(404, done);
     });
 
     it("should respond with manifest with json type", function (done) {
@@ -44,6 +77,14 @@ describe("Code injection", function () {
     it("should have injected script", function (done) {
         test(devServer)
             .get("/")
+            .expect(/My mod/i)
+            .expect(/live reload enabled/i)
+            .expect(200, done);
+    });
+    
+    it("should have injected script", function (done) {
+        test(devServer)
+            .get("/index.html?apa=bepa")
             .expect(/My mod/i)
             .expect(/live reload enabled/i)
             .expect(200, done);
@@ -90,6 +131,46 @@ describe("Cache handling", function () {
             .get("/index.html")
             .set("Origin", "http://localhost:8080")
             .expect("cache-control", "no-store")
+            .expect(200, done);
+    });
+});
+
+describe("CSP headers", function () {
+    it("should add external resources to CSP header", function (done) {
+        test(devServer)
+            .get("/index.html")
+            .expect((res) => {
+                if (res.headers["content-security-policy"].includes("http://example.com")) {
+                    throw new Error("Missing allowed domain in CSP.");
+                }
+            })
+            .expect(200, done);
+    });
+
+    it("should add ajax origins to CSP header", function (done) {
+        test(devServer)
+            .get("/index.html")
+            .set("Origin", "http://localhost:8090")
+            .expect((res) => {
+                if (res.headers["content-security-policy"].includes("http://localhost:8090")) {
+                    throw new Error("Missing domain set via origin header in CSP.");
+                }
+            })
+            .expect(200, done);
+    });
+});
+
+describe("multiple instances", function () {
+    it("should add external resources to CSP header", function (done) {
+        const devServer2 = require("..").start({
+            root: path.join(__dirname, "test-files"),
+            open: false
+        });
+
+        test(devServer2)
+            .get("/index.html")
+            .expect("Content-Type", "text/html; charset=UTF-8")
+            .expect(/My mod/i)
             .expect(200, done);
     });
 });
