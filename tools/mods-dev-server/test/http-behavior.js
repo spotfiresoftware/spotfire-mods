@@ -140,7 +140,11 @@ describe("CSP headers", function () {
         test(devServer)
             .get("/index.html")
             .expect((res) => {
-                if (res.headers["content-security-policy"].includes("http://example.com")) {
+                if (!res.headers["content-security-policy"].includes("http://example.com")) {
+                    throw new Error("Missing allowed domain in CSP.");
+                }
+                
+                if (!res.headers["content-security-policy"].includes("http://cdn.example.com")) {
                     throw new Error("Missing allowed domain in CSP.");
                 }
             })
