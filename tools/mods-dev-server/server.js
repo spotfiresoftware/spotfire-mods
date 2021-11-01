@@ -63,8 +63,8 @@ module.exports.start = start;
 
 /**
  * Start the development server.
- * @param {any} settings
- * @returns the http server instance.
+ * @param {import("./server").ServerSettings} settings
+ * @returns {import("http").Server} the http server instance.
  */
 function start(settings = {}) {
     settings = Object.assign({}, defaultSettings, settings);

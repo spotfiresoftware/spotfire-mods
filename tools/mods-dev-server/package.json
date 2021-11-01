@@ -7,10 +7,11 @@
         "url": "git+https://github.com/TIBCOSoftware/spotfire-mods.git"
     },
     "homepage": "https://github.com/TIBCOSoftware/spotfire-mods",
-    "main": "development-server.js",
+    "main": "server.js",
     "bin": {
         "mods-dev-server": "./development-server.js"
     },
+    "types": "server.d.ts",
     "scripts": {
         "test": "mocha test --exit"
     },
