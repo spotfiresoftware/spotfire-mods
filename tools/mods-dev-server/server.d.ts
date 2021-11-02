@@ -15,3 +15,4 @@ export interface ServerSettings {
 }
 
 export declare function start(settings: ServerSettings) : http.Server;
+export const settings: ServerSettings;

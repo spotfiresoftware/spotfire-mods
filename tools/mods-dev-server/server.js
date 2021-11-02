@@ -52,6 +52,7 @@ let declaredExternalResourcesInManifest = [];
 const allowedOrigins = new Set();
 
 const manifestName = "mod-manifest.json";
+/** @type {import("./server").ServerSettings} */
 const defaultSettings = {
     port: 8090,
     open: true,
@@ -60,6 +61,7 @@ const defaultSettings = {
 };
 
 module.exports.start = start;
+module.exports.settings = Object.freeze(defaultSettings);
 
 /**
  * Start the development server.
@@ -72,6 +74,10 @@ function start(settings = {}) {
     /** @type {WebSocket.connection[]} */
     let webSocketConnections = [];
     const reloadInstances = _.debounce(() => {
+        if(webSocketConnections.length) {
+            console.log("Reloading instances.");
+        }
+
         webSocketConnections.forEach((connection) => {
             connection.sendUTF("reload");
         });
@@ -156,6 +162,8 @@ function onlyWhenOriginIsSet(middleware) {
      * @param {connect.NextFunction} next
      */
     return function (req, res, next) {
+        console.log(req.url);
+
         if (req.headers.origin) {
             next();
         } else {
@@ -176,7 +184,6 @@ function injectWebSocketSnippet(settings) {
      * @param {connect.NextFunction} next
      */
     return function (req, res, next) {
-        console.log(req.url);
         let url = req.url || "";
 
         // Remove any query params.
