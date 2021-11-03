@@ -46,10 +46,6 @@ const _ = require("lodash");
 
 const injectHtml = fs.readFileSync(path.join(__dirname, "websocket.html"), { encoding: "utf8" });
 
-/** @type {string[]} */
-let declaredExternalResourcesInManifest = [];
-const allowedOrigins = new Set();
-
 const manifestName = "mod-manifest.json";
 /** @type {import("./server").ServerSettings} */
 const defaultSettings = {
@@ -68,6 +64,12 @@ module.exports.settings = Object.freeze(defaultSettings);
  * @returns {import("http").Server} the http server instance.
  */
 function start(settings = {}) {
+    /** @type {string[]} */
+    let declaredExternalResourcesInManifest = [];
+    const allowedOrigins = new Set();
+    /** @type {string[]} */
+    let manifestFiles = [];
+
     let serverUrl = "";
     let wsServerUrl = "";
 
@@ -76,25 +78,26 @@ function start(settings = {}) {
     /** @type {WebSocket.connection[]} */
     let webSocketConnections = [];
 
+    const rootDirectoryAbsolutePath = path.resolve(settings.root);
+
     const reloadInstances = _.debounce(() => {
         if (!webSocketConnections.length) {
             console.log(colors.yellow("File change detected but no connected instances"));
             return;
         }
 
-        console.log("Reloading instances.");
+        readExternalResourcesFromManifest(rootDirectoryAbsolutePath);
+        console.log(`Reloading ${webSocketConnections.length} connected instance${webSocketConnections.length > 1 ? "s" : ""}.`);
         webSocketConnections.forEach((connection) => {
             connection.sendUTF("reload");
         });
     }, 500);
 
-    const rootDirectoryAbsolutePath = path.resolve(settings.root);
-
     if (!fs.existsSync(rootDirectoryAbsolutePath)) {
         throw `The path '${rootDirectoryAbsolutePath}' does not exist.`;
     }
 
-    readExternalResourcesFromManifest(rootDirectoryAbsolutePath);
+    readExternalResourcesFromManifest(rootDirectoryAbsolutePath, true);
 
     chokidar
         .watch(settings.root, {})
@@ -116,6 +119,7 @@ function start(settings = {}) {
     app.use(cacheHeaders);
     app.use(cspHeaders);
     app.use(corsHeaders);
+    app.use(checkIfPartOfManifest);
     app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(settings)));
     app.use(serveStaticFiles);
 
@@ -128,6 +132,7 @@ function start(settings = {}) {
             let serverUrl = "http://" + "127.0.0.1" + ":" + settings.port;
             console.log(colors.yellow("%s is already in use. Trying another port."), serverUrl);
             setTimeout(() => {
+                server.close();
                 server.listen(0);
             }, 500);
         } else {
@@ -153,6 +158,7 @@ function start(settings = {}) {
         }
     });
 
+    // Set up the web socket server when the server is listening.
     let wsServer = new WebSocket.server({
         httpServer: server,
         autoAcceptConnections: false
@@ -196,6 +202,74 @@ function start(settings = {}) {
 
         next();
     }
+
+    /**
+     * Middleware to warn for files missing from manifest.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function checkIfPartOfManifest(req, res, next) {
+        let url = cleanUrl(req.url).slice(1);
+        if (manifestFiles.length && url != manifestName && !manifestFiles.includes(url)) {
+            console.log(colors.yellow(`Mod manifest warning: '${url}' is not listed in the files list.`));
+        }
+
+        next();
+    }
+
+    /**
+     * Read external resources from the mod manifest placed in the root directory.
+     * @param {string} rootDirectoryAbsolutePath
+     */
+    function readExternalResourcesFromManifest(rootDirectoryAbsolutePath, warn = false) {
+        const files = fs.readdirSync(rootDirectoryAbsolutePath);
+
+        if (files.find((fileName) => fileName == manifestName)) {
+            const manifestPath = path.join(rootDirectoryAbsolutePath, manifestName);
+
+            readExternalResources();
+            fs.watch(manifestPath, {}, readExternalResources);
+
+            async function readExternalResources() {
+                let content = fs.readFileSync(manifestPath, { encoding: "utf-8" });
+
+                try {
+                    let json = JSON.parse(content);
+                    declaredExternalResourcesInManifest = json.externalResources || [];
+                    manifestFiles = [...(json.files || []), json.icon];
+                } catch (err) {}
+            }
+        } else if (warn) {
+            console.warn(
+                colors.yellow("Could not find a mod-manifest.json in the root directory"),
+                colors.yellow(rootDirectoryAbsolutePath)
+            );
+        }
+    }
+
+    /**
+     * Middleware to manage CORS headers.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function corsHeaders(req, res, next) {
+        const isCorsRequest = req.headers.origin != undefined;
+        const requestFromOutsideSandbox = req.headers.origin != "null";
+
+        // Prevent CORS requests from the sandboxed iframe. E.g module loading will not work in embedded mode.
+        if (isCorsRequest && requestFromOutsideSandbox) {
+            allowedOrigins.add(req.headers.origin);
+
+            res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            res.setHeader("Access-Control-Allow-Origin", "*");
+        }
+
+        next();
+    }
 }
 
 /**
@@ -209,7 +283,9 @@ function onlyWhenOriginIsSet(middleware) {
      * @param {connect.NextFunction} next
      */
     return function (req, res, next) {
-        console.log(req.url);
+        if (req.method == "GET") {
+            console.log("GET", req.url);
+        }
 
         if (req.headers.origin) {
             next();
@@ -231,14 +307,7 @@ function injectWebSocketSnippet(settings) {
      * @param {connect.NextFunction} next
      */
     return function (req, res, next) {
-        let url = req.url || "";
-
-        // Remove any query params.
-        url = url.split("?")[0];
-
-        if (url.endsWith("/")) {
-            url += "index.html";
-        }
+        let url = cleanUrl(req.url);
 
         // Ignore files other than index.html and folder traversals.
         if (!url.endsWith("/index.html") || url.includes("..")) {
@@ -262,83 +331,15 @@ function injectWebSocketSnippet(settings) {
     };
 }
 
-/**
- * Middleware to manage CSP headers.
- *
- * @param {connect.IncomingMessage} req
- * @param {http.ServerResponse} res
- * @param {connect.NextFunction} next
- */
-function cspHeaders(req, res, next) {
-    if (req.method !== "GET") {
-        next();
-        return;
+function cleanUrl(url = "") {
+    // Remove any query params.
+    url = url.split("?")[0];
+
+    if (url.endsWith("/")) {
+        url += "index.html";
     }
 
-    // Set same security headers in the development server as in the Spotfire runtime.
-    res.setHeader(
-        "content-security-policy",
-        `sandbox allow-scripts; default-src 'self' 'unsafe-eval' 'unsafe-inline' blob: data: ${[
-            ...allowedOrigins.values(),
-            ...declaredExternalResourcesInManifest
-        ].join(" ")}`
-    );
-
-    // CSP header used by older browsers where the CSP policy is not fully supported.
-    res.setHeader("x-content-security-policy", "sandbox allow-scripts");
-
-    next();
-}
-
-/**
- * Read external resources from the mod manifest placed in the root directory.
- * @param {string} rootDirectoryAbsolutePath
- */
-function readExternalResourcesFromManifest(rootDirectoryAbsolutePath) {
-    const files = fs.readdirSync(rootDirectoryAbsolutePath);
-
-    if (files.find((fileName) => fileName == manifestName)) {
-        const manifestPath = path.join(rootDirectoryAbsolutePath, manifestName);
-
-        readExternalResources();
-        fs.watch(manifestPath, {}, readExternalResources);
-
-        async function readExternalResources() {
-            let content = fs.readFileSync(manifestPath, { encoding: "utf-8" });
-
-            try {
-                let json = JSON.parse(content);
-                declaredExternalResourcesInManifest = json.externalResources || [];
-            } catch (err) {}
-        }
-    } else {
-        console.warn(
-            colors.yellow("Could not find a mod-manifest.json in the root directory"),
-            colors.yellow(rootDirectoryAbsolutePath)
-        );
-    }
-}
-
-/**
- * Middleware to manage CORS headers.
- *
- * @param {connect.IncomingMessage} req
- * @param {http.ServerResponse} res
- * @param {connect.NextFunction} next
- */
-function corsHeaders(req, res, next) {
-    const isCorsRequest = req.headers.origin != undefined;
-    const requestFromOutsideSandbox = req.headers.origin != "null";
-
-    // Prevent CORS requests from the sandboxed iframe. E.g module loading will not work in embedded mode.
-    if (isCorsRequest && requestFromOutsideSandbox) {
-        allowedOrigins.add(req.headers.origin);
-
-        res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        res.setHeader("Access-Control-Allow-Origin", "*");
-    }
-
-    next();
+    return url;
 }
 
 /**
