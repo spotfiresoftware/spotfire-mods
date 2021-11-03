@@ -1,6 +1,6 @@
 {
     "name": "@tibco/spotfire-mods-dev-server",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Development server for TIBCO Spotfire(R) Mods",
     "repository": {
         "type": "git",
