@@ -1,6 +1,5 @@
 //@ts-check
 
-
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -26,7 +25,7 @@ const compression = require("compression");
 const serveStatic = require("serve-static");
 
 /**
- * Web socket server library. Used for setting up connections to each instance. 
+ * Web socket server library. Used for setting up connections to each instance.
  */
 const WebSocket = require("websocket");
 
@@ -69,15 +68,21 @@ module.exports.settings = Object.freeze(defaultSettings);
  * @returns {import("http").Server} the http server instance.
  */
 function start(settings = {}) {
+    let serverUrl = "";
+    let wsServerUrl = "";
+
     settings = Object.assign({}, defaultSettings, settings);
 
     /** @type {WebSocket.connection[]} */
     let webSocketConnections = [];
+
     const reloadInstances = _.debounce(() => {
-        if(webSocketConnections.length) {
-            console.log("Reloading instances.");
+        if (!webSocketConnections.length) {
+            console.log(colors.yellow("File change detected but no connected instances"));
+            return;
         }
 
+        console.log("Reloading instances.");
         webSocketConnections.forEach((connection) => {
             connection.sendUTF("reload");
         });
@@ -91,7 +96,18 @@ function start(settings = {}) {
 
     readExternalResourcesFromManifest(rootDirectoryAbsolutePath);
 
-    chokidar.watch(settings.root, {}).on("all", reloadInstances);
+    chokidar
+        .watch(settings.root, {})
+        .on("add", reloadInstances)
+        .on("change", reloadInstances)
+        .on("unlink", reloadInstances)
+        .on("addDir", reloadInstances)
+        .on("addDir", reloadInstances)
+        .on("unlinkDir", reloadInstances)
+        .on("error", (error) => console.log(colors.red(`File watcher error: ${error}`)))
+        .on("ready", () => {
+            return console.log("Initial file scan is complete. Ready for changes");
+        });
 
     const app = connect();
     const serveStaticFiles = serveStatic(settings.root, { index: ["index.html", "index.htm"] });
@@ -124,7 +140,9 @@ function start(settings = {}) {
     server.addListener("listening", function (/*e*/) {
         let address = server.address();
         // @ts-ignore
-        let serverUrl = "http://" + "127.0.0.1" + ":" + address.port;
+        serverUrl = "http://" + "127.0.0.1" + ":" + address.port;
+        // @ts-ignore
+        wsServerUrl = "ws://" + "127.0.0.1" + ":" + address.port;
         console.log(colors.green('Serving "%s" at %s'), settings.root, serverUrl);
 
         // Launch the default browser
@@ -143,12 +161,41 @@ function start(settings = {}) {
     wsServer.on("request", function (request) {
         let connection = request.accept("dev-server", request.origin);
         webSocketConnections.push(connection);
+        console.log(colors.green("Live reload instance connected."));
         connection.on("close", () => {
             webSocketConnections = webSocketConnections.filter((c) => c != connection);
         });
     });
 
     return server;
+
+    /**
+     * Middleware to manage CSP headers.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function cspHeaders(req, res, next) {
+        if (req.method !== "GET") {
+            next();
+            return;
+        }
+
+        // Set same security headers in the development server as in the Spotfire runtime.
+        res.setHeader(
+            "content-security-policy",
+            `sandbox allow-scripts; default-src 'self' 'unsafe-eval' 'unsafe-inline' blob: data: ${[
+                ...allowedOrigins.values(),
+                ...declaredExternalResourcesInManifest
+            ].join(" ")} ${wsServerUrl}`
+        );
+
+        // CSP header used by older browsers where the CSP policy is not fully supported.
+        res.setHeader("x-content-security-policy", "sandbox allow-scripts");
+
+        next();
+    }
 }
 
 /**
@@ -200,6 +247,11 @@ function injectWebSocketSnippet(settings) {
         }
 
         let filePath = path.join(settings.root, url);
+
+        if (!fs.existsSync(filePath)) {
+            next();
+            return;
+        }
 
         let file = fs.readFileSync(filePath, { encoding: "utf8" });
 
@@ -260,7 +312,10 @@ function readExternalResourcesFromManifest(rootDirectoryAbsolutePath) {
             } catch (err) {}
         }
     } else {
-        console.warn(colors.yellow("Could not find a mod-manifest.json in the root directory"), colors.yellow(rootDirectoryAbsolutePath));
+        console.warn(
+            colors.yellow("Could not find a mod-manifest.json in the root directory"),
+            colors.yellow(rootDirectoryAbsolutePath)
+        );
     }
 }
 
