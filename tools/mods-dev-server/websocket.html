@@ -2,7 +2,7 @@
     (function () {
         connect();
         function connect() {
-            var address = "ws://" + window.location.host + window.location.pathname;
+            var address = "ws://" + window.location.host + "/live-reload";
             var socket = new WebSocket(address, "dev-server");
             socket.onopen = function () {
                 console.log("Live reload enabled.");

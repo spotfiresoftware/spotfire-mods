@@ -11,7 +11,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\development-server.js"
+            "program": "${workspaceFolder}\\cli.js",
+            "args": ["test/test-files", "--open=false"]
         },
         {
             "type": "node",
