@@ -141,10 +141,6 @@ function start(settings = {}) {
         });
     });
 
-    wss.on("connection", function connection() {
-        console.log(colors.green("Live reload instance connected."));
-    });
-
     server.listen(settings.port);
 
     const reloadInstances = _.debounce(() => {
