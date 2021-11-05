@@ -126,12 +126,8 @@ Spotfire.initialize(async (mod) => {
 
         render(gauges, {
             svg,
-            click(d) {
-                if (d) {
-                    d.mark();
-                } else {
-                    dataView.clearMarking();
-                }
+            clearMarking() {
+                dataView.clearMarking();
             },
             mouseLeave() {
                 mod.controls.tooltip.hide();
