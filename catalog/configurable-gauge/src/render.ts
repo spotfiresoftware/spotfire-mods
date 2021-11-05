@@ -1,10 +1,11 @@
 // @ts-ignore
 import * as d3 from "d3";
 import { grid } from "./layout";
+import { rectangularSelection } from "./rectangularMarking";
 
 export interface Settings {
     svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
-    click?(d: Gauge | null): void;
+    clearMarking?(): void;
     mouseLeave?(): void;
     animationSpeed?: number;
     size?: { width: number; height: number };
@@ -61,10 +62,13 @@ export async function render(gauges: Gauge[], settings: Settings) {
     let gaugeWidth = size.width / colCount;
     let gaugeHeight = size.height / rowCount;
 
-    let radius = Math.min(
-        size.width / colCount / 2 - horizontalPadding / 2,
-        size.height / rowCount / 2 -
-            (settings.showMinMax ? settings.style.label.size * 2.4 : settings.style.label.size * 1.4)
+    let radius = Math.max(
+        Math.min(
+            size.width / colCount / 2 - horizontalPadding / 2,
+            size.height / rowCount / 2 -
+                (settings.showMinMax ? settings.style.label.size * 2.4 : settings.style.label.size * 1.4)
+        ),
+        5
     );
 
     const longTickRadius = radius;
@@ -102,10 +106,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .innerRadius((d) => innerRadius)
         .outerRadius((d) => (d.height ? longTickRadius : radius));
 
-    settings.svg
-        .attr("width", size.width)
-        .attr("height", size.height)
-        .on("click", () => settings.click?.(null));
+    settings.svg.attr("width", size.width).attr("height", size.height);
 
     let gaugesPaths = settings.svg.selectAll<any, Gauge>("g.gauge").data(gauges, (d: Gauge) => d.key);
 
@@ -268,6 +269,15 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .duration(animationSpeed / 2)
         .style("opacity", 0)
         .remove();
+
+    rectangularSelection(settings.svg as any, {
+        classesToMark: "bg",
+        ignoredClickClasses: ["gauge"],
+        clearMarking: () => settings.clearMarking?.(),
+        mark(data: Gauge) {
+            data.mark();
+        }
+    });
 
     function label(p: keyof Gauge, width: number, size: number) {
         return function (d: Gauge) {
