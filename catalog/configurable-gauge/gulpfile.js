@@ -11,7 +11,7 @@ function buildBundle() {
         entryPoints: ["src/index.ts"],
         bundle: true,
         sourcemap: true,
-        minify: true,
+        minify: process.argv.includes("--compress"),
         outfile: "dist/bundle.js"
     });
 }
