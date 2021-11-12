@@ -1,6 +1,6 @@
 // @ts-ignore
 import * as d3 from "d3";
-import { grid } from "./layout";
+import { gaugeArc, GaugeMeasurements, grid, labelsFitSpace, scaleFitSpace } from "./layout";
 import { rectangularSelection } from "./rectangularMarking";
 
 export interface Settings {
@@ -47,89 +47,62 @@ interface internalGauge extends Gauge {
 }
 
 export async function render(gauges: Gauge[], settings: Settings) {
-    const { size = { width: 50, height: 50 } } = settings;
     const { animationSpeed = 0 } = settings;
-    const { arcWidth = 10 } = settings;
+    const { size = { width: 50, height: 50 } } = settings;
 
-    let verticalPadding = size.width / 50;
-    let horizontalPadding = settings.showMinMax
-        ? Math.min(size.width / 5, settings.style.label.size * 0.7 * 8)
-        : size.width / 50;
+    let [rowCount, colCount] = grid(size.width, size.height, gauges.length);
 
-    const gaugeCount = gauges.length;
-    let [rowCount, colCount] = grid(size.width - horizontalPadding, size.height - verticalPadding, gaugeCount);
+    const horizontalPadding = size.width / 50;
+    const verticalPadding = size.height / 50;
 
     let gaugeWidth = size.width / colCount;
     let gaugeHeight = size.height / rowCount;
 
-    let radius = Math.max(
-        Math.min(
-            size.width / colCount / 2 - horizontalPadding / 2,
-            size.height / rowCount / 2 -
-                (settings.showMinMax ? settings.style.label.size * 2.4 : settings.style.label.size * 1.4)
-        ),
-        5
-    );
+    const heightWithPadding = gaugeHeight - horizontalPadding;
+    const widthWithPadding = gaugeWidth - verticalPadding;
 
-    const longTickRadius = radius;
-    // Shrink radius to make room for ticks
-    radius = radius - Math.min(radius / 10, 10);
+    let scaleLabelsFit = scaleFitSpace(widthWithPadding, heightWithPadding, settings.style.label.size);
+    let labelsFit = labelsFitSpace(widthWithPadding, heightWithPadding, settings.style.label.size);
+    let showMinMax = !!settings.showMinMax && scaleLabelsFit;
 
-    const innerRadius = radius - (radius * arcWidth) / 100;
+    const verticalSizeForLabels = showMinMax
+        ? settings.style.label.size * 2.4 + 5
+        : labelsFit
+        ? settings.style.label.size * 1.4
+        : 0;
+
+    const heightAfterLabels = heightWithPadding - verticalSizeForLabels;
+    let widthAfterLabels = widthWithPadding - (showMinMax ? 40 : 0);
+    let arc = gaugeArc(widthAfterLabels, heightAfterLabels, settings.padAngle!, settings.arcWidth || 10);
+
+    // These properties are set to enable fluid transitions.
     (gauges as internalGauge[]).forEach((g) => {
-        g.innerRadius = innerRadius;
-        g.radius = radius;
+        g.innerRadius = arc.innerRadius;
+        g.radius = arc.radius;
     });
-
-    const valueFontSize = Math.min(settings.style.value.size, innerRadius / 1.4);
-    const showLabels = valueFontSize == settings.style.value.size && settings.showMinMax;
-
-    const paddingAngle = ((settings.padAngle ?? 40) * 2 * Math.PI) / 360;
-    const shiftAngle = Math.PI - paddingAngle;
-    const maxAngle = Math.PI - paddingAngle;
-    let scale = d3.scaleLinear().range([-shiftAngle, maxAngle]).domain([0, 1]);
-
-    const labelPadding = 10 * (1 - paddingAngle / (Math.PI / 2));
-
-    const arc = d3
-        .arc<internalGauge>()
-        .startAngle((d) => scale(0)!)
-        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0)) || 0, maxAngle))
-        .innerRadius((d) => d.innerRadius)
-        .outerRadius((d) => d.radius);
-
-    const tickWidth = (2 * Math.PI) / 360;
-    const scaleArc = d3
-        .arc<{ x0: number; height: number }>()
-        .startAngle((d) => d.x0 - tickWidth / 2)
-        .endAngle((d) => d.x0 + tickWidth / 2)
-        .innerRadius((d) => innerRadius)
-        .outerRadius((d) => (d.height ? longTickRadius : radius));
 
     settings.svg.attr("width", size.width).attr("height", size.height);
 
     let gaugesPaths = settings.svg.selectAll<any, Gauge>("g.gauge").data(gauges, (d: Gauge) => d.key);
 
+    let horizontalTranslate = (i: number) => Math.floor(i % colCount) * gaugeWidth + gaugeWidth / 2;
+
+    /**
+     * It is necessary to further translate the arc downwards.
+     * The path arc is drawn in such a way that it would fit a full circle.
+     * That means that it grows outside of the gauge rectangle when the radius is greater than half the height.
+     */
+    const extraArcVerticalTranslate = arc.tickRadius - heightWithPadding / 2;
+    let verticalTranslate = (i: number) =>
+        Math.floor(i / colCount) * gaugeHeight + gaugeHeight / 2 + extraArcVerticalTranslate;
+
     let newGauge = gaugesPaths
         .enter()
         .append("g")
         .attr("class", "gauge")
-        .attr(
-            "transform",
-            (d, i) =>
-                `translate(${Math.floor(i % colCount) * gaugeWidth + gaugeWidth / 2}, ${
-                    Math.floor(i / colCount) * gaugeHeight + gaugeHeight / 2
-                })`
-        );
+        .attr("transform", (d, i) => `translate(${horizontalTranslate(i)}, ${verticalTranslate(i)})`);
 
-    newGauge.append("circle").attr("class", "click-zone");
-    newGauge.append("path").attr("class", "bg");
-    newGauge.append("g").attr("class", "scale").style("cursor", "default").style("user-select", "none");
-    newGauge.append("path").attr("class", "value");
-    newGauge.append("text").attr("class", "label-value");
-    newGauge.append("text").attr("class", "label");
-    newGauge.append("text").attr("class", "min-label");
-    newGauge.append("text").attr("class", "max-label");
+    createGaugeElems(newGauge);
 
     let update = gaugesPaths
         .merge(newGauge)
@@ -147,13 +120,73 @@ export async function render(gauges: Gauge[], settings: Settings) {
     update
         .transition("Position gauges")
         .duration(animationSpeed)
-        .attr(
-            "transform",
-            (_, i) =>
-                `translate(${Math.floor(i % colCount) * gaugeWidth + gaugeWidth / 2}, ${
-                    Math.floor(i / colCount) * gaugeHeight + gaugeHeight / 2
-                })`
-        );
+        .attr("transform", (_, i) => `translate(${horizontalTranslate(i)}, ${verticalTranslate(i)})`);
+
+    updateGauge(update, settings, {
+        ...arc,
+        height: heightWithPadding,
+        width: widthWithPadding,
+        showLabels: labelsFit,
+        showMinMax: showMinMax
+    });
+
+    gaugesPaths
+        .exit()
+        .transition("add sectors")
+        .duration(animationSpeed / 2)
+        .style("opacity", 0)
+        .remove();
+
+    rectangularSelection(settings.svg as any, {
+        classesToMark: "bg",
+        ignoredClickClasses: ["gauge"],
+        clearMarking: () => settings.clearMarking?.(),
+        mark(data: Gauge) {
+            data.mark();
+        }
+    });
+}
+
+function createGaugeElems(arcGroup: d3.Selection<SVGGElement, Gauge, SVGSVGElement, any>) {
+    arcGroup.append("circle").attr("class", "click-zone");
+    arcGroup.append("path").attr("class", "bg");
+    arcGroup.append("g").attr("class", "scale").style("cursor", "default").style("user-select", "none");
+    arcGroup.append("path").attr("class", "value");
+    arcGroup.append("text").attr("class", "label-value");
+    arcGroup.append("text").attr("class", "label");
+    arcGroup.append("text").attr("class", "min-label");
+    arcGroup.append("text").attr("class", "max-label");
+}
+
+function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, settings: Settings, m: GaugeMeasurements) {
+    const { animationSpeed = 0 } = settings;
+
+    let { radius, innerRadius, tickRadius: longTickRadius, width, maxAngle } = m;
+
+    const valueFontSize = Math.min(settings.style.value.size, m.innerRadius / 1.4);
+
+    const labelPadding = 10 * (1 - m.paddingRadians / (Math.PI / 2));
+
+    const labelYPos = 5 + -Math.cos(maxAngle) * longTickRadius + (m.showMinMax ? settings.style.label.size * 1.2 : 3);
+
+    const { arcWidth = 10 } = settings;
+
+    let scale = d3.scaleLinear().range([-maxAngle, maxAngle]).domain([0, 1]);
+
+    const arc = d3
+        .arc<internalGauge>()
+        .startAngle((d) => scale(0)!)
+        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0)) || 0, maxAngle))
+        .innerRadius((d) => d.innerRadius)
+        .outerRadius((d) => d.radius);
+
+    const tickWidth = (2 * Math.PI) / 360;
+    const scaleArc = d3
+        .arc<{ x0: number; height: number }>()
+        .startAngle((d) => d.x0 - tickWidth / 2)
+        .endAngle((d) => d.x0 + tickWidth / 2)
+        .innerRadius((d) => innerRadius)
+        .outerRadius((d) => (d.height ? longTickRadius : radius));
 
     let shake = (className: string) => (d: Gauge) =>
         className + " " + (settings.showShake && d.percent > 1 ? "shake" : "");
@@ -204,46 +237,47 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .transition("add labels")
         .duration(animationSpeed)
         .attr("font-size", settings.style.label.size)
+        .style("display", m.showLabels ? "inherit" : "none")
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "middle")
-        .attr("y", -Math.cos(maxAngle) * longTickRadius + (showLabels ? settings.style.label.size : 3))
+        .attr("y", labelYPos)
         .attr("x", 0)
-        .text(label("label", gaugeWidth, settings.style.label.size));
+        .text(label("label", width, settings.style.label.size));
 
     update
         .select("text.max-label")
         .attr("dy", "1em")
         .transition("add labels")
         .duration(animationSpeed)
-        .style("opacity", showLabels ? 1 : 0)
+        .style("opacity", m.showMinMax ? 1 : 0)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "start")
-        .attr("y", -Math.cos(maxAngle) * longTickRadius)
-        .attr("x", Math.sin(maxAngle) * longTickRadius + labelPadding)
-        .text(label("maxLabel", gaugeWidth / 2 - Math.sin(maxAngle) * longTickRadius, settings.style.label.size));
+        .attr("y", -Math.cos(maxAngle) * longTickRadius + 5)
+        .attr("x", Math.sin(maxAngle) * (radius - arcWidth) + labelPadding)
+        .text(label("maxLabel", width / 2 - Math.sin(maxAngle) * innerRadius, settings.style.label.size));
 
     update
         .select("text.min-label")
         .attr("dy", "1em")
         .transition("add labels")
         .duration(animationSpeed)
-        .style("opacity", showLabels ? 1 : 0)
+        .style("opacity", m.showMinMax ? 1 : 0)
         .attr("font-size", settings.style.label.size)
         .attr("font-style", settings.style.label.style)
         .attr("font-weight", settings.style.label.weight)
         .attr("fill", (d: any) => settings.style.label.color)
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "end")
-        .attr("y", -Math.cos(maxAngle) * longTickRadius)
-        .attr("x", -Math.sin(maxAngle) * longTickRadius - labelPadding)
-        .text(label("minLabel", gaugeWidth / 2 - Math.sin(maxAngle) * longTickRadius, settings.style.label.size));
+        .attr("y", -Math.cos(maxAngle) * longTickRadius + 5)
+        .attr("x", -Math.sin(maxAngle) * (radius - arcWidth) - labelPadding)
+        .text(label("minLabel", width / 2 - Math.sin(maxAngle) * innerRadius, settings.style.label.size));
 
     let ticks = update
         .select<any>("g.scale")
@@ -262,22 +296,6 @@ export async function render(gauges: Gauge[], settings: Settings) {
             let g: Gauge = this.parentNode.parentNode.__data__;
             return scale(g.percent)! > d.x0 ? g.color : settings.style.ticks.background;
         });
-
-    gaugesPaths
-        .exit()
-        .transition("add sectors")
-        .duration(animationSpeed / 2)
-        .style("opacity", 0)
-        .remove();
-
-    rectangularSelection(settings.svg as any, {
-        classesToMark: "bg",
-        ignoredClickClasses: ["gauge"],
-        clearMarking: () => settings.clearMarking?.(),
-        mark(data: Gauge) {
-            data.mark();
-        }
-    });
 
     function label(p: keyof Gauge, width: number, size: number) {
         return function (d: Gauge) {
