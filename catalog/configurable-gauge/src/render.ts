@@ -169,7 +169,7 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
 
     const labelYPos = 5 + -Math.cos(maxAngle) * longTickRadius + (m.showMinMax ? settings.style.label.size * 1.2 : 3);
 
-    const { arcWidth = 10 } = settings;
+    const arcWidth = m.radius - m.innerRadius;
 
     let scale = d3.scaleLinear().range([-maxAngle, maxAngle]).domain([0, 1]);
 
@@ -260,7 +260,7 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "start")
         .attr("y", -Math.cos(maxAngle) * longTickRadius + 5)
-        .attr("x", Math.sin(maxAngle) * (radius - arcWidth) + labelPadding)
+        .attr("x", Math.sin(maxAngle) * (longTickRadius - arcWidth) + labelPadding)
         .text(label("maxLabel", width / 2 - Math.sin(maxAngle) * innerRadius, settings.style.label.size));
 
     update
@@ -276,7 +276,7 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .attr("font-family", settings.style.label.fontFamily)
         .attr("text-anchor", "end")
         .attr("y", -Math.cos(maxAngle) * longTickRadius + 5)
-        .attr("x", -Math.sin(maxAngle) * (radius - arcWidth) - labelPadding)
+        .attr("x", -Math.sin(maxAngle) * (longTickRadius - arcWidth) - labelPadding)
         .text(label("minLabel", width / 2 - Math.sin(maxAngle) * innerRadius, settings.style.label.size));
 
     let ticks = update
