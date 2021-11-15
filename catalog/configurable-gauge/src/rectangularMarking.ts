@@ -1,10 +1,31 @@
 import * as d3 from "d3";
 
 export interface MarkingSettings {
+    /**
+     * Callback to clear the marking.
+     */
     clearMarking(): void;
+
+    /**
+     * Marking callback that will be invoked for each marked element.
+     * @param data d3 Data object bound to the marked element.
+     */
     mark(data: unknown): void;
+
+    /**
+     * CSS Classes to ignore. Checks the parent of the marked element to see if any parent has an ignored class.
+     */
     ignoredClickClasses: string[];
+
+    /**
+     * The CSS selector to use when filtering elements to mark.
+     */
     classesToMark: string;
+
+    /**
+     * Whether or not to allow centroid marking. It means only the center of the element needs to be part of the marking.
+     */
+    centerMarking?: boolean;
 }
 
 /**
@@ -56,15 +77,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         const selectionBox = rectangle.node()!.getBoundingClientRect();
         const markedSectors = svg
             .selectAll<SVGPathElement, unknown>("." + settings.classesToMark)
-            .filter(function (this: SVGPathElement) {
-                const box = this.getBoundingClientRect();
-                return (
-                    box.x >= selectionBox.x &&
-                    box.y >= selectionBox.y &&
-                    box.x + box.width <= selectionBox.x + selectionBox.width &&
-                    box.y + box.height <= selectionBox.y + selectionBox.height
-                );
-            });
+            .filter(settings.centerMarking ? partOfMarking : fullyPartOfMarking);
 
         if (markedSectors.size() === 0) {
             return settings.clearMarking();
@@ -73,6 +86,28 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         markedSectors.each((n: any) => {
             settings.mark(n);
         });
+
+        function fullyPartOfMarking(this: SVGPathElement) {
+            const box = this.getBoundingClientRect();
+            return (
+                box.x >= selectionBox.x &&
+                box.y >= selectionBox.y &&
+                box.x + box.width <= selectionBox.x + selectionBox.width &&
+                box.y + box.height <= selectionBox.y + selectionBox.height
+            );
+        }
+
+        function partOfMarking(this: SVGPathElement) {
+            const box = this.getBoundingClientRect();
+            let centerX = box.x + box.width / 2;
+            let centerY = box.y + box.height / 2;
+            return (
+                centerX >= selectionBox.x &&
+                centerY >= selectionBox.y &&
+                centerX <= selectionBox.x + selectionBox.width &&
+                centerY <= selectionBox.y + selectionBox.height
+            );
+        }
     };
 
     svg.on("mousedown", function (this: any) {

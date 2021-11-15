@@ -138,6 +138,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
         .remove();
 
     rectangularSelection(settings.svg as any, {
+        centerMarking: true,
         classesToMark: "bg",
         ignoredClickClasses: ["gauge"],
         clearMarking: () => settings.clearMarking?.(),
