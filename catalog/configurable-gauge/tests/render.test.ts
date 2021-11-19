@@ -38,17 +38,27 @@ const defaultGauge2: Gauge = {
     percent: 0.5
 };
 
+let padAngles = [0, 5, 10, 15, 20, 30, 35, 40, 45, 50, 60, 70, 80, 90];
+let arcWidths = [2, 5, 9, 10, 20, 30, 40, 60, 80, 100];
+let sizes = [
+    { width: 230, height: 118 },
+    { width: 300, height: 200 },
+    { width: 200, height: 300 },
+    { width: 100, height: 100 },
+    { width: 800, height: 650 }
+];
+
 describe("Render", () => {
     let svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
     beforeEach(() => {
-        svg = appendSvg()
+        svg = appendSvg();
     });
-    
+
     afterEach(() => {
         d3.selectAll("svg").remove();
-    })
+    });
 
-    it("Renders a group per gauge", async () => {
+    it("should render a group per gauge", async () => {
         render([defaultGauge], {
             svg: svg,
             style: defaultStyling,
@@ -71,8 +81,43 @@ describe("Render", () => {
         expect(svg.selectAll(".label-value").text()).toBe("10 000");
     });
 
-    describe("Min max labels", () => {
-        it("Renders min max labels when size is available", async () => {
+    describe("Arc", () => {
+        for (const size of sizes) {
+            for (const padAngle of padAngles) {
+                it(`should render the arc within the gauge group with pad angle of ${padAngle}° and size of ${
+                    size.width + ":" + size.height
+                }`, async () => {
+                    render([defaultGauge], {
+                        svg: svg,
+                        style: defaultStyling,
+                        size,
+                        padAngle
+                    });
+
+                    await awaitTransitions();
+
+                    expectArcToBeWithinGaugeGroup(svg);
+                });
+            }
+        }
+    });
+
+    describe("Labels", () => {
+        it("should be hidden by default", async () => {
+            render([defaultGauge], {
+                svg: svg,
+                style: defaultStyling,
+                size: { width: 300, height: 400 },
+                showMinMax: false
+            });
+
+            await awaitTransitions();
+
+            expect(svg.selectAll(".min-label").style("opacity")).toBe("0");
+            expect(svg.selectAll(".max-label").style("opacity")).toBe("0");
+        });
+
+        it("should be visible when enabled and there is enough space", async () => {
             render([defaultGauge], {
                 svg: svg,
                 style: defaultStyling,
@@ -100,11 +145,9 @@ describe("Render", () => {
             expect(svg.selectAll(".max-label").style("opacity")).toBe("0");
         });
 
-        let angles = [0, 5, 10, 15, 20, 30, 35, 40, 45, 50, 60, 70, 80, 90];
-        let arcWidths = [2, 5, 9, 10, 20, 30, 40, 60, 80, 100];
-        for (const padAngle of angles) {
+        for (const padAngle of padAngles) {
             for (const arcWidth of arcWidths) {
-                it(`should always be separated with of pad angle of ${padAngle}° and arc width of ${arcWidth} percent`, async () => {
+                it(`should be separated with of pad angle of ${padAngle}° and arc width of ${arcWidth} percent`, async () => {
                     render([defaultGauge], {
                         svg: svg,
                         style: defaultStyling,
@@ -116,8 +159,23 @@ describe("Render", () => {
 
                     await awaitTransitions();
 
-                    expectLabelsToBeSeparate(svg);
+                    expectMinMaxLabelsToBeSeparate(svg);
                     expectLabelsToBeWithinGaugeGroup(svg);
+                });
+
+                it(`should render labels between minmax and gauge bottom with pad angle of ${padAngle}° and arc width of ${arcWidth} percent`, async () => {
+                    render([defaultGauge], {
+                        svg: svg,
+                        style: defaultStyling,
+                        size: { width: 100, height: 100 },
+                        showMinMax: true,
+                        padAngle,
+                        arcWidth
+                    });
+
+                    await awaitTransitions();
+
+                    expectLabelsToBeBelowMinMaxAndInsideGauge(svg);
                 });
             }
         }
@@ -132,10 +190,30 @@ function round(n: number) {
     return Math.ceil(n * 100);
 }
 
-function expectLabelsToBeSeparate(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
+function expectArcToBeWithinGaugeGroup(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
+    let bgBox = (svg.select(".scale").node() as HTMLElement).getBoundingClientRect();
+    let gaugeBox = (svg.select(".gauge").node() as HTMLElement).getBoundingClientRect();
+    underAndWithinSides(bgBox, gaugeBox);
+}
+
+function underAndWithinSides(inner: DOMRect, outer: DOMRect) {
+    expect(round(inner.y)).toBeGreaterThanOrEqual(round(outer.y));
+    expect(round(inner.x)).toBeGreaterThanOrEqual(round(outer.x));
+    expect(round(inner.x + inner.width)).toBeLessThanOrEqual(round(outer.x + outer.width));
+}
+
+function expectMinMaxLabelsToBeSeparate(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
     let minBox = (svg.select(".min-label").node() as HTMLElement).getBoundingClientRect();
     let maxBox = (svg.select(".max-label").node() as HTMLElement).getBoundingClientRect();
     expect(round(minBox.x + minBox.width)).toBeLessThan(round(maxBox.x));
+}
+
+function expectLabelsToBeBelowMinMaxAndInsideGauge(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
+    let gaugeBox = (svg.select(".gauge").node() as HTMLElement).getBoundingClientRect();
+    let minBox = (svg.select(".min-label").node() as HTMLElement).getBoundingClientRect();
+    let labelBox = (svg.select(".label").node() as HTMLElement).getBoundingClientRect();
+    expect(round(minBox.y + minBox.height)).toBeLessThan(round(labelBox.y));
+    expect(round(labelBox.y + labelBox.height)).toBeLessThanOrEqual(round(gaugeBox.y + gaugeBox.height));
 }
 
 function expectLabelsToBeWithinGaugeGroup(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
