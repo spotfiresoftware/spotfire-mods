@@ -228,7 +228,7 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
            Z
         `
         )
-        .attr("fill", "red")
+        .attr("fill", "transparent")
         .style("opacity", "0.7");
 
     update
