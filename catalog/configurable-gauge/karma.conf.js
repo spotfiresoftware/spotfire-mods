@@ -43,6 +43,7 @@ module.exports = function(config) {
     // web server port
     port: 9876,
 
+    browserNoActivityTimeout: 1000 * 60 * 10,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
@@ -59,8 +60,17 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://www.npmjs.com/search?q=keywords:karma-launcher
-    browsers: ['ChromeHeadless'],
-
+    // browsers: ['ChromeHeadless'],
+    browsers: [
+      'ChromeDebugging'
+    ],
+    
+    customLaunchers: {
+      ChromeDebugging: {
+        base: 'ChromeHeadless',
+        flags: [ '--remote-debugging-port=9333' ]
+      }
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

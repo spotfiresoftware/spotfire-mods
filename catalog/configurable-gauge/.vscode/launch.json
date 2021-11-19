@@ -5,15 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
-            "request": "launch",
-            "name": "Jest Tests",
-            "program": "${workspaceRoot}\\node_modules\\jest\\bin\\jest.js",
-            "args": [
-                "-i"
-            ],
-            "internalConsoleOptions": "openOnSessionStart",
-            "sourceMaps": true
+            "type": "chrome",
+            "request": "attach",
+            "sourceMaps": true,
+            "name": "Attach Karma Chrome",
+            "address": "localhost",
+            "port": 9333,
+            "pathMapping": {
+                "/": "${workspaceRoot}/",
+                "/base/": "${workspaceRoot}/"
+            }
         }
     ]
 }
