@@ -149,7 +149,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 }
 
 function createGaugeElems(arcGroup: d3.Selection<SVGGElement, Gauge, SVGSVGElement, any>) {
-    arcGroup.append("circle").attr("class", "click-zone");
+    arcGroup.append("path").attr("class", "click-zone");
     arcGroup.append("path").attr("class", "bg");
     arcGroup.append("g").attr("class", "scale").style("cursor", "default").style("user-select", "none");
     arcGroup.append("path").attr("class", "value");
@@ -210,12 +210,26 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
 
+    const xArcStart = -radius;
     update
-        .select("circle.click-zone")
+        .select("path.click-zone")
         .transition("add sectors")
         .duration(animationSpeed)
-        .attr("r", radius)
-        .attr("fill", "transparent");
+        .attr(
+            "d",
+            `
+           M ${xArcStart} ${0}
+           A ${m.radius} ${m.radius} 0 0 1 ${-xArcStart} ${0}
+           A ${m.radius} ${m.radius} 0 0 1 ${radius / 2} ${Math.min(radius, labelYPos)}
+           L ${radius / 2} ${labelYPos}
+           L ${-radius / 2} ${labelYPos}
+           L ${-radius / 2} ${Math.min(radius, labelYPos)}
+           A ${m.radius} ${m.radius} 0 0 1 ${xArcStart} ${0}
+           Z
+        `
+        )
+        .attr("fill", "red")
+        .style("opacity", "0.7");
 
     update
         .select("text.label-value")
