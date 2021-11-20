@@ -29,7 +29,6 @@ export interface GaugeMeasurements extends GaugeArc {
     showMinMax: boolean;
     showLabels: boolean;
     width: number;
-    height: number;
 }
 
 export interface GaugeArc {
@@ -38,13 +37,6 @@ export interface GaugeArc {
     innerRadius: number;
     paddingRadians: number;
     maxAngle: number;
-}
-
-export interface LayoutMeasurements {
-    radius: number;
-    labelSize: number;
-    showMinMax: boolean;
-    showLabels: boolean;
 }
 
 export function gaugeRadius(width: number, height: number, paddingRadians: number) {

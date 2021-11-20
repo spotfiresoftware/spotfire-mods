@@ -81,6 +81,25 @@ describe("Render", () => {
         expect(svg.selectAll(".label-value").text()).toBe("10 000");
     });
 
+    it("should render vertically centered a group per gauge", async () => {
+        render([defaultGauge, defaultGauge2, { ...defaultGauge2, key: "sads" }], {
+            svg: svg,
+            style: defaultStyling,
+            size: { width: 600, height: 400 }
+        });
+
+        await awaitTransitions();
+
+        let firstGauge = svg.select(".gauge").node() as HTMLElement;
+        let svgPos = svg.node().getBoundingClientRect();
+
+        let gauge = firstGauge.getBoundingClientRect();
+
+        expect(gauge.height).toBeLessThan(200);
+
+        expect(gauge.y).toBeGreaterThan(svgPos.y + 50);
+    });
+
     describe("Arc", () => {
         for (const size of sizes) {
             for (const padAngle of padAngles) {
