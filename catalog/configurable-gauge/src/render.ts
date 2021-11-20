@@ -92,9 +92,9 @@ export async function render(gauges: Gauge[], settings: Settings) {
      * The path arc is drawn in such a way that it would fit a full circle.
      * That means that it grows outside of the gauge rectangle when the radius is greater than half the height.
      */
-    const extraArcVerticalTranslate = arc.tickRadius - heightWithPadding / 2;
-    let verticalTranslate = (i: number) =>
-        Math.floor(i / colCount) * gaugeHeight + gaugeHeight / 2 + extraArcVerticalTranslate;
+    let remainingSpace = Math.max((size.height - rowCount * Math.min(gaugeHeight, gaugeWidth)) / 2, 0);
+
+    let verticalTranslate = (i: number) => arc.tickRadius + Math.floor(i / colCount) * gaugeHeight + remainingSpace;
 
     let newGauge = gaugesPaths
         .enter()
@@ -124,7 +124,6 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     updateGauge(update, settings, {
         ...arc,
-        height: heightWithPadding,
         width: widthWithPadding,
         showLabels: labelsFit,
         showMinMax: showMinMax
