@@ -1,4 +1,4 @@
-import { grid, gaugeRadius, labelsFitSpace, scaleFitSpace, gaugeHeight } from "../src/layout";
+import { grid, gaugeRadius, labelsFitSpace, scaleFitSpace } from "../src/layout";
 
 describe("Sizing", () => {
     it("Calculates the best grid size", () => {
