@@ -5,11 +5,12 @@
     "main": "src/index.ts",
     "scripts": {
         "server": "mods-dev-server dist",
-        "build": "gulp build --compress",
+        "build": "npm run ts && gulp build --compress",
         "build-watch": "gulp watch",
-        "start": "npm run build-watch",
+        "start": "npm run ts && npm run build-watch",
         "test": "karma start",
-        "ts-watch": "tsc --watch"
+        "ts-watch": "tsc --watch",
+        "ts": "tsc"
     },
     "author": "objerke, ebrandin",
     "license": "ISC",
