@@ -15,6 +15,12 @@ All source code for the mod example can be found in the `src` folder. Other nece
 - Shake overfull gauge.
 - Show min and max labels.
 
+## Setting min and max expressions
+
+By default the `min` and `max` axes are empty. When `min` is empty, the default value is 0. The default `max` is the current greatest value from the `value` axis. It means that one gauge will always be full when no explicit `max` expression is set.
+
+The simplest way to configure min and max values are to set static numeric [custom expressions](https://docs.tibco.com/pub/sfire-analyst/11.6.0/doc/html/en-US/TIB_sfire-analyst_UsersGuide/ncfe/ncfe_custom_expressions_introduction.htm), such as "100" for the `max` expression.
+
 ## Development Prerequisites
 
 These instructions assume that you have [Node.js](https://nodejs.org/en/) (which includes npm) installed.
