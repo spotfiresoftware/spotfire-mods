@@ -84,16 +84,37 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     // Last rendered data view is still valid from a users perspective since
     // a document modification was made during a progress indication.
     // Hard abort if row count exceeds an arbitrary selected limit
-    const xLimit = 1250;
+    const xLimit = 10000;
     const colorLimit = 100;
     const colorCount = (await dataView.hierarchy("Color")).leafCount;
     const xCount = (await dataView.hierarchy("X")).leafCount;
     if (colorCount > colorLimit || xCount > xLimit) {
         svg.selectAll("*").remove();
-        mod.controls.errorOverlay.show(`Exceeded data size limit (colors: ${colorLimit}, x: ${xLimit})`, "rowCount");
+
+        mod.controls.errorOverlay.show("The resulting data view exceeded the size limit.", "dataViewSize1");
+        if (xCount > xLimit) {
+            mod.controls.errorOverlay.show(
+                `Maximum allowed X axis values is ${xLimit}. Try aggregating the expression further.`,
+                "dataViewSize2"
+            );
+        } else {
+            mod.controls.errorOverlay.hide("dataViewSize2");
+        }
+
+        if (colorCount > colorLimit) {
+            mod.controls.errorOverlay.show(
+                `Maximum number of colors is limited to ${colorLimit} for readability reasons.`,
+                "dataViewSize3"
+            );
+        } else {
+            mod.controls.errorOverlay.hide("dataViewSize3");
+        }
+
         return;
     } else {
-        mod.controls.errorOverlay.hide("rowCount");
+        mod.controls.errorOverlay.hide("dataViewSize1");
+        mod.controls.errorOverlay.hide("dataViewSize2");
+        mod.controls.errorOverlay.hide("dataViewSize3");
     }
 
     const colorHierarchy = await dataView.hierarchy("Color");
@@ -183,19 +204,41 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     svg.append("g").attr("class", "hover-line").attr("clip-path", "url(#clipPath)");
 
     /**
+     * Compute the suitable ticks to show
+     */
+    const scaleWidth = xScale.range()[1] - xScale.range()[0];
+    const minLabelWidth = 20;
+    const maxCount = scaleWidth / minLabelWidth;
+    const drawEvery = Math.ceil(xCount / maxCount);
+    const drawXScaleLabel = [0, xCount - 1];
+    let drawIndex = drawEvery;
+    while (drawIndex < xCount) {
+        if (xCount - drawIndex > drawEvery) {
+            drawXScaleLabel.push(drawIndex);
+        }
+        drawIndex += drawEvery;
+    }
+
+    drawXScaleLabel.push(xCount - 1);
+    var labelWidth = scaleWidth / Math.ceil(xCount / drawEvery) - 4;
+    console.log(drawXScaleLabel);
+    /**
      * X axis group.
      */
-    svg.append("g")
+    var xScaleD3 = svg
+        .append("g")
         .attr("transform", `translate(0,${windowSize.height - margin.bottom})`)
         .call(
             d3
                 .axisBottom(xScale)
-                .tickSize(styling.scales.tick.stroke != "none" ? 5 : 0)
+                .tickSize(5)
                 .tickPadding(styling.scales.tick.stroke != "none" ? 3 : 9)
-        )
-        .selectAll("text")
-        .remove();
+        );
+    xScaleD3.selectAll("text").remove();
 
+    xScaleD3
+        .selectAll("g.tick line")
+        .attr("y2", (_, i) => (styling.scales.tick.stroke != "none" && drawXScaleLabel.includes(i) ? 5 : 0));
     /**
      * Y Axis group.
      */
@@ -235,7 +278,6 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     /**
      * Draws X labels as divs (not SVG)
      */
-    const maxWidth = Math.max(0, xScale.step() - 4);
     xLabelsContainer.selectAll("*").remove();
     xLabelsContainer
         .style("bottom", `${margin.bottom - 35}px`)
@@ -256,7 +298,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .style("left", (d) => xScale(d) + "px")
         .append("div")
         .attr("class", "x-axis-label")
-        .style("max-width", maxWidth + "px")
+        .style("max-width", (_, i) => `${drawXScaleLabel.includes(i) ? labelWidth : 0}px`)
         .style("color", styling.scales.font.color)
         .style("font-family", styling.scales.font.fontFamily)
         .style("font-size", styling.scales.font.fontSize + "px")
