@@ -245,9 +245,8 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
                     e.message || e || "☹️ Something went wrong, check developer console",
                     "General"
                 );
-                if (DEBUG) {
-                    throw e;
-                }
+
+                console.error(e);
             }
         } as T;
     };
