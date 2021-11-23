@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { Gauge, render } from "../src/render";
+import { Gauge, render } from "../src/gauge";
 
 const defaultStyling = {
     gauge: {
@@ -48,7 +48,7 @@ let sizes = [
     { width: 800, height: 650 }
 ];
 
-describe("Render", () => {
+describe("Gauge", () => {
     let svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
     beforeEach(() => {
         svg = appendSvg();
@@ -91,7 +91,7 @@ describe("Render", () => {
         await awaitTransitions();
 
         let firstGauge = svg.select(".gauge").node() as HTMLElement;
-        let svgPos = svg.node().getBoundingClientRect();
+        let svgPos = svg.node()!.getBoundingClientRect();
 
         let gauge = firstGauge.getBoundingClientRect();
 

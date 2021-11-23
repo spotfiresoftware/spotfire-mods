@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { render, Gauge } from "./render";
+import { render, Gauge } from "./gauge";
 import { DataView, ModProperty } from "spotfire-api";
 import { renderSettings } from "./settings";
 import { resources } from "./resources";

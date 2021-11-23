@@ -23,6 +23,6 @@
         },
         "typeRoots": ["./spotfire", "./node_modules/@types"]
     },
-    "include": ["./src/**/*.ts", "./src/**/*.tsx", "./test/**/*.ts", "./spotfire/**/*.d.ts"],
+    "include": ["./src/**/*.ts", "./src/**/*.tsx", "./tests/**/*.ts", "./spotfire/**/*.d.ts"],
     "exclude": ["../node_modules"]
 }
