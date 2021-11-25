@@ -107,9 +107,9 @@ svg {
     transition: stroke 0.1s ease;
 }
 
-.gauge:hover .value {
-    transition: stroke 0.3s ease;
+.gauge:hover .highlight {
     stroke: currentColor;
+    pointer-events: none;
 }
 
 .shake {

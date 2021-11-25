@@ -150,6 +150,7 @@ export async function render(gauges: Gauge[], settings: Settings) {
 function createGaugeElems(arcGroup: d3.Selection<SVGGElement, Gauge, SVGSVGElement, any>) {
     arcGroup.append("path").attr("class", "click-zone");
     arcGroup.append("path").attr("class", "bg");
+    arcGroup.append("path").attr("class", "highlight");
     arcGroup.append("g").attr("class", "scale").style("cursor", "default").style("user-select", "none");
     arcGroup.append("path").attr("class", "value");
     arcGroup.append("text").attr("class", "label-value");
@@ -180,6 +181,13 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .innerRadius((d) => d.innerRadius)
         .outerRadius((d) => d.radius);
 
+    const highlightArc = d3
+        .arc<internalGauge>()
+        .startAngle((d) => scale(0)!)
+        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0)) || 0, maxAngle))
+        .innerRadius((d) => Math.max(d.innerRadius - 2, 0))
+        .outerRadius((d) => d.radius + 3);
+
     const tickWidth = (2 * Math.PI) / 360;
     const scaleArc = d3
         .arc<{ x0: number; height: number }>()
@@ -206,8 +214,16 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .duration(animationSpeed)
         .attr("class", shake("value"))
         .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }))
-        .attr("stroke-width", 2)
         .attr("fill", (d) => d.color);
+
+    update
+        .select("path.highlight")
+        .transition("add highlight")
+        .duration(animationSpeed)
+        .attr("fill", "transparent")
+        .attr("stroke-width", 1)
+        .attr("d", (d: any) => highlightArc(d))
+        .attr("class", "highlight");
 
     const xArcStart = -radius;
     update
