@@ -5,7 +5,6 @@ import { renderSettings } from "./settings";
 import { resources } from "./resources";
 
 const Spotfire = window.Spotfire;
-const DEBUG = true;
 
 Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
