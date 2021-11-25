@@ -183,8 +183,8 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
 
     const highlightArc = d3
         .arc<internalGauge>()
-        .startAngle((d) => scale(0)!)
-        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0)) || 0, maxAngle))
+        .startAngle((d) => scale(-3 / (d.radius * 2 * Math.PI))!)
+        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0) + 3 / (d.radius * 2 * Math.PI)) || 0, maxAngle))
         .innerRadius((d) => Math.max(d.innerRadius - 2, 0))
         .outerRadius((d) => d.radius + 3);
 
