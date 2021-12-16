@@ -200,14 +200,14 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .attr("opacity", settings.style.gauge.backgroundOpacity / 100)
         .transition("add sectors")
         .duration(animationSpeed)
-        .attrTween("d", tweenArc({ percent: 1, radius, innerRadius }, 1))
+        .attrTween("d", tweenArc({ percent: 1, radius, innerRadius }, arc, 1))
         .attr("fill", (d) => settings.style.gauge.background);
 
     update
         .select("path.value")
         .transition("add sectors")
         .duration(animationSpeed)
-        .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }))
+        .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }, arc))
         .attr("fill", (d) => d.color);
 
     update
@@ -216,7 +216,7 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .duration(animationSpeed)
         .attr("fill", "transparent")
         .attr("stroke-width", 1)
-        .attr("d", (d: any) => highlightArc(d))
+        .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }, highlightArc))
         .attr("class", "highlight");
 
     const xArcStart = -radius;
@@ -334,7 +334,11 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         };
     }
 
-    function tweenArc(defaultPrevValue: Partial<internalGauge>, overridePercent?: number) {
+    function tweenArc(
+        defaultPrevValue: Partial<internalGauge>,
+        arcFunc: (d: internalGauge, ...args: any[]) => string | null,
+        overridePercent?: number
+    ) {
         return function tweenArc(this: any, data: any) {
             let prevValue = this.__prev ? this.__prev : defaultPrevValue;
 
@@ -347,7 +351,7 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
             var i = d3.interpolate(prevValue, data);
 
             return function (value: any) {
-                return arc(i(value))!;
+                return arcFunc(i(value))!;
             };
         };
     }
