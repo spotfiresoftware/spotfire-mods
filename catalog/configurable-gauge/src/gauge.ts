@@ -10,7 +10,6 @@ export interface Settings {
     animationSpeed?: number;
     size?: { width: number; height: number };
     showMinMax?: boolean;
-    showShake?: boolean;
     arcWidth?: number;
     padAngle?: number;
     style: {
@@ -196,15 +195,11 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .innerRadius((d) => innerRadius)
         .outerRadius((d) => (d.height ? longTickRadius : radius));
 
-    let shake = (className: string) => (d: Gauge) =>
-        className + " " + (settings.showShake && d.percent > 1 ? "shake" : "");
-
     update
         .select("path.bg")
         .attr("opacity", settings.style.gauge.backgroundOpacity / 100)
         .transition("add sectors")
         .duration(animationSpeed)
-        .attr("class", shake("bg"))
         .attrTween("d", tweenArc({ percent: 1, radius, innerRadius }, 1))
         .attr("fill", (d) => settings.style.gauge.background);
 
@@ -212,7 +207,6 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .select("path.value")
         .transition("add sectors")
         .duration(animationSpeed)
-        .attr("class", shake("value"))
         .attrTween("d", tweenArc({ percent: 0, radius, innerRadius }))
         .attr("fill", (d) => d.color);
 

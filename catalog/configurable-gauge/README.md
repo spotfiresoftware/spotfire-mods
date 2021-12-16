@@ -12,7 +12,6 @@ All source code for the mod example can be found in the `src` folder. Other nece
 - Opacity of background arc.
 - Opacity of scale ticks.
 - Show gauge value as percent
-- Shake overfull gauge.
 - Show min and max labels.
 
 ## Setting min and max expressions

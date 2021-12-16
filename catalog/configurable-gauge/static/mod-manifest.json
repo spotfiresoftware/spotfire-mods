@@ -31,11 +31,6 @@
             "type": "boolean"
         },
         {
-            "name": "showShake",
-            "defaultValue": "false",
-            "type": "boolean"
-        },
-        {
             "name": "showMinMax",
             "defaultValue": "false",
             "type": "boolean"

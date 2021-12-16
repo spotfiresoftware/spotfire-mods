@@ -8,6 +8,5 @@ export const resources = {
     settingsBackgroundOpacity: "Background opacity:",
     settingsScaleTicksOpacity: "Scale ticks opacity:",
     settingsShowPercent: "Show percent:",
-    settingsShowMinMax: "Show min and max:",
-    settingsShakeWhenFull: "Shake when full:"
+    settingsShowMinMax: "Show min and max:"
 };
