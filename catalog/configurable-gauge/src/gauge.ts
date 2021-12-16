@@ -51,8 +51,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     let [rowCount, colCount] = grid(size.width, size.height, gauges.length);
 
-    const horizontalPadding = size.width / 50;
-    const verticalPadding = size.height / 50;
+    const horizontalPadding = 10;//size.width / 50;
+    const verticalPadding = 10;//size.height / 50;
 
     let gaugeWidth = size.width / colCount;
     let gaugeHeight = size.height / rowCount;
@@ -91,7 +91,11 @@ export async function render(gauges: Gauge[], settings: Settings) {
      * The path arc is drawn in such a way that it would fit a full circle.
      * That means that it grows outside of the gauge rectangle when the radius is greater than half the height.
      */
-    let remainingSpace = Math.max((size.height - rowCount * Math.min(gaugeHeight, gaugeWidth)) / 2, 0);
+    let remainingSpace = Math.max((size.height - rowCount * Math.min(gaugeHeight, gaugeHeight)) / 2, 0);
+
+    // Temporary fix. remainingSpace is sometimes too large and will cause gauges to be drawn below available area.
+    // This will anchor the grid to the top of the visualization.
+    remainingSpace = 0;
 
     let verticalTranslate = (i: number) => arc.tickRadius + Math.floor(i / colCount) * gaugeHeight + remainingSpace;
 
