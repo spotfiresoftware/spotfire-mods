@@ -205,8 +205,12 @@ function appendSvg() {
     return d3.select("body").append("svg").attr("xmlns", "http://www.w3.org/2000/svg");
 }
 
-function round(n: number) {
+function ceil(n: number) {
     return Math.ceil(n * 100);
+}
+
+function floor(n: number) {
+    return Math.floor(n * 100);
 }
 
 function expectArcToBeWithinGaugeGroup(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
@@ -216,31 +220,31 @@ function expectArcToBeWithinGaugeGroup(svg: d3.Selection<SVGSVGElement, unknown,
 }
 
 function underAndWithinSides(inner: DOMRect, outer: DOMRect) {
-    expect(round(inner.y)).toBeGreaterThanOrEqual(round(outer.y));
-    expect(round(inner.x)).toBeGreaterThanOrEqual(round(outer.x));
-    expect(round(inner.x + inner.width)).toBeLessThanOrEqual(round(outer.x + outer.width));
+    expect(ceil(inner.y)).toBeGreaterThanOrEqual(ceil(outer.y));
+    expect(ceil(inner.x)).toBeGreaterThanOrEqual(ceil(outer.x));
+    expect(ceil(inner.x + inner.width)).toBeLessThanOrEqual(ceil(outer.x + outer.width));
 }
 
 function expectMinMaxLabelsToBeSeparate(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
     let minBox = (svg.select(".min-label").node() as HTMLElement).getBoundingClientRect();
     let maxBox = (svg.select(".max-label").node() as HTMLElement).getBoundingClientRect();
-    expect(round(minBox.x + minBox.width)).toBeLessThan(round(maxBox.x));
+    expect(ceil(minBox.x + minBox.width)).toBeLessThan(ceil(maxBox.x));
 }
 
 function expectLabelsToBeBelowMinMaxAndInsideGauge(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
     let gaugeBox = (svg.select(".gauge").node() as HTMLElement).getBoundingClientRect();
     let minBox = (svg.select(".min-label").node() as HTMLElement).getBoundingClientRect();
     let labelBox = (svg.select(".label").node() as HTMLElement).getBoundingClientRect();
-    expect(round(minBox.y + minBox.height)).toBeLessThan(round(labelBox.y));
-    expect(round(labelBox.y + labelBox.height)).toBeLessThanOrEqual(round(gaugeBox.y + gaugeBox.height));
+    expect(ceil(labelBox.y)).toBeGreaterThanOrEqual(floor(minBox.y + minBox.height));
+    expect(floor(labelBox.y + labelBox.height)).toBeLessThanOrEqual(ceil(gaugeBox.y + gaugeBox.height));
 }
 
 function expectLabelsToBeWithinGaugeGroup(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
     let gaugeBox = (svg.select(".gauge").node() as HTMLElement).getBoundingClientRect();
     let minBox = (svg.select(".min-label").node() as HTMLElement).getBoundingClientRect();
     let maxBox = (svg.select(".max-label").node() as HTMLElement).getBoundingClientRect();
-    expect(round(minBox.x)).toBeGreaterThanOrEqual(round(gaugeBox.x));
-    expect(round(maxBox.x + maxBox.width)).toBeLessThanOrEqual(round(gaugeBox.x + gaugeBox.width));
+    expect(ceil(minBox.x)).toBeGreaterThanOrEqual(ceil(gaugeBox.x));
+    expect(ceil(maxBox.x + maxBox.width)).toBeLessThanOrEqual(ceil(gaugeBox.x + gaugeBox.width));
 }
 
 async function awaitTransitions() {
