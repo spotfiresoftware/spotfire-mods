@@ -149,13 +149,13 @@ export async function render(gauges: Gauge[], settings: Settings) {
 function createGaugeElems(arcGroup: d3.Selection<SVGGElement, Gauge, SVGSVGElement, any>) {
     arcGroup.append("path").attr("class", "click-zone");
     arcGroup.append("path").attr("class", "bg");
-    arcGroup.append("path").attr("class", "highlight");
     arcGroup.append("g").attr("class", "scale").style("cursor", "default").style("user-select", "none");
     arcGroup.append("path").attr("class", "value");
     arcGroup.append("text").attr("class", "label-value");
     arcGroup.append("text").attr("class", "label");
     arcGroup.append("text").attr("class", "min-label");
     arcGroup.append("text").attr("class", "max-label");
+    arcGroup.append("path").attr("class", "highlight");
 }
 
 function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, settings: Settings, m: GaugeMeasurements) {
@@ -182,9 +182,9 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
 
     const highlightArc = d3
         .arc<internalGauge>()
-        .startAngle((d) => scale(-3 / (d.radius * 2 * Math.PI))!)
-        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0) + 3 / (d.radius * 2 * Math.PI)) || 0, maxAngle))
-        .innerRadius((d) => Math.max(d.innerRadius - 2, 0))
+        .startAngle((d) => scale(-5 / (d.radius * 2 * Math.PI))!)
+        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0) + 5 / (d.radius * 2 * Math.PI)) || 0, maxAngle + 5))
+        .innerRadius((d) => Math.max(d.innerRadius - 3, 0))
         .outerRadius((d) => d.radius + 3);
 
     const tickWidth = (2 * Math.PI) / 360;
