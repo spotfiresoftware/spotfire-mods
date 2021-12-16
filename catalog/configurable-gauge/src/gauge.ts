@@ -324,7 +324,7 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .style("opacity", settings.style.ticks.backgroundOpacity / 100)
         .attr("fill", function (d) {
             let g: Gauge = this.parentNode.parentNode.__data__;
-            return scale(g.percent)! > d.x0 ? g.color : settings.style.ticks.background;
+            return scale(g.percent)! >= d.x0 && g.percent != 0 ? g.color : settings.style.ticks.background;
         });
 
     function label(p: keyof Gauge, width: number, size: number) {

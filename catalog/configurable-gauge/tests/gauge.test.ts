@@ -27,15 +27,26 @@ const defaultGauge: Gauge = {
     percent: 0.5
 };
 
-const defaultGauge2: Gauge = {
+const emptyGauge: Gauge = {
     color: "green",
-    formattedValue: "10 000",
+    formattedValue: "0",
     key: "second",
     label: "Second",
     mark() {},
     maxLabel: "20 000",
     minLabel: "0",
-    percent: 0.5
+    percent: 0
+};
+
+const fullGauge: Gauge = {
+    color: "rgb(255, 100, 125)",
+    formattedValue: "20 000",
+    key: "third",
+    label: "Full",
+    mark() {},
+    maxLabel: "20 000",
+    minLabel: "0",
+    percent: 1
 };
 
 let padAngles = [0, 5, 10, 15, 20, 30, 35, 40, 45, 50, 60, 70, 80, 90];
@@ -67,7 +78,7 @@ describe("Gauge", () => {
 
         expect(svg.selectAll("g.gauge").size()).toBe(1);
 
-        render([defaultGauge, defaultGauge2], {
+        render([defaultGauge, emptyGauge], {
             svg: svg,
             style: defaultStyling,
             size: { width: 300, height: 400 },
@@ -82,7 +93,7 @@ describe("Gauge", () => {
     });
 
     it("should render vertically centered a group per gauge", async () => {
-        render([defaultGauge, defaultGauge2, { ...defaultGauge2, key: "sads" }], {
+        render([defaultGauge, emptyGauge, { ...emptyGauge, key: "sads" }], {
             svg: svg,
             style: defaultStyling,
             size: { width: 600, height: 400 }
@@ -198,6 +209,38 @@ describe("Gauge", () => {
                 });
             }
         }
+    });
+
+    describe("Tick marks", () => {
+        it("should be gray when empty", async () => {
+            render([emptyGauge], {
+                svg: svg,
+                style: defaultStyling,
+                size: { width: 300, height: 400 },
+                showMinMax: false
+            });
+
+            await awaitTransitions();
+
+            svg.selectAll(".tick").each(function (d) {
+                expect(d3.select(this).attr("fill")).toBe("rgb(221, 221, 221)");
+            });
+        });
+        
+        it("should be color of gauge when full", async () => {
+            render([fullGauge], {
+                svg: svg,
+                style: defaultStyling,
+                size: { width: 300, height: 400 },
+                showMinMax: false
+            });
+
+            await awaitTransitions();
+
+            svg.selectAll(".tick").each(function (d) {
+                expect(d3.select(this).attr("fill")).toBe(fullGauge.color);
+            });
+        });
     });
 });
 
