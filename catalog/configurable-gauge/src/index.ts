@@ -89,7 +89,7 @@ Spotfire.initialize(async (mod) => {
 
             const percent = (value - min) / (max - min);
             const formattedValue = showPercent.value()
-                ? `${(percent * 100).toPrecision(3)}%`
+                ? `${parseFloat((percent * 100).toPrecision(3))}%`
                 : valueAxis.parts.length
                 ? row.continuous(valueAxisName).formattedValue()
                 : 0;
