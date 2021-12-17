@@ -22,7 +22,7 @@
         },
         {
             "name": "ticksOpacity",
-            "defaultValue": 100,
+            "defaultValue": 50,
             "type": "integer"
         },
         {

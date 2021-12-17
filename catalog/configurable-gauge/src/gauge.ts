@@ -179,12 +179,15 @@ function updateGauge(update: d3.Selection<any, Gauge, SVGSVGElement, any>, setti
         .innerRadius((d) => d.innerRadius)
         .outerRadius((d) => d.radius);
 
+    const highlightPadding = 3;
+    const padAngle = (d: { radius: number }) => 2 * Math.asin(highlightPadding / 2 / d.radius);
+
     const highlightArc = d3
         .arc<internalGauge>()
-        .startAngle((d) => scale(-5 / (d.radius * 2 * Math.PI))!)
-        .endAngle((d) => Math.min(scale(Math.max(d.percent, 0) + 5 / (d.radius * 2 * Math.PI)) || 0, maxAngle + 5))
-        .innerRadius((d) => Math.max(d.innerRadius - 3, 0))
-        .outerRadius((d) => d.radius + 3);
+        .startAngle((d) => scale(0)! - padAngle(d))
+        .endAngle((d) => Math.min((scale(d.percent) || 0), maxAngle) + padAngle(d))
+        .innerRadius((d) => Math.max(d.innerRadius - highlightPadding, 0))
+        .outerRadius((d) => d.radius + highlightPadding);
 
     const tickWidth = (2 * Math.PI) / 360;
     const scaleArc = d3
