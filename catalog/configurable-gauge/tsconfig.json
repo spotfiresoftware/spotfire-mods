@@ -1,23 +1,28 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES2016",
+        "jsxFactory": "h",
+        "jsx": "react",
+        "moduleResolution": "node",
         "noUnusedLocals": true,
         "allowJs": false,
         "allowUnreachableCode": false,
+        "noEmit": true,
         "noImplicitAny": true,
         "strict": true,
         "charset": "utf8",
         "sourceMap": true,
+        "esModuleInterop": true,
         "inlineSources": true,
-        "module": "es2015",
+        "module": "ES2015",
         "outDir": "./build/",
         "lib": ["es2019", "dom"],
         "baseUrl": ".",
         "paths": {
-            "spotfire-api": ["./spotfire/spotfire-api-1-2"],
+            "spotfire-api": ["./spotfire/spotfire-api-1-3"],
         },
         "typeRoots": ["./spotfire", "./node_modules/@types"]
     },
-    "include": ["./src/**/*.ts", "./test/**/*.ts", "./spotfire/**/*.d.ts"],
+    "include": ["./src/**/*.ts", "./src/**/*.tsx", "./tests/**/*.ts", "./spotfire/**/*.d.ts"],
     "exclude": ["../node_modules"]
 }
