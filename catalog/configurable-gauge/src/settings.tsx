@@ -75,7 +75,20 @@ export function renderSettings(components: Components[]) {
                         onChange={function (this: HTMLInputElement, e: any) {
                             const { value } = e.target;
                             let p = parseInt(value);
-                            console.log(this, e, c, p);
+                            c.property.set(p);
+                        }}
+                    ></input>
+                    <input
+                        type="number"
+                        max={c.max}
+                        min={c.min}
+                        value={c.property.value<number>()!}
+                        step={c.step}
+                        onChange={function (this: HTMLInputElement, e: any) {
+                            let { value } = e.target;
+                            let p = parseInt(value, 10) || 0;
+                            p = Math.max(c.min, Math.min(p, c.max));
+                            e.target.value = p;
                             c.property.set(p);
                         }}
                     ></input>

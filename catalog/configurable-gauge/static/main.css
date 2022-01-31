@@ -59,6 +59,24 @@ svg {
 .settings-area span {
     margin-right: 10px;
     margin-bottom: 10px;
+    min-width: calc(50% - 10px);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 3px;
+    align-items: center;
+}
+
+.settings-area input[type=range] {
+    width: 100%;
+}
+
+.settings-area input[type=number] {
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    width: 4em;
+    vertical-align: bottom;
 }
 
 .input {
