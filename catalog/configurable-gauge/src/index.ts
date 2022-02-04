@@ -110,7 +110,19 @@ Spotfire.initialize(async (mod) => {
                     }
                 },
                 mouseOver() {
-                    mod.controls.tooltip.show(row);
+                    let tooltip = [gaugeAxis, colorAxis, valueAxis, minAxis, maxAxis]
+                        .filter((a) => a.parts.length)
+                        .map(
+                            (a) =>
+                                a.name +
+                                ": " +
+                                (a.isCategorical
+                                    ? row.categorical(a.name).formattedValue()
+                                    : row.continuous(a.name).formattedValue())
+                        )
+                        .join("\n");
+
+                    mod.controls.tooltip.show(tooltip);
                 }
             } as Gauge;
         });
