@@ -43,6 +43,8 @@ export function render(settings: SmithSettings, points: Point[]) {
         .attr("width", settings.size.width)
         .attr("height", settings.size.height);
 
+    radius -= 3;
+
     svg.call(bg);
 
     svg.selectAll(".rc")
@@ -139,7 +141,13 @@ export function render(settings: SmithSettings, points: Point[]) {
         let g = svg.select("#bg");
 
         const realCircles = Array.from(range(0, settings.gridDensity ?? 10.1, 0.2)).map(rCircle);
-        const imaginaryCircles = Array.from(range(settings.gridDensity ? settings.gridDensity * -0.5 : -5, settings.gridDensity ? settings.gridDensity * 0.5 : 5.1, 0.2)).map(iCircle);
+        const imaginaryCircles = Array.from(
+            range(
+                settings.gridDensity ? settings.gridDensity * -0.5 : -5,
+                settings.gridDensity ? settings.gridDensity * 0.5 : 5.1,
+                0.2
+            )
+        ).map(iCircle);
 
         g.selectAll(".setup")
             .data([radius])
