@@ -6,6 +6,13 @@ const assert = require("assert");
 
 const { spawn } = require("child_process");
 
+describe("CLI", function () {
+    it("should warn when no manifest is present in the root folder", async () => {
+        const server = cli(["cli.js", "test", "-p", "5556", "-o", "false"]);
+        await server.match("Could not find a mod-manifest.json in the root directory");
+    });
+});
+
 describe("Web socket connection", function () {
     it("should reload browser on file change", async function () {
         const server = cli(["cli.js", "test/test-files", "-p", "5555", "-o", "false"]);
@@ -62,7 +69,7 @@ describe("Web socket connection", function () {
 });
 
 /**
- * Assert that the current page contains the provided pattern. 
+ * Assert that the current page contains the provided pattern.
  * @param {puppeteer.Page} page
  * @param {string} pattern
  */
@@ -138,9 +145,7 @@ function cli(args) {
             } else {
                 timeout = setTimeout(() => {
                     let err = `'${_pattern}' did not appear in ${ms}ms. Current output is:  '${output}'.`;
-
-                    unwrappedPromise.resolve(err);
-                    assert.fail(err);
+                    unwrappedPromise.reject(err);
                 }, ms);
             }
 
