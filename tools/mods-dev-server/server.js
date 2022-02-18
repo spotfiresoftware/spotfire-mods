@@ -235,7 +235,7 @@ function start(settings = {}) {
         fs.watch(manifestPath, {}, readExternalResources);
     }
 
-    async function readExternalResources() {
+    function readExternalResources() {
         if (!fs.existsSync(manifestPath)) {
             return;
         }
