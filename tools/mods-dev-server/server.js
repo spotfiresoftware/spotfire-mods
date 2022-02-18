@@ -76,12 +76,13 @@ function start(settings = {}) {
     settings = Object.assign({}, defaultSettings, settings);
 
     const rootDirectoryAbsolutePath = path.resolve(settings.root);
+    const manifestPath = path.join(rootDirectoryAbsolutePath, manifestName);
 
     if (!fs.existsSync(rootDirectoryAbsolutePath)) {
         throw `The path '${rootDirectoryAbsolutePath}' does not exist.`;
     }
 
-    readExternalResourcesFromManifest(rootDirectoryAbsolutePath, true);
+    setupManifestListener();
 
     const app = connect();
     const serveStaticFiles = serveStatic(settings.root, { index: ["index.html", "index.htm"] });
@@ -151,7 +152,7 @@ function start(settings = {}) {
             return;
         }
 
-        readExternalResourcesFromManifest(rootDirectoryAbsolutePath);
+        readExternalResources();
         console.log(`Reloading ${openConnections.length} connected instance${openConnections.length > 1 ? "s" : ""}.`);
         for (const client of openConnections) {
             client.send("reload");
@@ -219,32 +220,33 @@ function start(settings = {}) {
 
     /**
      * Read external resources from the mod manifest placed in the root directory.
-     * @param {string} rootDirectoryAbsolutePath
      */
-    function readExternalResourcesFromManifest(rootDirectoryAbsolutePath, warn = false) {
-        const files = fs.readdirSync(rootDirectoryAbsolutePath);
-
-        if (files.find((fileName) => fileName == manifestName)) {
-            const manifestPath = path.join(rootDirectoryAbsolutePath, manifestName);
-
-            readExternalResources();
-            fs.watch(manifestPath, {}, readExternalResources);
-
-            async function readExternalResources() {
-                let content = fs.readFileSync(manifestPath, { encoding: "utf-8" });
-
-                try {
-                    let json = JSON.parse(content);
-                    declaredExternalResourcesInManifest = json.externalResources || [];
-                    manifestFiles = [...(json.files || []), json.icon];
-                } catch (err) {}
-            }
-        } else if (warn) {
-            console.warn(
+    function setupManifestListener() {
+        if (!fs.existsSync(manifestPath)) {
+            console.log(
                 colors.yellow("Could not find a mod-manifest.json in the root directory"),
                 colors.yellow(rootDirectoryAbsolutePath)
             );
+
+            return;
         }
+
+        readExternalResources();
+        fs.watch(manifestPath, {}, readExternalResources);
+    }
+
+    async function readExternalResources() {
+        if (!fs.existsSync(manifestPath)) {
+            return;
+        }
+
+        let content = fs.readFileSync(manifestPath, { encoding: "utf-8" });
+
+        try {
+            let json = JSON.parse(content);
+            declaredExternalResourcesInManifest = json.externalResources || [];
+            manifestFiles = [...(json.files || []), json.icon];
+        } catch (err) {}
     }
 
     /**
