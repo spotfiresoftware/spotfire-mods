@@ -21,7 +21,7 @@
 ">
 <meta itemprop="datePublished" content="2020-11-06T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-11-06T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2472">
+<meta itemprop="wordCount" content="2500">
 
 
 
@@ -407,7 +407,7 @@
 <li>In <strong>Spotfire</strong> go to <em>Tools &gt; Development &gt; Create visualization mod</em> and <strong>connect to the project</strong> by following the on-screen steps (<em>Connect to Project &gt; Development server &gt; Connect</em>)</li>
 <li>You should see some mod metadata on the screen, which means the mod is working.</li>
 </ul>
-<p><img src="./images/step1.PNG" alt=""></p>
+<p><img src="./images/step1.PNG" alt="Step 1"></p>
 <hr>
 <h3 id="2-add-google-charts-library">2. Add Google Charts library</h3>
 <ul>
@@ -422,6 +422,23 @@
      &lt;/body&gt;
  &lt;/html&gt;
 </code></pre></div><ul>
+<li>Update the style in the <em>main.css</em> file</li>
+</ul>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#a40000">-body{
+</span><span style="color:#a40000">-    margin: 0;
+</span><span style="color:#a40000">-    overflow: hidden;
+</span><span style="color:#a40000">-}
+</span><span style="color:#a40000"></span>
+<span style="color:#a40000">-#mod-container {
+</span><span style="color:#a40000">-    white-space: pre;
+</span><span style="color:#a40000">-}
+</span><span style="color:#a40000"></span>
+<span style="color:#00a000">+html, body, #mod-container {
+</span><span style="color:#00a000">+    margin: 0;
+</span><span style="color:#00a000">+    height: 100%;
+</span><span style="color:#00a000">+    overflow: hidden;
+</span><span style="color:#00a000">+}
+</span></code></pre></div><ul>
 <li>Add the <em>gstatic</em> domain name as an external resource in <em>mod-manifest.json</em>. External resources from unknown domains will be blocked from loading for security reasons.</li>
 </ul>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">    &#34;files&#34;: [
@@ -517,7 +534,7 @@
 </code></pre></div><ul>
 <li>Save the changes. You should see the example working in Spotfire.</li>
 </ul>
-<p><img src="./images/step2.PNG" alt=""></p>
+<p><img src="./images/step2.PNG" alt="Step 2"></p>
 <ul>
 <li>Make use of <em>async/await</em> to get rid of extra code.</li>
 <li>Make the chart fit the screen by providing a chart area with some predefined margins.</li>
@@ -610,7 +627,6 @@
 </span><span style="color:#00a000">+        const colorDomain = colorHierarchy.isEmpty ? [&#34;All Values&#34;] : colorLeafNodes.map((node) =&gt; node.formattedPath());
 </span><span style="color:#00a000"></span>
 <span style="color:#00a000">+        const xLeafNodes = (await xHierarchy.root()).leaves();
-</span><span style="color:#00a000">+        const xDomain = xLeafNodes.map(node =&gt; node.formattedValue());
 </span><span style="color:#00a000"></span>
 <span style="color:#00a000">+        const dataColumns = [&#34;Columns&#34;];
 </span><span style="color:#00a000">+        colorDomain.forEach(value =&gt; dataColumns.push(value, { role: &#34;style&#34; }));
@@ -651,7 +667,7 @@
 </span><span style="color:#00a000">+        } catch (e) {
 </span><span style="color:#00a000">+            console.log(e);
 </span><span style="color:#00a000">+        }
-</span></code></pre></div><p><img src="./images/step3.PNG" alt=""></p>
+</span></code></pre></div><p><img src="./images/step3.PNG" alt="Step 3"></p>
 <hr>
 <h3 id="4-selectionmarking">4. Selection/marking</h3>
 <ul>
@@ -678,7 +694,7 @@
 </span><span style="color:#00a000">+        }
 </span><span style="color:#00a000"></span>     }
 
-</code></pre></div><p><img src="./images/step4.PNG" alt=""></p>
+</code></pre></div><p><img src="./images/step4.PNG" alt="Step 4"></p>
 <ul>
 <li>To clear all marking on background click, as native Spotfire visualizations do, we listen for &ldquo;click&rdquo; event and check its target id.</li>
 </ul>
@@ -781,7 +797,7 @@
 </span><span style="color:#00a000">+        function popoutChangeHandler() {}
 </span><span style="color:#00a000"></span>     }
  });
-</code></pre></div><p><img src="./images/step5.PNG" alt=""></p>
+</code></pre></div><p><img src="./images/step5.PNG" alt="Step 5"></p>
 <ul>
 <li>Add a tiny helper function to check property value.</li>
 <li>On each render we check <strong>stacking</strong> and <strong>orientation</strong> properties and update the chart configuration accordingly. Stacking is a simple boolean but orientation requires different classes for horizontal and vertical types of charts.</li>
@@ -894,7 +910,7 @@
 </span><span style="color:#00a000">+svg text {
 </span><span style="color:#00a000">+    cursor: pointer;
 </span><span style="color:#00a000">+}
-</span></code></pre></div><p><img src="./images/step5-1.PNG" alt=""></p>
+</span></code></pre></div><p><img src="./images/step5-1.PNG" alt="Step 5-1"></p>
 <hr>
 <h3 id="6-use-spotfire-theme-and-styling">6. Use Spotfire theme and styling</h3>
 <ul>
@@ -937,7 +953,7 @@
 </code></pre></div><ul>
 <li>In Spotfire, change <em>Visualizations Theme</em> to <strong>Dark</strong> (<em>Visualizations &gt; Canvas styling &gt; Dark</em>). You should see colors change according to theme.</li>
 </ul>
-<p><img src="./images/step6.PNG" alt=""></p>
+<p><img src="./images/step6.PNG" alt="Step 6"></p>
 <hr>
 <h3 id="7-prepare-for-export">7. Prepare for export</h3>
 <ul>
@@ -952,7 +968,7 @@
 </span></code></pre></div><ul>
 <li>Go to <em>File &gt; Export &gt; Visualization to PDF</em> to test the export feature</li>
 </ul>
-<p><img src="./images/step7.PNG" alt=""></p>
+<p><img src="./images/step7.PNG" alt="Step 7"></p>
 <ul>
 <li>Note that this example Mod is using external resources, hence it will not be possible to export using the web client, see the <a href="https://tibcosoftware.github.io/spotfire-mods/docs/using-the-api/mod-schema/">manifest schema documentation</a>.</li>
 </ul>
@@ -1086,7 +1102,7 @@
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2021 TIBCO Software Inc. All Rights Reserved</small>
+        <small class="text-white">&copy; 2022 TIBCO Software Inc. All Rights Reserved</small>
         <small class="ml-1"><a href="https://www.tibco.com/company/terms-of-use" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>
