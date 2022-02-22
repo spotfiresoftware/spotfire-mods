@@ -1,0 +1,16 @@
+{
+    "apiVersion": "1.1",
+    "version": "1.0",
+    "externalResources": ["http://example.com", "http://cdn.example.com"],
+    "name": "Test mod",
+    "id": "test-mod",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "animationTimeMs",
+            "type": "integer",
+            "defaultValue": 1000
+        }
+    ],
+    "files": ["index.html", "main.css"]
+}

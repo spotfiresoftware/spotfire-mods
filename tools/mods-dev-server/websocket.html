@@ -1,0 +1,25 @@
+<script type="text/javascript">
+    (function () {
+        connect();
+        function connect() {
+            var address = "ws://" + window.location.host + "/live-reload";
+            var socket = new WebSocket(address, "dev-server");
+            socket.onopen = function () {
+                console.log("Live reload enabled.");
+            };
+            socket.onmessage = function (msg) {
+                if (msg.data == "reload") window.location.reload();
+            };
+
+            socket.onclose = function () {
+                console.log("Live reload disabled");
+                setTimeout(connect, 1000);
+            } 
+
+            socket.onerror = function (err) {
+                console.log("Live reload failed", err);
+                setTimeout(connect, 1000);
+            }
+        }
+    })();
+</script>
