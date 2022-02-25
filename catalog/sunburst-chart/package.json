@@ -7,12 +7,12 @@
         "server": "mods-dev-server dist",
         "build": "webpack --mode production",
         "build-watch": "webpack --watch",
-        "start": "npm install && npm run build-watch"
+        "start": "npm ci && npm run build-watch"
     },
     "author": "objerke, ebrandin",
     "license": "ISC",
     "devDependencies": {
-        "@tibco/spotfire-mods-dev-server": "^1.0.0",
+        "@tibco/spotfire-mods-dev-server": "^1.0.1",
         "@types/d3": "^5.16.4",
         "copy-webpack-plugin": "^6.0.3",
         "d3": "^5.14.2",
