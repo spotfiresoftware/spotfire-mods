@@ -16,7 +16,7 @@
         "@babel/core": "^7.12.10",
         "@babel/plugin-transform-runtime": "^7.12.10",
         "@babel/preset-env": "^7.12.11",
-        "@tibco/spotfire-mods-dev-server": "^1.0.0",
+        "@tibco/spotfire-mods-dev-server": "^1.0.1",
         "babel-loader": "^8.2.2",
         "copy-webpack-plugin": "^6.4.1",
         "core-js": "^3.8.3",
