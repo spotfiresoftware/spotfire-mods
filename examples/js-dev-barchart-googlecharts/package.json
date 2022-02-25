@@ -3,14 +3,14 @@
     "version": "1.0.1",
     "description": "",
     "scripts": {
-        "start": "npm install && npm run server",
+        "start": "npm ci && npm run server",
         "server": "mods-dev-server src"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@tibco/spotfire-mods-dev-server": "^1.0.0",
+        "@tibco/spotfire-mods-dev-server": "^1.0.1",
         "@types/google.visualization": "0.0.51"
     },
     "dependencies": {}
