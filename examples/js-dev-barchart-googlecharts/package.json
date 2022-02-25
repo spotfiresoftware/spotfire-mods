@@ -3,7 +3,7 @@
     "version": "1.0.1",
     "description": "",
     "scripts": {
-        "start": "npm install && npm run server",
+        "start": "npm ci && npm run server",
         "server": "mods-dev-server src"
     },
     "keywords": [],
