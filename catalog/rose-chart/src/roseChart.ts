@@ -231,8 +231,13 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
         mark: (d: RoseChartSector) => d.mark(),
+        getCenter(d: any) {
+            let c = arc.centroid(d);
+            return { x: c[0] + size.width / 2, y: c[1] + size.height / 2 };
+        },
         ignoredClickClasses: ["sector", "label", "label-path"],
-        classesToMark: "sector"
+        markingSelector: ".sector",
+        centerMarking: true
     });
 
     function tweenArc(this: any, data: any) {
