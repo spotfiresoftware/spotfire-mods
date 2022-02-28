@@ -84,6 +84,8 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .descendants()
         .filter((d: any) => (d.depth || showOnlyRoot) && d.data.fill !== "transparent");
 
+    const innerRadius = visibleSectors.reduce((p, c) => (c.y0 < p ? c.y0 : p), radius);
+
     const sectors = svg
         .select("g#sectors")
         .selectAll("path")
@@ -210,6 +212,12 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         centerMarking: true
     });
 
+    d3.select("#explanation")
+        .style("--size", innerRadius * 2 + "px")
+        .style("--padding", 5 + "px")
+        .style("--padding-top", innerRadius / 3 + "px")
+        .style("--top", size.height / 2 + breadcrumbsHeight / 2 + "px");
+
     function getTransformData(data: any) {
         // d3.interpolate should not try to interpolate other properties
         return (({ value, x0, x1, y0, y1 }) => ({ value, x0, x1, y0, y1 }))(data);
@@ -286,8 +294,12 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         d3.select("#percentage").text(texts.value);
         d3.select("#value").text(texts.text);
 
+        // Display ellipsis character at the end if the circle overflows.
+        let explanationElem = document.querySelector("#explanation") as HTMLDivElement;
+        let showEllipsis = explanationElem.offsetHeight < explanationElem.scrollHeight;
+        (document.querySelector("#value-ellipsis") as HTMLDivElement)!.style.display = showEllipsis ? "block" : "none";
+
         let ancestors = getAncestors(d);
-        console.log(ancestors);
 
         d3.selectAll("path")
             .transition("sector hover")
