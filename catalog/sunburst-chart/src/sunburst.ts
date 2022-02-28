@@ -201,8 +201,13 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
         mark: (d: any) => settings.mark(d.data),
+        getCenter(d: any) {
+            let c = arc.centroid(d);
+            return { x: c[0] + size.width / 2, y: c[1] + size.height / 2 };
+        },
         ignoredClickClasses: ["sector"],
-        classesToMark: "sector"
+        markingSelector: ".sector",
+        centerMarking: true
     });
 
     function getTransformData(data: any) {
