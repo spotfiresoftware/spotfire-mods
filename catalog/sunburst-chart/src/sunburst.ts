@@ -290,13 +290,23 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         let texts = settings.getCenterText(d.data);
         settings.onMouseover?.(d.data);
 
+        let explanationElem = document.querySelector("#explanation") as HTMLDivElement;
+        let paddingWrapper = document.querySelector("#padding-wrapper") as HTMLDivElement;
+        paddingWrapper.style.paddingTop = "0px";
+
         d3.select("#explanation").style("visibility", "visible");
-        d3.select("#percentage").text(texts.value);
-        d3.select("#value").text(texts.text);
+        d3.select("#percentage")
+            .text(texts.value)
+            .style("--percentage-size", Math.max(innerRadius / 5, 10) + "px");
+        d3.select("#value")
+            .text(texts.text)
+            .style("--value-size", Math.max(innerRadius / 7, 8) + "px");
+
+        let showEllipsis = explanationElem.offsetHeight < explanationElem.scrollHeight;
+
+        paddingWrapper.style.paddingTop = Math.max(5, (innerRadius * 2 - paddingWrapper.offsetHeight) / 2.5) + "px";
 
         // Display ellipsis character at the end if the circle overflows.
-        let explanationElem = document.querySelector("#explanation") as HTMLDivElement;
-        let showEllipsis = explanationElem.offsetHeight < explanationElem.scrollHeight;
         (document.querySelector("#value-ellipsis") as HTMLDivElement)!.style.display = showEllipsis ? "block" : "none";
 
         let ancestors = getAncestors(d);

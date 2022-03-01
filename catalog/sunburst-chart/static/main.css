@@ -48,11 +48,13 @@ body,
 
 #explanation #percentage {
     padding-top: var(--padding-top);
-    font-size: max(5vmin, 10px);
+    font-size: var(--percentage-size);
+    white-space: pre-line;
+    line-break: anywhere;
 }
 
 #explanation #value{
-    font-size: 2vmin;
+    font-size: var(--value-size);
 }
 
 #explanation #value-ellipsis{
