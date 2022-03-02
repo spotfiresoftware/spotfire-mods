@@ -1,3 +1,4 @@
 export const resources = {
-    gridDensity: "Grid density"
+    gridDensity: "Grid density",
+    extras: "Extras"
 };

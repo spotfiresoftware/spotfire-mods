@@ -1,5 +1,4 @@
-import * as d3 from "d3";
-import { Point, render, setup } from "./smithChart";
+import { Point, render } from "./smithChart";
 import { DataView, ModProperty } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import { renderSettings } from "./settings";
@@ -10,20 +9,31 @@ const Spotfire = window.Spotfire;
 Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
-    const svg = d3.select("#mod-container").append("svg").attr("xmlns", "http://www.w3.org/2000/svg").call(setup);
+    const canvas = document.createElement("canvas");
+    document.querySelector("#mod-container")?.append(canvas);
 
     const pointAxisName = "Point";
     const colorAxisName = "Color";
     const rRealAxisName = "rReal";
     const rImaginaryAxisName = "rImaginary";
 
-    const reader = mod.createReader(mod.visualization.data(), mod.windowSize(), mod.property("gridDensity"));
+    const reader = mod.createReader(
+        mod.visualization.data(),
+        mod.windowSize(),
+        mod.property("gridDensity"),
+        mod.property("extras")
+    );
 
-    reader.subscribe(generalErrorHandler(mod)(onChange), (err) => {
+    reader.subscribe(generalErrorHandler(mod, 40000)(onChange), (err) => {
         mod.controls.errorOverlay.show(err);
     });
 
-    async function onChange(dataView: DataView, windowSize: Spotfire.Size, densityProp: ModProperty<number>) {
+    async function onChange(
+        dataView: DataView,
+        windowSize: Spotfire.Size,
+        densityProp: ModProperty<number>,
+        extrasProp: ModProperty<boolean>
+    ) {
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy(colorAxisName))?.root();
 
@@ -35,6 +45,7 @@ Spotfire.initialize(async (mod) => {
                 color: row.color().hexCode,
                 label: row.categorical(pointAxisName).formattedValue(),
                 r: [row.continuous(rRealAxisName).value<number>(), row.continuous(rImaginaryAxisName).value<number>()],
+                isMarked: row.isMarked(),
                 mark: () => {
                     row.mark();
                 },
@@ -52,9 +63,10 @@ Spotfire.initialize(async (mod) => {
 
         render(
             {
-                svg,
+                canvas,
                 size: windowSize,
                 gridDensity: densityProp.value()!,
+                showExtras: extrasProp.value()!,
                 clearMarking: dataView.clearMarking
             },
             points
@@ -62,7 +74,8 @@ Spotfire.initialize(async (mod) => {
 
         if (context.isEditing) {
             renderSettings([
-                { label: resources.gridDensity, type: "range", property: densityProp, max: 20, min: 0, step: 1 }
+                { label: resources.gridDensity, type: "range", property: densityProp, max: 20, min: 0, step: 1 },
+                { label: resources.extras, type: "checkbox", property: extrasProp }
             ]);
         }
 

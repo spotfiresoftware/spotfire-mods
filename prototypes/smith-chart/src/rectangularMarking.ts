@@ -1,6 +1,4 @@
-import * as d3 from "d3";
-
-export interface MarkingSettings {
+export interface MarkingSettings<T> {
     /**
      * Callback to clear the marking.
      */
@@ -8,99 +6,60 @@ export interface MarkingSettings {
 
     /**
      * Marking callback that will be invoked for each marked element.
-     * @param data d3 Data object bound to the marked element.
+     * @param datum d3 Data object bound to the marked element.
      */
-    mark(data: unknown): void;
+    mark(datum: T): void;
 
     /**
-     * CSS Classes to ignore. Checks the parent of the marked element to see if any parent has an ignored class.
+     * Get the calculated center of a datum object. The default is to take the center of the bounding box.
+     * @param datum  d3 Data object bound to the marked element.
      */
-    ignoredClickClasses: string[];
-
-    /**
-     * The CSS selector to use when filtering elements to mark.
-     */
-    classesToMark: string;
-
-    /**
-     * Whether or not to allow centroid marking. It means only the center of the element needs to be part of the marking.
-     */
-    centerMarking?: boolean;
+    getCenter(datum: T): [x: number, y: number];
 }
 
 /**
  * Draws rectangular selection
  */
-export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, any>, settings: MarkingSettings) {
-    let firstTarget: any;
-
+export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: any[], settings: MarkingSettings<T>) {
     function drawRectangle(x: number, y: number, w: number, h: number) {
         return "M" + [x, y] + " l" + [w, 0] + " l" + [0, h] + " l" + [-w, 0] + "z";
     }
 
-    d3.select(".rectangle").remove();
+    document.querySelector(".rectangle-marking")?.remove();
 
-    const rectangle = svg.append("path").attr("class", "rectangle").attr("visibility", "hidden");
+    // make a simple rectangle
+    let svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg2.classList.add("rectangle-marking");
+    let rectangle = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    rectangle.classList.add("rectangle");
+    rectangle.style.visibility = "hidden";
+    svg2.appendChild(rectangle);
+    document.body.appendChild(svg2);
 
     const startSelection = function (start: [number, number]) {
-        rectangle.attr("d", drawRectangle(start[0], start[0], 0, 0)).attr("visibility", "visible");
+        rectangle.setAttribute("d", drawRectangle(start[0], start[0], 0, 0));
+        rectangle.style.visibility = "visible";
     };
 
     const moveSelection = function (start: [number, number], moved: [number, number]) {
-        rectangle.attr("d", drawRectangle(start[0], start[1], moved[0] - start[0], moved[1] - start[1]));
+        rectangle.setAttribute("d", drawRectangle(start[0], start[1], moved[0] - start[0], moved[1] - start[1]));
     };
 
     const endSelection = function (start: [number, number], end: [number, number]) {
-        rectangle.attr("visibility", "hidden");
+        rectangle.style.visibility = "hidden";
 
-        // Ignore rectangular markings that were just a click.
-        if (Math.abs(start[0] - end[0]) < 4 || Math.abs(start[1] - end[1]) < 4) {
-            let elem = firstTarget;
-            let clearMarking = true;
-            while (elem) {
-                const elemClasses: string[] = Array.from(elem?.classList || []);
-                if (elemClasses.find((c) => settings.ignoredClickClasses.includes(c))) {
-                    clearMarking = false;
-                    break;
-                }
+        const selectionBox = rectangle.getBoundingClientRect();
+        const markedSectors = data.filter(partOfMarking);
 
-                elem = elem.parentNode;
-            }
-
-            if (clearMarking) {
-                settings.clearMarking();
-            }
-
-            return;
-        }
-
-        const selectionBox = rectangle.node()!.getBoundingClientRect();
-        const markedSectors = svg
-            .selectAll<SVGPathElement, unknown>("." + settings.classesToMark)
-            .filter(settings.centerMarking ? partOfMarking : fullyPartOfMarking);
-
-        if (markedSectors.size() === 0) {
+        if (markedSectors.length === 0) {
             return settings.clearMarking();
         }
 
-        markedSectors.each((n: any) => {
-            settings.mark(n);
-        });
+        markedSectors.forEach(settings.mark);
 
-        function fullyPartOfMarking(this: SVGPathElement) {
-            const box = this.getBoundingClientRect();
-            return (
-                box.x >= selectionBox.x &&
-                box.y >= selectionBox.y &&
-                box.x + box.width <= selectionBox.x + selectionBox.width &&
-                box.y + box.height <= selectionBox.y + selectionBox.height
-            );
-        }
+        function partOfMarking(d: T) {
+            let [centerX, centerY] = settings.getCenter(d);
 
-        function partOfMarking(this: SVGPathElement) {
-            const box = this.getBoundingClientRect();
-            let centerX = box.x + box.width / 2;
-            let centerY = box.y + box.height / 2;
             return (
                 centerX >= selectionBox.x &&
                 centerY >= selectionBox.y &&
@@ -110,23 +69,21 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         }
     };
 
-    svg.on("mousedown", function (this: any) {
-        if (d3.event.which === 3) {
+    canvas.onmousedown = function (this: any, event) {
+        if (event.which === 3) {
             return;
         }
 
-        firstTarget = d3.event.target;
-
-        let subject = d3.select(window),
-            start = d3.mouse(this);
+        let start: [number, number] = [event.clientX, event.clientY];
         startSelection(start);
-        subject
-            .on("mousemove.rectangle", function () {
-                moveSelection(start, d3.mouse(svg.node() as any));
-            })
-            .on("mouseup.rectangle", function () {
-                endSelection(start, d3.mouse(svg.node() as any));
-                subject.on("mousemove.rectangle", null).on("mouseup.rectangle", null);
-            });
-    });
+        window.onmousemove = function (event) {
+            moveSelection(start, [event.clientX, event.clientY]);
+        };
+
+        window.onmouseup = function (event) {
+            endSelection(start, [event.clientX, event.clientY]);
+            window.onmousemove = null;
+            window.onmouseup = null;
+        };
+    };
 }

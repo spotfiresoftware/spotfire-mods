@@ -9,6 +9,11 @@
             "name": "gridDensity",
             "type": "integer",
             "defaultValue": "10"
+        },
+        {
+            "name": "extras",
+            "type": "boolean",
+            "defaultValue": "false"
         }
     ],
     "dataViewDefinition": {

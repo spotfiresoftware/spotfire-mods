@@ -5,9 +5,10 @@ import { rectangularSelection } from "./rectangularMarking";
 export type ComplexNumber = [real: number, imaginary: number];
 
 export interface SmithSettings {
-    svg: d3.Selection<SVGSVGElement, any, any, any>;
+    canvas: HTMLCanvasElement;
     size: { width: number; height: number };
     gridDensity?: number;
+    showExtras?: boolean;
     clearMarking?(): void;
     mouseLeave?(): void;
 }
@@ -17,16 +18,7 @@ export interface Point {
     color: string;
     mark(): void;
     mouseOver(): void;
-}
-
-/**
- * Add the necessary groups to the SVG for layering to work.
- * @param svg Visualization element
- */
-export function setup(svg: d3.Selection<SVGSVGElement, any, any, any>) {
-    svg.append("g").attr("id", "bg");
-    svg.append("g").attr("id", "circles");
-    svg.append("g").attr("id", "points");
+    isMarked: boolean;
 }
 
 /**
@@ -35,111 +27,85 @@ export function setup(svg: d3.Selection<SVGSVGElement, any, any, any>) {
  * @param points Points to visualize
  */
 export function render(settings: SmithSettings, points: Point[]) {
-    const { svg } = settings;
+    const { canvas } = settings;
 
     let radius = Math.min(settings.size.width, settings.size.height) / 2;
 
-    svg.attr("viewBox", `-${radius}, -${radius}, ${radius * 2}, ${radius * 2}`)
-        .attr("width", settings.size.width)
-        .attr("height", settings.size.height);
+    canvas.width = settings.size.width;
+    canvas.height = settings.size.height;
 
-    radius -= 3;
+    let padding = 3;
+    radius -= padding;
+    const context = canvas.getContext("2d")!;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
 
-    svg.call(bg);
+    bg(context);
 
-    svg.selectAll(".rc")
-        .data(points)
-        .join(
-            (enter) => enter.append("circle").call(realCircle),
-            (update) => update.call(realCircle),
-            (exit) => exit.remove()
-        );
+    if (settings.showExtras) {
+        for (const p of points) {
+            if (!p.isMarked) {
+                continue;
+            }
 
-    svg.selectAll(".ri-circle")
-        .data(points.filter((d) => rToz(d.r)[1] !== 0))
-        .join(
-            (enter) => enter.append("circle").call(imaginaryCircle),
-            (update) => update.call(imaginaryCircle),
-            (exit) => exit.remove()
-        );
+            context.fillStyle = p.color;
+            context.strokeStyle = p.color;
+            context.lineWidth = 1;
 
-    svg.selectAll(".ri-line")
-        .data(points.filter((d) => rToz(d.r)[1] == 0))
-        .join(
-            (enter) => enter.append("path").call(imaginaryLine),
-            (update) => update.call(imaginaryLine),
-            (exit) => exit.remove()
-        );
+            const z = rToz(p.r);
+            const rc = rCircle(z[0]);
+            const ic = iCircle(z[1]);
 
-    svg.selectAll(".point")
-        .data(points)
-        .join(
-            (enter) => enter.append("circle").call(point),
-            (update) => update.call(point),
-            (exit) => exit.remove()
-        );
+            context.beginPath();
+            context.arc(rc.cx * radius + centerX, rc.cy * radius * -1 + centerY, rc.r * radius, 0, 2 * Math.PI, false);
+            context.stroke();
 
-    rectangularSelection(svg as any, {
-        classesToMark: "point",
+            // The extra cy check is due to a rendering issue in the canvas when the circle becomes to great to render properly, render as a straight line instead.
+            if (z[1] != 0 && ic.cy > -50000) {
+                context.beginPath();
+                context.arc(
+                    ic.cx * radius + centerX,
+                    ic.cy * radius * -1 + centerY,
+                    ic.r * radius,
+                    0,
+                    2 * Math.PI,
+                    false
+                );
+                context.stroke();
+            } else {
+                context.beginPath();
+                context.moveTo(centerX - radius, centerY);
+                context.lineTo(centerX + radius, centerY);
+                context.stroke();
+            }
+        }
+    }
+
+    for (const p of points) {
+        context.fillStyle = p.color;
+        context.strokeStyle = p.color;
+        context.lineWidth = 1;
+
+        context.beginPath();
+        context.arc(p.r[0] * radius + centerX, p.r[1] * radius * -1 + centerY, 1, 0, 2 * Math.PI, false);
+        context.fill();
+    }
+
+    rectangularSelection(canvas, points, {
         mark(d: Point) {
             d.mark();
         },
         clearMarking: () => settings.clearMarking?.(),
-        centerMarking: true,
-        ignoredClickClasses: []
+        getCenter(p) {
+            return [p.r[0] * radius + centerX, p.r[1] * radius * -1 + centerY];
+        }
     });
-
-    function circleStyling(selection: d3.Selection<any, Point, SVGSVGElement, any>) {
-        return selection
-            .attr("stroke", (d) => d.color)
-            .attr("fill", "none")
-            .attr("stroke-width", 2)
-            .attr("stroke-opacity", "0.6")
-            .attr("clip-path", "url(#unit-circle)");
-    }
-
-    function realCircle(selection: d3.Selection<any, Point, SVGSVGElement, any>) {
-        return selection
-            .attr("class", "rc")
-            .attr("cx", (d) => rCircle(rToz(d.r)[0]).cx * radius)
-            .attr("cy", (d) => rCircle(rToz(d.r)[0]).cy * radius * -1)
-            .attr("r", (d) => rCircle(rToz(d.r)[0]).r * radius)
-            .call(circleStyling);
-    }
-
-    function imaginaryCircle(selection: d3.Selection<any, Point, SVGSVGElement, any>) {
-        return selection
-            .attr("class", "ri-circle")
-            .attr("cx", (d) => iCircle(rToz(d.r)[1]).cx * radius)
-            .attr("cy", (d) => iCircle(rToz(d.r)[1]).cy * radius * -1)
-            .attr("r", (d) => iCircle(rToz(d.r)[1]).r * radius)
-            .call(circleStyling);
-    }
-
-    function imaginaryLine(selection: d3.Selection<any, Point, SVGSVGElement, any>) {
-        return selection.attr("class", "ri-line").attr("d", `M -${radius} 0 L ${radius} 0`).call(circleStyling);
-    }
-
-    function point(selection: d3.Selection<any, Point, SVGSVGElement, any>) {
-        return selection
-            .attr("class", "point")
-            .attr("cx", (d) => d.r[0] * radius)
-            .attr("cy", (d) => d.r[1] * radius * -1)
-            .attr("r", 3)
-            .attr("stroke", (d) => d.color)
-            .attr("fill", (d) => d.color)
-            .on("click", (d) => d.mark())
-            .attr("stroke-width", 1)
-            .attr("clip-path", "url(#unit-circle)");
-    }
 
     /**
      * Render the background grid.
      * @param svg Visualization svg
      */
-    function bg(svg: d3.Selection<any, Point, SVGSVGElement, any>) {
-        let g = svg.select("#bg");
-
+    function bg(context: CanvasRenderingContext2D) {
         const realCircles = Array.from(range(0, settings.gridDensity ?? 10.1, 0.2)).map(rCircle);
         const imaginaryCircles = Array.from(
             range(
@@ -149,85 +115,57 @@ export function render(settings: SmithSettings, points: Point[]) {
             )
         ).map(iCircle);
 
-        g.selectAll(".setup")
-            .data([radius])
-            .join(
-                (enter) => {
-                    let g = enter.append("g").attr("class", "setup");
-                    g.append("defs")
-                        .append("clipPath")
-                        .attr("id", "unit-circle")
-                        .append("circle")
-                        .attr("cx", 0)
-                        .attr("cy", 0)
-                        .attr("r", (d) => d);
+        context.fillStyle = "#222222";
+        context.strokeStyle = "#222222";
+        context.lineWidth = 1;
 
-                    g.append("path")
-                        .attr("id", "horizontal-line")
-                        .attr("d", (d) => `M -${d} 0 L ${d} 0`)
-                        .attr("stroke", "black")
-                        .attr("stroke-width", "1")
-                        .attr("stroke-opacity", "0.5");
+        // Add a circle as a clip path
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        context.clip();
 
-                    g.append("path")
-                        .attr("id", "vertical-line")
-                        .attr("d", (d) => `M 0 -${d} L 0 ${d}`)
-                        .attr("stroke", "black")
-                        .attr("stroke-width", "1")
-                        .attr("stroke-opacity", "0.5");
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        context.stroke();
 
-                    return g;
-                },
-                (update) => {
-                    update.select("#unit-circle circle").attr("r", (d) => d);
-                    update.select("#horizontal-line").attr("d", (d) => `M -${d} 0 L ${d} 0`);
-                    update.select("#vertical-line").attr("d", (d) => `M 0 -${d} L 0 ${d}`);
+        context.beginPath();
+        context.moveTo(centerX - radius, centerY);
+        context.lineTo(centerX + radius, centerY);
+        context.stroke();
 
-                    return update;
-                },
-                (exit) => exit.remove()
+        context.beginPath();
+        context.moveTo(centerX, centerY - radius);
+        context.lineTo(centerX, centerY + radius);
+        context.stroke();
+
+        for (let index = 0; index < realCircles.length; index++) {
+            const circle = realCircles[index];
+            context.beginPath();
+            context.strokeStyle = index % 5 == 0 ? "rgba(2,2,2, 0.6)" : "rgba(2,2,2,0.3)";
+            context.arc(
+                circle.cx * radius + centerX,
+                circle.cy * radius + centerY,
+                circle.r * radius,
+                0,
+                2 * Math.PI,
+                false
             );
-
-        g.selectAll(".bg-circle")
-            .data(realCircles)
-            .join(
-                (enter) => enter.append("circle").call(bgCircleStyling),
-                (update) => update.call(bgCircleStyling),
-                (exit) => exit.remove()
-            );
-
-        g.selectAll(".bg-circle2")
-            .data(imaginaryCircles)
-            .join(
-                (enter) => enter.append("circle").call(bgCircleStyling2),
-                (update) => update.call(bgCircleStyling2),
-                (exit) => exit.remove()
-            );
-
-        function bgCircleStyling(s: d3.Selection<any, Circle, any, any>) {
-            return s
-
-                .attr("class", "bg-circle")
-                .attr("cx", (d) => d.cx * radius)
-                .attr("cy", (d) => d.cy * radius)
-                .attr("r", (d) => d.r * radius)
-                .attr("stroke", "black")
-                .attr("fill", "none")
-                .attr("stroke-width", 1)
-                .attr("stroke-opacity", (d, i) => (i % 5 == 0 ? "0.6" : "0.3"));
+            context.stroke();
         }
 
-        function bgCircleStyling2(s: d3.Selection<any, Circle, any, any>) {
-            return s
-                .attr("class", "bg-circle2")
-                .attr("cx", (d) => d.cx * radius)
-                .attr("cy", (d) => d.cy * radius * -1)
-                .attr("r", (d) => d.r * radius)
-                .attr("stroke", "black")
-                .attr("fill", "none")
-                .attr("stroke-width", 1)
-                .attr("stroke-opacity", (d, i) => (i % 5 == 0 ? "0.6" : "0.3"))
-                .attr("clip-path", "url(#unit-circle)");
+        for (let index = 0; index < imaginaryCircles.length; index++) {
+            const circle = imaginaryCircles[index];
+            context.beginPath();
+            context.strokeStyle = index % 5 == 0 ? "rgba(2,2,2, 0.6)" : "rgba(2,2,2,0.3)";
+            context.arc(
+                circle.cx * radius + centerX,
+                circle.cy * radius * -1 + centerY,
+                circle.r * radius,
+                0,
+                2 * Math.PI,
+                false
+            );
+            context.stroke();
         }
     }
 }
