@@ -172,8 +172,8 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .append("rect")
         .attr("x", margin.left)
         .attr("y", margin.top)
-        .attr("width", windowSize.width - margin.left - margin.right)
-        .attr("height", windowSize.height - (margin.bottom + margin.top));
+        .attr("width", Math.max(0, windowSize.width - (margin.left + margin.right)))
+        .attr("height", Math.max(0, windowSize.height - (margin.bottom + margin.top)));
 
     /**
      * Background rectangle - used to catch click events and clear marking.
