@@ -1,4 +1,4 @@
-import { Point, render } from "./smithChart";
+import { createCanvases, Point, render } from "./smithChart";
 import { DataView, ModProperty } from "spotfire-api";
 import { generalErrorHandler } from "./generalErrorHandler";
 import { renderSettings } from "./settings";
@@ -9,8 +9,7 @@ const Spotfire = window.Spotfire;
 Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
-    const canvas = document.createElement("canvas");
-    document.querySelector("#mod-container")?.append(canvas);
+    const canvas = createCanvases(document.querySelector("#mod-container")!);
 
     const pointAxisName = "Point";
     const colorAxisName = "Color";
@@ -46,8 +45,11 @@ Spotfire.initialize(async (mod) => {
                 label: row.categorical(pointAxisName).formattedValue(),
                 r: [row.continuous(rRealAxisName).value<number>(), row.continuous(rImaginaryAxisName).value<number>()],
                 isMarked: row.isMarked(),
-                mark: () => {
-                    row.mark();
+                mark: (toggle: boolean) => {
+                    row.mark(toggle ? "ToggleOrAdd" : "Replace");
+                },
+                tooltip() {
+                    mod.controls.tooltip.show(row.categorical(pointAxisName).formattedValue());
                 },
                 mouseOver() {
                     mod.controls.tooltip.show(row);
@@ -67,7 +69,8 @@ Spotfire.initialize(async (mod) => {
                 size: windowSize,
                 gridDensity: densityProp.value()!,
                 showExtras: extrasProp.value()!,
-                clearMarking: dataView.clearMarking
+                clearMarking: dataView.clearMarking,
+                mouseLeave: () => mod.controls.tooltip.hide()
             },
             points
         );

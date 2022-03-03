@@ -5,18 +5,19 @@ import { rectangularSelection } from "./rectangularMarking";
 export type ComplexNumber = [real: number, imaginary: number];
 
 export interface SmithSettings {
-    canvas: HTMLCanvasElement;
+    canvas: Canvas;
     size: { width: number; height: number };
     gridDensity?: number;
     showExtras?: boolean;
     clearMarking?(): void;
-    mouseLeave?(): void;
+    mouseLeave(): void;
 }
 
 export interface Point {
     r: ComplexNumber;
     color: string;
-    mark(): void;
+    mark(toggle: boolean): void;
+    tooltip(): void;
     mouseOver(): void;
     isMarked: boolean;
 }
@@ -26,6 +27,32 @@ interface RenderedPoint {
     cy: number;
     r: number;
     point: Point;
+}
+
+export type Canvas = ReturnType<typeof createCanvases>;
+
+export function createCanvases(parent: HTMLElement) {
+    return {
+        bg: createCanvas(),
+        main: createCanvas(),
+        hightlight: createCanvas(true)
+    };
+
+    function createCanvas(transparent?: boolean) {
+        const canvas = document.createElement("canvas");
+        canvas.style.position = "absolute";
+        canvas.style.left = "0";
+        canvas.style.top = "0";
+        canvas.style.right = "0";
+        canvas.style.bottom = "0";
+        if (transparent) {
+            canvas.style.pointerEvents = "none";
+        }
+
+        parent.appendChild(canvas);
+
+        return canvas;
+    }
 }
 
 /**
@@ -54,17 +81,25 @@ export function render(settings: SmithSettings, points: Point[]) {
 
     let radius = Math.min(settings.size.width, settings.size.height) / 2;
 
-    canvas.width = settings.size.width;
-    canvas.height = settings.size.height;
+    Object.keys(canvas).forEach((k) => {
+        canvas[k as keyof typeof canvas].width = settings.size.width;
+        canvas[k as keyof typeof canvas].height = settings.size.height;
+    });
 
-    let padding = 3;
+    const padding = 3;
     radius -= padding;
-    const context = canvas.getContext("2d")!;
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
 
-    bg(context);
+    const bgContext = canvas.bg.getContext("2d")!;
+    const mainContext = canvas.main.getContext("2d")!;
+    const highlightContext = canvas.hightlight.getContext("2d")!;
+
+    const centerX = canvas.main.width / 2;
+    const centerY = canvas.main.height / 2;
+
+    bg(bgContext);
     let rendered: RenderedPoint[] = [];
+
+    circleClip(mainContext, centerX, centerY, radius);
 
     if (settings.showExtras) {
         for (const p of points) {
@@ -72,22 +107,29 @@ export function render(settings: SmithSettings, points: Point[]) {
                 continue;
             }
 
-            context.fillStyle = p.color;
-            context.strokeStyle = p.color;
-            context.lineWidth = 1;
+            mainContext.fillStyle = p.color;
+            mainContext.strokeStyle = p.color;
+            mainContext.lineWidth = 1;
 
             const z = rToz(p.r);
             const rc = rCircle(z[0]);
             const ic = iCircle(z[1]);
 
-            context.beginPath();
-            context.arc(rc.cx * radius + centerX, rc.cy * radius * -1 + centerY, rc.r * radius, 0, 2 * Math.PI, false);
-            context.stroke();
+            mainContext.beginPath();
+            mainContext.arc(
+                rc.cx * radius + centerX,
+                rc.cy * radius * -1 + centerY,
+                rc.r * radius,
+                0,
+                2 * Math.PI,
+                false
+            );
+            mainContext.stroke();
 
             // The extra cy check is due to a rendering issue in the canvas when the circle becomes to great to render properly, render as a straight line instead.
             if (z[1] != 0 && ic.cy > -50000) {
-                context.beginPath();
-                context.arc(
+                mainContext.beginPath();
+                mainContext.arc(
                     ic.cx * radius + centerX,
                     ic.cy * radius * -1 + centerY,
                     ic.r * radius,
@@ -95,26 +137,26 @@ export function render(settings: SmithSettings, points: Point[]) {
                     2 * Math.PI,
                     false
                 );
-                context.stroke();
+                mainContext.stroke();
             } else {
-                context.beginPath();
-                context.moveTo(centerX - radius, centerY);
-                context.lineTo(centerX + radius, centerY);
-                context.stroke();
+                mainContext.beginPath();
+                mainContext.moveTo(centerX - radius, centerY);
+                mainContext.lineTo(centerX + radius, centerY);
+                mainContext.stroke();
             }
         }
     }
 
     for (const p of points) {
-        context.fillStyle = p.color;
-        context.strokeStyle = p.color;
-        context.lineWidth = 1;
+        mainContext.fillStyle = p.color;
+        mainContext.strokeStyle = p.color;
+        mainContext.lineWidth = 1;
 
-        context.beginPath();
+        mainContext.beginPath();
         const cx = p.r[0] * radius + centerX;
         const cy = p.r[1] * radius * -1 + centerY;
         const pointRadius = 2;
-        context.arc(cx, cy, pointRadius, 0, 2 * Math.PI, false);
+        mainContext.arc(cx, cy, pointRadius, 0, 2 * Math.PI, false);
         rendered.push({
             cx,
             cy,
@@ -122,12 +164,12 @@ export function render(settings: SmithSettings, points: Point[]) {
             r: pointRadius
         });
 
-        context.fill();
+        mainContext.fill();
     }
 
-    rectangularSelection(canvas, rendered, {
-        mark(d) {
-            d.point.mark();
+    rectangularSelection(canvas.main, rendered, {
+        mark(p, e) {
+            p.point.mark(e.ctrlKey);
         },
         clearMarking: () => settings.clearMarking?.(),
         getCenter(p) {
@@ -141,6 +183,23 @@ export function render(settings: SmithSettings, points: Point[]) {
             }
 
             return false;
+        },
+        mouseOver(p) {
+            p.point.tooltip();
+
+            highlightContext.fillStyle = "#222222";
+            highlightContext.strokeStyle = "#222222";
+            highlightContext.lineWidth = 1;
+
+            highlightContext.clearRect(0, 0, settings.size.width, settings.size.height);
+            highlightContext.beginPath();
+            const pointRadius = 4;
+            highlightContext.arc(p.cx, p.cy, pointRadius, 0, 2 * Math.PI, false);
+            highlightContext.stroke();
+        },
+        mouseLeave() {
+            highlightContext.clearRect(0, 0, settings.size.width, settings.size.height);
+            settings.mouseLeave();
         }
     });
 
@@ -163,9 +222,7 @@ export function render(settings: SmithSettings, points: Point[]) {
         context.lineWidth = 1;
 
         // Add a circle as a clip path
-        context.beginPath();
-        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-        context.clip();
+        circleClip(context, centerX, centerY, radius);
 
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -217,6 +274,12 @@ interface Circle {
     cx: number;
     cy: number;
     r: number;
+}
+
+function circleClip(context: CanvasRenderingContext2D, centerX: number, centerY: number, radius: number) {
+    context.beginPath();
+    context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+    context.clip();
 }
 
 // r = reflection coefficient

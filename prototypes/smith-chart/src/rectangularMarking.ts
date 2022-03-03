@@ -8,7 +8,7 @@ export interface MarkingSettings<T> {
      * Marking callback that will be invoked for each marked element.
      * @param datum d3 Data object bound to the marked element.
      */
-    mark(datum: T): void;
+    mark(datum: T, e: MouseEvent): void;
 
     /**
      * Get the calculated center of a datum object. The default is to take the center of the bounding box.
@@ -17,6 +17,8 @@ export interface MarkingSettings<T> {
     getCenter(datum: T): [x: number, y: number];
 
     hitTest(datum: T, coordinates: [x: number, y: number]): boolean;
+    mouseOver(datum: T, coordinates: [x: number, y: number]): void;
+    mouseLeave(): void;
 }
 
 /**
@@ -28,6 +30,7 @@ export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: T[], se
     }
 
     document.querySelector(".rectangle-marking")?.remove();
+    let markingActive = false;
 
     // make a simple rectangle
     let svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -47,8 +50,9 @@ export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: T[], se
         rectangle.setAttribute("d", drawRectangle(start[0], start[1], moved[0] - start[0], moved[1] - start[1]));
     };
 
-    const endSelection = function (start: [number, number], end: [number, number]) {
+    const endSelection = function (start: [number, number], end: [number, number], event: MouseEvent) {
         rectangle.style.visibility = "hidden";
+        markingActive = false;
 
         // Ignore rectangular markings that were just a click.
         if (Math.abs(start[0] - end[0]) < 4 || Math.abs(start[1] - end[1]) < 4) {
@@ -57,7 +61,7 @@ export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: T[], se
                 var obj = data[i];
 
                 if (settings.hitTest(obj, end)) {
-                    settings.mark(obj);
+                    settings.mark(obj, event);
                     return;
                 }
             }
@@ -73,7 +77,7 @@ export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: T[], se
             return settings.clearMarking();
         }
 
-        markedSectors.forEach(settings.mark);
+        markedSectors.forEach((p) => settings.mark(p, event));
 
         function partOfMarking(d: T) {
             let [centerX, centerY] = settings.getCenter(d);
@@ -87,11 +91,32 @@ export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: T[], se
         }
     };
 
+    canvas.onmousemove = function (event) {
+        if (markingActive) {
+            return;
+        }
+
+        // detect object clicked, starting with last in array because this will be uppermost
+        for (let i = data.length - 1; i >= 0; i--) {
+            var obj = data[i];
+
+            const coordinates: [number, number] = [event.clientX, event.clientY];
+            if (settings.hitTest(obj, coordinates)) {
+                settings.mouseOver(obj, coordinates);
+
+                return;
+            }
+        }
+
+        settings.mouseLeave();
+    };
+
     canvas.onmousedown = function (this: any, event) {
         if (event.which === 3) {
             return;
         }
 
+        markingActive = true;
         let start: [number, number] = [event.clientX, event.clientY];
         startSelection(start);
         window.onmousemove = function (event) {
@@ -99,7 +124,7 @@ export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: T[], se
         };
 
         window.onmouseup = function (event) {
-            endSelection(start, [event.clientX, event.clientY]);
+            endSelection(start, [event.clientX, event.clientY], event);
             window.onmousemove = null;
             window.onmouseup = null;
         };
