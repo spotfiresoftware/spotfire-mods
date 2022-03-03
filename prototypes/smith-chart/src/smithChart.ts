@@ -21,6 +21,13 @@ export interface Point {
     isMarked: boolean;
 }
 
+interface RenderedPoint {
+    cx: number;
+    cy: number;
+    r: number;
+    point: Point;
+}
+
 /**
  * Render the Smith chart into the provided SVG.
  * @param settings Visualization settings
@@ -28,6 +35,22 @@ export interface Point {
  */
 export function render(settings: SmithSettings, points: Point[]) {
     const { canvas } = settings;
+
+    points.sort((a, b) => {
+        if (a.isMarked && b.isMarked) {
+            return 0;
+        }
+
+        if (a.isMarked) {
+            return 1;
+        }
+
+        if (b.isMarked) {
+            return -1;
+        }
+
+        return 0;
+    });
 
     let radius = Math.min(settings.size.width, settings.size.height) / 2;
 
@@ -41,6 +64,7 @@ export function render(settings: SmithSettings, points: Point[]) {
     const centerY = canvas.height / 2;
 
     bg(context);
+    let rendered: RenderedPoint[] = [];
 
     if (settings.showExtras) {
         for (const p of points) {
@@ -87,17 +111,36 @@ export function render(settings: SmithSettings, points: Point[]) {
         context.lineWidth = 1;
 
         context.beginPath();
-        context.arc(p.r[0] * radius + centerX, p.r[1] * radius * -1 + centerY, 1, 0, 2 * Math.PI, false);
+        const cx = p.r[0] * radius + centerX;
+        const cy = p.r[1] * radius * -1 + centerY;
+        const pointRadius = 2;
+        context.arc(cx, cy, pointRadius, 0, 2 * Math.PI, false);
+        rendered.push({
+            cx,
+            cy,
+            point: p,
+            r: pointRadius
+        });
+
         context.fill();
     }
 
-    rectangularSelection(canvas, points, {
-        mark(d: Point) {
-            d.mark();
+    rectangularSelection(canvas, rendered, {
+        mark(d) {
+            d.point.mark();
         },
         clearMarking: () => settings.clearMarking?.(),
         getCenter(p) {
-            return [p.r[0] * radius + centerX, p.r[1] * radius * -1 + centerY];
+            return [p.cx, p.cy];
+        },
+        hitTest(p, [x, y]) {
+            var a = Math.pow(x - p.cx, 2);
+            var b = Math.pow(y - p.cy, 2);
+            if (Math.sqrt(a + b) <= p.r) {
+                return true;
+            }
+
+            return false;
         }
     });
 

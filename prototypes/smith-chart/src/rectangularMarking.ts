@@ -15,12 +15,14 @@ export interface MarkingSettings<T> {
      * @param datum  d3 Data object bound to the marked element.
      */
     getCenter(datum: T): [x: number, y: number];
+
+    hitTest(datum: T, coordinates: [x: number, y: number]): boolean;
 }
 
 /**
  * Draws rectangular selection
  */
-export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: any[], settings: MarkingSettings<T>) {
+export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: T[], settings: MarkingSettings<T>) {
     function drawRectangle(x: number, y: number, w: number, h: number) {
         return "M" + [x, y] + " l" + [w, 0] + " l" + [0, h] + " l" + [-w, 0] + "z";
     }
@@ -47,6 +49,22 @@ export function rectangularSelection<T>(canvas: HTMLCanvasElement, data: any[], 
 
     const endSelection = function (start: [number, number], end: [number, number]) {
         rectangle.style.visibility = "hidden";
+
+        // Ignore rectangular markings that were just a click.
+        if (Math.abs(start[0] - end[0]) < 4 || Math.abs(start[1] - end[1]) < 4) {
+            // detect object clicked, starting with last in array because this will be uppermost
+            for (let i = data.length - 1; i >= 0; i--) {
+                var obj = data[i];
+
+                if (settings.hitTest(obj, end)) {
+                    settings.mark(obj);
+                    return;
+                }
+            }
+
+            settings.clearMarking();
+            return;
+        }
 
         const selectionBox = rectangle.getBoundingClientRect();
         const markedSectors = data.filter(partOfMarking);
