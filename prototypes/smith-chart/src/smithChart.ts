@@ -267,6 +267,54 @@ export function render(settings: SmithSettings, points: Point[]) {
             );
             context.stroke();
         }
+
+        // Draw a section of dense lines.
+        const denseVerticalSection = Array.from(range(0, 0.2, 0.006));
+        const clipCircle = imaginaryCircles[Math.floor(imaginaryCircles.length / 2 - 1)];
+        let c1 = {
+            x: clipCircle.cx * radius + centerX,
+            y: clipCircle.cy * radius * -1 + centerY,
+            r: clipCircle.r * radius
+        };
+
+        for (let index = 0; index < denseVerticalSection.length; index++) {
+            const step = denseVerticalSection[index];
+
+            let c2 = { x: centerX + step * radius, y: centerY, r: radius - step * radius };
+            let xDistanceBetweenCircles = c1.x - c2.x;
+            let yDistanceBetweenCircles = c1.y - c2.y;
+            let c1c2Hypotenuse = Math.sqrt(xDistanceBetweenCircles ** 2 + yDistanceBetweenCircles ** 2);
+            let c1c2BottomAngle = Math.acos(
+                (c1c2Hypotenuse ** 2 + yDistanceBetweenCircles ** 2 - xDistanceBetweenCircles ** 2) /
+                    (2 * c1c2Hypotenuse * yDistanceBetweenCircles)
+            );
+
+            // Calculate triangle with c1 radius, c2 radius and hypotenuse to get bottom angle
+            let a = c1.r;
+            let b = c2.r;
+            let c = c1c2Hypotenuse;
+
+            let intersectionTriangleBottomAngle = Math.acos((a ** 2 + c ** 2 - b ** 2) / (2 * a * c));
+
+            // From the two circles intersection point we can calculate the angle from which we begin drawing the arc.
+            // let intersectionX = c2.x - Math.cos(Math.PI / 2 - c1c2BottomAngle - intersectionTriangleBottomAngle) * c2.r;
+            let intersectionY = c1.y - Math.sin(Math.PI / 2 - c1c2BottomAngle - intersectionTriangleBottomAngle) * c1.r;
+
+            let startDrawingAngle = (intersectionY - centerY) / c2.r;
+
+            context.beginPath();
+            context.strokeStyle = "#22222";
+            context.lineWidth = 1;
+            context.arc(
+                c2.x,
+                centerY,
+                c2.r,
+                Math.PI - Math.asin(startDrawingAngle),
+                Math.PI + Math.asin(startDrawingAngle),
+                false
+            );
+            context.stroke();
+        }
     }
 }
 
