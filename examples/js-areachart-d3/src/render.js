@@ -56,6 +56,24 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         return;
     }
 
+    // The margins around the chart canvas.
+    const margin = { top: 20, right: 40, bottom: 40, left: 80 };
+
+    // The position and size of the chart canvas.
+    const canvas = { 
+        top: margin.top,
+        left: margin.left,
+        width: windowSize.width - (margin.left + margin.right),
+        height: windowSize.height - (margin.top + margin.bottom)
+
+    };
+    if (canvas.height < 0 || canvas.width < 0) {
+        // Abort rendering if the window is not large enough to render anything.
+        svg.selectAll("*").remove();
+        xLabelsContainer.selectAll("*").remove();
+        return;
+    }
+
     const onSelection = ({ dragSelectActive }) => {
         state.preventRender = dragSelectActive;
     };
@@ -142,11 +160,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         gapfill.value()
     );
 
-    const xAxisMeta = await mod.visualization.axis("X");
-    const yAxisMeta = await mod.visualization.axis("Y");
     const colorAxisMeta = await mod.visualization.axis("Color");
-
-    const margin = { top: 20, right: 40, bottom: 40, left: 80 };
 
     const { curveMarked, curveUnmarked } = buildD3CurveFunctions(roundedCurves.value());
     const { xScale, yScale, line, area, fillOpacity, yScaleTickFormat } = buildD3Scales(chartType.value());
@@ -170,10 +184,10 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .append("clipPath")
         .attr("id", "clipPath")
         .append("rect")
-        .attr("x", margin.left)
-        .attr("y", margin.top)
-        .attr("width", Math.max(0, windowSize.width - (margin.left + margin.right)))
-        .attr("height", Math.max(0, windowSize.height - (margin.bottom + margin.top)));
+        .attr("x", canvas.left)
+        .attr("y", canvas.top)
+        .attr("width", canvas.width)
+        .attr("height", canvas.height);
 
     /**
      * Background rectangle - used to catch click events and clear marking.
@@ -659,30 +673,6 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         return [pre, ...segment, post];
     }
 
-    /**
-     * @param {string[]} displayNames
-     * @param {string[]} formattedValues
-     * @param {string} separator
-     */
-    function createAxisTooltip(displayNames, formattedValues, separator) {
-        return displayNames.length == formattedValues.length
-            ? formattedValues.map((v, i) => displayNames + ": " + v).join(separator)
-            : null;
-    }
-
-    /**
-     * Get the formatted path as an array
-     * @param {Spotfire.DataViewHierarchyNode} node
-     * @returns {string[]}
-     */
-    function getFormattedValues(node) {
-        let values = [];
-        while (node.level >= 0) {
-            values.push(node.formattedValue());
-            node = node.parent;
-        }
-        return values.reverse();
-    }
 
     /**
      * @param {number} colorIndex
