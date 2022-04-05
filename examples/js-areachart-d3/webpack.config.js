@@ -39,6 +39,8 @@ module.exports = {
             }
         ]
     },
-    plugins: [new webpack.NamedModulesPlugin(), new CopyPlugin({ patterns: [{ from: "static" }] })],
+    plugins: [
+        new CopyPlugin({ patterns: [{ from: "static" }] })
+    ],
     devtool: "inline-source-map"
 };

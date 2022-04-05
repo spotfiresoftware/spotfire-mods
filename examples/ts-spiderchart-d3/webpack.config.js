@@ -21,7 +21,9 @@ module.exports = {
     resolve: {
         extensions: [".tsx", ".ts", ".js"]
     },
-    plugins: [new webpack.NamedModulesPlugin(), new CopyPlugin({ patterns: [{ from: "static" }] })],
+    plugins: [
+        new CopyPlugin({ patterns: [{ from: "static" }] })
+    ],
     devtool: "inline-source-map",
     performance: {
         maxEntrypointSize: 800000,
