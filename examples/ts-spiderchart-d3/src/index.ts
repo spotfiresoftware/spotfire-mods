@@ -140,7 +140,7 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
                 await callback(dataView, ...args);
 
                 mod.controls.errorOverlay.hide("General");
-            } catch (e) {
+            } catch (e: any) {
                 mod.controls.errorOverlay.show(
                     e.message || e || "☹️ Something went wrong, check developer console",
                     "General"
