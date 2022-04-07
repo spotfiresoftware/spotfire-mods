@@ -7,6 +7,7 @@
         "build": "gulp build",
         "start": "npm run dev",
         "clean": "gulp clean",
+        "server": "mods-dev-server dist",
         "test": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"} && ts-node --files --project ./tsconfig.json node_modules/jasmine/bin/jasmine --config=tests/support/jasmine.json "
     },
     "keywords": [],
@@ -14,20 +15,20 @@
     "license": "ISC",
     "devDependencies": {
         "@tibco/spotfire-mods-dev-server": "^1.0.1",
-        "@types/google.visualization": "0.0.51",
-        "@types/jasmine": "^3.4.0",
-        "gulp": "^4.0.2",
-        "gulp-clean-css": "^4.2.0",
-        "gulp-rename": "^1.4.0",
-        "gulp-terser": "^1.2.0",
-        "jasmine": "^3.4.0",
-        "jasmine-core": "^3.4.0",
-        "prettier": "^1.19.1",
-        "rimraf": "^3.0.0",
-        "rollup": "^1.21.3",
-        "rollup-plugin-typescript2": "^0.24.2",
-        "ts-node": "^8.4.1",
-        "typescript": "^3.8.2"
+        "@types/google.visualization": "0.0.68",
+        "@types/jasmine": "3.10.5",
+        "gulp": "4.0.2",
+        "gulp-clean-css": "4.3.0",
+        "gulp-rename": "2.0.0",
+        "gulp-terser": "2.1.0",
+        "jasmine": "4.0.2",
+        "jasmine-core": "4.0.1",
+        "prettier": "2.6.2",
+        "rimraf": "3.0.2",
+        "rollup": "2.70.1",
+        "rollup-plugin-typescript2": "0.31.2",
+        "ts-node": "10.7.0",
+        "typescript": "4.6.3"
     },
     "dependencies": {}
 }
