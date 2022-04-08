@@ -171,14 +171,14 @@ export function animationControl(animationSpeedProperty: {
                             this,
                             Math.round(
                                 animationScale.invert(
-                                    d3.pointer(animationSlider.node()!)[0]
+                                    d3.pointer(event, animationSlider.node()!)[0]
                                 )
                             )
                         );
 
                         event.sourceEvent.preventDefault();
                     })
-                    .on("drag", function (event: any) {                        
+                    .on("drag", function (event: any) {
                         dispatch.call(
                             "sliderChange",
                             this,
