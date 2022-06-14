@@ -110,9 +110,10 @@ Spotfire.initialize(async (mod) => {
         if (context.isEditing) {
             var popoutClosedEventEmitter = new events.EventEmitter();
             config.onScaleClick = createScalePopout(mod.controls, overdue, weekend, popoutClosedEventEmitter);
-            config.showOverdue = overdue.value();
-            config.showWeekend = weekend.value();
         }
+
+        config.showOverdue = overdue.value();
+        config.showWeekend = weekend.value();
 
         await render(tasks, dataView, state, minDate, maxDate, tooltip, styling, windowsSize, context.interactive);
         context.signalRenderComplete();
