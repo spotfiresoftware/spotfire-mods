@@ -55,11 +55,7 @@
 &lt;h3 id=&#34;dataset&#34;&gt;Dataset&lt;/h3&gt;
 &lt;p&gt;The dataset used in this tutorial can be found &lt;a href=&#34;heroes.txt&#34;&gt;here&lt;/a&gt;. It is a reduced version of this &lt;a href=&#34;https://www.kaggle.com/claudiodavi/superhero-set&#34;&gt;dataset&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;A running instance of &lt;em&gt;Spotfire&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;A code editor. It is highly recommended to use Visual Studio Code when developing a mod. The mod example includes predefined settings for VS Code that enable a default build task, intellisense in the mod manifest and intellisense in the JavaScript code.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;node.js&lt;/code&gt; installed&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;All prerequisites are listed in the general &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/#prerequisites&#34;&gt;getting started guide&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;1-initial-setup&#34;&gt;1. Initial setup&lt;/h3&gt;
 &lt;ul&gt;
@@ -68,6 +64,7 @@
 &lt;li&gt;Open the folder in a terminal or command line.&lt;/li&gt;
 &lt;li&gt;Run &lt;code&gt;npm install&lt;/code&gt; to install dependencies.&lt;/li&gt;
 &lt;li&gt;Run &lt;code&gt;npm run server&lt;/code&gt; to start the server. The provided server setup allows you to see live updates when developing a mod.&lt;/li&gt;
+&lt;li&gt;In &lt;strong&gt;Spotfire&lt;/strong&gt;, load the &lt;a href=&#34;#dataset&#34;&gt;dataset&lt;/a&gt; to create a new analysis file.&lt;/li&gt;
 &lt;li&gt;In &lt;strong&gt;Spotfire&lt;/strong&gt; go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create visualization mod&lt;/em&gt; and &lt;strong&gt;connect to the project&lt;/strong&gt; by following the on-screen steps (&lt;em&gt;Connect to Project &amp;gt; Development server &amp;gt; Connect&lt;/em&gt;)&lt;/li&gt;
 &lt;li&gt;You should see some mod metadata on the screen, which means the mod is working.&lt;/li&gt;
 &lt;/ul&gt;
@@ -654,7 +651,7 @@
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;A running instance of Spotfire.&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt;&lt;br&gt;
 This is needed to develop and test a mod. Development can be done against the installed client (TIBCO Spotfire® Analyst) or the web client (TIBCO Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;
 &lt;p&gt;Spotfire version 11.0 or newer is required for mod development. See also &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods#spotfire-versions-and-their-mod-api&#34;&gt;Spotfire versions and their Mod API&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
