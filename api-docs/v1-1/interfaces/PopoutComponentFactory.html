@@ -1,0 +1,402 @@
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>PopoutComponentFactory | API Documentation</title><meta name="description" content="Documentation for API Documentation"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><style>@import "https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i";
+
+html {
+    height: 100%;
+}
+
+body {
+    margin-top: 0rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.tsd-page-title {
+    padding: 20px 0 20px 0;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+#tsd-search .results {
+    z-index: 1;
+}
+
+.tsd-page-toolbar {
+    z-index: inherit;
+    position: static;
+}
+
+.tsd-panel {
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+#main-wrapper {
+    overflow: auto;
+    flex-grow: 1;
+    width: 100%;
+    height: calc(100vh - 4rem);
+}
+
+.lead {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.overview-link {
+    width: 16px;
+    height: 16px;
+}
+
+.overview-link svg {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+#nav-wrapper {
+    min-height: 4rem;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/********************************
+*
+* Extracted via collect-css.js
+*
+********************************/
+#nav-wrapper {
+    border-collapse: separate;
+    border-spacing: 0px 0px;
+    caption-side: top;
+    color: rgb(34, 34, 34);
+    cursor: auto;
+    direction: ltr;
+    empty-cells: show;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 16px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    font-stretch: 100%;
+    font: 16px / 24px Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    letter-spacing: normal;
+    line-height: 24px;
+    list-style-position: outside;
+    list-style-type: disc;
+    list-style: outside none disc;
+    orphans: 2;
+    tab-size: 8;
+    text-align: left;
+    text-align-last: auto;
+    text-decoration-color: rgb(34, 34, 34);
+    text-indent: 0px;
+    visibility: visible;
+    white-space: normal;
+    widows: 2;
+    word-break: normal;
+    word-spacing: 0px;
+    word-wrap: normal;
+}
+#nav-wrapper *,
+#nav-wrapper ::before,
+#nav-wrapper ::after {
+    box-sizing: border-box;
+}
+#nav-wrapper article,
+#nav-wrapper aside,
+#nav-wrapper figcaption,
+#nav-wrapper figure,
+#nav-wrapper footer,
+#nav-wrapper header,
+#nav-wrapper hgroup,
+#nav-wrapper main,
+#nav-wrapper nav,
+#nav-wrapper section {
+    display: block;
+}
+#nav-wrapper .navbar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+}
+#nav-wrapper .navbar-expand {
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+}
+#nav-wrapper .flex-column {
+    flex-direction: column !important;
+}
+@media (min-width: 768px) {
+    #nav-wrapper .flex-md-row {
+        flex-direction: row !important;
+    }
+}
+#nav-wrapper .td-navbar {
+    background: rgb(50, 65, 143);
+    min-height: 4rem;
+    margin: 0px;
+    z-index: 32;
+}
+@media (min-width: 768px) {
+    #nav-wrapper .td-navbar {
+        position: fixed;
+        top: 0px;
+        width: 100%;
+    }
+}
+#nav-wrapper a {
+    color: rgb(145, 173, 255);
+    text-decoration: none;
+    background-color: transparent;
+}
+#nav-wrapper .navbar-brand {
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+#nav-wrapper .navbar-dark .navbar-brand {
+    color: rgb(255, 255, 255);
+}
+#nav-wrapper .td-navbar .navbar-brand {
+    text-transform: none;
+}
+#nav-wrapper svg {
+    overflow: hidden;
+    vertical-align: middle;
+}
+#nav-wrapper .td-navbar .navbar-brand svg {
+    display: inline-block;
+    margin: 0px 10px 0px 5px;
+    height: 30px;
+    padding-top: 4px;
+}
+#nav-wrapper .text-uppercase {
+    text-transform: uppercase !important;
+}
+#nav-wrapper .font-weight-bold {
+    font-weight: 700 !important;
+}
+@media (min-width: 768px) {
+    #nav-wrapper .ml-md-auto,
+    #nav-wrapper .mx-md-auto {
+        margin-left: auto !important;
+    }
+}
+#nav-wrapper .td-navbar #main_navbar {
+    margin-top: 5px;
+}
+#nav-wrapper ol,
+#nav-wrapper ul,
+#nav-wrapper dl {
+    margin-top: 0px;
+    margin-bottom: 1rem;
+}
+#nav-wrapper .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0px;
+    margin-bottom: 0px;
+    list-style: none;
+}
+#nav-wrapper .navbar-expand .navbar-nav {
+    flex-direction: row;
+}
+#nav-wrapper .mt-2,
+#nav-wrapper .my-2 {
+    margin-top: 0.5rem !important;
+}
+@media (min-width: 992px) {
+    #nav-wrapper .mt-lg-0,
+    #nav-wrapper .my-lg-0 {
+        margin-top: 0px !important;
+    }
+}
+#nav-wrapper .mb-2,
+#nav-wrapper .my-2 {
+    margin-bottom: 0.5rem !important;
+}
+#nav-wrapper .mr-4,
+#nav-wrapper .mx-4 {
+    margin-right: 1.5rem !important;
+}
+@media (min-width: 992px) {
+    #nav-wrapper .mb-lg-0,
+    #nav-wrapper .my-lg-0 {
+        margin-bottom: 0px !important;
+    }
+}
+#nav-wrapper .nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+}
+#nav-wrapper .navbar-nav .nav-link {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+#nav-wrapper .navbar-expand .navbar-nav .nav-link {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+}
+#nav-wrapper .navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.75);
+}
+#nav-wrapper .td-navbar .nav-link {
+    text-transform: none;
+    font-weight: 700;
+}
+#nav-wrapper .navbar-dark .navbar-nav .show > .nav-link,
+#nav-wrapper .navbar-dark .navbar-nav .active > .nav-link,
+#nav-wrapper .navbar-dark .navbar-nav .nav-link.show,
+#nav-wrapper .navbar-dark .navbar-nav .nav-link.active {
+    color: rgb(255, 255, 255);
+}
+#nav-wrapper .d-none {
+    display: none !important;
+}
+@media (min-width: 992px) {
+    #nav-wrapper .d-lg-block {
+        display: block !important;
+    }
+}
+</style></head><body><div id="nav-wrapper">
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+	<a class="navbar-brand" href="/spotfire-mods/">
+		<span class="navbar-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 26">
+				<polygon
+					points="0 2.142 0 4.631 6.756 4.631 6.756 21.582 9.347 21.582 9.347 4.631 16.103 4.631 16.103 2.142 0 2.142"
+					style="fill:#fff"></polygon>
+				<rect x="19.187" y="2.142" width="2.592" height="19.44" style="fill:#fff"></rect>
+				<path
+					d="M36.147 11.567c2.16-.809 3.3-2.271 3.3-4.262.0-3.048-2.066-5.163-6.725-5.163H26.337v19.44h6.571c4.967.0 7.157-2.208 7.157-5.5C40.065 13.9 38.708 12.22 36.147 11.567zm-7.188-7h3.98c2.53.0 3.887 1.089 3.887 2.955.0 1.9-1.512 3.142-4.288 3.142H28.959zm4.2 14.589h-4.2v-6.1h3.795c2.715.0 4.689.808 4.689 3.048C37.443 18.13 36.024 19.157 33.155 19.157z"
+					style="fill:#fff"></path>
+				<path
+					d="M51.947 19.685c-4.226.0-7.065-3.08-7.065-7.9s2.808-7.745 7-7.745A8.985 8.985.0 0157.16 5.688l.833-2.395a12.063 12.063.0 00-6.108-1.618c-5.614.0-9.656 4.044-9.656 10.234s4.011 10.14 9.656 10.14a11.586 11.586.0 005.954-1.617l-.432-2.644A9.259 9.259.0 0151.947 19.685z"
+					style="fill:#fff"></path>
+				<path
+					d="M72.987 2.562c-2.52 4.872-7.1 10.667-13.159 13.964a9.246 9.246.0 001.314 2.139A40.1 40.1.0 0073.879 3.047 8.9 8.9.0 0072.987 2.562z"
+					style="fill:#fff"></path>
+				<path
+					d="M68.57 1.618c-5.668.0-9.672 4.41-9.672 10.218a12.52 12.52.0 00.3 2.765c5.8-2.383 10.95-7.636 13.562-12.143A10.369 10.369.0 0068.57 1.618z"
+					style="fill:#fff"></path>
+				<path
+					d="M74.1 3.184A47.341 47.341.0 0162.87 20.264a9.823 9.823.0 005.7 1.7c5.668.0 9.671-4.442 9.671-10.25C78.241 7.863 76.661 4.878 74.1 3.184z"
+					style="fill:#fff"></path>
+				<path
+					d="M188.584.0a2.514 2.514.0 00-2.49 2.525V2.54a2.49 2.49.0 104.979-.015V2.511A2.493 2.493.0 00188.584.0zm2.2 2.525a2.2 2.2.0 11-4.407.015V2.525a2.2 2.2.0 114.407-.014zm-1.059-.52c0-.533-.414-.807-.973-.807H187.61V3.751h.487v-.88h.53l.6.88h.586l-.673-.966A.768.768.0 00189.728 2.005zm-1.015.462H188.1V1.631h.616c.329.0.515.144.515.418C189.228 2.294 189.042 2.467 188.713 2.467z"
+					style="fill:#fff"></path>
+				<polygon
+					points="212.126 2.128 204.004 13.953 195.856 2.128 194.975 2.128 194.975 21.558 195.883 21.558 195.883 3.765 203.95 15.424 204.004 15.424 212.071 3.765 212.071 21.558 213.007 21.558 213.007 2.128 212.126 2.128"
+					style="fill:#fff"></polygon>
+				<path
+					d="M223.551 7.235a7.174 7.174.0 00-7.213 7.328v.056a7.186 7.186.0 1014.371-.056v-.055A7.1 7.1.0 00223.551 7.235zm6.222 7.356a6.24 6.24.0 11-12.472.0v-.056A6.212 6.212.0 01223.5 8.068a6.315 6.315.0 016.278 6.467z"
+					style="fill:#fff"></path>
+				<path
+					d="M245.822 1.3V11.371a6.47 6.47.0 00-6.139-4.136 6.981 6.981.0 00-6.855 7.3v.056a6.965 6.965.0 006.855 7.3 6.532 6.532.0 006.139-4.192v3.858h.881V1.3zm.055 13.3a6.225 6.225.0 01-6.111 6.44c-3.442.0-6-2.776-6-6.468v-.055c0-3.748 2.5-6.412 6-6.412a6.242 6.242.0 016.111 6.439z"
+					style="fill:#fff"></path>
+				<path
+					d="M255.182 13.98c-2.257-.638-4.212-1.277-4.212-3.025V10.9c0-1.554 1.514-2.748 3.8-2.748a7.831 7.831.0 014.4 1.471l.5-.749A8.96 8.96.0 00254.8 7.318c-2.836.0-4.735 1.583-4.735 3.664v.056c0 2.332 2.23 3.053 4.817 3.8 2.12.583 4.213 1.194 4.213 3.164v.056c0 1.721-1.735 2.914-3.965 2.914a8.474 8.474.0 01-5.176-1.915l-.523.694a9.1 9.1.0 005.644 2.054c2.781.0 4.928-1.527 4.928-3.83v-.056C260 15.479 257.715 14.674 255.182 13.98z"
+					style="fill:#fff"></path>
+				<path
+					d="M94.3 10.788c-4.239-.916-5.231-1.943-5.231-3.775V6.957c0-1.748 1.6-3.136 4.1-3.136A8.425 8.425.0 0198.73 5.93L1e2 4.237A10 10 0 0093.223 1.85c-3.661.0-6.332 2.248-6.332 5.3v.055c0 3.193 2.038 4.636 6.47 5.608 4.047.86 5.011 1.887 5.011 3.691v.056c0 1.915-1.707 3.3-4.3 3.3a9.139 9.139.0 01-6.607-2.748l-1.349 1.61A11.224 11.224.0 0094 21.836c3.826.0 6.579-2.165 6.579-5.5v-.056C100.574 13.314 98.592 11.732 94.3 10.788z"
+					style="fill:#fff"></path>
+				<path
+					d="M111.117 6.9a6.392 6.392.0 00-5.451 3.192V7.207h-2.12V26h2.12V18.81a6.411 6.411.0 005.451 3.054c3.442.0 6.8-2.776 6.8-7.467v-.056C117.917 9.622 114.531 6.9 111.117 6.9zm4.625 7.522c0 3.47-2.257 5.524-5.01 5.524a5.321 5.321.0 01-5.149-5.551v-.056a5.332 5.332.0 015.149-5.524c2.7.0 5.01 2.165 5.01 5.552z"
+					style="fill:#fff"></path>
+				<path
+					d="M127.276 6.9a7.4 7.4.0 00-7.433 7.5v.055a7.323 7.323.0 007.378 7.44 7.422 7.422.0 007.461-7.495v-.056A7.346 7.346.0 00127.276 6.9zm5.231 7.55a5.276 5.276.0 01-5.231 5.524 5.364 5.364.0 01-5.258-5.579v-.056a5.279 5.279.0 015.2-5.552 5.412 5.412.0 015.286 5.608z"
+					style="fill:#fff"></path>
+				<path
+					d="M144.784 9.1V7.207h-4.515V2.877h-2.12v4.33h-1.982V9.1h1.982v8.66c0 2.915 1.734 4.053 4.019 4.053a5.3 5.3.0 002.561-.611V19.366a4.427 4.427.0 01-2.065.5 2.114 2.114.0 01-2.395-2.387V9.1z"
+					style="fill:#fff"></path>
+				<path
+					d="M152.794 3.044a7.024 7.024.0 012.064.36V1.545a6.384 6.384.0 00-2.34-.361 4.167 4.167.0 00-3.055 1.11 5.087 5.087.0 00-1.239 3.692V7.235h-1.955V9.1h1.955V21.558h2.12V9.1h4.487V7.263h-4.515V6.1C150.316 4.043 151.142 3.044 152.794 3.044z"
+					style="fill:#fff"></path>
+				<rect x="157.584" y="1.711" width="2.423" height="2.359" style="fill:#fff"></rect>
+				<rect x="157.75" y="7.207" width="2.092" height="14.351" style="fill:#fff"></rect>
+				<path
+					d="M165.814 10.955V7.207h-2.12V21.558h2.12V15.84c0-4.33 2.533-6.578 5.644-6.578h.165V6.957A6.1 6.1.0 00165.814 10.955z"
+					style="fill:#fff"></path>
+				<path
+					d="M185.719 14.508c0-4.219-2.423-7.606-6.635-7.606-3.937.0-6.827 3.331-6.827 7.5a7.113 7.113.0 007.1 7.495 7.326 7.326.0 005.865-2.693L183.9 18.005a5.869 5.869.0 01-4.487 2.027 4.991 4.991.0 01-5.011-4.775h11.287C185.719 14.924 185.719 14.7 185.719 14.508zM174.4 13.536c.3-2.776 2.175-4.83 4.625-4.83 2.808.0 4.3 2.221 4.542 4.83z"
+					style="fill:#fff"></path>
+				<path
+					d="M81.876 2.005c0-.533-.415-.807-.973-.807H79.758V3.751h.486v-.88h.53l.6.88h.587l-.673-.966A.768.768.0 0081.876 2.005zm-1.016.462h-.616V1.631h.616c.329.0.515.144.515.418C81.375 2.294 81.189 2.467 80.86 2.467zM80.731.0a2.514 2.514.0 00-2.49 2.525V2.54a2.49 2.49.0 104.98-.015V2.511A2.493 2.493.0 0080.731.0zm2.2 2.525a2.2 2.2.0 11-4.408.015V2.525a2.2 2.2.0 114.408-.014z"
+					style="fill:#fff"></path>
+			</svg></span><span class="text-uppercase font-weight-bold"></span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link" href="/spotfire-mods/about/"><span>About</span></a>
+			</li>
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link" href="/spotfire-mods/docs/">Documentation</a>
+			</li>
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link" href="/spotfire-mods/overview/"><span>API Overview</span></a>
+			</li>
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<a class="nav-link active" href="/spotfire-mods/api-docs/index.html"><span class="active">API Documentation</span></span></a>
+			</li>
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"></div>
+</nav>
+</div>
+<div id="main-wrapper"><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base=".."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">API Documentation</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><ul class="tsd-breadcrumb"><li><a href="../index.html">API Documentation</a></li><li><a href="PopoutComponentFactory.html">PopoutComponentFactory</a></li></ul><h1>Interface PopoutComponentFactory</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Represents an object with methods that create <a href="PopoutComponent.html">PopoutComponent</a>s.</p>
+</div></div></section><section class="tsd-panel tsd-hierarchy"><h3>Hierarchy</h3><ul class="tsd-hierarchy"><li><span class="target">PopoutComponentFactory</span></li></ul></section><section class="tsd-panel-group tsd-index-group"><h2>Index</h2><section class="tsd-panel tsd-index-panel"><div class="tsd-index-content"><section class="tsd-index-section "><h3>Methods</h3><ul class="tsd-index-list"><li class="tsd-kind-method tsd-parent-kind-interface"><a href="PopoutComponentFactory.html#button" class="tsd-kind-icon">button</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="PopoutComponentFactory.html#checkbox" class="tsd-kind-icon">checkbox</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="PopoutComponentFactory.html#radioButton" class="tsd-kind-icon">radio<wbr/>Button</a></li></ul></section></div></section></section><section class="tsd-panel-group tsd-member-group "><h2>Methods</h2><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="button" class="tsd-anchor"></a><h3 class="tsd-anchor-link">button<a href="#button" aria-label="Permalink" class="tsd-anchor-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></svg></a></h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">button<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="PopoutButtonOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutButtonOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="PopoutComponent.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutComponent</a></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in spotfire-api-1-1.d.ts:1155</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Creates a component that renders as a button.</p>
+</div></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>options: <a href="PopoutButtonOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutButtonOptions</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Specifies how the button shall be rendered.</p>
+</div></div></li></ul><h4 class="tsd-returns-title">Returns <a href="PopoutComponent.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutComponent</a></h4></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="checkbox" class="tsd-anchor"></a><h3 class="tsd-anchor-link">checkbox<a href="#checkbox" aria-label="Permalink" class="tsd-anchor-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></svg></a></h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">checkbox<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="PopoutCheckboxOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutCheckboxOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="PopoutComponent.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutComponent</a></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in spotfire-api-1-1.d.ts:1150</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Creates a component that renders as a checkbox.</p>
+</div></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>options: <a href="PopoutCheckboxOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutCheckboxOptions</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Specifies how the checkbox shall be rendered.</p>
+</div></div></li></ul><h4 class="tsd-returns-title">Returns <a href="PopoutComponent.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutComponent</a></h4></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="radioButton" class="tsd-anchor"></a><h3 class="tsd-anchor-link">radio<wbr/>Button<a href="#radioButton" aria-label="Permalink" class="tsd-anchor-icon"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></svg></a></h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">radio<wbr/>Button<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="PopoutRadioButtonOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutRadioButtonOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="PopoutComponent.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutComponent</a></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in spotfire-api-1-1.d.ts:1145</li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Creates a component that renders as a radio button.</p>
+</div></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>options: <a href="PopoutRadioButtonOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutRadioButtonOptions</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
+<p>Specifies how the radio button shall be rendered.</p>
+</div></div></li></ul><h4 class="tsd-returns-title">Returns <a href="PopoutComponent.html" class="tsd-signature-type" data-tsd-kind="Interface">PopoutComponent</a></h4></li></ul></section></section></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class=""><a href="../index.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="current tsd-kind-interface"><a href="PopoutComponentFactory.html" class="tsd-kind-icon">Popout<wbr/>Component<wbr/>Factory</a><ul><li class="tsd-kind-method tsd-parent-kind-interface"><a href="PopoutComponentFactory.html#button" class="tsd-kind-icon">button</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="PopoutComponentFactory.html#checkbox" class="tsd-kind-icon">checkbox</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="PopoutComponentFactory.html#radioButton" class="tsd-kind-icon">radio<wbr/>Button</a></li></ul></li></ul></nav></div></div></div><footer class=""><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="overlay"></div><script src="../assets/main.js"></script></div><script>(function () {
+    var titleElem = document.querySelector("h1");
+    var title = titleElem.textContent;
+
+    if (title.indexOf("Interface") != 0) {
+        return;
+    }
+
+    var interfaceName = title.split("Interface ")[1];
+
+    let div = document.createElement("div");
+
+    let span = document.createElement("span");
+    span.innerHTML = "Display in ";
+
+    let link = document.createElement("a");
+    link.classList.add("overview-link");
+    link.innerHTML = "API overview";
+    link.title = "Display " + interfaceName + " in the API overview.";
+    link.href = "/spotfire-mods/overview/#" + interfaceName.split("<")[0];
+
+    div.appendChild(span);
+    insertAfter(link, span);
+    insertAfter(div, titleElem);
+
+    function insertAfter(newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(
+            newNode,
+            referenceNode.nextSibling
+        );
+    }
+})();
+</script></body></html>
