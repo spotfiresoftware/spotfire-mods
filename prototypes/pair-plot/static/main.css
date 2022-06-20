@@ -5,13 +5,17 @@
 html,
 body,
 #border,
-#correlogram {
+#correlogram,
+#canvas-content {
     position: absolute;
+    top: 0;
+    left: 0;
     margin: 0;
     height: 100%;
     width: 100%;
     /* user-select: none; */
     padding: 0;
+    overflow: hidden;
 }
 
 .rectangle {
@@ -46,6 +50,7 @@ body,
 circle {
     cursor: pointer;
 }
+
 .icon-button {
     width: 16px;
     height: 16px;

@@ -1,9 +1,10 @@
 import * as d3 from "d3";
+import { Size } from "spotfire-api";
 import { Diagonal } from "./index";
 import { rectangularSelection } from "./rectangularMarking";
+import { nonBlockingForEach } from "./util";
 
 const padding = 0.1;
-
 export interface PairPlotData {
     measures: string[];
     points: (number | null)[][];
@@ -11,26 +12,32 @@ export interface PairPlotData {
     count: number[] | null;
     colors: string[];
     tooltips: (() => void)[];
+    hideTooltips: () => void;
 }
 
-export function render(data: PairPlotData, diagonal: Diagonal) {
-    const plot = document.querySelector("#correlogram")!;
-    var { clientWidth, clientHeight } = plot;
+export async function render(data: PairPlotData, diagonal: Diagonal, size: Size, dataView: Spotfire.DataView) {
+    const useCanvas = data.points.length * data.measures.length > 10000;
+    const measureCount = data.measures.length;
 
-    const width = Math.floor(clientWidth / data.measures.length);
-    const height = Math.floor(clientHeight / data.measures.length);
+    document.querySelector("#canvas-content")!.textContent = "";
 
-    plot.innerHTML = "";
+    const d3Content = document.querySelector("#correlogram")!;
+    var { clientWidth, clientHeight } = d3Content;
+
+    const width = clientWidth / measureCount;
+    const height = clientHeight / measureCount;
+
+    d3Content.innerHTML = "";
     const svg = d3.select("#correlogram");
 
     let cells = data.measures.flatMap((_, x) =>
-        data.measures
-            .map((_, y) => ({
-                x,
-                y
-            }))
-            .filter((d) => d.x != d.y)
+        data.measures.map((_, y) => ({
+            x,
+            y
+        }))
     );
+
+    let lower = cells.filter((d) => d.x < d.y);
 
     const scales = data.measures
         .map((_, i) => data.points.map((p) => p[i]).filter((v) => v != null))
@@ -50,24 +57,26 @@ export function render(data: PairPlotData, diagonal: Diagonal) {
         });
 
     const axes = scales.map((a, i) => ({
-        xAxis: (i == 0 ? d3.axisTop(a.xScale) : d3.axisBottom(a.xScale)).ticks(Math.max(2, Math.min(5, width / 100))),
-        yAxis: (i == 0 ? d3.axisLeft(a.yScale) : d3.axisRight(a.yScale)).ticks(Math.max(2, Math.min(5, height / 100)))
+        xAxis: d3.axisTop(a.xScale).ticks(Math.max(2, Math.min(5, width / 100))),
+        yAxis: d3.axisRight(a.yScale).ticks(Math.max(2, Math.min(5, height / 100)))
     }));
 
     scales.forEach((_, i) => {
         svg.append("svg:g")
             .attr("class", "xAxis")
-            .attr("transform", () => `translate(${i * width + padding * width} ${Math.max(i, 1) * height}) `)
+            .attr("transform", () => `translate(${i * width + padding * width} ${(i + 1) * height}) `)
+            .attr("visibility", () => (i == measureCount - 1 ? "hidden" : "visible"))
             .call(axes[i].xAxis as any);
         svg.append("svg:g")
             .attr("class", "yAxis")
-            .attr("transform", () => `translate(${Math.max(i, 1) * width} ${i * height + padding * height}) `)
+            .attr("transform", () => `translate(${i * width} ${i * height + padding * height}) `)
+            .attr("visibility", () => (i == 0 ? "hidden" : "visible"))
             .call(axes[i].yAxis as any);
         svg.append("svg:g")
             .attr("class", "measureName")
             .append("svg:text")
-            .attr("x", () => `${Math.round(((2 * i + 1) / (2 * data.measures.length)) * 100)}%`)
-            .attr("y", () => `${Math.round(((2 * i + 1) / (2 * data.measures.length)) * 100)}%`)
+            .attr("x", () => `${Math.round(((2 * i + 1) / (2 * measureCount)) * 100)}%`)
+            .attr("y", () => `${Math.round(((2 * i + 1) / (2 * measureCount)) * 100)}%`)
             .attr("dominant-baseline", "bottom")
             .attr("text-anchor", "middle")
             .text((_) =>
@@ -75,63 +84,110 @@ export function render(data: PairPlotData, diagonal: Diagonal) {
             );
     });
 
-    let scatterCell = svg
-        .attr("viewBox", `0 0 ${clientWidth} ${clientHeight}`)
-        .selectAll(".scatterCell")
+    svg.selectAll(".outline")
         .data(cells)
         .enter()
-        .append("svg:g")
-        .attr("class", "scatterCell")
-        .attr("transform", (d) => `translate(${d.x * width + padding * width} ${d.y * height + padding * height}) `)
-        .attr("width", width * (1 - 2 * padding))
-        .attr("height", height * (1 - 2 * padding));
-    // svg.selectAll(".outline")
-    //     .data(cells)
-    //     .enter()
-    //     .append("svg:rect")
-    //     .attr("class", "outline")
-    //     .attr("width", width)
-    //     .attr("height", height)
-    //     .attr("x", (d) => d.x * width)
-    //     .attr("y", (d) => d.y * height)
-    //     .style("stroke", "#bbb")
-    //     .style("stroke-width", 1)
-    //     .style("fill", "transparent");
+        .append("svg:rect")
+        .attr("class", "outline")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("x", (d) => d.x * width)
+        .attr("y", (d) => d.y * height)
+        .style("stroke", "#bbb")
+        .style("stroke-width", 1)
+        .style("fill", "transparent");
 
-    const d3Circles = scatterCell
-        .selectAll("circle")
-        .data(
-            (d) =>
-                data.points
-                    .map((p, index) => {
-                        const x = p[d.x];
-                        const y = p[d.y];
-                        return x && y ? { x: scales[d.x].xScale(x), y: scales[d.y].yScale(y), index } : null;
-                    })
-                    .filter((p) => p != null),
-            (d) => ""
-        )
-        .enter()
-        .append("circle")
-        .attr("class", "circle")
-        .attr("cx", (d) => d!.x!)
-        .attr("cy", (d) => d!.y!)
-        .attr("r", Math.min(width, height) / 50)
-        .attr("fill", (d) => data.colors[d!.index])
-        .attr("stroke", "black")
-        .attr("stroke-width", Math.min(2, Math.min(width, height) / 500))
-        .on("click", (d) => data.mark(d!.index))
-        .on("mouseover", (d) => {
-            data.tooltips[d!.index]();
+    if (useCanvas) {
+        await nonBlockingForEach(lower, drawScatterCell);
+    } else {
+        let scatterCell = svg
+            .attr("viewBox", `0 0 ${clientWidth} ${clientHeight}`)
+            .selectAll(".scatterCell")
+            .data(lower)
+            .enter()
+            .append("svg:g")
+            .attr("class", "scatterCell")
+            .attr("transform", (d) => `translate(${d.x * width + padding * width} ${d.y * height + padding * height}) `)
+            .attr("width", width * (1 - 2 * padding))
+            .attr("height", height * (1 - 2 * padding));
+
+        const d3Circles = scatterCell
+            .selectAll("circle")
+            .data(
+                (d) =>
+                    data.points
+                        .map((p, index) => {
+                            const x = p[d.x];
+                            const y = p[d.y];
+                            return x && y ? { x: scales[d.x].xScale(x), y: scales[d.y].yScale(y), index } : null;
+                        })
+                        .filter((p) => p != null),
+                (d) => ""
+            )
+            .enter()
+            .append("circle")
+            .attr("class", "circle")
+            .attr("cx", (d) => d!.x!)
+            .attr("cy", (d) => d!.y!)
+            .attr("r", Math.min(width, height) / 50)
+            .attr("fill", (d) => data.colors[d!.index])
+            .attr("stroke", "black")
+            .attr("stroke-width", Math.min(2, Math.min(width, height) / 500))
+            .on("click", (d) => data.mark(d!.index))
+            .on("mouseover", (d) => {
+                data.tooltips[d!.index]();
+            })
+            .on("mouseleave", (_) => {
+                data.hideTooltips();
+            });
+
+        scatterCell.exit().remove();
+        d3Circles.exit().remove();
+
+        rectangularSelection(svg, {
+            clearMarking: () => {},
+            mark: (d: any) => data.mark(d.index),
+            ignoredClickClasses: ["circle"],
+            classesToMark: "circle"
         });
+    }
 
-    scatterCell.exit().remove();
-    d3Circles.exit().remove();
+    async function drawScatterCell(cell: { x: number; y: number }) {
+        if (await dataView.hasExpired()) {
+            document.querySelector("#canvas-content")!.textContent = "";
+            return;
+        }
 
-    // rectangularSelection(svg, {
-    //     clearMarking: () => {},
-    //     mark: (d: any) => data.mark(d.index),
-    //     ignoredClickClasses: ["circle"],
-    //     classesToMark: "circle"
-    // });
+        const row = cell.x;
+        const col = cell.y;
+        let cc = createCanvasContext(row, col);
+        const lineWidth = Math.max(0.2, Math.min(width, height) / 4000);
+        data.points.forEach((point, index) => {
+            if (point[col] && point[row]) {
+                let left = scales[row].xScale(point[row]!)! + padding * (size.width / measureCount);
+                let top = scales[col].yScale(point[col]!)! + padding * (size.height / measureCount);
+                if (cc) {
+                    cc.beginPath();
+                    cc.arc(left, top, Math.min(size.height, size.width) / 50 / measureCount, 0, 2 * Math.PI);
+                    cc.fillStyle = data.colors[index];
+                    cc.fill();
+                    cc.lineWidth = lineWidth;
+                    cc.strokeStyle = "black";
+                    cc.stroke();
+                }
+            }
+        });
+    }
+
+    function createCanvasContext(row: number, col: number) {
+        let cell = document.createElement("canvas");
+        cell.setAttribute("width", `${size.width / measureCount}px`);
+        cell.setAttribute("height", `${size.height / measureCount}px`);
+        cell.style.left = `${(row * size.width) / measureCount}px`;
+        cell.style.top = `${(col * size.height) / measureCount}px`;
+        cell.style.position = "absolute";
+        cell.setAttribute("id", `canvas-cell-${row}-${col}`);
+        document.querySelector("#canvas-content")?.appendChild(cell);
+        return cell.getContext("2d");
+    }
 }

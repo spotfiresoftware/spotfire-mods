@@ -6,12 +6,13 @@
     "icon": "icon.svg",
     "properties": [
         {
-            "name": "Diagonal", 
-            "type": "string", 
+            "name": "Diagonal",
+            "type": "string",
             "defaultValue": "measure-names"
         }
     ],
     "dataViewDefinition": {
+        "tooltip": { "enabled": true },
         "colorAxis": {
             "mode": "dual",
             "dropTarget": {
@@ -32,17 +33,17 @@
                 "placement": "bottom"
             },
             {
-                "name": "MeasureNames",
+                "name": "ColumnNames",
                 "mode": "categorical",
                 "placement": "none",
                 "legendItem": { "defaultVisibility": "hidden" },
                 "propertyControl": { "visibility": "visible" },
-                "automaticConfiguration": { "expressionHeuristics": "none", "priority": "100"    }
+                "automaticConfiguration": { "expressionHeuristics": "none", "priority": 100 }
             },
             {
                 "name": "MarkerBy",
                 "mode": "categorical",
-                "automaticConfiguration": { "expressionHeuristics": "default", "priority": "0" }
+                "automaticConfiguration": { "expressionHeuristics": "default", "priority": 0 }
             },
             {
                 "name": "Count",

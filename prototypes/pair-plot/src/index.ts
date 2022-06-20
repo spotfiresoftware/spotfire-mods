@@ -1,8 +1,8 @@
-import { Axis, DataView, Mod, ModProperty } from "spotfire-api";
+import { Axis, DataView, Mod, ModProperty, Size } from "spotfire-api";
 import { render, PairPlotData } from "./pair-plot";
 import { resources } from "./resources";
 
-const measureNamesAxisName = "MeasureNames";
+const columnNamesAxisName = "ColumnNames";
 const countAxisName = "Count";
 const diagonalPropertyName = "Diagonal";
 const colorAxisName = "Color";
@@ -31,7 +31,7 @@ window.Spotfire.initialize(async (mod) => {
 
     document.querySelector("#resetMandatoryExpressions button")!.addEventListener("click", () => {
         document.querySelector("#resetMandatoryExpressions")!.classList.toggle("hidden", true);
-        mod.visualization.axis(measureNamesAxisName).setExpression("<[Axis.Default.Names]>");
+        mod.visualization.axis(columnNamesAxisName).setExpression("<[Axis.Default.Names]>");
         mod.visualization.axis(countAxisName).setExpression("Count()");
     });
 
@@ -39,7 +39,7 @@ window.Spotfire.initialize(async (mod) => {
         mod.visualization.data(),
         mod.property(diagonalPropertyName),
         mod.visualization.axis(measureAxisName),
-        mod.visualization.axis(measureNamesAxisName),
+        mod.visualization.axis(columnNamesAxisName),
         mod.visualization.axis(countAxisName),
         mod.visualization.axis(colorAxisName),
         mod.windowSize()
@@ -53,7 +53,8 @@ window.Spotfire.initialize(async (mod) => {
         measureAxis: Axis,
         measureNamesAxis: Axis,
         countAxis: Axis,
-        colorAxis: Axis
+        colorAxis: Axis,
+        size: Size
     ) {
         let timerLog = createTimerLog();
         if (measureAxis.parts.length < 2) {
@@ -83,7 +84,7 @@ window.Spotfire.initialize(async (mod) => {
             return;
         }
 
-        const measures = (await (await dataView.hierarchy(measureNamesAxisName))!.root())?.leaves();
+        const measures = (await (await dataView.hierarchy(columnNamesAxisName))!.root())?.leaves();
         const columnNamesLeafIndices = measures?.map((l) => l.leafIndex) || [];
         const rows = await dataView.allRows();
         if (!measures || rows == null) {
@@ -96,7 +97,7 @@ window.Spotfire.initialize(async (mod) => {
         var markerCount = rows!.length / measureCount;
 
         const colors = rows!.slice(0, markerCount).map((r) => r.color().hexCode);
-        const tooltips = rows!.slice(0, markerCount).map((r) => (() => mod.controls.tooltip.show(r)));
+        const tooltips = rows!.slice(0, markerCount).map((r) => () => mod.controls.tooltip.show(r));
         timerLog.add("Read colors");
         const count = null;
         countAxis.expression
@@ -115,11 +116,12 @@ window.Spotfire.initialize(async (mod) => {
             colors,
             count,
             mark: (index: number) => rows![index].mark(),
-            tooltips
+            tooltips,
+            hideTooltips: () => mod.controls.tooltip.hide()
         };
         timerLog.add("Transpose");
 
-        render(data, diagonalProperty.value() || "measure-names");
+        render(data, diagonalProperty.value() || "measure-names", size, dataView);
         timerLog.add("Render");
         // timerLog.log();
 
