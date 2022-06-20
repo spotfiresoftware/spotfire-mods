@@ -41,11 +41,6 @@
                 "automaticConfiguration": { "expressionHeuristics": "none", "priority": 100 }
             },
             {
-                "name": "MarkerBy",
-                "mode": "categorical",
-                "automaticConfiguration": { "expressionHeuristics": "default", "priority": 0 }
-            },
-            {
                 "name": "Count",
                 "mode": "continuous",
                 "placement": "none",

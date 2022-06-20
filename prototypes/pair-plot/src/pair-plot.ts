@@ -9,6 +9,7 @@ export interface PairPlotData {
     measures: string[];
     points: (number | null)[][];
     mark: (index: number) => void;
+    marked: boolean[];
     count: number[] | null;
     colors: string[];
     tooltips: (() => void)[];
@@ -16,6 +17,7 @@ export interface PairPlotData {
 }
 
 export async function render(data: PairPlotData, diagonal: Diagonal, size: Size, dataView: Spotfire.DataView) {
+    console.log(data);
     const useCanvas = data.points.length * data.measures.length > 10000;
     const measureCount = data.measures.length;
 
@@ -162,22 +164,28 @@ export async function render(data: PairPlotData, diagonal: Diagonal, size: Size,
         const col = cell.y;
         let cc = createCanvasContext(row, col);
         const lineWidth = Math.max(0.2, Math.min(width, height) / 4000);
-        data.points.forEach((point, index) => {
-            if (point[col] && point[row]) {
-                let left = scales[row].xScale(point[row]!)! + padding * (size.width / measureCount);
-                let top = scales[col].yScale(point[col]!)! + padding * (size.height / measureCount);
-                if (cc) {
-                    cc.beginPath();
-                    cc.arc(left, top, Math.min(size.height, size.width) / 50 / measureCount, 0, 2 * Math.PI);
-                    cc.fillStyle = data.colors[index];
-                    cc.fill();
-                    cc.lineWidth = lineWidth;
-                    cc.strokeStyle = "black";
-                    cc.stroke();
+
+        data.points.forEach(getRenderer(false));
+        data.points.forEach(getRenderer(true));
+
+        function getRenderer(renderMarkedRows: boolean) {
+            return (point: (number | null)[], index: number) => {
+                if (point[col] && point[row] && data.marked[index] == renderMarkedRows) {
+                    let left = scales[row].xScale(point[row]!)! + padding * (size.width / measureCount);
+                    let top = scales[col].yScale(point[col]!)! + padding * (size.height / measureCount);
+                    if (cc) {
+                        cc.beginPath();
+                        cc.arc(left, top, Math.min(size.height, size.width) / 50 / measureCount, 0, 2 * Math.PI);
+                        cc.fillStyle = data.colors[index];
+                        cc.fill();
+                        cc.lineWidth = lineWidth;
+                        cc.strokeStyle = "black";
+                        cc.stroke();
+                    }
                 }
             }
-        });
-    }
+        }
+   }
 
     function createCanvasContext(row: number, col: number) {
         let cell = document.createElement("canvas");

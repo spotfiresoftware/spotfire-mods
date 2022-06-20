@@ -76,9 +76,9 @@ window.Spotfire.initialize(async (mod) => {
 
         const showConfigError =
             (measureAxis.parts.length > 1 && measureNamesAxis.expression != "<[Axis.Default.Names]>") ||
-            (diagonalProperty.value() != "measure-names" && countAxis.expression != "Count()");
+            (diagonalProperty.value() != "measure-names" && countAxis.expression.toLowerCase() != "count()");
         document.getElementById("resetMandatoryExpressions")!.classList.toggle("hidden", !showConfigError);
-        document.getElementById("correlogram")!.classList.toggle("hidden", showConfigError);
+        document.getElementById("content")!.classList.toggle("hidden", showConfigError);
 
         if (showConfigError) {
             return;
@@ -96,25 +96,25 @@ window.Spotfire.initialize(async (mod) => {
         var measureCount = columnNamesLeafIndices.length;
         var markerCount = rows!.length / measureCount;
 
+        // Color and count axes will have the same value for all "column names", i.e. it is sufficient to retrieve the first occurance.
+        const marked = rows!.slice(0, markerCount).map((r) => r.isMarked());
         const colors = rows!.slice(0, markerCount).map((r) => r.color().hexCode);
-        const tooltips = rows!.slice(0, markerCount).map((r) => () => mod.controls.tooltip.show(r));
-        timerLog.add("Read colors");
-        const count = null;
-        countAxis.expression
+        const count = countAxis.expression
             ? rows!.slice(0, markerCount).map((r) => r.continuous(countAxisName).value() as number)
             : null;
-        const points = transpose<number>(
-            createChunks(
-                rows!.map((r) => r.continuous(measureAxisName).value()),
-                markerCount
-            )
-        );
+
+        const tooltips = rows!.slice(0, markerCount).map((r) => () => mod.controls.tooltip.show(r));
+        timerLog.add("Read colors");
+
+        const tallSkinny = rows!.map((r, i) => r.continuous(measureAxisName).value());
+        const points = transpose<number>(arrayToMatrix(tallSkinny, markerCount));
 
         var data: PairPlotData = {
             measures: measures!.map((m) => m.formattedValue()),
             points,
             colors,
             count,
+            marked,
             mark: (index: number) => rows![index].mark(),
             tooltips,
             hideTooltips: () => mod.controls.tooltip.hide()
@@ -123,7 +123,7 @@ window.Spotfire.initialize(async (mod) => {
 
         render(data, diagonalProperty.value() || "measure-names", size, dataView);
         timerLog.add("Render");
-        // timerLog.log();
+        //timerLog.log();
 
         renderSettingsButton(mod, diagonalProperty);
 
@@ -134,7 +134,7 @@ window.Spotfire.initialize(async (mod) => {
         return m[0].map((_, i) => m.map((x) => x[i]));
     }
 
-    function createChunks(arr: any[], chunkSize: number) {
+    function arrayToMatrix(arr: any[], chunkSize: number) {
         var results = [];
         while (arr.length) {
             results.push(arr.splice(0, chunkSize));
