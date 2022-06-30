@@ -165,33 +165,36 @@ export function animationControl(animationSpeedProperty: {
             .call(
                 d3
                     .drag<SVGRectElement, any>()
-                    .on("start", function () {
+                    .on("start", function (event:any) {
                         dispatch.call(
                             "sliderChange",
                             this,
                             Math.round(
                                 animationScale.invert(
-                                    d3.mouse(animationSlider.node()!)[0]
+                                    d3.pointer(event, animationSlider.node()!)[0]
                                 )
                             )
                         );
 
-                        d3.event.sourceEvent.preventDefault();
+                        event.sourceEvent.preventDefault();
                     })
-                    .on("drag", function () {
+                    .on("drag", function (event: any) {
                         dispatch.call(
                             "sliderChange",
                             this,
                             Math.round(
                                 animationScale.invert(
-                                    d3.mouse(animationSlider.node()!)[0]
+                                    d3.pointer(event, animationSlider.node()!)[0]
                                 )
                             )
                         );
                     })
             );
 
-        dispatch.on("sliderChange.slider", function (value) {
+        dispatch.on("sliderChange.slider", function (value: any) {
+            if (isNaN(value)) {
+                return;
+            }
             setSliderValue(value);
             animationIndex = value;
             valueChanged(value, true);
@@ -234,10 +237,10 @@ export function animationControl(animationSpeedProperty: {
             .attr("r", 6)
             .attr("class", "animation-handle");
 
-        function sliderclick() {
-            setPlaying(false);
+        function sliderclick(event: any) {
+            setPlaying(false);            
             animationIndex = Math.round(
-                animationScale.invert(d3.mouse(animationSlider.node()!)[0])
+                animationScale.invert(d3.pointer(event, animationSlider.node()!)[0])
             );
             setSliderValue(animationIndex);
             valueChanged(animationIndex, true);

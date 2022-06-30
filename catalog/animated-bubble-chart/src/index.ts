@@ -218,10 +218,10 @@ export async function render(
 
     // Add one dimensional marking by dragging on the x-axis area
     xAxisScaleGuideArea
-        .on("contextmenu", function () {
-            onScaleClick(...d3.mouse(document.body), "X");
-            d3.event.preventDefault();
-            d3.event.stopPropagation();
+        .on("contextmenu", function (event: any) {
+            onScaleClick(d3.pointer(document.body)[0], d3.pointer(document.body)[1], "X");
+            event.preventDefault();
+            event.stopPropagation();
             return false;
         })
         .attr("x", xAxesArea.x1)
@@ -272,10 +272,10 @@ export async function render(
 
     // Add one dimensional marking by dragging on the y-axis area
     yAxisScaleGuideArea
-        .on("contextmenu", function () {
-            onScaleClick(...d3.mouse(document.body), "Y");
-            d3.event.preventDefault();
-            d3.event.stopPropagation();
+        .on("contextmenu", function (event:any) {
+            onScaleClick(d3.pointer(document.body)[0], d3.pointer(document.body)[1], "Y");
+            event.preventDefault();
+            event.stopPropagation();
             return false;
         })
         .attr("x", yAxisArea.x1)
@@ -297,8 +297,8 @@ export async function render(
         .attr("y", bubbleArea.y1)
         .attr("width", bubbleArea.width)
         .attr("height", bubbleArea.height)
-        .on("click", () => {
-            if (!d3.event.defaultPrevented) {
+        .on("click", (event:any) => {
+            if (!event.defaultPrevented) {
                 dataView.clearMarking();
             }
         })
@@ -517,7 +517,7 @@ export async function render(
             // update attributes on all dots
             let transitionEnd = allDots
                 .attr("id", getKey)
-                .attr("class", (r) => `dot ${r.isMarked() ? "marked" : ""}`)
+                .attr("class", (r:any) => `dot ${r.isMarked() ? "marked" : ""}`)
                 .call(
                     markingHandler(
                         svg,
@@ -548,15 +548,15 @@ export async function render(
                 });
 
             allDots
-                .on("click", function (row: DataViewRow) {
+                .on("click", function (row: DataViewRow, event:any) {
                     setIdle();
                     markRowforAllTimes(
                         row,
                         dataView,
-                        d3.event.ctrlKey || d3.event.metaKey
+                        event.ctrlKey || event.metaKey
                     );
 
-                    d3.event.preventDefault();
+                    event.preventDefault();
                 })
                 .call(hl);
 
@@ -597,7 +597,7 @@ export async function render(
             //re-use current labels
             let labels = markerLayer
                 .selectAll<SVGTextElement, DataViewRow>(".label")
-                .data(displayRows, (d) => getKey(d) + "_label");
+                .data(displayRows, (d: any) => getKey(d) + "_label");
 
             // add new dots if needed
             let newLabels = labels
@@ -612,8 +612,8 @@ export async function render(
 
             // update attributes on all labels
             allLabels
-                .attr("id", (d) => getKey(d) + "_label")
-                .attr("class", (r) => `label ${r.isMarked() ? "marked" : ""}`)
+                .attr("id", (d: any) => getKey(d) + "_label")
+                .attr("class", (r: any) => `label ${r.isMarked() ? "marked" : ""}`)
                 .call(
                     markingHandler(
                         svg,
@@ -631,11 +631,11 @@ export async function render(
                 .text(labelText);
 
             allLabels
-                .on("click", function (row: DataViewRow) {
+                .on("click", function (row: DataViewRow, event:any) {
                     markRowforAllTimes(
                         row,
                         dataView,
-                        d3.event.ctrlKey || d3.event.metaKey
+                        event.ctrlKey || event.metaKey
                     );
                 })
                 .call(hl);
