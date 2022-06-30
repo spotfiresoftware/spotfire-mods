@@ -23,14 +23,14 @@ export async function render(data: PairPlotData, diagonal: Diagonal, size: Size,
 
     document.querySelector("#canvas-content")!.textContent = "";
 
-    const d3Content = document.querySelector("#correlogram")!;
+    const d3Content = document.querySelector("#plot-content")!;
     var { clientWidth, clientHeight } = d3Content;
 
     const width = clientWidth / measureCount;
     const height = clientHeight / measureCount;
 
     d3Content.innerHTML = "";
-    const svg = d3.select("#correlogram");
+    const svg = d3.select("#plot-content");
 
     let cells = data.measures.flatMap((_, x) =>
         data.measures.map((_, y) => ({
@@ -39,7 +39,7 @@ export async function render(data: PairPlotData, diagonal: Diagonal, size: Size,
         }))
     );
 
-    let lower = cells.filter((d) => d.x < d.y);
+    let scatterCells = cells.filter((d) => d.x != d.y);
 
     const scales = data.measures
         .map((_, i) => data.points.map((p) => p[i]).filter((v) => v != null))
@@ -58,33 +58,10 @@ export async function render(data: PairPlotData, diagonal: Diagonal, size: Size,
             };
         });
 
-    const axes = scales.map((a, i) => ({
+    const axes = scales.map((a) => ({
         xAxis: d3.axisTop(a.xScale).ticks(Math.max(2, Math.min(5, width / 100))),
         yAxis: d3.axisRight(a.yScale).ticks(Math.max(2, Math.min(5, height / 100)))
     }));
-
-    scales.forEach((_, i) => {
-        svg.append("svg:g")
-            .attr("class", "xAxis")
-            .attr("transform", () => `translate(${i * width + padding * width} ${(i + 1) * height}) `)
-            .attr("visibility", () => (i == measureCount - 1 ? "hidden" : "visible"))
-            .call(axes[i].xAxis as any);
-        svg.append("svg:g")
-            .attr("class", "yAxis")
-            .attr("transform", () => `translate(${i * width} ${i * height + padding * height}) `)
-            .attr("visibility", () => (i == 0 ? "hidden" : "visible"))
-            .call(axes[i].yAxis as any);
-        svg.append("svg:g")
-            .attr("class", "measureName")
-            .append("svg:text")
-            .attr("x", () => `${Math.round(((2 * i + 1) / (2 * measureCount)) * 100)}%`)
-            .attr("y", () => `${Math.round(((2 * i + 1) / (2 * measureCount)) * 100)}%`)
-            .attr("dominant-baseline", "bottom")
-            .attr("text-anchor", "middle")
-            .text((_) =>
-                diagonal == "measure-names" ? data.measures[i] : `TODO - Show ${diagonal} for ${data.measures[i]}`
-            );
-    });
 
     svg.selectAll(".outline")
         .data(cells)
@@ -99,13 +76,34 @@ export async function render(data: PairPlotData, diagonal: Diagonal, size: Size,
         .style("stroke-width", 1)
         .style("fill", "transparent");
 
+    scales.forEach((_, i) => {
+        svg.append("svg:g")
+            .attr("class", "xAxis")
+            .attr("transform", () => `translate(${i * width + padding * width} ${measureCount * height - 1}) `)
+            .call(axes[i].xAxis as any);
+        svg.append("svg:g")
+            .attr("class", "yAxis")
+            .attr("transform", () => `translate(0 ${i * height + padding * height}) `)
+            .call(axes[i].yAxis as any);
+        svg.append("svg:g")
+            .attr("class", "measureName")
+            .append("svg:text")
+            .attr("x", () => `${Math.round(((2 * i + 1) / (2 * measureCount)) * 100)}%`)
+            .attr("y", () => `${Math.round(((2 * i + 1) / (2 * measureCount)) * 100)}%`)
+            .attr("dominant-baseline", "bottom")
+            .attr("text-anchor", "middle")
+            .text((_) =>
+                diagonal == "measure-names" ? data.measures[i] : `TODO - Show ${diagonal} for ${data.measures[i]}`
+            );
+    });
+
     if (useCanvas) {
-        await nonBlockingForEach(lower, drawScatterCell);
+        await nonBlockingForEach(scatterCells, drawScatterCell);
     } else {
         let scatterCell = svg
             .attr("viewBox", `0 0 ${clientWidth} ${clientHeight}`)
             .selectAll(".scatterCell")
-            .data(lower)
+            .data(scatterCells)
             .enter()
             .append("svg:g")
             .attr("class", "scatterCell")
@@ -183,9 +181,9 @@ export async function render(data: PairPlotData, diagonal: Diagonal, size: Size,
                         cc.stroke();
                     }
                 }
-            }
+            };
         }
-   }
+    }
 
     function createCanvasContext(row: number, col: number) {
         let cell = document.createElement("canvas");

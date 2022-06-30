@@ -5,7 +5,7 @@
 html,
 body,
 #border,
-#correlogram,
+#plot-content,
 #canvas-content {
     position: absolute;
     top: 0;

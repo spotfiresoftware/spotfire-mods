@@ -1,5 +1,5 @@
 {
-    "name": "sunburst-chart-mod",
+    "name": "pair-plot-mod",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -9,17 +9,16 @@
         "build-watch": "webpack --watch",
         "start": "npm install && npm run build-watch"
     },
-    "author": "objerke, ebrandin",
+    "author": "ebrandin",
     "license": "ISC",
     "devDependencies": {
         "@tibco/spotfire-mods-dev-server": "^1.0.0",
         "@types/d3": "^5.16.4",
-        "copy-webpack-plugin": "^6.0.3",
+        "copy-webpack-plugin": "11.0.0",
         "d3": "^5.14.2",
-        "ts-loader": "^8.0.11",
-        "typescript": "^4.1.2",
-        "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.12"
-    },
-    "dependencies": {}
+        "ts-loader": "9.3.1",
+        "typescript": "4.7.4",
+        "webpack": "5.73.0",
+        "webpack-cli": "4.10.0"
+    }
 }
