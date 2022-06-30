@@ -56,6 +56,24 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         return;
     }
 
+    // The margins around the chart canvas.
+    const margin = { top: 20, right: 40, bottom: 40, left: 80 };
+
+    // The position and size of the chart canvas.
+    const canvas = { 
+        top: margin.top,
+        left: margin.left,
+        width: windowSize.width - (margin.left + margin.right),
+        height: windowSize.height - (margin.top + margin.bottom)
+
+    };
+    if (canvas.height < 0 || canvas.width < 0) {
+        // Abort rendering if the window is not large enough to render anything.
+        svg.selectAll("*").remove();
+        xLabelsContainer.selectAll("*").remove();
+        return;
+    }
+
     const onSelection = ({ dragSelectActive }) => {
         state.preventRender = dragSelectActive;
     };
@@ -84,16 +102,37 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     // Last rendered data view is still valid from a users perspective since
     // a document modification was made during a progress indication.
     // Hard abort if row count exceeds an arbitrary selected limit
-    const xLimit = 1250;
+    const xLimit = 10000;
     const colorLimit = 100;
     const colorCount = (await dataView.hierarchy("Color")).leafCount;
     const xCount = (await dataView.hierarchy("X")).leafCount;
     if (colorCount > colorLimit || xCount > xLimit) {
         svg.selectAll("*").remove();
-        mod.controls.errorOverlay.show(`Exceeded data size limit (colors: ${colorLimit}, x: ${xLimit})`, "rowCount");
+
+        mod.controls.errorOverlay.show("The resulting data view exceeded the size limit.", "dataViewSize1");
+        if (xCount > xLimit) {
+            mod.controls.errorOverlay.show(
+                `Maximum allowed X axis values is ${xLimit}. Try aggregating the expression further.`,
+                "dataViewSize2"
+            );
+        } else {
+            mod.controls.errorOverlay.hide("dataViewSize2");
+        }
+
+        if (colorCount > colorLimit) {
+            mod.controls.errorOverlay.show(
+                `Maximum number of colors is limited to ${colorLimit} for readability reasons.`,
+                "dataViewSize3"
+            );
+        } else {
+            mod.controls.errorOverlay.hide("dataViewSize3");
+        }
+
         return;
     } else {
-        mod.controls.errorOverlay.hide("rowCount");
+        mod.controls.errorOverlay.hide("dataViewSize1");
+        mod.controls.errorOverlay.hide("dataViewSize2");
+        mod.controls.errorOverlay.hide("dataViewSize3");
     }
 
     const colorHierarchy = await dataView.hierarchy("Color");
@@ -121,11 +160,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         gapfill.value()
     );
 
-    const xAxisMeta = await mod.visualization.axis("X");
-    const yAxisMeta = await mod.visualization.axis("Y");
     const colorAxisMeta = await mod.visualization.axis("Color");
-
-    const margin = { top: 20, right: 40, bottom: 40, left: 80 };
 
     const { curveMarked, curveUnmarked } = buildD3CurveFunctions(roundedCurves.value());
     const { xScale, yScale, line, area, fillOpacity, yScaleTickFormat } = buildD3Scales(chartType.value());
@@ -149,10 +184,10 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .append("clipPath")
         .attr("id", "clipPath")
         .append("rect")
-        .attr("x", margin.left)
-        .attr("y", margin.top)
-        .attr("width", windowSize.width - margin.left - margin.right)
-        .attr("height", windowSize.height - (margin.bottom + margin.top));
+        .attr("x", canvas.left)
+        .attr("y", canvas.top)
+        .attr("width", canvas.width)
+        .attr("height", canvas.height);
 
     /**
      * Background rectangle - used to catch click events and clear marking.
@@ -183,19 +218,41 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     svg.append("g").attr("class", "hover-line").attr("clip-path", "url(#clipPath)");
 
     /**
+     * Compute the suitable ticks to show
+     */
+    const scaleWidth = xScale.range()[1] - xScale.range()[0];
+    const minLabelWidth = 20;
+    const maxCount = scaleWidth / minLabelWidth;
+    const drawEvery = Math.ceil(xCount / maxCount);
+    const drawXScaleLabel = [0, xCount - 1];
+    let drawIndex = drawEvery;
+    while (drawIndex < xCount) {
+        if (xCount - drawIndex > drawEvery) {
+            drawXScaleLabel.push(drawIndex);
+        }
+        drawIndex += drawEvery;
+    }
+
+    drawXScaleLabel.push(xCount - 1);
+    var labelWidth = scaleWidth / Math.ceil(xCount / drawEvery) - 4;
+    console.log(drawXScaleLabel);
+    /**
      * X axis group.
      */
-    svg.append("g")
+    var xScaleD3 = svg
+        .append("g")
         .attr("transform", `translate(0,${windowSize.height - margin.bottom})`)
         .call(
             d3
                 .axisBottom(xScale)
-                .tickSize(styling.scales.tick.stroke != "none" ? 5 : 0)
+                .tickSize(5)
                 .tickPadding(styling.scales.tick.stroke != "none" ? 3 : 9)
-        )
-        .selectAll("text")
-        .remove();
+        );
+    xScaleD3.selectAll("text").remove();
 
+    xScaleD3
+        .selectAll("g.tick line")
+        .attr("y2", (_, i) => (styling.scales.tick.stroke != "none" && drawXScaleLabel.includes(i) ? 5 : 0));
     /**
      * Y Axis group.
      */
@@ -235,7 +292,6 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     /**
      * Draws X labels as divs (not SVG)
      */
-    const maxWidth = Math.max(0, xScale.step() - 4);
     xLabelsContainer.selectAll("*").remove();
     xLabelsContainer
         .style("bottom", `${margin.bottom - 35}px`)
@@ -256,7 +312,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .style("left", (d) => xScale(d) + "px")
         .append("div")
         .attr("class", "x-axis-label")
-        .style("max-width", maxWidth + "px")
+        .style("max-width", (_, i) => `${drawXScaleLabel.includes(i) ? labelWidth : 0}px`)
         .style("color", styling.scales.font.color)
         .style("font-family", styling.scales.font.fontFamily)
         .style("font-size", styling.scales.font.fontSize + "px")
@@ -499,7 +555,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
 
         function handleMouseOverPoint(data) {
             g.attr("visibility", "visible");
-            tooltip.show(createPointTooltip(data));
+            tooltip.show(data.tooltip);
         }
 
         function handleMouseOut() {
@@ -617,30 +673,6 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         return [pre, ...segment, post];
     }
 
-    /**
-     * @param {string[]} displayNames
-     * @param {string[]} formattedValues
-     * @param {string} separator
-     */
-    function createAxisTooltip(displayNames, formattedValues, separator) {
-        return displayNames.length == formattedValues.length
-            ? formattedValues.map((v, i) => displayNames + ": " + v).join(separator)
-            : null;
-    }
-
-    /**
-     * Get the formatted path as an array
-     * @param {Spotfire.DataViewHierarchyNode} node
-     * @returns {string[]}
-     */
-    function getFormattedValues(node) {
-        let values = [];
-        while (node.level >= 0) {
-            values.push(node.formattedValue());
-            node = node.parent;
-        }
-        return values.reverse();
-    }
 
     /**
      * @param {number} colorIndex
@@ -650,56 +682,6 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         return nodeFormattedPathAsArray(colorLeaves[colorIndex])
             .map((val, i) => colorAxisMeta.parts[i].displayName + ": " + val)
             .join("\n");
-    }
-
-    /**
-     * Mimic the built in Spotfire tooltip
-     * @param {Point} point
-     * @returns {string}
-     */
-    function createPointTooltip(point) {
-        const separator = "\n";
-        let colorValues = getFormattedValues(colorLeaves[point.colorIndex]);
-        let xValues = getFormattedValues(xLeaves[point.xIndex]);
-        let yDisplayName = yAxisMeta.parts[0].displayName;
-
-        if (yAxisMeta.parts.length > 1) {
-            // Find the corresponding display name for the y axis value for multiple measures.
-            let colorLevelForColumnNames = colorAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
-            let xLevelForColumnNames = xAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
-            if (colorLevelForColumnNames >= 0) {
-                yDisplayName = colorValues[colorLevelForColumnNames];
-            }
-
-            if (xLevelForColumnNames >= 0) {
-                yDisplayName = xValues[xLevelForColumnNames];
-            }
-        }
-
-        let xLabel =
-            createAxisTooltip(
-                xAxisMeta.parts.map((p) => p.displayName),
-                xValues,
-                separator
-            ) ||
-            (xAxisMeta.parts.length
-                ? createAxisTooltip([xAxisMeta.name + " axis"], [xLeaves[point.xIndex].formattedPath()], separator)
-                : "");
-        let colorLabel =
-            createAxisTooltip(
-                colorAxisMeta.parts.map((p) => p.displayName),
-                colorValues,
-                separator
-            ) ||
-            (colorAxisMeta.parts.length
-                ? createAxisTooltip(
-                      [colorAxisMeta.name + " axis"],
-                      [colorLeaves[point.colorIndex].formattedPath()],
-                      separator
-                  )
-                : "");
-
-        return [xLabel, yDisplayName + ": " + point.Y_Formatted, colorLabel].join(separator);
     }
 
     /**

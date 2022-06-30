@@ -1,0 +1,114 @@
+{
+    "apiVersion": "1.3",
+    "version": "1.1",
+    "name": "Gauge",
+    "id": "spotfire-configurable-gauge-mod",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "gaugeWidth",
+            "defaultValue": 20,
+            "type": "integer"
+        },
+        {
+            "name": "gaugeOpacity",
+            "defaultValue": 100,
+            "type": "integer"
+        },
+        {
+            "name": "gaugeAngle",
+            "defaultValue": 40,
+            "type": "integer"
+        },
+        {
+            "name": "ticksOpacity",
+            "defaultValue": 50,
+            "type": "integer"
+        },
+        {
+            "name": "showPercent",
+            "defaultValue": "false",
+            "type": "boolean"
+        },
+        {
+            "name": "showMinMax",
+            "defaultValue": "false",
+            "type": "boolean"
+        }
+    ],
+    "dataViewDefinition": {
+        "tooltip": {
+            "enabled": true
+        },
+        "colorAxis": {
+            "mode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            },
+            "automaticConfiguration": {
+                "expressionHeuristics": "none"
+            }
+        },
+        "axes": [
+            {
+                "name": "Gauge",
+                "mode": "categorical",
+                "placement": "bottom",
+                "dropTarget": {
+                    "icon": "Tile",
+                    "description": "Use {0} on the mod's Gauge-axis"
+                },
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                }
+            },
+            {
+                "name": "Value",
+                "mode": "continuous",
+                "allowMultipleMeasures": false,
+                "placement": "left",
+                "automaticConfiguration": {
+                    "priority": "100"
+                },
+                "dropTarget": {
+                    "icon": "YAxis",
+                    "description": "Use {0} on the mod's Value-axis"
+                }
+            },
+            {
+                "name": "Min",
+                "mode": "continuous",
+                "allowMultipleMeasures": false,
+                "placement": "none",
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                },
+                "legendItem": {
+                    "title": "Min value"
+                },
+                "dropTarget": {
+                    "icon": "Compare",
+                    "description": "Use {0} on the Min value-axis"
+                }
+            },
+            {
+                "name": "Max",
+                "mode": "continuous",
+                "allowMultipleMeasures": false,
+                "placement": "none",
+                "legendItem": {
+                    "title": "Max value"
+                },
+                "dropTarget": {
+                    "icon": "Compare",
+                    "description": "Use {0} on the Max value-axis"
+                },
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                }
+            }
+        ]
+    },
+    "files": ["index.html", "main.css", "bundle.js"]
+}

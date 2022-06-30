@@ -1,15 +1,19 @@
 {
     "name": "@tibco/spotfire-mods-dev-server",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Development server for TIBCO Spotfire(R) Mods",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/TIBCOSoftware/spotfire-mods.git"
     },
     "homepage": "https://github.com/TIBCOSoftware/spotfire-mods",
-    "main": "development-server.js",
+    "main": "server.js",
     "bin": {
-        "mods-dev-server": "./development-server.js"
+        "mods-dev-server": "./cli.js"
+    },
+    "types": "server.d.ts",
+    "scripts": {
+        "test": "mocha test --exit"
     },
     "keywords": [
         "TIBCO",
@@ -19,10 +23,28 @@
     "author": "TIBCO Spotfire",
     "license": "BSD-3-Clause",
     "dependencies": {
-        "live-server": "^1.2.1"
+        "chokidar": "^3.5.2",
+        "colors": "^1.4.0",
+        "compression": "^1.7.4",
+        "connect": "^3.7.0",
+        "lodash": "^4.17.21",
+        "open": "^8.4.0",
+        "serve-static": "^1.14.1",
+        "ws": "^8.2.3",
+        "yargs": "^17.2.1"
     },
     "devDependencies": {
-        "@types/live-server": "^1.2.0",
-        "@types/node": "^14.14.31"
+        "@types/compression": "^1.7.2",
+        "@types/connect": "^3.4.35",
+        "@types/lodash": "^4.14.176",
+        "@types/mocha": "^9.0.0",
+        "@types/node": "^14.14.31",
+        "@types/serve-static": "^1.13.10",
+        "@types/supertest": "^2.0.11",
+        "@types/ws": "^8.2.0",
+        "@types/yargs": "^17.0.5",
+        "mocha": "^9.1.3",
+        "puppeteer": "^13.3.2",
+        "supertest": "^6.1.6"
     }
 }

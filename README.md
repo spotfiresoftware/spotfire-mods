@@ -29,6 +29,7 @@ The Mods API is backwards compatible but not forwards compatible. Pick a Mod API
 | Spotfire 11.0    | 1.0             |
 | Spotfire 11.3    | 1.1             |
 | Spotfire 11.4    | 1.2             |
+| Spotfire 11.5    | 1.3             |
 
 When a mod is trying to use newer API features without updating the [`apiVersion`](https://github.com/TIBCOSoftware/spotfire-mods/blob/7be343f007d2ec9f3d36e5078419b57674db8467/examples/js-dev-barchart/src/mod-manifest.json#L2) in the `mod-manifest.json` the following happens.
 

@@ -1,0 +1,77 @@
+{
+    "apiVersion": "1.3",
+    "version": "1.0",
+    "name": "Smith chart",
+    "id": "spotfire-smith-chart-mod",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "gridDensity",
+            "type": "integer",
+            "defaultValue": "10"
+        },
+        {
+            "name": "extras",
+            "type": "boolean",
+            "defaultValue": "false"
+        }
+    ],
+    "dataViewDefinition": {
+        "tooltip": {
+            "enabled": true
+        },
+        "colorAxis": {
+            "mode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            },
+            "automaticConfiguration": {
+                "expressionHeuristics": "none"
+            }
+        },
+        "axes": [
+            {
+                "name": "Point",
+                "mode": "categorical",
+                "placement": "bottom",
+                "dropTarget": {
+                    "icon": "Tile",
+                    "description": "Use {0} on the mod's Point-axis"
+                },
+                "automaticConfiguration": {
+                    "expressionHeuristics": "none"
+                }
+            },
+            {
+                "name": "rReal",
+                "mode": "continuous",
+                "legendItem": {"title": "Reflection coefficient, Real part"},
+                "allowMultipleMeasures": false,
+                "placement": "left",
+                "automaticConfiguration": {
+                    "priority": "100"
+                },
+                "dropTarget": {
+                    "icon": "YAxis",
+                    "description": "Use {0} on the mod's Value-axis"
+                }
+            },
+            {
+                "name": "rImaginary",
+                "legendItem": {"title": "Reflection coefficient, imaginary part"},
+                "mode": "continuous",
+                "allowMultipleMeasures": false,
+                "placement": "left",
+                "automaticConfiguration": {
+                    "priority": "100"
+                },
+                "dropTarget": {
+                    "icon": "YAxis",
+                    "description": "Use {0} on the mod's Value-axis"
+                }
+            }
+        ]
+    },
+    "files": ["index.html", "main.css", "bundle.js"]
+}

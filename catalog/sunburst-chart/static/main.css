@@ -18,23 +18,51 @@ body,
 }
 
 #explanation {
+    overflow: hidden;
+    border-radius: 50%;
+    text-align: justify;
+    text-align: center;
+
     position: absolute;
-    margin: 0 43%;
-    height: 20%;
-    width: 14%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    left: 50%;
+    top: var(--top);
+    transform: translate(-50%, -50%);
+    height: var(--size);
+    width: var(--size);
+}
+
+/* Create two arcs that the texts follow to create a circle effect */
+#explanation i,
+#explanation::before {
+    content: "";
+    float: left;
+    height: 100%;
+    width: 50%;
+    shape-outside: radial-gradient(farthest-side at right, transparent calc(100% - var(--padding)), #fff 0);
+}
+
+#explanation i {
+    float: right;
+    shape-outside: radial-gradient(farthest-side at left, transparent calc(100% - var(--padding)), #fff 0);
 }
 
 #explanation #percentage {
-    font-size: max(5vmin, 10px);
-    white-space: nowrap;
+    padding-top: var(--padding-top);
+    font-size: var(--percentage-size);
+    white-space: pre-line;
+    line-break: anywhere;
 }
 
 #explanation #value{
+    font-size: var(--value-size);
+}
+
+#explanation #value-ellipsis{
     font-size: 2vmin;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 
 @media (max-width: 20em)   

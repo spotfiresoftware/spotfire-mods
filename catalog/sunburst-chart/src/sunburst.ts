@@ -84,6 +84,8 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         .descendants()
         .filter((d: any) => (d.depth || showOnlyRoot) && d.data.fill !== "transparent");
 
+    const innerRadius = visibleSectors.reduce((p, c) => (c.y0 < p ? c.y0 : p), radius);
+
     const sectors = svg
         .select("g#sectors")
         .selectAll("path")
@@ -201,9 +203,20 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
         mark: (d: any) => settings.mark(d.data),
+        getCenter(d: any) {
+            let c = arc.centroid(d);
+            return { x: c[0] + size.width / 2, y: c[1] + size.height / 2 };
+        },
         ignoredClickClasses: ["sector"],
-        classesToMark: "sector"
+        markingSelector: ".sector",
+        centerMarking: true
     });
+
+    d3.select("#explanation")
+        .style("--size", innerRadius * 2 + "px")
+        .style("--padding", 5 + "px")
+        .style("--padding-top", innerRadius / 3 + "px")
+        .style("--top", size.height / 2 + breadcrumbsHeight / 2 + "px");
 
     function getTransformData(data: any) {
         // d3.interpolate should not try to interpolate other properties
@@ -277,12 +290,26 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         let texts = settings.getCenterText(d.data);
         settings.onMouseover?.(d.data);
 
+        let explanationElem = document.querySelector("#explanation") as HTMLDivElement;
+        let paddingWrapper = document.querySelector("#padding-wrapper") as HTMLDivElement;
+        paddingWrapper.style.paddingTop = "0px";
+
         d3.select("#explanation").style("visibility", "visible");
-        d3.select("#percentage").text(texts.value);
-        d3.select("#value").text(texts.text);
+        d3.select("#percentage")
+            .text(texts.value)
+            .style("--percentage-size", Math.max(innerRadius / 5, 10) + "px");
+        d3.select("#value")
+            .text(texts.text)
+            .style("--value-size", Math.max(innerRadius / 7, 8) + "px");
+
+        let showEllipsis = explanationElem.offsetHeight < explanationElem.scrollHeight;
+
+        paddingWrapper.style.paddingTop = Math.max(5, (innerRadius * 2 - paddingWrapper.offsetHeight) / 2.5) + "px";
+
+        // Display ellipsis character at the end if the circle overflows.
+        (document.querySelector("#value-ellipsis") as HTMLDivElement)!.style.display = showEllipsis ? "block" : "none";
 
         let ancestors = getAncestors(d);
-        console.log(ancestors);
 
         d3.selectAll("path")
             .transition("sector hover")

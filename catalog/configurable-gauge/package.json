@@ -1,0 +1,31 @@
+{
+    "name": "gauge-mod",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.ts",
+    "scripts": {
+        "server": "mods-dev-server dist",
+        "build": "npm run ts && gulp build --compress",
+        "build-watch": "gulp watch",
+        "start": "npm run ts && npm run build-watch",
+        "test": "karma start",
+        "ts-watch": "tsc --watch",
+        "ts": "tsc"
+    },
+    "author": "objerke, ebrandin",
+    "license": "ISC",
+    "devDependencies": {
+        "@tibco/spotfire-mods-dev-server": "^1.0.1",
+        "@types/d3": "^5.16.4",
+        "@types/jasmine": "3.10.5",
+        "d3": "^5.14.2",
+        "esbuild": "0.14.34",
+        "gulp": "4.0.2",
+        "karma": "6.3.17",
+        "karma-chrome-launcher": "3.1.1",
+        "karma-esbuild": "2.2.4",
+        "karma-jasmine": "4.0.2",
+        "preact": "10.7.1",
+        "typescript": "4.6.3"
+    }
+}
