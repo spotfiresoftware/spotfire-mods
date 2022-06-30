@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "@tibco/spotfire-mods-dev-server": "^1.0.0",
+    "@tibco/spotfire-mods-dev-server": "^1.0.1",
     "@types/d3": "^6.7.0",
     "@types/node": "^16.9.1",
     "copy-webpack-plugin": "^6.0.3",
