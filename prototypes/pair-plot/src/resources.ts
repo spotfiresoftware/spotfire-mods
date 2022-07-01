@@ -15,22 +15,16 @@ export const resources = {
     triangle_heatmap: "Heat map"
 };
 
-export const enum DiagonalContent {
+export const enum CellContent {
     // Do not change. These are stored as mod propertis.
     Blank = 0,
     Stat = 1,
     ScatterPlot = 2,
     Histogram = 3,
     Distribution = 4,
-    BoxPlot = 5
-}
-
-export const enum TriangleContent {
-    // Do not change. As defined in mod manifest.
-    Blank = 0,
-    ScatterPlot = 1,
-    CorrelationStat = 2,
-    CorrelationColor = 3
+    BoxPlot = 5,
+    CorrelationStat = 6,
+    CorrelationColor = 7
 }
 
 export const ManifestConst = {

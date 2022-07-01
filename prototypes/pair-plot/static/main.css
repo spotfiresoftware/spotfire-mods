@@ -7,15 +7,79 @@ body,
 #border,
 #plot-content,
 #canvas-content {
+    user-select: none;
+    padding: 0;
+    overflow: hidden;
+}
+
+#plot-content,
+#canvas-content,
+#x-axes,
+#y-axes {
     position: absolute;
     top: 0;
     left: 0;
     margin: 0;
     height: 100%;
     width: 100%;
-    /* user-select: none; */
-    padding: 0;
-    overflow: hidden;
+}
+
+#content {
+    display: grid;
+    grid-template-columns: 50px 1fr 50px;
+    grid-template-rows: 50px 1fr 50px;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#top-grid {
+    position: relative;
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+#left-grid {
+    position: relative;
+    grid-column: 1;
+    grid-row: 2;
+}
+
+#right-grid {
+    position: relative;
+    grid-column: 3;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+#top-grid div,
+#right-grid div {
+    font-size: 20px;
+    margin: auto;
+    flex-grow: 1;
+    text-align: center;
+}
+
+#right-grid div {
+    writing-mode: vertical-lr;
+    text-orientation: sideways;
+}
+
+#bottom-grid {
+    position: relative;
+    grid-column: 2;
+    grid-row: 3;
+}
+
+#content-grid {
+    position: relative;
+    grid-column: 2;
+    grid-row: 2;
 }
 
 .rectangle {

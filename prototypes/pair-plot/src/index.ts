@@ -1,6 +1,6 @@
 import { Axis, DataView, Mod, ModProperty, Size } from "spotfire-api";
 import { render, PairPlotData } from "./pair-plot";
-import { TriangleContent, ManifestConst, resources, DiagonalContent } from "./resources";
+import { TriangleContent, ManifestConst, resources, CellContent } from "./resources";
 import { createSettingsButton } from "./settings";
 
 export function createTimerLog() {
@@ -44,7 +44,7 @@ window.Spotfire.initialize(async (mod) => {
 
     async function onChange(
         dataView: DataView,
-        diagonalContent: ModProperty<DiagonalContent>,
+        diagonalContent: ModProperty<CellContent>,
         upperContent: ModProperty<TriangleContent>,
         lowerContent: ModProperty<TriangleContent>,
         measureAxis: Axis,

@@ -8,7 +8,7 @@
         {
             "name": "Diagonal",
             "type": "integer",
-            "defaultValue": 1
+            "defaultValue": 0
         },
         {
             "name": "Upper",
@@ -18,7 +18,7 @@
         {
             "name": "Lower",
             "type": "integer",
-            "defaultValue": 1
+            "defaultValue": 2
         }
     ],
     "dataViewDefinition": {
