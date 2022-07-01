@@ -1,6 +1,6 @@
 import { Axis, DataView, Mod, ModProperty, Size } from "spotfire-api";
 import { render, PairPlotData } from "./pair-plot";
-import { TriangleContent, ManifestConst, resources, CellContent } from "./resources";
+import { ManifestConst, resources, CellContent } from "./resources";
 import { createSettingsButton } from "./settings";
 
 export function createTimerLog() {
@@ -19,13 +19,30 @@ export function createTimerLog() {
     };
 }
 
+function getSelectValues(select) {
+    var result = [];
+    var options = select && select.options;
+    var opt;
+  
+    for (var i=0, iLen=options.length; i<iLen; i++) {
+      opt = options[i];
+  
+      if (opt.selected) {
+        result.push(opt.value || opt.text);
+      }
+    }
+    return result;
+  }
+
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
     document.querySelector("#resetMandatoryExpressions button")!.addEventListener("click", () => {
+        const columns = getSelectValues(document.querySelector("select#columns"));
         document.querySelector("#resetMandatoryExpressions")!.classList.toggle("hidden", true);
         mod.visualization.axis(ManifestConst.ColumnNamesAxis).setExpression("<[Axis.Default.Names]>");
         mod.visualization.axis(ManifestConst.CountAxis).setExpression("Count()");
+        mod.visualization.axis(ManifestConst.MeasureAxis).setExpression(columns.map(name => `[${name}]`).join(","));
     });
 
     const reader = mod.createReader(
@@ -45,8 +62,8 @@ window.Spotfire.initialize(async (mod) => {
     async function onChange(
         dataView: DataView,
         diagonalContent: ModProperty<CellContent>,
-        upperContent: ModProperty<TriangleContent>,
-        lowerContent: ModProperty<TriangleContent>,
+        upperContent: ModProperty<CellContent>,
+        lowerContent: ModProperty<CellContent>,
         measureAxis: Axis,
         measureNamesAxis: Axis,
         countAxis: Axis,
@@ -54,12 +71,12 @@ window.Spotfire.initialize(async (mod) => {
         size: Size
     ) {
         let timerLog = createTimerLog();
-        if (measureAxis.parts.length < 2) {
-            mod.controls.errorOverlay.show("Select two or more measures.", "Measures");
-            return;
-        }
+        // if (measureAxis.parts.length < 2) {
+        //     mod.controls.errorOverlay.show("Select two or more measures.", "Measures");
+        //     return;
+        // }
 
-        mod.controls.errorOverlay.hide("Measures");
+        // mod.controls.errorOverlay.hide("Measures");
 
         if (colorAxis.isCategorical && colorAxis.parts.find((p) => p.expression.includes("[Axis.Default.Names]"))) {
             mod.controls.errorOverlay.show(
@@ -73,6 +90,7 @@ window.Spotfire.initialize(async (mod) => {
 
         // Ideally would these axes expressions be set by the manifest.
         const showConfigError =
+            measureAxis.parts.length < 2 ||
             (measureAxis.parts.length > 1 && measureNamesAxis.expression != "<[Axis.Default.Names]>") ||
             countAxis.expression.toLowerCase() != "count()";
 
@@ -80,6 +98,18 @@ window.Spotfire.initialize(async (mod) => {
         document.getElementById("content")!.classList.toggle("hidden", showConfigError);
 
         if (showConfigError) {
+            let columnsSelect = document.querySelector("select#columns");
+            let columns = await (
+                await (await mod.visualization.mainTable()).columns()
+            ).filter((c) => c.dataType.isNumber());
+            columns.forEach((c) => {
+                const option = document.createElement("option");
+                option.value = c.name;
+                option.text = c.name;
+                columnsSelect?.appendChild(option);
+            });
+
+
             return;
         }
 
@@ -120,7 +150,9 @@ window.Spotfire.initialize(async (mod) => {
         };
         timerLog.add("Transpose");
 
-        render(data, diagonalContent.value(), upperContent.value(), lowerContent.value(), size, () => dataView.hasExpired());
+        render(data, diagonalContent.value(), upperContent.value(), lowerContent.value(), size, () =>
+            dataView.hasExpired()
+        );
 
         timerLog.add("Render");
         //timerLog.log();
