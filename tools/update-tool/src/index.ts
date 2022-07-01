@@ -14,23 +14,64 @@ const ignoredFolders = ["tools", "prototypes", "catalog"];
 
 const versionCache: { [packageName: string]: string } = {};
 
-main();
+require("yargs")
+    .scriptName("mods-updater")
+    .usage("$0 <cmd> [args]")
+    .command(
+        "test <mods folder>",
+        "Test to install and build all examples",
+        (yargs: any) => {
+            yargs.positional("mods folder", {
+                describe: "Root folder of the spotfire mods GitHub repo.",
+                type: "string"
+            });
+        },
+        function (argv: { [key: string]: any }) {
+            test(argv.modsfolder);
+        }
+    )
+    .command(
+        "update <mods folder> [major]",
+        "Update all mod examples to their latest version",
+        (yargs: any) => {
+            yargs.positional("mods folder", {
+                describe: "Root folder of the spotfire mods GitHub repo.",
+                type: "string"
+            });
 
-async function main() {
-    let projects = await findModsProjects();
+            yargs.positional("major", {
+                type: "boolean",
+                default: false,
+                describe: "Update to latest major version"
+            });
+        },
+        function (argv: { [key: string]: any }) {
+            updater(argv.modsfolder, argv.major);
+        }
+    )
+    .help().argv;
+
+async function test(rootFolder: string) {
+    let projects = await findModsProjects(rootFolder);
     console.log(`Found ${projects.length} projects.`);
-    await updateProjects(projects);
     await installAndBuildProjects(projects);
+}
+
+async function updater(rootFolder: string, major: boolean) {
+    let projects = await findModsProjects(rootFolder);
+    console.log(`Found ${projects.length} projects to test.`);
+    await updateProjects(projects, major);
 }
 
 /**
  * Find all mod projects in the repository.
  * @returns A list of matching Mod projects.
  */
-async function findModsProjects(): Promise<ModProject[]> {
+async function findModsProjects(rootFolder: string): Promise<ModProject[]> {
     /** @type string[] */
     let matches = await glob(
-        `./../../!(${ignoredFolders.join("|")})/*/package.json`,
+        path.resolve(rootFolder) +
+            `/!(${ignoredFolders.join("|")})/*/package.json`,
         {
             ignore: "*node_modules*"
         }
@@ -73,26 +114,50 @@ async function latestVersion(npmPackage: string) {
 }
 
 /**
+ * Get the latest stable minor version of an npm package.
+ * @param npmPackage Name of npm package
+ * @param currentMajorVersion The current major version
+ * @returns The latest minor version
+ */
+async function latestMinorVersion(
+    npmPackage: string,
+    currentMajorVersion: string
+) {
+    if (versionCache[npmPackage + currentMajorVersion]) {
+        return versionCache[npmPackage + currentMajorVersion];
+    }
+
+    let versions = await getResults(
+        `npm show ${npmPackage}@${currentMajorVersion} version --json`
+    );
+    let latest = versions[versions.length - 1];
+    versionCache[npmPackage + currentMajorVersion] = latest;
+    return latest;
+}
+
+/**
  * Update all dependencies in package.json for all provided projects,
  * @param projects The projects to update
  */
-async function updateProjects(projects: ModProject[]) {
+async function updateProjects(projects: ModProject[], major: boolean) {
     for (const project of projects) {
         console.log("*********************************");
         console.log(project.name);
-        await updateDependencies(project, false);
+        await updateDependencies(project, major, false);
         console.log("**");
-        await updateDependencies(project, true);
+        await updateDependencies(project, major, true);
     }
 }
 
 /**
  *
  * @param project The mod project to update
+ * @param major Whether or not to update major versions.
  * @param updateDevDependencies Whether or not to update dependencies or dev dependencies.
  */
 async function updateDependencies(
     project: ModProject,
+    major: boolean,
     updateDevDependencies: boolean
 ) {
     const dependencies: { [dependency: string]: string } =
@@ -101,8 +166,17 @@ async function updateDependencies(
             : project.package.dependences) || {};
 
     for (const packageName of Object.keys(dependencies)) {
-        const latest = await latestVersion(packageName);
         const current = dependencies[packageName];
+
+        let latest: string;
+        if (major) {
+            latest = await latestVersion(packageName);
+        } else {
+            latest = await latestMinorVersion(
+                packageName,
+                current.slice(0, current.indexOf("."))
+            );
+        }
 
         if (
             latest != current &&
