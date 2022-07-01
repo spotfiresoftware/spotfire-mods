@@ -64,10 +64,13 @@ export async function render(
         await asyncForeach(cells, drawCell);
     } catch {
         // Wait for next render loop when data expires
-        return;
+        //return;
     }
 
     document.querySelector("#canvas-content")!.replaceChildren(canvas);
+    document.querySelector("#plot-content")!.textContent = "";
+    document.querySelector("#y-axes")!.textContent = "";
+    document.querySelector("#x-axes")!.textContent = "";
 
     const d3_plot_content = d3.select("#plot-content");
     const d3_y_axes = d3.select("#y-axes");
@@ -75,15 +78,11 @@ export async function render(
     const top_measures = document.querySelector("#top-grid");
     const right_measures = document.querySelector("#right-grid");
 
-
-    function createMeasureName(name: string){
+    function createMeasureName(name: string) {
         const div = document.createElement("div");
         div.textContent = name;
         return div;
     }
-
-    top_measures?.replaceChildren(...data.measures.map(createMeasureName));
-    right_measures?.replaceChildren(...data.measures.map(createMeasureName));
 
     d3_plot_content
         .selectAll(".outline")
@@ -99,7 +98,6 @@ export async function render(
         .style("stroke-width", 1)
         .style("fill", "transparent");
 
-    
     scales.forEach((_, i) => {
         d3_x_axes
             .append("svg:g")
@@ -112,6 +110,9 @@ export async function render(
             .attr("transform", () => `translate(49 ${i * height + padding * height}) `)
             .call(axes[i].yAxis as any);
     });
+
+    top_measures?.replaceChildren(...data.measures.map(createMeasureName));
+    right_measures?.replaceChildren(...data.measures.map(createMeasureName));
 
     async function drawCell(cell: { x: number; y: number }) {
         if (await hasExpired()) {
