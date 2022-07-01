@@ -1,14 +1,7 @@
 import { Axis, DataView, Mod, ModProperty, Size } from "spotfire-api";
 import { render, PairPlotData } from "./pair-plot";
-import { resources } from "./resources";
-
-const columnNamesAxisName = "ColumnNames";
-const countAxisName = "Count";
-const diagonalPropertyName = "Diagonal";
-const colorAxisName = "Color";
-const measureAxisName = "Measures";
-
-export type Diagonal = "measure-names" | "histogram" | "distribution" | "statistics" | "box-plot";
+import { TriangleContent, ManifestConst, resources, DiagonalContent } from "./resources";
+import { createSettingsButton } from "./settings";
 
 export function createTimerLog() {
     let times = [{ desc: "start", t: Date.now() }];
@@ -31,17 +24,19 @@ window.Spotfire.initialize(async (mod) => {
 
     document.querySelector("#resetMandatoryExpressions button")!.addEventListener("click", () => {
         document.querySelector("#resetMandatoryExpressions")!.classList.toggle("hidden", true);
-        mod.visualization.axis(columnNamesAxisName).setExpression("<[Axis.Default.Names]>");
-        mod.visualization.axis(countAxisName).setExpression("Count()");
+        mod.visualization.axis(ManifestConst.ColumnNamesAxis).setExpression("<[Axis.Default.Names]>");
+        mod.visualization.axis(ManifestConst.CountAxis).setExpression("Count()");
     });
 
     const reader = mod.createReader(
         mod.visualization.data(),
-        mod.property(diagonalPropertyName),
-        mod.visualization.axis(measureAxisName),
-        mod.visualization.axis(columnNamesAxisName),
-        mod.visualization.axis(countAxisName),
-        mod.visualization.axis(colorAxisName),
+        mod.property(ManifestConst.Diagonal),
+        mod.property(ManifestConst.Upper),
+        mod.property(ManifestConst.Lower),
+        mod.visualization.axis(ManifestConst.MeasureAxis),
+        mod.visualization.axis(ManifestConst.ColumnNamesAxis),
+        mod.visualization.axis(ManifestConst.CountAxis),
+        mod.visualization.axis(ManifestConst.ColorAxis),
         mod.windowSize()
     );
 
@@ -49,7 +44,9 @@ window.Spotfire.initialize(async (mod) => {
 
     async function onChange(
         dataView: DataView,
-        diagonalProperty: ModProperty<Diagonal>,
+        diagonalContent: ModProperty<DiagonalContent>,
+        upperContent: ModProperty<TriangleContent>,
+        lowerContent: ModProperty<TriangleContent>,
         measureAxis: Axis,
         measureNamesAxis: Axis,
         countAxis: Axis,
@@ -74,9 +71,11 @@ window.Spotfire.initialize(async (mod) => {
 
         mod.controls.errorOverlay.hide("color");
 
+        // Ideally would these axes expressions be set by the manifest.
         const showConfigError =
             (measureAxis.parts.length > 1 && measureNamesAxis.expression != "<[Axis.Default.Names]>") ||
-            (diagonalProperty.value() != "measure-names" && countAxis.expression.toLowerCase() != "count()");
+            countAxis.expression.toLowerCase() != "count()";
+
         document.getElementById("resetMandatoryExpressions")!.classList.toggle("hidden", !showConfigError);
         document.getElementById("content")!.classList.toggle("hidden", showConfigError);
 
@@ -84,7 +83,7 @@ window.Spotfire.initialize(async (mod) => {
             return;
         }
 
-        const measures = (await (await dataView.hierarchy(columnNamesAxisName))!.root())?.leaves();
+        const measures = (await (await dataView.hierarchy(ManifestConst.ColumnNamesAxis))!.root())?.leaves();
         const columnNamesLeafIndices = measures?.map((l) => l.leafIndex) || [];
         const rows = await dataView.allRows();
         if (!measures || rows == null) {
@@ -100,13 +99,13 @@ window.Spotfire.initialize(async (mod) => {
         const marked = rows!.slice(0, markerCount).map((r) => r.isMarked());
         const colors = rows!.slice(0, markerCount).map((r) => r.color().hexCode);
         const count = countAxis.expression
-            ? rows!.slice(0, markerCount).map((r) => r.continuous(countAxisName).value() as number)
+            ? rows!.slice(0, markerCount).map((r) => r.continuous(ManifestConst.CountAxis).value() as number)
             : null;
 
         const tooltips = rows!.slice(0, markerCount).map((r) => () => mod.controls.tooltip.show(r));
         timerLog.add("Read colors");
 
-        const tallSkinny = rows!.map((r, i) => r.continuous(measureAxisName).value());
+        const tallSkinny = rows!.map((r, i) => r.continuous(ManifestConst.MeasureAxis).value());
         const points = transpose<number>(arrayToMatrix(tallSkinny, markerCount));
 
         var data: PairPlotData = {
@@ -121,11 +120,12 @@ window.Spotfire.initialize(async (mod) => {
         };
         timerLog.add("Transpose");
 
-        render(data, diagonalProperty.value() || "measure-names", size, dataView);
+        render(data, diagonalContent.value(), upperContent.value(), lowerContent.value(), size, () => dataView.hasExpired());
+
         timerLog.add("Render");
         //timerLog.log();
 
-        renderSettingsButton(mod, diagonalProperty);
+        createSettingsButton(mod, diagonalContent, upperContent, lowerContent);
 
         context.signalRenderComplete();
     }
@@ -141,58 +141,5 @@ window.Spotfire.initialize(async (mod) => {
         }
 
         return results;
-    }
-
-    function renderSettingsButton(mod: Mod, diagonal: ModProperty<Diagonal>) {
-        let settingsButton = document.querySelector<HTMLElement>(".settings");
-        settingsButton?.classList.toggle("visible", mod.getRenderContext().isEditing);
-        let pos = settingsButton!.getBoundingClientRect();
-
-        function createDiagonalButton(value: Diagonal, text: string) {
-            return {
-                enabled: true,
-                name: "diagonal",
-                value,
-                checked: diagonal.value() == value,
-                text
-            };
-        }
-        settingsButton!.onclick = () => {
-            mod.controls.popout.show(
-                {
-                    x: pos.left + pos.width / 2,
-                    y: pos.top + pos.height,
-                    autoClose: true,
-                    alignment: "Top",
-                    onChange(event) {
-                        if (event.name == "diagonal") {
-                            diagonal.set(event.value);
-                        }
-                    }
-                },
-                () => [
-                    mod.controls.popout.section({
-                        heading: resources.diagonal,
-                        children: [
-                            mod.controls.popout.components.radioButton(
-                                createDiagonalButton("measure-names", resources.diagonal_measures)
-                            ),
-                            mod.controls.popout.components.radioButton(
-                                createDiagonalButton("statistics", resources.diagonal_stat)
-                            ),
-                            mod.controls.popout.components.radioButton(
-                                createDiagonalButton("histogram", resources.diagonal_histogram)
-                            ),
-                            mod.controls.popout.components.radioButton(
-                                createDiagonalButton("distribution", resources.diagonal_distribution)
-                            ),
-                            mod.controls.popout.components.radioButton(
-                                createDiagonalButton("box-plot", resources.diagonal_box_plot)
-                            )
-                        ]
-                    })
-                ]
-            );
-        };
     }
 });

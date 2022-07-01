@@ -7,8 +7,18 @@
     "properties": [
         {
             "name": "Diagonal",
-            "type": "string",
-            "defaultValue": "measure-names"
+            "type": "integer",
+            "defaultValue": 1
+        },
+        {
+            "name": "Upper",
+            "type": "integer",
+            "defaultValue": 0
+        },
+        {
+            "name": "Lower",
+            "type": "integer",
+            "defaultValue": 1
         }
     ],
     "dataViewDefinition": {
@@ -38,7 +48,7 @@
                 "placement": "none",
                 "legendItem": { "defaultVisibility": "hidden" },
                 "propertyControl": { "visibility": "visible" },
-                "automaticConfiguration": { "expressionHeuristics": "none", "priority": 100 }
+                "automaticConfiguration": { "expressionHeuristics": "none" }
             },
             {
                 "name": "Count",

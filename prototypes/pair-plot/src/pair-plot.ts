@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import { Size } from "spotfire-api";
-import { Diagonal } from "./index";
 import { rectangularSelection } from "./rectangularMarking";
-import { nonBlockingForEach } from "./util";
+import { DiagonalContent, TriangleContent } from "./resources";
+import { asyncForeach } from "./util";
 
 const padding = 0.1;
 export interface PairPlotData {
@@ -16,9 +16,15 @@ export interface PairPlotData {
     hideTooltips: () => void;
 }
 
-export async function render(data: PairPlotData, diagonal: Diagonal, size: Size, dataView: Spotfire.DataView) {
+export async function render(
+    data: PairPlotData,
+    diagonal: DiagonalContent | null,
+    upper: TriangleContent | null,
+    lower: TriangleContent | null,
+    size: Size,
+    hasExpired: () => Promise<boolean>
+) {
     console.log(data);
-    const useCanvas = data.points.length * data.measures.length > 10000;
     const measureCount = data.measures.length;
 
     document.querySelector("#canvas-content")!.textContent = "";
@@ -39,7 +45,7 @@ export async function render(data: PairPlotData, diagonal: Diagonal, size: Size,
         }))
     );
 
-    let scatterCells = cells.filter((d) => d.x != d.y);
+    let nonDiagonalCells = cells.filter((d) => d.x != d.y);
 
     const scales = data.measures
         .map((_, i) => data.points.map((p) => p[i]).filter((v) => v != null))
@@ -92,74 +98,28 @@ export async function render(data: PairPlotData, diagonal: Diagonal, size: Size,
             .attr("y", () => `${Math.round(((2 * i + 1) / (2 * measureCount)) * 100)}%`)
             .attr("dominant-baseline", "bottom")
             .attr("text-anchor", "middle")
-            .text((_) =>
-                diagonal == "measure-names" ? data.measures[i] : `TODO - Show ${diagonal} for ${data.measures[i]}`
-            );
+            .text((_) => `TODO - Show ${diagonal} for ${data.measures[i]}`);
     });
 
-    if (useCanvas) {
-        await nonBlockingForEach(scatterCells, drawScatterCell);
-    } else {
-        let scatterCell = svg
-            .attr("viewBox", `0 0 ${clientWidth} ${clientHeight}`)
-            .selectAll(".scatterCell")
-            .data(scatterCells)
-            .enter()
-            .append("svg:g")
-            .attr("class", "scatterCell")
-            .attr("transform", (d) => `translate(${d.x * width + padding * width} ${d.y * height + padding * height}) `)
-            .attr("width", width * (1 - 2 * padding))
-            .attr("height", height * (1 - 2 * padding));
+    asyncForeach(nonDiagonalCells, drawCell);
 
-        const d3Circles = scatterCell
-            .selectAll("circle")
-            .data(
-                (d) =>
-                    data.points
-                        .map((p, index) => {
-                            const x = p[d.x];
-                            const y = p[d.y];
-                            return x && y ? { x: scales[d.x].xScale(x), y: scales[d.y].yScale(y), index } : null;
-                        })
-                        .filter((p) => p != null),
-                (d) => ""
-            )
-            .enter()
-            .append("circle")
-            .attr("class", "circle")
-            .attr("cx", (d) => d!.x!)
-            .attr("cy", (d) => d!.y!)
-            .attr("r", Math.min(width, height) / 50)
-            .attr("fill", (d) => data.colors[d!.index])
-            .attr("stroke", "black")
-            .attr("stroke-width", Math.min(2, Math.min(width, height) / 500))
-            .on("click", (d) => data.mark(d!.index))
-            .on("mouseover", (d) => {
-                data.tooltips[d!.index]();
-            })
-            .on("mouseleave", (_) => {
-                data.hideTooltips();
-            });
-
-        scatterCell.exit().remove();
-        d3Circles.exit().remove();
-
-        rectangularSelection(svg, {
-            clearMarking: () => {},
-            mark: (d: any) => data.mark(d.index),
-            ignoredClickClasses: ["circle"],
-            classesToMark: "circle"
-        });
-    }
-
-    async function drawScatterCell(cell: { x: number; y: number }) {
-        if (await dataView.hasExpired()) {
+    async function drawCell(cell: { x: number; y: number }) {
+        if (await hasExpired()) {
             document.querySelector("#canvas-content")!.textContent = "";
             return;
         }
 
         const row = cell.x;
         const col = cell.y;
+
+        let content = row > col ? upper : lower;
+        switch (content) {
+            case TriangleContent.ScatterPlot:
+                drawScatterCell(row, col);
+        }
+    }
+
+    function drawScatterCell(row: number, col: number) {
         let cc = createCanvasContext(row, col);
         const lineWidth = Math.max(0.2, Math.min(width, height) / 4000);
 

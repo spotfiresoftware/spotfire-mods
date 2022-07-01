@@ -1,4 +1,4 @@
-export async function nonBlockingForEach<T>(
+export async function asyncForeach<T>(
     list: T[],
     cb: (element: T, index: number, list: T[]) => void
 ) {
