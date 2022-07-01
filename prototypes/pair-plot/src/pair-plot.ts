@@ -24,19 +24,10 @@ export async function render(
     size: Size,
     hasExpired: () => Promise<boolean>
 ) {
-    console.log(data);
     const measureCount = data.measures.length;
-
-    document.querySelector("#canvas-content")!.textContent = "";
 
     const d3Content = document.querySelector("#plot-content")!;
     var { clientWidth, clientHeight } = d3Content;
-
-    const width = clientWidth / measureCount;
-    const height = clientHeight / measureCount;
-
-    d3Content.innerHTML = "";
-    const svg = d3.select("#plot-content");
 
     let cells = data.measures.flatMap((_, x) =>
         data.measures.map((_, y) => ({
@@ -46,6 +37,12 @@ export async function render(
     );
 
     let nonDiagonalCells = cells.filter((d) => d.x != d.y);
+
+    const width = clientWidth / measureCount;
+    const height = clientHeight / measureCount;
+
+    d3Content.innerHTML = "";
+    const svg = d3.select("#plot-content");
 
     const scales = data.measures
         .map((_, i) => data.points.map((p) => p[i]).filter((v) => v != null))
@@ -101,12 +98,18 @@ export async function render(
             .text((_) => `TODO - Show ${diagonal} for ${data.measures[i]}`);
     });
 
-    asyncForeach(nonDiagonalCells, drawCell);
+    let { cell, context } = createCanvasContext();
+    try {
+        await asyncForeach(nonDiagonalCells, drawCell);
+    } catch {
+        // Wait for next render loop
+    }
+
+    document.querySelector("#canvas-content")!.replaceChildren(cell);
 
     async function drawCell(cell: { x: number; y: number }) {
         if (await hasExpired()) {
-            document.querySelector("#canvas-content")!.textContent = "";
-            return;
+            throw "Dataview expired";
         }
 
         const row = cell.x;
@@ -120,7 +123,6 @@ export async function render(
     }
 
     function drawScatterCell(row: number, col: number) {
-        let cc = createCanvasContext(row, col);
         const lineWidth = Math.max(0.2, Math.min(width, height) / 4000);
 
         data.points.forEach(getRenderer(false));
@@ -129,31 +131,31 @@ export async function render(
         function getRenderer(renderMarkedRows: boolean) {
             return (point: (number | null)[], index: number) => {
                 if (point[col] && point[row] && data.marked[index] == renderMarkedRows) {
-                    let left = scales[row].xScale(point[row]!)! + padding * (size.width / measureCount);
-                    let top = scales[col].yScale(point[col]!)! + padding * (size.height / measureCount);
-                    if (cc) {
-                        cc.beginPath();
-                        cc.arc(left, top, Math.min(size.height, size.width) / 50 / measureCount, 0, 2 * Math.PI);
-                        cc.fillStyle = data.colors[index];
-                        cc.fill();
-                        cc.lineWidth = lineWidth;
-                        cc.strokeStyle = "black";
-                        cc.stroke();
+                    const left = scales[row].xScale(point[row]!)! + (padding + row) * (size.width / measureCount);
+                    const top = scales[col].yScale(point[col]!)! + (padding + col) * (size.height / measureCount);
+                    const r = Math.min(size.height, size.width) / 50 / measureCount;
+                    const color = data.colors[index];
+                    if (context) {
+                        context.beginPath();
+                        context.arc(left, top, r, 0, 2 * Math.PI);
+                        context.fillStyle = color;
+                        context.fill();
+                        context.lineWidth = lineWidth;
+                        context.strokeStyle = "black";
+                        context.stroke();
                     }
                 }
             };
         }
     }
 
-    function createCanvasContext(row: number, col: number) {
+    function createCanvasContext() {
         let cell = document.createElement("canvas");
-        cell.setAttribute("width", `${size.width / measureCount}px`);
-        cell.setAttribute("height", `${size.height / measureCount}px`);
-        cell.style.left = `${(row * size.width) / measureCount}px`;
-        cell.style.top = `${(col * size.height) / measureCount}px`;
+        cell.setAttribute("width", `${size.width}px`);
+        cell.setAttribute("height", `${size.height}px`);
+        cell.style.left = "0";
+        cell.style.top = "0";
         cell.style.position = "absolute";
-        cell.setAttribute("id", `canvas-cell-${row}-${col}`);
-        document.querySelector("#canvas-content")?.appendChild(cell);
-        return cell.getContext("2d");
+        return { cell, context: cell.getContext("2d") };
     }
 }
