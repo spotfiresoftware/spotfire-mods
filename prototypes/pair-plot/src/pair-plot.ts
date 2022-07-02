@@ -58,6 +58,21 @@ export async function render(
         yAxis: d3.axisLeft(a.yScale).ticks(Math.max(2, Math.min(5, height / 100)))
     }));
 
+    // Create the html cells and the border
+    const htmlCells = data.measures
+        .map((_, row) =>
+            data.measures.map((_, col) => {
+                const cell = document.createElement("div");
+                cell.style.gridRow = `${row + 1}`;
+                cell.style.gridColumn = `${col + 1}`;
+                cell.id = `html-cell-${row}-${col}`;
+                return cell;
+            })
+        )
+        .flat();
+
+    document.querySelector("#html-content")?.replaceChildren(...htmlCells);
+
     let { canvas, context } = createCanvas();
     try {
         await asyncForeach(cells, drawCell);
@@ -67,7 +82,6 @@ export async function render(
     }
 
     document.querySelector("#canvas-content")!.replaceChildren(canvas);
-    document.querySelector("#html-content")!.textContent = "";
     document.querySelector("#y-axes")!.textContent = "";
     document.querySelector("#x-axes")!.textContent = "";
 
@@ -82,21 +96,6 @@ export async function render(
         div.title = name;
         return div;
     }
-
-    // Create the html cells and the border
-    const htmlCells = data.measures
-        .map((_, row) =>
-            data.measures.map((_, col) => {
-                const cell = document.createElement("div");
-                cell.style.gridRow = `${row + 1}`;
-                cell.style.gridColumn = `${col + 1}`;
-                return cell;
-            })
-        )
-        .flat();
-
-    document.querySelector("#html-content")?.replaceChildren(...htmlCells);
-
 
     // Create all scales
     scales.forEach((_, i) => {
@@ -120,13 +119,42 @@ export async function render(
             throw "Dataview expired";
         }
 
-        const row = cell.x;
-        const col = cell.y;
+        const col = cell.x;
+        const row = cell.y;
 
-        let content = row == col ? diagonal : row > col ? upper : lower;
+        let content = row == col ? diagonal : row > col ? lower : upper;
+        let htmlCell = document.querySelector(`#html-cell-${row}-${col}`)!;
         switch (content) {
             case CellContent.ScatterPlot:
                 drawScatterCell(row, col);
+                break;
+            case CellContent.Stats:
+                htmlCell.textContent = `TODO - Calculate stats (min, max, mean, quartiles etc for ${data.measures[row]}.`;
+                break;
+            case CellContent.BoxPlot:
+                htmlCell.textContent = `TODO - Box plot for ${data.measures[row]}.`;
+                break;
+            case CellContent.CorrelationColor:
+                htmlCell.textContent = `TODO - Calculate correltation between ${data.measures[row]} and ${data.measures[col]} and show as color.`;
+                break;
+            case CellContent.CorrelationStat:
+                htmlCell.textContent = `TODO - Calculate correltation between ${data.measures[row]} and ${data.measures[col]} and show the numbers.`;
+                break;
+            case CellContent.Density:
+                htmlCell.textContent = `TODO - Show a density plot for ${data.measures[row]} using a kernel density estimation.`;
+                break;
+            case CellContent.Histogram:
+                htmlCell.textContent = `TODO - Show a histogram for ${data.measures[row]}. Determine bins from available size.`;
+                break;
+            case CellContent.HeatMap:
+                htmlCell.textContent = `TODO - Show a heatmap for ${data.measures[row]} vs ${data.measures[col]}. Determine bins from available size.`;
+                break;
+            case CellContent.ContourPlot:
+                htmlCell.textContent = `TODO - Show a contour plot for ${data.measures[row]} vs ${data.measures[col]}.`;
+                break;
+            case CellContent.Blank:
+                // Content is blank by default
+                break;
         }
     }
 
@@ -139,8 +167,8 @@ export async function render(
         function getRenderer(renderMarkedRows: boolean) {
             return (point: (number | null)[], index: number) => {
                 if (point[col] && point[row] && data.marked[index] == renderMarkedRows) {
-                    const left = scales[row].xScale(point[row]!)! + (padding + row) * (clientWidth / measureCount);
-                    const top = scales[col].yScale(point[col]!)! + (padding + col) * (clientHeight / measureCount);
+                    const left = scales[col].xScale(point[col]!)! + (padding + col) * (clientWidth / measureCount);
+                    const top = scales[row].yScale(point[row]!)! + (padding + row) * (clientHeight / measureCount);
                     const r = Math.min(clientHeight, clientWidth) / 50 / measureCount;
                     const color = data.colors[index];
                     if (context) {
