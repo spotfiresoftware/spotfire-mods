@@ -19,30 +19,29 @@ export function createTimerLog() {
     };
 }
 
-function getSelectValues(select) {
+function getSelectValues(elements: NodeListOf<HTMLInputElement>) {
     var result = [];
-    var options = select && select.options;
-    var opt;
-  
-    for (var i=0, iLen=options.length; i<iLen; i++) {
-      opt = options[i];
-  
-      if (opt.selected) {
-        result.push(opt.value || opt.text);
-      }
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].checked) {
+            result.push(elements[i].value);
+        }
     }
     return result;
-  }
+}
 
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
     document.querySelector("#resetMandatoryExpressions button")!.addEventListener("click", () => {
-        const columns = getSelectValues(document.querySelector("select#columns"));
+        const columns = getSelectValues(
+            document.querySelectorAll(
+                "#column-selection input[type='checkbox']:checked"
+            ) as NodeListOf<HTMLInputElement>
+        );
         document.querySelector("#resetMandatoryExpressions")!.classList.toggle("hidden", true);
         mod.visualization.axis(ManifestConst.ColumnNamesAxis).setExpression("<[Axis.Default.Names]>");
         mod.visualization.axis(ManifestConst.CountAxis).setExpression("Count()");
-        mod.visualization.axis(ManifestConst.MeasureAxis).setExpression(columns.map(name => `[${name}]`).join(","));
+        mod.visualization.axis(ManifestConst.MeasureAxis).setExpression(columns.map((name) => `[${name}]`).join(","));
     });
 
     const reader = mod.createReader(
@@ -98,17 +97,24 @@ window.Spotfire.initialize(async (mod) => {
         document.getElementById("content")!.classList.toggle("hidden", showConfigError);
 
         if (showConfigError) {
-            let columnsSelect = document.querySelector("select#columns");
-            let columns = await (
+            const selectionWrapper = document.querySelector("#column-selection");
+            selectionWrapper!.textContent = "";
+            const columns = await (
                 await (await mod.visualization.mainTable()).columns()
             ).filter((c) => c.dataType.isNumber());
-            columns.forEach((c) => {
-                const option = document.createElement("option");
-                option.value = c.name;
-                option.text = c.name;
-                columnsSelect?.appendChild(option);
+            columns.forEach((c, i) => {
+                const input = document.createElement("input");
+                input.type = "checkbox";
+                input.value = c.name;
+                input.name = "column";
+                input.id = `column-${i}`;
+                const label = document.createElement("label")
+                label.setAttribute("for", input.id);
+                label.textContent = c.name
+                const div = document.createElement("div");
+                div.replaceChildren(input, label);
+                selectionWrapper?.appendChild(div);
             });
-
 
             return;
         }
