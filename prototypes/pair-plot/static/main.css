@@ -26,8 +26,8 @@ body,
 
 #content {
     display: grid;
-    grid-template-columns: 50px 1fr 50px;
-    grid-template-rows: 50px 1fr 50px;
+    grid-template-columns: 50px auto 24px;
+    grid-template-rows: 20px auto 30px;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     position: absolute;
@@ -59,15 +59,19 @@ body,
 
 #top-grid div,
 #right-grid div {
-    font-size: 20px;
-    margin: auto;
-    flex-grow: 1;
+    font-size: 14px;
     text-align: center;
+    flex: 1 1 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 0 4px;
 }
 
 #right-grid div {
     writing-mode: vertical-lr;
     text-orientation: sideways;
+    margin: 4px 0;
 }
 
 #bottom-grid {
@@ -80,6 +84,23 @@ body,
     position: relative;
     grid-column: 2;
     grid-row: 2;
+}
+
+#html-content {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 1fr;
+    grid-gap: 1px;
+    height:100%;
+    width:100%;
+    background-color:#ccc;
+    border: solid 1px #ccc
+}
+
+#html-content div
+{
+    /* TODO Set this via API */
+    background-color:white;
 }
 
 .rectangle {

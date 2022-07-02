@@ -25,8 +25,7 @@ export async function render(
     hasExpired: () => Promise<boolean>
 ) {
     const measureCount = data.measures.length;
-    const d3Content = document.querySelector("#plot-content")!;
-    const { clientWidth, clientHeight } = d3Content;
+    const { clientWidth, clientHeight } = document.querySelector("#canvas-content")!;
     const width = clientWidth / measureCount;
     const height = clientHeight / measureCount;
 
@@ -68,11 +67,10 @@ export async function render(
     }
 
     document.querySelector("#canvas-content")!.replaceChildren(canvas);
-    document.querySelector("#plot-content")!.textContent = "";
+    document.querySelector("#html-content")!.textContent = "";
     document.querySelector("#y-axes")!.textContent = "";
     document.querySelector("#x-axes")!.textContent = "";
 
-    const d3_plot_content = d3.select("#plot-content");
     const d3_y_axes = d3.select("#y-axes");
     const d3_x_axes = d3.select("#x-axes");
     const top_measures = document.querySelector("#top-grid");
@@ -81,23 +79,26 @@ export async function render(
     function createMeasureName(name: string) {
         const div = document.createElement("div");
         div.textContent = name;
+        div.title = name;
         return div;
     }
 
-    d3_plot_content
-        .selectAll(".outline")
-        .data(cells)
-        .enter()
-        .append("svg:rect")
-        .attr("class", "outline")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("x", (d) => d.x * width)
-        .attr("y", (d) => d.y * height)
-        .style("stroke", "#bbb")
-        .style("stroke-width", 1)
-        .style("fill", "transparent");
+    // Create the html cells and the border
+    const htmlCells = data.measures
+        .map((_, row) =>
+            data.measures.map((_, col) => {
+                const cell = document.createElement("div");
+                cell.style.gridRow = `${row + 1}`;
+                cell.style.gridColumn = `${col + 1}`;
+                return cell;
+            })
+        )
+        .flat();
 
+    document.querySelector("#html-content")?.replaceChildren(...htmlCells);
+
+
+    // Create all scales
     scales.forEach((_, i) => {
         d3_x_axes
             .append("svg:g")
