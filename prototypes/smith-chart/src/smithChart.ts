@@ -4,6 +4,9 @@ import { rectangularSelection } from "./rectangularMarking";
 
 export type ComplexNumber = [real: number, imaginary: number];
 
+const fullCircle = Math.PI*2;
+const halfCircle = Math.PI;
+
 export interface SmithSettings {
     canvas: Canvas;
     size: { width: number; height: number };
@@ -79,7 +82,8 @@ export function render(settings: SmithSettings, points: Point[]) {
         return 0;
     });
 
-    let radius = Math.min(settings.size.width, settings.size.height) / 2;
+    let scaleRadius = Math.min(settings.size.width, settings.size.height) / 2
+    let radius = scaleRadius-40;
 
     Object.keys(canvas).forEach((k) => {
         canvas[k as keyof typeof canvas].width = settings.size.width;
@@ -121,7 +125,7 @@ export function render(settings: SmithSettings, points: Point[]) {
                 rc.cy * radius * -1 + centerY,
                 rc.r * radius,
                 0,
-                2 * Math.PI,
+                fullCircle,
                 false
             );
             mainContext.stroke();
@@ -134,7 +138,7 @@ export function render(settings: SmithSettings, points: Point[]) {
                     ic.cy * radius * -1 + centerY,
                     ic.r * radius,
                     0,
-                    2 * Math.PI,
+                    fullCircle,
                     false
                 );
                 mainContext.stroke();
@@ -156,7 +160,7 @@ export function render(settings: SmithSettings, points: Point[]) {
         const cx = p.r[0] * radius + centerX;
         const cy = p.r[1] * radius * -1 + centerY;
         const pointRadius = 2;
-        mainContext.arc(cx, cy, pointRadius, 0, 2 * Math.PI, false);
+        mainContext.arc(cx, cy, pointRadius, 0, fullCircle, false);
         rendered.push({
             cx,
             cy,
@@ -222,22 +226,71 @@ export function render(settings: SmithSettings, points: Point[]) {
         context.lineWidth = 1;
 
         // Add a circle as a clip path
-        circleClip(context, centerX, centerY, radius);
+        circleClip(context, centerX, centerY, scaleRadius);
 
+         // Outer scales
+        for(let i = 0; i < 4; i++){
+            context.beginPath();
+            context.arc(centerX, centerY, scaleRadius-(11*i), 0, 2 * Math.PI, false);
+            context.stroke();
+        }
+
+        context.save();
+        context.translate(centerX, centerY);
+        context.textAlign = "center";
+
+        //Scale 1. 180>0>-170
+        context.rotate(-halfCircle/2);
+        let steps = 36*5;
+
+        for(let i = 0; i < steps; i++){
+            if(i%5 == 0){
+                context.fillText(i== 0 ? "±" + (180-(10*i)) : (180-(10*i)).toString(), 0, -scaleRadius+31);
+            }
+            context.beginPath();
+            context.moveTo(0, -scaleRadius+30);
+            context.lineTo(0, -scaleRadius+33);
+            context.stroke();
+            context.rotate(fullCircle/steps);
+        }
+
+        steps = 50*5;
+        for(let i = 0; i < steps; i++){
+            if(i%5 == 0){
+                context.fillText(i == 0 ? "0,0" : ((steps-i)/100).toString(), 0, -scaleRadius+21);
+                context.fillText(i == 0 ? "0,0" :(i/100).toString(), 0, -scaleRadius+9);
+            }
+            context.beginPath();
+            context.moveTo(0, -scaleRadius+14);
+            context.lineTo(0, -scaleRadius+8);
+            context.stroke();
+            context.rotate(fullCircle/steps);
+        }
+
+        //Scale 3, reversed scale 2
+        context.restore();
+
+         // Add a circle as a clip path
+         circleClip(context, centerX, centerY, radius);
+
+        // Circle border
         context.beginPath();
-        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        context.arc(centerX, centerY, radius, 0, fullCircle, false);
         context.stroke();
 
+        // Horizontal line through chart
         context.beginPath();
         context.moveTo(centerX - radius, centerY);
         context.lineTo(centerX + radius, centerY);
         context.stroke();
 
+        // Vertical line through chart
         context.beginPath();
         context.moveTo(centerX, centerY - radius);
         context.lineTo(centerX, centerY + radius);
         context.stroke();
 
+        // Real circles
         for (let index = 0; index < realCircles.length; index++) {
             const circle = realCircles[index];
             context.beginPath();
@@ -247,12 +300,13 @@ export function render(settings: SmithSettings, points: Point[]) {
                 circle.cy * radius + centerY,
                 circle.r * radius,
                 0,
-                2 * Math.PI,
+                fullCircle,
                 false
             );
             context.stroke();
         }
 
+        // Imaginary circles
         for (let index = 0; index < imaginaryCircles.length; index++) {
             const circle = imaginaryCircles[index];
             context.beginPath();
@@ -262,7 +316,7 @@ export function render(settings: SmithSettings, points: Point[]) {
                 circle.cy * radius * -1 + centerY,
                 circle.r * radius,
                 0,
-                2 * Math.PI,
+                fullCircle,
                 false
             );
             context.stroke();
