@@ -230,7 +230,7 @@ export function render(settings: SmithSettings, points: Point[]) {
         context.fillStyle = "rgb(100, 137, 250)";
         context.strokeStyle = "rgb(100, 137, 250)";
 
-         // Outer scales
+        // Outer scales
         for(let i = 0; i < 4; i++){
             if(i == 3){
                 context.fillStyle = "rgb(255, 78, 51)";
@@ -241,6 +241,7 @@ export function render(settings: SmithSettings, points: Point[]) {
             context.stroke();
         }
 
+        // Scale text prep
         context.fillStyle = "#222222";
         context.strokeStyle = "#222222";
         context.save();
@@ -265,6 +266,7 @@ export function render(settings: SmithSettings, points: Point[]) {
             context.lineWidth = 0.5;
         }
 
+        //Scale 2 & 3. 0.0->0.49
         steps = 50*5;
         for(let i = 0; i < steps; i++){
             if(i%5 == 0){
@@ -307,21 +309,32 @@ export function render(settings: SmithSettings, points: Point[]) {
         context.lineTo(centerX, centerY + radius);
         context.stroke();
 
+
+        context.save();
+        context.translate(centerX, centerY);
+        context.rotate(-halfCircle/2);
         // Real circles
         for (let index = 0; index < realCircles.length; index++) {
             const circle = realCircles[index];
             context.beginPath();
             context.strokeStyle = index % 5 == 0 ? "rgba(2,2,2, 0.6)" : "rgba(2,2,2,0.3)";
             context.arc(
-                circle.cx * radius + centerX,
-                circle.cy * radius + centerY,
+                circle.cy * radius,
+                circle.cx * radius,
                 circle.r * radius,
                 0,
                 fullCircle,
                 false
             );
             context.stroke();
+
+            // Horizontal scales 
+            if((index % 5 == 0 && index/5 < 7) || index/5 < 1){
+                
+                context.fillText((index/5).toString(),  3,  circle.cx * radius - circle.r * radius - 2);
+            }
         }
+        context.restore();
 
         // Imaginary circles
         for (let index = 0; index < imaginaryCircles.length; index++) {
