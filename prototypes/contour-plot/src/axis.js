@@ -19,7 +19,7 @@ async function drawAxisX(windowSize, margin, dataView) {
             .domain([...new Set(categories)])
             .range([margin, windowSize.width]);
 
-        var tickCount = Math.round(windowSize.width / windowSize.height * 10);
+        var tickCount = Math.round(windowSize.width / windowSize.height * 20);
         var skip = Math.round(x.domain().length/tickCount);
         var tickValues = x.domain().filter((d,i) => !(i%skip));
 
@@ -44,7 +44,7 @@ async function drawAxisX(windowSize, margin, dataView) {
                     d3
                         .axisTop(x)
                         .scale(x)
-                        .ticks((windowSize.width / windowSize.height) * 10)
+                        .ticks((windowSize.width / windowSize.height) * 20)
                 )
                 .call((g) => g.select(".domain").remove());
         return xAxis;

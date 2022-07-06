@@ -28,7 +28,7 @@ Spotfire.initialize(async (mod) => {
         mod.visualization.axis("Color"),
         mod.property("segments"),
         mod.property("smooth"),
-        mod.property("showLines"),
+        mod.property("showLines")
     );
 
     /**
@@ -79,18 +79,24 @@ Spotfire.initialize(async (mod) => {
                         text: "Show contour lines",
                         checked: showLines.value(),
                         enabled: true
-                    }),
+                    })
                 ]
             })
         ];
 
-        function popoutChangeHandler({name, value}) {
+        function popoutChangeHandler({ name, value }) {
             if (name === "showLines") {
                 showLines.set(value);
             }
             if (name === "smooth") {
                 smooth.set(value);
             }
+        }
+
+        function segmentChangeHandler(e) {
+            console.log("Event value: " + e.target.value);
+            segments.set(e.target.value);
+            console.log("Segment value: " + segments.value());
         }
         /**
          * Check the data view for errors
@@ -109,12 +115,15 @@ Spotfire.initialize(async (mod) => {
          * Print out to document
          */
         const container = document.querySelector("#mod-container");
+        const segmentCountInput = document.getElementById("segment-input");
+        segmentCountInput.addEventListener("change", segmentChangeHandler);
 
         // Space reserved for scales
         var margin = 40;
 
         var svg = d3
             .create("svg")
+            .attr("id", "chart-area")
             .attr("viewBox", [0, 0, windowSize.width, windowSize.height])
             .attr("width", windowSize.width)
             .attr("height", windowSize.height);
@@ -127,10 +136,13 @@ Spotfire.initialize(async (mod) => {
         let contours, color;
         await drawContour(svg, dataView, windowSize, margin, segments.value(), smooth.value(), showLines.value());
 
-        //&container.children.clear();
-        container.innerHTML = "";
+        var old_svg = document.getElementById("chart-area");
+        if (old_svg) {
+            container.removeChild(old_svg);
+            segmentCountInput.removeEventListener("change", segmentChangeHandler);
+        }
         container.appendChild(svg.node());
-        container.addEventListener("click", (e) => {
+        document.getElementById("chart-area").addEventListener("click", (e) => {
             dataView.clearMarking();
             showPopout(e, showLines);
         });
