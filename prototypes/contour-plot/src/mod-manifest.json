@@ -1,0 +1,52 @@
+{
+    "apiVersion": "1.3",
+    "version": "1.0",
+    "name": "Contour Plot",
+    "id": "spotfire-contour-plot-mod",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "segments",
+            "type": "integer",
+            "defaultValue": 40
+        },
+        {
+            "name": "smooth",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "showLines",
+            "type": "boolean",
+            "defaultValue": false
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "dual",
+            "preferredDualMode": "continuous",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "X",
+                "mode": "dual",
+                "placement": "top"
+            },
+            {
+                "name": "Y",
+                "mode": "dual",
+                "placement": "left"
+            },
+            {
+                "name": "Z",
+                "mode": "continuous",
+                "placement": "bottom"
+            }
+        ]
+    },
+    "files": ["axis.js", "contour.js", "d3.min.js", "index.html", "main.css", "main.js"]
+}
