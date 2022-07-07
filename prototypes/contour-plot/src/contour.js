@@ -59,7 +59,10 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         .range(colors.map((v) => v.color))
         .interpolate(d3.interpolateRgb.gamma(2.2));
 
-    var thresholds = d3.quantize(d3.interpolate(min, max), segments);
+    var values = data.map(d => d.weight);
+    values.sort((a,b) => a - b);
+    var thresholds = d3.quantize(d3.interpolateBasis(values), segments);
+    console.log(thresholds);
     var contours = d3
         .contours()
         .size([dataWidth, dataHeight])
@@ -72,10 +75,11 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         contours[i].low = thresholds[i];
         if (i+1 < thresholds.length) {
             contours[i].high = thresholds[i+1]
+            contours[i].value = (contours[i].low + contours[i].high) / 2.0;
+        } else {
+            contours[i].value = contours[i].low;
         }
     }
-
-
 
     // Contours
     svg.append("g")
@@ -97,7 +101,6 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         .selectAll("circle")
         .data(data)
         .join("rect")
-        .attr("stroke", (d) => d.isMarked ? "black" : "rgba(0,0,0,0)")
         .attr("x", (d) => xScale(d.x))
         .attr("y", (d) => yScale(d.y))
         .attr("width", windowSize.width / dataWidth)
@@ -120,7 +123,6 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
     contours.on("mousedown", async function (e) {
         var rows = await dataView.allRows();
         var markingOperator = event.ctrlKey || event.shiftKey ? "Add" : "Replace";
-        console.log(markingOperator);
         mod.transaction(() => {
             rows.map(row => {
                 var z = row.continuous("Z").value();

@@ -8,12 +8,12 @@
         {
             "name": "segments",
             "type": "integer",
-            "defaultValue": 40
+            "defaultValue": 10
         },
         {
             "name": "smooth",
             "type": "boolean",
-            "defaultValue": false
+            "defaultValue": true
         },
         {
             "name": "showLines",
