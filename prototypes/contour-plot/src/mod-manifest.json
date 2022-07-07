@@ -33,12 +33,12 @@
         "axes": [
             {
                 "name": "X",
-                "mode": "dual",
+                "mode": "categorical",
                 "placement": "top"
             },
             {
                 "name": "Y",
-                "mode": "dual",
+                "mode": "categorical",
                 "placement": "left"
             },
             {

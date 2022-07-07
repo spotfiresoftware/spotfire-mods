@@ -48,6 +48,7 @@ Spotfire.initialize(async (mod) => {
 
      */
     async function render(dataView, windowSize, xAxis, yAxis, zAxis, colorAxis, segments, smooth, showLines) {
+        // Update mod properties via the custom control panel at the top of the visualization.
         function segmentChangeHandler(e) {
             segments.set(e.target.value);
         }
@@ -59,6 +60,7 @@ Spotfire.initialize(async (mod) => {
         function showLineChangeHandler(e) {
             showLines.set(this.checked);
         }
+
         /**
          * Check the data view for errors
          */
@@ -72,9 +74,7 @@ Spotfire.initialize(async (mod) => {
         }
         mod.controls.errorOverlay.hide();
 
-        /**
-         * Print out to document
-         */
+        // Selectors for the container and control panel parts
         const container = document.querySelector("#mod-container");
         const segmentCountInput = document.getElementById("segment-input");
         segmentCountInput.addEventListener("change", segmentChangeHandler);
@@ -102,13 +102,14 @@ Spotfire.initialize(async (mod) => {
             .attr("width", windowSize.width)
             .attr("height", windowSize.height);
 
-        var [xAxis, xScale] = await drawAxisX(svgWindowSize, margin, dataView);
-        var [yAxis, yScale] = await drawAxisY(svgWindowSize, margin, dataView);
-        svg.append("g").call(xAxis);
-        svg.append("g").call(yAxis);
+        // Draw scales 
+        await drawAxisX(svg, svgWindowSize, margin, dataView);
+        await drawAxisY(svg, svgWindowSize, margin, dataView);
 
-        await drawContour(mod, svg, dataView, xScale, yScale, svgWindowSize, margin, segments.value(), smooth.value(), showLines.value());
+        // Draw contour plot
+        await drawContour(mod, svg, dataView, svgWindowSize, margin, segments.value(), smooth.value(), showLines.value());
 
+        // If this is a re-render remove the old svg and the old event listeners
         var old_svg = document.getElementById("chart-area");
         if (old_svg) {
             container.removeChild(old_svg);
@@ -116,7 +117,8 @@ Spotfire.initialize(async (mod) => {
             smoothInput.removeEventListener("change", smoothChangeHandler);
             showLineInput.removeEventListener("change", showLineChangeHandler);
         }
-        
+
+        // add the new svg to the document and signal completion
         container.appendChild(svg.node());
         context.signalRenderComplete();
     }

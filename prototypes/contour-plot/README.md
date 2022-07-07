@@ -1,7 +1,5 @@
-# Mod Starter Project
-This is a mod template project. It contains the minimum amount of code necessary to run a working mod.  
-
-All source code for the mod example can be found in the `src` folder.
+# Contour Plot
+This is a mod implementing a Contour plot. The X and Y axises need to be categorical and the Z axis only supports continuous values.
 
 ## Prerequisites
 These instructions assume that you have [Node.js](https://nodejs.org/en/) (which includes npm) installed.
@@ -15,9 +13,3 @@ These instructions assume that you have [Node.js](https://nodejs.org/en/) (which
 
 ## Working without a development server
 - In Spotfire, follow the steps of creating a new mod and then browse for, and point to, the _manifest_ in the `src` folder.
-
-## TODO
-- Implement selection/marking (place out poins?)
-- Segment amount selection
-- Smoothing toggle
-- Segment label toggle

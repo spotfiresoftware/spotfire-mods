@@ -5,10 +5,11 @@ function transformScale(n, a, b, c, d) {
     return ((n - a) * newRange) / oldRange + c;
 }
 
-async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margin, segments, smooth, showLines) {
+async function drawContour(mod, svg, dataView, windowSize, margin, segments, smooth, showLines) {
     var dataWidth = (await dataView.categoricalAxis("X")).hierarchy.leafCount;
     var dataHeight = (await dataView.categoricalAxis("Y")).hierarchy.leafCount;
-    // Transfer point from gridspace to screenspace
+
+    // Transfer point from gridspace to screenspace.
     function transform({ type, value, coordinates }) {
         return {
             type,
@@ -16,43 +17,32 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
             coordinates: coordinates.map((rings) => {
                 return rings.map((points) => {
                     return points.map(([x, y]) => [
-                        transformScale(y, 0, dataWidth, margin, windowSize.width),
-                        transformScale(x, 0, dataHeight, 0, windowSize.height - margin)
+                        transformScale(x, 0, dataWidth, margin, windowSize.width),
+                        transformScale(y, 0, dataHeight, 0, windowSize.height - margin)
                     ]);
                 });
             })
         };
     }
 
-    var data = (await dataView.allRows()).map((row) => {
-        var x = dataView.categoricalAxis("X") ? row.categorical("X").formattedValue() : row.continuous("X").value();
-        var y = dataView.categoricalAxis("Y") ? row.categorical("Y").formattedValue() : row.continuous("Y").value();
+    var data = (await dataView.allRows()).map((row) => ({
+        x: row.categorical("X").formattedValue(),
+        y: row.categorical("Y").formattedValue(),
+        weight: row.continuous("Z").value(),
+        isMarked: row.isMarked(),
+        row: row
+    }));
 
-        return {
-            x: x,
-            y: y,
-            weight: row.continuous("Z").value(),
-            isMarked: row.isMarked(),
-            row: row
-        };
-    });
+    // Get all the colors from the color axis
+    var colors = (await dataView.allRows()).map((row) => ({
+        z: row.continuous("Z").value(),
+        color: row.color().hexCode
+    }));
 
-    var colors = (await dataView.allRows()).map((row) => {
-        if (mod.visualization.axis("Color").isCategorical) {
-        }
-        else {
-        }
-        return {
-            z: row.continuous("Z").value(),
-            color: row.color().hexCode
-        };
-    });
-
+    // Sort them in order of weight
     colors.sort((a, b) => a.z - b.z);
 
-    var min = data.reduce((acc, d) => Math.min(d.weight, acc), Number.MAX_VALUE);
-    var max = data.reduce((acc, d) => Math.max(d.weight, acc), Number.MIN_VALUE);
-
+    // Use this sorted color list to create a gradient
     var color = d3
         .scaleLinear()
         .domain(colors.map((v) => v.z))
@@ -60,9 +50,10 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         .interpolate(d3.interpolateRgb.gamma(2.2));
 
     var values = data.map(d => d.weight);
-    values.sort((a,b) => a - b);
+    values.sort((a, b) => a - b);
+
+    // Thresholds are based on interpolateBasis, which avoids datasets with extreme differences in values from placing all contours around such a spike.
     var thresholds = d3.quantize(d3.interpolateBasis(values), segments);
-    console.log(thresholds);
     var contours = d3
         .contours()
         .size([dataWidth, dataHeight])
@@ -70,18 +61,19 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         .thresholds(thresholds)(data.map((d) => d.weight))
         .map(transform);
 
-    // Calculate contour value range for tooltip
+    // Calculate contour value range for tooltip.
+    // The midpoint ("value") is used to pick the color.
     for (var i = 0; i < thresholds.length; i++) {
         contours[i].low = thresholds[i];
-        if (i+1 < thresholds.length) {
-            contours[i].high = thresholds[i+1]
+        if (i + 1 < thresholds.length) {
+            contours[i].high = thresholds[i + 1]
             contours[i].value = (contours[i].low + contours[i].high) / 2.0;
         } else {
             contours[i].value = contours[i].low;
         }
     }
 
-    // Contours
+    // Draw the countours.
     svg.append("g")
         .attr("stroke", showLines ? "white" : "none")
         .attr("stroke-opacity", 0.5)
@@ -92,25 +84,13 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         .attr("fill", (d) => color(d.value))
         .attr("d", d3.geoPath());
 
-    // Actual values
-    svg.append("g")
-        .attr("stroke", "rgba(0,0,0,0)")
-        .attr("fill", "rgba(0,0,0,0)")
-        .attr("pointer-events", "none")
-        .attr("stroke-opacity", 0.7)
-        .selectAll("circle")
-        .data(data)
-        .join("rect")
-        .attr("x", (d) => xScale(d.x))
-        .attr("y", (d) => yScale(d.y))
-        .attr("width", windowSize.width / dataWidth)
-        .attr("height", windowSize.height / dataHeight);
-
+    // Tooltip and selection highlight event listener.
     var contours = svg.selectAll("path");
     contours.on("mouseenter", function (e) {
-        var lowRounded = Math.round(e.low*100)/100;
-        var highRounded = Math.round(e.high*100)/100;
-        var tooltip = `Contour: ${lowRounded} - ${highRounded}`
+        var lowRounded = Math.round(e.low * 100) / 100;
+        var highRounded = Math.round(e.high * 100) / 100;
+        var midRounded = Math.round(e.value * 100) / 100;
+        var tooltip = `Min: ${lowRounded}\nMid: ${midRounded}\nMax: ${highRounded}`
         mod.controls.tooltip.show(tooltip);
         d3.select(this).attr("class", "hover")
     });
@@ -119,7 +99,8 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         d3.select(this).attr("class", null);
     });
 
-    // Mark all rows with values within the contour threshhold
+    // Mark all rows with values within the contour threshhold.
+    // If ctrl or shift key is held when clicked add instead of replace markings.
     contours.on("mousedown", async function (e) {
         var rows = await dataView.allRows();
         var markingOperator = event.ctrlKey || event.shiftKey ? "Add" : "Replace";
