@@ -76,18 +76,6 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
     }
 
 
-    // Actual values
-    svg.append("g")
-        .attr("stroke", "rgba(0,0,0,0)")
-        .attr("stroke-opacity", 0.7)
-        .attr("fill", "rgba(0,0,0,0)")
-        .selectAll("circle")
-        .data(data)
-        .join("rect")
-        .attr("x", (d) => xScale(d.x))
-        .attr("y", (d) => yScale(d.y))
-        .attr("width", windowSize.width / dataWidth)
-        .attr("height", windowSize.height / dataHeight);
 
     // Contours
     svg.append("g")
@@ -99,6 +87,21 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         .join("path")
         .attr("fill", (d) => color(d.value))
         .attr("d", d3.geoPath());
+
+    // Actual values
+    svg.append("g")
+        .attr("stroke", "rgba(0,0,0,0)")
+        .attr("fill", "rgba(0,0,0,0)")
+        .attr("pointer-events", "none")
+        .attr("stroke-opacity", 0.7)
+        .selectAll("circle")
+        .data(data)
+        .join("rect")
+        .attr("stroke", (d) => d.isMarked ? "black" : "rgba(0,0,0,0)")
+        .attr("x", (d) => xScale(d.x))
+        .attr("y", (d) => yScale(d.y))
+        .attr("width", windowSize.width / dataWidth)
+        .attr("height", windowSize.height / dataHeight);
 
     var contours = svg.selectAll("path");
     contours.on("mouseenter", function (e) {
@@ -113,6 +116,24 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
         d3.select(this).attr("class", null);
     });
 
-
-    // Highlighted selected contour
+    // Mark all rows with values within the contour threshhold
+    contours.on("mousedown", async function (e) {
+        var rows = await dataView.allRows();
+        var markingOperator = event.ctrlKey || event.shiftKey ? "Add" : "Replace";
+        console.log(markingOperator);
+        mod.transaction(() => {
+            rows.map(row => {
+                var z = row.continuous("Z").value();
+                if (z >= e.low) {
+                    if (e.high != undefined) {
+                        if (z < e.high) {
+                            row.mark(markingOperator);
+                        }
+                    } else {
+                        row.mark(markingOperator);
+                    }
+                }
+            });
+        })
+    });
 }

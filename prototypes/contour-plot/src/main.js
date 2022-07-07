@@ -80,8 +80,10 @@ Spotfire.initialize(async (mod) => {
         segmentCountInput.addEventListener("change", segmentChangeHandler);
         const smoothInput = document.getElementById("smooth-input");
         smoothInput.addEventListener("change", smoothChangeHandler);
+        smoothInput.checked = smooth.value();
         const showLineInput = document.getElementById("showlines-input");
         showLineInput.addEventListener("change", showLineChangeHandler);
+        showLineInput.checked = showLines.value();
 
         // Space reserved for scales
         var margin = 32;
@@ -114,11 +116,8 @@ Spotfire.initialize(async (mod) => {
             smoothInput.removeEventListener("change", smoothChangeHandler);
             showLineInput.removeEventListener("change", showLineChangeHandler);
         }
+        
         container.appendChild(svg.node());
-        document.getElementById("chart-area").addEventListener("click", (e) => {
-            dataView.clearMarking();
-        });
-
         context.signalRenderComplete();
     }
 });
