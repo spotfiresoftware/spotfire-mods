@@ -46,7 +46,10 @@
                 "mode": "continuous",
                 "placement": "bottom"
             }
-        ]
+        ],
+        "tooltip": {
+            "enabled": true
+        }
     },
     "files": ["axis.js", "contour.js", "d3.min.js", "index.html", "main.css", "main.js"]
 }

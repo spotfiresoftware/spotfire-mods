@@ -16,3 +16,18 @@ body{
 svg {
     cursor: pointer;
 }
+
+path.hover {
+    fill: white;
+}
+
+.column {
+    float: left;
+    width: 20%;
+  }
+  
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}

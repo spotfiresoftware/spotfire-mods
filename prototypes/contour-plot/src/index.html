@@ -16,8 +16,20 @@
         <link rel="stylesheet" type="text/css" media="all" href="main.css" />
     </head>
     <body>
-        <label for="segmentInput">Number of segments</label>
-        <input type="number" id="segment-input" name="segments" min="1" max="999" value="40">
+        <div class="row">
+            <div class="column">
+                <label for="segment-input">Number of segments</label>
+                <input type="number" id="segment-input" name="segments" min="1" max="999" value="40">
+            </div>
+            <div class="column">
+                <label for="smooth-input">Smooth contours</label>
+                <input type="checkbox" id="smooth-input" name="smooth">
+            </div>
+            <div class="column">
+                <label for="showlines-input">Display contour lines</label>
+                <input type="checkbox" id="showlines-input" name="showlines">
+            </div>
+        </div>
         <div id="mod-container"></div>
         <script id="spotfire-loader">var Spotfire=function(e){"use strict";return e.initialize=function(e){var t="sfTemp"+1e4*Math.random()+"Cb",r=window;r[t]=e;var a={subject:"GetUrl",callbackId:-1,options:{cbId:t}};r.addEventListener("message",(function e(t){if(t.source!==r.parent||!t.data.src)return;r.removeEventListener("message",e);var a=document,n=a.createElement("script");n.src=t.data.src,(a.head||a.body).appendChild(n)})),r.parent.postMessage(a,"*")},e}({});</script>
         <script src="d3.min.js"></script>

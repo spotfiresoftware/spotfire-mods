@@ -28,7 +28,7 @@ async function drawAxisX(windowSize, margin, dataView) {
                 .attr("transform", `translate(0, ${margin})`)
                 .call(d3.axisTop(x).scale(x).tickValues(tickValues))
                 .call((g) => g.select(".domain").remove());
-        return xAxis;
+        return [xAxis, x];
     } else {
         var xValues = (await dataView.allRows()).map((row) => {
             return row.continuous("X").value();
@@ -47,7 +47,7 @@ async function drawAxisX(windowSize, margin, dataView) {
                         .ticks((windowSize.width / windowSize.height) * 20)
                 )
                 .call((g) => g.select(".domain").remove());
-        return xAxis;
+        return [xAxis, x];
     }
 }
 
@@ -76,7 +76,7 @@ async function drawAxisY(windowSize, margin, dataView) {
                         .tickValues(tickValues)
                 )
                 .call((g) => g.select(".domain").remove());
-        return yAxis;
+        return [yAxis, y];
     } else {
         var yValues = (await dataView.allRows()).map((row) => {
             return row.continuous("Y").value();
@@ -96,6 +96,6 @@ async function drawAxisY(windowSize, margin, dataView) {
                         .ticks((windowSize.height / windowSize.width) * 10)
                 )
                 .call((g) => g.select(".domain").remove());
-        return yAxis;
+        return [yAxis, y];
     }
 }

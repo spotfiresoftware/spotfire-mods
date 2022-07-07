@@ -48,55 +48,16 @@ Spotfire.initialize(async (mod) => {
 
      */
     async function render(dataView, windowSize, xAxis, yAxis, zAxis, colorAxis, segments, smooth, showLines) {
-        const { popout } = mod.controls;
-        function showPopout(e) {
-            popout.show(
-                {
-                    x: e.x,
-                    y: e.y,
-                    autoClose: true,
-                    alignment: "Bottom",
-                    onChange: popoutChangeHandler
-                },
-                popoutContent
-            );
-        }
-
-        const { section } = popout;
-        const { checkbox } = popout.components;
-        const popoutContent = () => [
-            section({
-                heading: "Contour Plot Settings",
-                children: [
-                    checkbox({
-                        name: "smooth",
-                        text: "Enable smoothing",
-                        checked: smooth.value(),
-                        enabled: true
-                    }),
-                    checkbox({
-                        name: "showLines",
-                        text: "Show contour lines",
-                        checked: showLines.value(),
-                        enabled: true
-                    })
-                ]
-            })
-        ];
-
-        function popoutChangeHandler({ name, value }) {
-            if (name === "showLines") {
-                showLines.set(value);
-            }
-            if (name === "smooth") {
-                smooth.set(value);
-            }
-        }
-
         function segmentChangeHandler(e) {
-            console.log("Event value: " + e.target.value);
             segments.set(e.target.value);
-            console.log("Segment value: " + segments.value());
+        }
+
+        function smoothChangeHandler(e) {
+            smooth.set(this.checked);
+        }
+
+        function showLineChangeHandler(e) {
+            showLines.set(this.checked);
         }
         /**
          * Check the data view for errors
@@ -117,9 +78,20 @@ Spotfire.initialize(async (mod) => {
         const container = document.querySelector("#mod-container");
         const segmentCountInput = document.getElementById("segment-input");
         segmentCountInput.addEventListener("change", segmentChangeHandler);
+        const smoothInput = document.getElementById("smooth-input");
+        smoothInput.addEventListener("change", smoothChangeHandler);
+        const showLineInput = document.getElementById("showlines-input");
+        showLineInput.addEventListener("change", showLineChangeHandler);
 
         // Space reserved for scales
-        var margin = 40;
+        var margin = 32;
+        // Space taken up by the control panel
+        var margin_top = 50;
+
+        var svgWindowSize = {
+            width: windowSize.width,
+            height: windowSize.height - margin_top
+        };
 
         var svg = d3
             .create("svg")
@@ -128,23 +100,23 @@ Spotfire.initialize(async (mod) => {
             .attr("width", windowSize.width)
             .attr("height", windowSize.height);
 
-        var xAxis = await drawAxisX(windowSize, margin, dataView);
-        var yAxis = await drawAxisY(windowSize, margin, dataView);
+        var [xAxis, xScale] = await drawAxisX(svgWindowSize, margin, dataView);
+        var [yAxis, yScale] = await drawAxisY(svgWindowSize, margin, dataView);
         svg.append("g").call(xAxis);
         svg.append("g").call(yAxis);
 
-        let contours, color;
-        await drawContour(svg, dataView, windowSize, margin, segments.value(), smooth.value(), showLines.value());
+        await drawContour(mod, svg, dataView, xScale, yScale, svgWindowSize, margin, segments.value(), smooth.value(), showLines.value());
 
         var old_svg = document.getElementById("chart-area");
         if (old_svg) {
             container.removeChild(old_svg);
             segmentCountInput.removeEventListener("change", segmentChangeHandler);
+            smoothInput.removeEventListener("change", smoothChangeHandler);
+            showLineInput.removeEventListener("change", showLineChangeHandler);
         }
         container.appendChild(svg.node());
         document.getElementById("chart-area").addEventListener("click", (e) => {
             dataView.clearMarking();
-            showPopout(e, showLines);
         });
 
         context.signalRenderComplete();
