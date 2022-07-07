@@ -126,7 +126,7 @@ async function drawContour(mod, svg, dataView, xScale, yScale, windowSize, margi
                 var z = row.continuous("Z").value();
                 if (z >= e.low) {
                     if (e.high != undefined) {
-                        if (z < e.high) {
+                        if (z <= e.high) {
                             row.mark(markingOperator);
                         }
                     } else {
