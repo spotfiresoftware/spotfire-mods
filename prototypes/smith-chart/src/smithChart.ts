@@ -12,6 +12,7 @@ export interface SmithSettings {
     size: { width: number; height: number };
     gridDensity?: number;
     showExtras?: boolean;
+    showOuterScales?: boolean;
     clearMarking?(): void;
     mouseLeave(): void;
 }
@@ -83,7 +84,7 @@ export function render(settings: SmithSettings, points: Point[]) {
     });
 
     let scaleRadius = Math.min(settings.size.width, settings.size.height) / 2
-    let radius = scaleRadius-60;
+    let radius = settings.showOuterScales ? scaleRadius-60 : scaleRadius;
 
     Object.keys(canvas).forEach((k) => {
         canvas[k as keyof typeof canvas].width = settings.size.width;
@@ -92,6 +93,7 @@ export function render(settings: SmithSettings, points: Point[]) {
 
     const padding = 3;
     radius -= padding;
+    scaleRadius -= padding;
 
     const bgContext = canvas.bg.getContext("2d")!;
     const mainContext = canvas.main.getContext("2d")!;
@@ -225,72 +227,75 @@ export function render(settings: SmithSettings, points: Point[]) {
         context.strokeStyle = "#222222";
         context.lineWidth = 1;
 
-        // Add a circle as a clip path
-        circleClip(context, centerX, centerY, scaleRadius);
-        context.fillStyle = "rgb(100, 137, 250)";
-        context.strokeStyle = "rgb(100, 137, 250)";
+        if(settings.showOuterScales)
+        {
+            // Add a circle as a clip path
+            circleClip(context, centerX, centerY, scaleRadius);
+            context.fillStyle = "rgb(100, 137, 250)";
+            context.strokeStyle = "rgb(100, 137, 250)";
 
-        // Outer scales
-        for(let i = 0; i < 4; i++){
-            if(i == 3){
-                context.fillStyle = "rgb(255, 78, 51)";
-                context.strokeStyle = "rgb(255, 78, 51)";
-            }
-            context.beginPath();
-            context.arc(centerX, centerY, scaleRadius-(17*i), 0, 2 * Math.PI, false);
-            context.stroke();
-        }
-
-        // Scale text prep
-        context.fillStyle = "#222222";
-        context.strokeStyle = "#222222";
-        context.save();
-        context.translate(centerX, centerY);
-        context.textAlign = "center";
-
-        //Scale 1. 180>0>-170
-        context.rotate(-halfCircle/2);
-        let steps = 36*5;
-
-        for(let i = 0; i < steps; i++){
-            if(i%5 == 0){
-                context.fillText(i== 0 ? "±" + (180-(2*i)) : (180-(2*i)).toString(), 0, -scaleRadius+(17*2 + 11));
-                context.lineWidth = 1;
-            }
-            
-            context.beginPath();
-            context.moveTo(0, -scaleRadius+(17*3));
-            context.lineTo(0, -scaleRadius+(17*2 + 11 + 3));
-            context.stroke();
-            context.rotate(fullCircle/steps);
-            context.lineWidth = 0.5;
-        }
-
-        //Scale 2 & 3. 0.0->0.49
-        steps = 50*5;
-        for(let i = 0; i < steps; i++){
-            if(i%5 == 0){
-                context.fillText(i == 0 ? "0,0" : ((steps-i)/500).toString(), 0, -scaleRadius+(17*1 + 11 + 1));
-                context.fillText(i == 0 ? "0,0" :(i/500).toString(), 0, -scaleRadius+(17*0 + 11 + 1));
-                context.lineWidth = 1;
+            // Outer scales
+            for(let i = 0; i < 4; i++){
+                if(i == 3){
+                    context.fillStyle = "rgb(255, 78, 51)";
+                    context.strokeStyle = "rgb(255, 78, 51)";
+                }
                 context.beginPath();
-                context.moveTo(0, -scaleRadius+(17*1 + 3));
-                context.lineTo(0, -scaleRadius+(17*1 - 3));
+                context.arc(centerX, centerY, scaleRadius-(17*i), 0, 2 * Math.PI, false);
+                context.stroke();
             }
-            else{
+
+            // Scale text prep
+            context.fillStyle = "#222222";
+            context.strokeStyle = "#222222";
+            context.save();
+            context.translate(centerX, centerY);
+            context.textAlign = "center";
+
+            //Scale 1. 180>0>-170
+            context.rotate(-halfCircle/2);
+            let steps = 36*5;
+
+            for(let i = 0; i < steps; i++){
+                if(i%5 == 0){
+                    context.fillText(i== 0 ? "±" + (180-(2*i)) : (180-(2*i)).toString(), 0, -scaleRadius+(17*2 + 11));
+                    context.lineWidth = 1;
+                }
+                
+                context.beginPath();
+                context.moveTo(0, -scaleRadius+(17*3));
+                context.lineTo(0, -scaleRadius+(17*2 + 11 + 3));
+                context.stroke();
+                context.rotate(fullCircle/steps);
                 context.lineWidth = 0.5;
-                context.beginPath();
-                context.moveTo(0, -scaleRadius+(17*1 + 2));
-                context.lineTo(0, -scaleRadius+(17*1 - 2));
             }
-            context.stroke();
-            context.rotate(fullCircle/steps);
+
+            //Scale 2 & 3. 0.0->0.49
+            steps = 50*5;
+            for(let i = 0; i < steps; i++){
+                if(i%5 == 0){
+                    context.fillText(i == 0 ? "0,0" : ((steps-i)/500).toString(), 0, -scaleRadius+(17*1 + 11 + 1));
+                    context.fillText(i == 0 ? "0,0" :(i/500).toString(), 0, -scaleRadius+(17*0 + 11 + 1));
+                    context.lineWidth = 1;
+                    context.beginPath();
+                    context.moveTo(0, -scaleRadius+(17*1 + 3));
+                    context.lineTo(0, -scaleRadius+(17*1 - 3));
+                }
+                else{
+                    context.lineWidth = 0.5;
+                    context.beginPath();
+                    context.moveTo(0, -scaleRadius+(17*1 + 2));
+                    context.lineTo(0, -scaleRadius+(17*1 - 2));
+                }
+                context.stroke();
+                context.rotate(fullCircle/steps);
+            }
+
+            context.restore();
         }
-
-        context.restore();
-
-         // Add a circle as a clip path
-         circleClip(context, centerX, centerY, radius);
+        
+        // Add a circle as a clip path
+        circleClip(context, centerX, centerY, radius);
 
         // Circle border
         context.beginPath();

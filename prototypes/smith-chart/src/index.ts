@@ -20,7 +20,8 @@ Spotfire.initialize(async (mod) => {
         mod.visualization.data(),
         mod.windowSize(),
         mod.property("gridDensity"),
-        mod.property("extras")
+        mod.property("extras"),
+        mod.property("outerScales")
     );
 
     reader.subscribe(generalErrorHandler(mod, 40000)(onChange), (err) => {
@@ -31,7 +32,8 @@ Spotfire.initialize(async (mod) => {
         dataView: DataView,
         windowSize: Spotfire.Size,
         densityProp: ModProperty<number>,
-        extrasProp: ModProperty<boolean>
+        extrasProp: ModProperty<boolean>,
+        outerScalesProp: ModProperty<boolean>
     ) {
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy(colorAxisName))?.root();
@@ -69,6 +71,7 @@ Spotfire.initialize(async (mod) => {
                 size: windowSize,
                 gridDensity: densityProp.value()!,
                 showExtras: extrasProp.value()!,
+                showOuterScales: outerScalesProp.value()!,
                 clearMarking: dataView.clearMarking,
                 mouseLeave: () => mod.controls.tooltip.hide()
             },
@@ -78,7 +81,8 @@ Spotfire.initialize(async (mod) => {
         if (context.isEditing) {
             renderSettings([
                 { label: resources.gridDensity, type: "range", property: densityProp, max: 20, min: 0, step: 1 },
-                { label: resources.extras, type: "checkbox", property: extrasProp }
+                { label: resources.extras, type: "checkbox", property: extrasProp },
+                { label: resources.outerScales, type: "checkbox", property: outerScalesProp}
             ]);
         }
 
