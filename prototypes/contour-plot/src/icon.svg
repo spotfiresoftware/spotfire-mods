@@ -1,1 +1,7 @@
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><style>.cls-1{fill:#faa264;}</style></defs><title>Mods_icons</title><path class="cls-1" d="M24,15a3.141,3.141,0,0,1-3.15,3,2.757,2.757,0,0,1-2.445-1.5H18V24H10.5v-.405A2.757,2.757,0,0,0,12,21.15,3.141,3.141,0,0,0,9,18a3.141,3.141,0,0,0-3,3.15,2.757,2.757,0,0,0,1.5,2.445V24H0V6H7.5V5.595A2.757,2.757,0,0,1,6,3.15,3.141,3.141,0,0,1,9,0a3.141,3.141,0,0,1,3,3.15,2.757,2.757,0,0,1-1.5,2.445V6H18v7.5h.405A2.757,2.757,0,0,1,20.85,12,3.141,3.141,0,0,1,24,15Z"/></svg>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#E5E5E5"/>
+<rect width="24" height="24" fill="white"/>
+<rect x="6" y="9.33116" width="6" height="12" transform="rotate(-33.724 6 9.33116)" fill="#6489FA"/>
+<rect opacity="0.7" y="10.2645" width="12.7437" height="20.0467" transform="rotate(-47.2472 0 10.2645)" fill="#6489FA"/>
+<rect width="24" height="24" fill="#6489FA" fill-opacity="0.45"/>
+</svg>
