@@ -17,6 +17,17 @@ svg {
     cursor: pointer;
 }
 
+.settings-icon {
+    width: 21px;
+    height: 21px;
+    display: block;
+    fill: #ccc;
+}
+
+.settings-icon:hover {
+    fill: #ddd;
+}
+
 path.hover {
     fill: white;
 }

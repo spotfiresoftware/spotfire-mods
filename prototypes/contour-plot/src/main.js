@@ -28,7 +28,8 @@ Spotfire.initialize(async (mod) => {
         mod.visualization.axis("Color"),
         mod.property("segments"),
         mod.property("smooth"),
-        mod.property("showLines")
+        mod.property("showLines"),
+        mod.property("showSettings")
     );
 
     /**
@@ -45,9 +46,14 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.AnalysisProperty<integer>} segments
      * @param {Spotfire.AnalysisProperty<integer>} smooth
      * @param {Spotfire.AnalysisProperty<boolean>} showLines
-
+     * @param {Spotfire.AnalysisProperty<boolean>} showSettings
      */
-    async function render(dataView, windowSize, xAxis, yAxis, zAxis, colorAxis, segments, smooth, showLines) {
+    async function render(dataView, windowSize, xAxis, yAxis, zAxis, colorAxis, segments, smooth, showLines, showSettings) {
+
+        // Selectors for the container and control panel parts
+        const container = document.querySelector("#mod-container");
+        const settingsPanel = d3.selectAll("#settings-panel");
+
         // Update mod properties via the custom control panel at the top of the visualization.
         function segmentChangeHandler(e) {
             segments.set(e.target.value);
@@ -60,6 +66,33 @@ Spotfire.initialize(async (mod) => {
         function showLineChangeHandler(e) {
             showLines.set(this.checked);
         }
+
+        function showSettingsChangeHandler(e) {
+            showSettings.set(!showSettings.value());
+            settingsPanel.attr("style", showSettings.value() ? "visibility: visible;" : "visibility: hidden;");
+        } 
+
+        const segmentCountInput = document.getElementById("segment-input");
+        const smoothInput = document.getElementById("smooth-input");
+        const showLineInput = document.getElementById("showlines-input");
+        const showSettingsInput = document.getElementById("showsettings-input");
+
+        // If this is a re-render remove the old svg and the old event listeners
+        var old_svg = document.getElementById("chart-area");
+        if (old_svg) {
+            container.removeChild(old_svg);
+            segmentCountInput.removeEventListener("change", segmentChangeHandler);
+            smoothInput.removeEventListener("change", smoothChangeHandler);
+            showLineInput.removeEventListener("change", showLineChangeHandler);
+            showSettingsInput.removeEventListener("click", showSettingsChangeHandler);
+        }
+
+        smoothInput.addEventListener("change", smoothChangeHandler);
+        smoothInput.checked = smooth.value();
+        showLineInput.addEventListener("change", showLineChangeHandler);
+        showLineInput.checked = showLines.value();
+        segmentCountInput.addEventListener("change", segmentChangeHandler);
+        showSettingsInput.addEventListener("click", showSettingsChangeHandler);
 
         /**
          * Check the data view for errors
@@ -74,16 +107,6 @@ Spotfire.initialize(async (mod) => {
         }
         mod.controls.errorOverlay.hide();
 
-        // Selectors for the container and control panel parts
-        const container = document.querySelector("#mod-container");
-        const segmentCountInput = document.getElementById("segment-input");
-        segmentCountInput.addEventListener("change", segmentChangeHandler);
-        const smoothInput = document.getElementById("smooth-input");
-        smoothInput.addEventListener("change", smoothChangeHandler);
-        smoothInput.checked = smooth.value();
-        const showLineInput = document.getElementById("showlines-input");
-        showLineInput.addEventListener("change", showLineChangeHandler);
-        showLineInput.checked = showLines.value();
 
         // Space reserved for scales
         var margin = 32;
@@ -108,15 +131,6 @@ Spotfire.initialize(async (mod) => {
 
         // Draw contour plot
         await drawContour(mod, svg, dataView, svgWindowSize, margin, segments.value(), smooth.value(), showLines.value());
-
-        // If this is a re-render remove the old svg and the old event listeners
-        var old_svg = document.getElementById("chart-area");
-        if (old_svg) {
-            container.removeChild(old_svg);
-            segmentCountInput.removeEventListener("change", segmentChangeHandler);
-            smoothInput.removeEventListener("change", smoothChangeHandler);
-            showLineInput.removeEventListener("change", showLineChangeHandler);
-        }
 
         // add the new svg to the document and signal completion
         container.appendChild(svg.node());

@@ -19,6 +19,11 @@
             "name": "showLines",
             "type": "boolean",
             "defaultValue": false
+        },
+        {
+            "name": "showSettings",
+            "type": "boolean",
+            "defaultValue": true
         }
     ],
     "dataViewDefinition": {
