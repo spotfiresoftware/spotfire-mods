@@ -19,6 +19,11 @@
             "name": "outerScales",
             "type": "boolean",
             "defaultValue": "true"
+        },
+        {
+            "name": "innerScales",
+            "type": "boolean",
+            "defaultValue": "true"
         }
     ],
     "dataViewDefinition": {

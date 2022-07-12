@@ -13,6 +13,7 @@ export interface SmithSettings {
     gridDensity?: number;
     showExtras?: boolean;
     showOuterScales?: boolean;
+    showInnerScales?: boolean;
     clearMarking?(): void;
     mouseLeave(): void;
 }
@@ -333,10 +334,11 @@ export function render(settings: SmithSettings, points: Point[]) {
             );
             context.stroke();
 
-            // Horizontal scales 
-            if((index % 5 == 0 && index/5 < 7) || index/5 < 1){
-                
-                context.fillText((index/5).toString(),  3,  circle.cx * radius - circle.r * radius - 2);
+            if(settings.showInnerScales){
+                // Horizontal scales 
+                if((index % 5 == 0 && index/5 < 7) || index/5 < 1){
+                    context.fillText((index/5).toString(),  3,  circle.cx * radius - circle.r * radius - 2);
+                }
             }
         }
         context.restore();

@@ -1,5 +1,6 @@
 export const resources = {
     gridDensity: "Grid density",
     extras: "Extras",
-    outerScales: "Outer scales"
+    outerScales: "Outer scales",
+    innerScales: "Inner Scales"
 };
