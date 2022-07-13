@@ -22,7 +22,8 @@ Spotfire.initialize(async (mod) => {
         mod.property("gridDensity"),
         mod.property("extras"),
         mod.property("outerScales"),
-        mod.property("innerScales")
+        mod.property("innerScales"),
+        mod.property("zoom")
     );
 
     reader.subscribe(generalErrorHandler(mod, 40000)(onChange), (err) => {
@@ -35,7 +36,8 @@ Spotfire.initialize(async (mod) => {
         densityProp: ModProperty<number>,
         extrasProp: ModProperty<boolean>,
         outerScalesProp: ModProperty<boolean>,
-        innerScalesProp: ModProperty<boolean>
+        innerScalesProp: ModProperty<boolean>,
+        zoomProp: ModProperty<number>
     ) {
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy(colorAxisName))?.root();
@@ -75,6 +77,7 @@ Spotfire.initialize(async (mod) => {
                 showExtras: extrasProp.value()!,
                 showOuterScales: outerScalesProp.value()!,
                 showInnerScales : innerScalesProp.value()!,
+                zoom : zoomProp.value()!,
                 clearMarking: dataView.clearMarking,
                 mouseLeave: () => mod.controls.tooltip.hide()
             },
@@ -87,6 +90,7 @@ Spotfire.initialize(async (mod) => {
                 { label: resources.extras, type: "checkbox", property: extrasProp },
                 { label: resources.outerScales, type: "checkbox", property: outerScalesProp},
                 { label: resources.innerScales, type: "checkbox", property: innerScalesProp},
+                { label: resources.zoom, type: "range", property: zoomProp, max: 400, min: 0, step: 20 }
             ]);
         }
 

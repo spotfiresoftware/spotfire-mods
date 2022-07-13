@@ -14,6 +14,7 @@ export interface SmithSettings {
     showExtras?: boolean;
     showOuterScales?: boolean;
     showInnerScales?: boolean;
+    zoom?: number;
     clearMarking?(): void;
     mouseLeave(): void;
 }
@@ -84,7 +85,7 @@ export function render(settings: SmithSettings, points: Point[]) {
         return 0;
     });
 
-    let scaleRadius = Math.min(settings.size.width, settings.size.height) / 2
+    let scaleRadius = settings.zoom ? Math.min(settings.size.width, settings.size.height)*(100+settings.zoom)/200:  Math.min(settings.size.width, settings.size.height)/2
     let radius = settings.showOuterScales ? scaleRadius-60 : scaleRadius;
 
     Object.keys(canvas).forEach((k) => {

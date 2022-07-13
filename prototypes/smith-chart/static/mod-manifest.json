@@ -24,6 +24,11 @@
             "name": "innerScales",
             "type": "boolean",
             "defaultValue": "true"
+        },
+        {
+            "name": "zoom",
+            "type": "integer",
+            "defaultValue": "0"
         }
     ],
     "dataViewDefinition": {
