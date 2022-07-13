@@ -294,6 +294,41 @@ export function render(settings: SmithSettings, points: Point[]) {
 
             context.restore();
         }
+
+        enum Quadrant {
+            First,
+            Second,
+            Third,
+            Fourth
+        }
+
+        function innerScalesInCircle(text : string[], quadrant: Quadrant){
+            // vsvensso: 
+            context.save();
+            context.translate(centerX, centerY);
+            context.rotate(-halfCircle/2);
+            var denominator = 16;
+            var increase = 0;
+
+            for(let i = 0; i < text.length; i++){
+                denominator += quadrant == Quadrant.First || quadrant == Quadrant.Second ? 2+increase : -2+increase;
+                context.rotate(quadrant == Quadrant.First || quadrant == Quadrant.Third ? halfCircle/denominator : -halfCircle/denominator);
+                context.fillText(text[i], quadrant == Quadrant.First || quadrant == Quadrant.Fourth ? radius-17 : -radius+3, -1, 15);
+                increase += quadrant == Quadrant.First || quadrant == Quadrant.Second ? 1 : -0.2/(i+1);
+            }
+
+            context.restore();
+        }
+
+        if(settings.showInnerScales){
+            var text = ["1.2", "1.4", "1.6", "1.8", "2.0"];
+            innerScalesInCircle(text, Quadrant.First);
+            innerScalesInCircle(text, Quadrant.Second);
+
+            text = ["0.8", "0.6", "0.4"];
+            innerScalesInCircle(text, Quadrant.Third);
+            innerScalesInCircle(text, Quadrant.Fourth);
+        }
         
         // Add a circle as a clip path
         circleClip(context, centerX, centerY, radius);
