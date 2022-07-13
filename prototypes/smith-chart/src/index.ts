@@ -23,7 +23,9 @@ Spotfire.initialize(async (mod) => {
         mod.property("extras"),
         mod.property("outerScales"),
         mod.property("innerScales"),
-        mod.property("zoom")
+        mod.property("zoom"),
+        mod.property("xCoord"),
+        mod.property("yCoord")
     );
 
     reader.subscribe(generalErrorHandler(mod, 40000)(onChange), (err) => {
@@ -37,7 +39,9 @@ Spotfire.initialize(async (mod) => {
         extrasProp: ModProperty<boolean>,
         outerScalesProp: ModProperty<boolean>,
         innerScalesProp: ModProperty<boolean>,
-        zoomProp: ModProperty<number>
+        zoomProp: ModProperty<number>,
+        xCoordProp: ModProperty<number>,
+        yCoordProp: ModProperty<number>
     ) {
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy(colorAxisName))?.root();
@@ -78,6 +82,8 @@ Spotfire.initialize(async (mod) => {
                 showOuterScales: outerScalesProp.value()!,
                 showInnerScales : innerScalesProp.value()!,
                 zoom : zoomProp.value()!,
+                xCoord: xCoordProp.value()!,
+                yCoord: yCoordProp.value()!,
                 clearMarking: dataView.clearMarking,
                 mouseLeave: () => mod.controls.tooltip.hide()
             },
@@ -90,6 +96,8 @@ Spotfire.initialize(async (mod) => {
                 { label: resources.extras, type: "checkbox", property: extrasProp },
                 { label: resources.outerScales, type: "checkbox", property: outerScalesProp},
                 { label: resources.innerScales, type: "checkbox", property: innerScalesProp},
+                { label: resources.xCoord, type: "range", property: xCoordProp, max: 100, min: -100, step: 1 },
+                { label: resources.yCoord, type: "range", property: yCoordProp, max: 100, min: -100, step: 1 },
                 { label: resources.zoom, type: "range", property: zoomProp, max: 400, min: 0, step: 20 }
             ]);
         }

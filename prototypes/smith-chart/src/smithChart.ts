@@ -15,6 +15,8 @@ export interface SmithSettings {
     showOuterScales?: boolean;
     showInnerScales?: boolean;
     zoom?: number;
+    xCoord?: number;
+    yCoord?: number;
     clearMarking?(): void;
     mouseLeave(): void;
 }
@@ -101,8 +103,8 @@ export function render(settings: SmithSettings, points: Point[]) {
     const mainContext = canvas.main.getContext("2d")!;
     const highlightContext = canvas.hightlight.getContext("2d")!;
 
-    const centerX = canvas.main.width / 2;
-    const centerY = canvas.main.height / 2;
+    const centerX = settings.xCoord ?  (canvas.main.width / 2) - (settings.xCoord*0.01*radius) : canvas.main.width / 2;
+    const centerY = settings.yCoord ?  canvas.main.height / 2  - (settings.yCoord*0.01*radius): canvas.main.height / 2;
 
     bg(bgContext);
     let rendered: RenderedPoint[] = [];

@@ -4,4 +4,6 @@ export const resources = {
     outerScales: "Outer scales",
     innerScales: "Inner Scales",
     zoom: "Zoom",
+    xCoord: "X Coordinate",
+    yCoord: "Y Coordinate"
 };

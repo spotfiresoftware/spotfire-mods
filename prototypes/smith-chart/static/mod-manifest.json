@@ -29,6 +29,16 @@
             "name": "zoom",
             "type": "integer",
             "defaultValue": "0"
+        },
+        {
+            "name": "xCoord",
+            "type": "integer",
+            "defaultValue": "0"
+        },
+        {
+            "name": "yCoord",
+            "type": "integer",
+            "defaultValue": "0"
         }
     ],
     "dataViewDefinition": {
