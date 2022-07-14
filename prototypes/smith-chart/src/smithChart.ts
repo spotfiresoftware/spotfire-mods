@@ -1,5 +1,6 @@
 // @ts-ignore
 import * as d3 from "d3";
+import { ModProperty } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
 
 export type ComplexNumber = [real: number, imaginary: number];
@@ -14,7 +15,7 @@ export interface SmithSettings {
     showExtras?: boolean;
     showOuterScales?: boolean;
     showInnerScales?: boolean;
-    zoom?: number;
+    zoom?: ModProperty <number>;
     xCoord?: number;
     yCoord?: number;
     clearMarking?(): void;
@@ -71,6 +72,11 @@ export function createCanvases(parent: HTMLElement) {
 export function render(settings: SmithSettings, points: Point[]) {
     const { canvas } = settings;
 
+    // Zoom with wheel
+    canvas.main.onwheel = (e: WheelEvent) => {
+            settings.zoom?.set( Math.min(Math.max( settings.zoom?.value()! - e.deltaY, 0), 400));
+    };
+
     points.sort((a, b) => {
         if (a.isMarked && b.isMarked) {
             return 0;
@@ -87,7 +93,7 @@ export function render(settings: SmithSettings, points: Point[]) {
         return 0;
     });
 
-    let scaleRadius = settings.zoom ? Math.min(settings.size.width, settings.size.height)*(100+settings.zoom)/200:  Math.min(settings.size.width, settings.size.height)/2
+    let scaleRadius = settings.zoom?.value() ? Math.min((settings.size.width, settings.size.height)*(100+settings.zoom.value()!))/200:  Math.min(settings.size.width, settings.size.height)/2
     let radius = settings.showOuterScales ? scaleRadius-60 : scaleRadius;
 
     Object.keys(canvas).forEach((k) => {

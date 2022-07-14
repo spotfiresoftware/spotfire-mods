@@ -43,6 +43,7 @@ Spotfire.initialize(async (mod) => {
         xCoordProp: ModProperty<number>,
         yCoordProp: ModProperty<number>
     ) {
+
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy(colorAxisName))?.root();
 
@@ -81,7 +82,7 @@ Spotfire.initialize(async (mod) => {
                 showExtras: extrasProp.value()!,
                 showOuterScales: outerScalesProp.value()!,
                 showInnerScales : innerScalesProp.value()!,
-                zoom : zoomProp.value()!,
+                zoom : zoomProp,
                 xCoord: xCoordProp.value()!,
                 yCoord: yCoordProp.value()!,
                 clearMarking: dataView.clearMarking,
