@@ -426,6 +426,8 @@ Spotfire.initialize(async (mod) => {
                     let mode = e.ctrlKey ? "Toggle" : "Replace";
                     if (e.shiftKey) {
                         rows.forEach((m) => m.mark(mode));
+                    } else if (e.altKey) {
+                        colorLeaves[rows.indexOf(row)].mark(mode);
                     } else {
                         row.mark(mode);
                     }
