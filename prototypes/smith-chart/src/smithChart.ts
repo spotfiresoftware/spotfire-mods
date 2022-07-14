@@ -178,7 +178,6 @@ export function render(settings: SmithSettings, points: Point[]) {
         mainContext.fill();
     }
 
-    
     // Zoom with wheel
     canvas.main.onwheel = (e: WheelEvent) => {
         settings.zoom?.set( Math.min(Math.max( settings.zoom?.value()! - e.deltaY, 0), 400));
@@ -189,20 +188,19 @@ export function render(settings: SmithSettings, points: Point[]) {
         var speed = 2;
         switch(e.key){
             case ("ArrowRight") :
-                settings.xCoord?.set(settings.xCoord.value()!+speed);
+                settings.xCoord?.set(Math.min(settings.xCoord.value()!+speed, 100));
                 break;
             case ("ArrowLeft") :
-                settings.xCoord?.set(settings.xCoord.value()!-speed);
+                settings.xCoord?.set(Math.max(settings.xCoord.value()!-speed, -100));
                 break;
             case ("ArrowUp") : 
-                settings.yCoord?.set(settings.yCoord.value()!-speed);
+                settings.yCoord?.set(Math.max(settings.yCoord.value()!-speed, -100));
                 break;
             case ("ArrowDown") : 
-                settings.yCoord?.set(settings.yCoord.value()!+speed);
+                settings.yCoord?.set(Math.min(settings.yCoord.value()!+speed, 100));
                 break;
         }
     };
-
 
     rectangularSelection(canvas.main, rendered, {
         mark(p, e) {
