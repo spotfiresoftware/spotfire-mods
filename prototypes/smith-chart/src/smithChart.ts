@@ -303,8 +303,11 @@ export function render(settings: SmithSettings, points: Point[]) {
             steps = 50*5;
             for(let i = 0; i < steps; i++){
                 if(i%5 == 0){
-                    context.fillText(i == 0 ? "0,0" : ((steps-i)/500).toString(), 0, -scaleRadius+(17*1 + 11 + 1));
-                    context.fillText(i == 0 ? "0,0" :(i/500).toString(), 0, -scaleRadius+(17*0 + 11 + 1));
+                    // Show less numbers if visualization is very small to avoid clutter
+                    if(scaleRadius > 280 || i%10 == 0){
+                        context.fillText(i == 0 ? "0,0" : ((steps-i)/500).toString(), 0, -scaleRadius+(17*1 + 11 + 1));
+                        context.fillText(i == 0 ? "0,0" :(i/500).toString(), 0, -scaleRadius+(17*0 + 11 + 1));
+                    }
                     context.lineWidth = 1;
                     context.beginPath();
                     context.moveTo(0, -scaleRadius+(17*1 + 3));
