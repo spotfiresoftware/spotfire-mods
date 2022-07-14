@@ -83,8 +83,8 @@ Spotfire.initialize(async (mod) => {
                 showOuterScales: outerScalesProp.value()!,
                 showInnerScales : innerScalesProp.value()!,
                 zoom : zoomProp,
-                xCoord: xCoordProp.value()!,
-                yCoord: yCoordProp.value()!,
+                xCoord: xCoordProp,
+                yCoord: yCoordProp,
                 clearMarking: dataView.clearMarking,
                 mouseLeave: () => mod.controls.tooltip.hide()
             },

@@ -16,8 +16,8 @@ export interface SmithSettings {
     showOuterScales?: boolean;
     showInnerScales?: boolean;
     zoom?: ModProperty <number>;
-    xCoord?: number;
-    yCoord?: number;
+    xCoord?: ModProperty<number>;
+    yCoord?: ModProperty <number>;
     clearMarking?(): void;
     mouseLeave(): void;
 }
@@ -72,11 +72,6 @@ export function createCanvases(parent: HTMLElement) {
 export function render(settings: SmithSettings, points: Point[]) {
     const { canvas } = settings;
 
-    // Zoom with wheel
-    canvas.main.onwheel = (e: WheelEvent) => {
-            settings.zoom?.set( Math.min(Math.max( settings.zoom?.value()! - e.deltaY, 0), 400));
-    };
-
     points.sort((a, b) => {
         if (a.isMarked && b.isMarked) {
             return 0;
@@ -109,8 +104,8 @@ export function render(settings: SmithSettings, points: Point[]) {
     const mainContext = canvas.main.getContext("2d")!;
     const highlightContext = canvas.hightlight.getContext("2d")!;
 
-    const centerX = settings.xCoord ?  (canvas.main.width / 2) - (settings.xCoord*0.01*radius) : canvas.main.width / 2;
-    const centerY = settings.yCoord ?  canvas.main.height / 2  - (settings.yCoord*0.01*radius): canvas.main.height / 2;
+    let centerX = settings.xCoord ?  (canvas.main.width / 2) - (settings.xCoord.value()!*0.01*radius) : canvas.main.width / 2;
+    let centerY = settings.yCoord ?  canvas.main.height / 2  - (settings.yCoord.value()!*0.01*radius): canvas.main.height / 2;
 
     bg(bgContext);
     let rendered: RenderedPoint[] = [];
@@ -182,6 +177,32 @@ export function render(settings: SmithSettings, points: Point[]) {
 
         mainContext.fill();
     }
+
+    
+    // Zoom with wheel
+    canvas.main.onwheel = (e: WheelEvent) => {
+        settings.zoom?.set( Math.min(Math.max( settings.zoom?.value()! - e.deltaY, 0), 400));
+    };
+
+    // Move canvas with arrow keys
+    document.onkeydown = (e: KeyboardEvent) => {
+        var speed = 2;
+        switch(e.key){
+            case ("ArrowRight") :
+                settings.xCoord?.set(settings.xCoord.value()!+speed);
+                break;
+            case ("ArrowLeft") :
+                settings.xCoord?.set(settings.xCoord.value()!-speed);
+                break;
+            case ("ArrowUp") : 
+                settings.yCoord?.set(settings.yCoord.value()!-speed);
+                break;
+            case ("ArrowDown") : 
+                settings.yCoord?.set(settings.yCoord.value()!+speed);
+                break;
+        }
+    };
+
 
     rectangularSelection(canvas.main, rendered, {
         mark(p, e) {
