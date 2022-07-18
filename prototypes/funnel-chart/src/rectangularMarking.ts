@@ -97,14 +97,13 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
             .filter(settings.centerMarking ? partOfMarking : fullyPartOfMarking);
 
         
-        
-        let {_groups : identified, } = markedSectors;
+        let identified = markedSectors.nodes()
 
-        if (identified[0].length === 0){
+        if (identified.length === 0){
             return settings.clearMarking();
         }
 
-        let ids = identified[0].map((n : any) => n.id)
+        let ids = identified.map((n : any) => n.id)
         
         let toMark = settings.processes?.filter((process) => {
             return ids.indexOf(process.label) > -1;
