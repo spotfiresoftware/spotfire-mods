@@ -9,7 +9,7 @@
         "build-watch": "webpack --watch",
         "start": "npm ci && npm run build-watch"
     },
-    "author": "objerke, ebrandin",
+    "author": "tobiashjalmarsson",
     "license": "ISC",
     "devDependencies": {
         "@tibco/spotfire-mods-dev-server": "^1.0.1",
