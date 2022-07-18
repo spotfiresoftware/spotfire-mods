@@ -9,7 +9,6 @@ enum LabelPosition {
     outside = "outside",
     inside = "inside"
 }
-// BUGG : COLOR BY AMOUNT is not showing correct label when choosing name, probably retrieve data another way
 window.Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
@@ -28,14 +27,6 @@ window.Spotfire.initialize(async (mod) => {
     let interaction = interactionLock();
     reader.subscribe(generalErrorHandler(mod, 10000, interaction)(onChange));
 
-    /**
-     * Render the bar chart.
-     * This visualization is a simplified example to highlight how the mod API can be used. It is not a fully functioning visualization.
-     *
-     * @param {Spotfire.Size} size
-     * @param {Spotfire.DataView} dataView
-     * @param {Spotfire.ModProperty<string>} yAxisMode
-     */
     async function onChange(
         dataView: Spotfire.DataView,
         size: Spotfire.Size,
@@ -55,13 +46,10 @@ window.Spotfire.initialize(async (mod) => {
         let errors = await dataView.getErrors();
         if (errors.length > 0) {
             mod.controls.errorOverlay.show(errors, "dataView");
-            // TODO clear DOM
             return;
         }
         mod.controls.errorOverlay.hide("dataView");
         mod.controls.tooltip.hide();
-        // Get the leaf nodes for the x hierarchy. We will iterate over them to
-        // render the bars.
         let colorHierarchy = await dataView.hierarchy("Color");
         if (colorHierarchy == null) {
             return;
@@ -69,11 +57,9 @@ window.Spotfire.initialize(async (mod) => {
 
         let colorRoot = await colorHierarchy.root();
         if (colorRoot == null) {
-            // Return and wait for next call to render when reading data was aborted.
-            // Last rendered data view is still valid from a users perspective since
-            // a document modification was made during a progress indication.
             return;
         }
+
         let dataViewYAxis = await dataView.continuousAxis("Y");
         if (dataViewYAxis == null) {
             mod.controls.errorOverlay.show("No data on y axis.", "y");
@@ -94,6 +80,7 @@ window.Spotfire.initialize(async (mod) => {
         if (dataRows == null) {
             return;
         }
+
         dataRows.forEach((row) => {
             if (row == null) {
                 return;

@@ -60,11 +60,6 @@ let FULL_WIDTH = 180;
 let CENTER = 0;
 let lineGenerator = d3.line();
 
-/**
- * Render the visualization
- * @param {Spotfire.Size} size
- * @param {Object} data
- */
 export async function funnel(size: Spotfire.Size, data: FunnelData[], settings: FunnelSettings) {
     let width = size.width;
     let height = size.height;
@@ -87,6 +82,7 @@ export async function funnel(size: Spotfire.Size, data: FunnelData[], settings: 
         .style("display", "block")
         .style("margin", "auto");
 
+    console.log(typeof svg);
     renderProcesses(size, svg, data, settings);
 }
 
@@ -128,7 +124,6 @@ function renderProcesses(size: Spotfire.Size, svg: any, processes: FunnelData[],
             .attr("id", processes[i].label)
             .attr("fill", processes[i].colors.backGround)
             .attr("stroke", "none")
-            //.attr("stroke", processes[i].color)
             .on("mouseover.hover", function (this: SVGPathElement) {
                 let tooltipInfo = [
                     processes[i].label,
