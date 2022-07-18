@@ -30,7 +30,7 @@ export interface FunnelSettings {
 }
 
 interface ColorSettings {
-    backGround : HexColor | string;
+    backGround: HexColor | string;
     marking: string;
 }
 
@@ -100,7 +100,7 @@ function renderProcesses(size: Spotfire.Size, svg: any, processes: FunnelData[],
     let height_delta = Math.round(size.height / processes.length) - Math.round(size.height / (processes.length * 10));
     let width_percentage = 1.0;
     let rectCoords: RectCoords = { x1: 0, x2: 0, y1: 0, y2: 0 };
-    let margin = Math.round(size.height/(processes.length * 10));
+    let margin = Math.round(size.height / (processes.length * 10));
     for (let i = 0; i < processes.length; i++) {
         if (processes[i] == null || processes[i] == undefined) {
             break;
@@ -129,7 +129,7 @@ function renderProcesses(size: Spotfire.Size, svg: any, processes: FunnelData[],
             .attr("fill", processes[i].colors.backGround)
             .attr("stroke", "none")
             //.attr("stroke", processes[i].color)
-            .on("mouseover.hover", function(this : SVGPathElement) {
+            .on("mouseover.hover", function (this: SVGPathElement) {
                 let tooltipInfo = [
                     processes[i].label,
                     processes[i].value,
@@ -139,7 +139,7 @@ function renderProcesses(size: Spotfire.Size, svg: any, processes: FunnelData[],
                 d3.select(this).attr("stroke", processes[i].colors.marking);
                 d3.event.stopPropagation();
             })
-            .on("mouseleave", function(this : SVGPathElement) {
+            .on("mouseleave", function (this: SVGPathElement) {
                 settings.tooltip.hide();
                 d3.select(this).attr("stroke", "none");
                 d3.event.stopPropagation();

@@ -5,12 +5,6 @@ import { interactionLock } from "./interactionLock";
 import { resources } from "./resources";
 import { funnel, FunnelData, FunnelSettings, LabelFor } from "./funnelChart";
 
-
-enum InteractionMode {
-    drilldown = "drilldown",
-    mark = "mark"
-}
-
 enum LabelPosition {
     outside = "outside",
     inside = "inside"
@@ -51,7 +45,7 @@ window.Spotfire.initialize(async (mod) => {
         showProcessName: ModProperty<boolean>,
         showProcessQuantity: ModProperty<boolean>,
         showProcessPercentage: ModProperty<boolean>,
-        labelPosition: ModProperty<string>,
+        labelPosition: ModProperty<string>
     ) {
         /**
          * Check for any errors.
@@ -100,22 +94,22 @@ window.Spotfire.initialize(async (mod) => {
         if (dataRows == null) {
             return;
         }
-        dataRows.forEach(row => {
+        dataRows.forEach((row) => {
             if (row == null) {
                 return;
             }
-        })
+        });
 
-        let data : FunnelData[] = [];
+        let data: FunnelData[] = [];
 
         let colorLeaves = colorRoot.leaves();
-        if (colorLeaves === undefined){
+        if (colorLeaves === undefined) {
             return;
         }
-        
+
         colorLeaves.map((leaf: any, idx: number) => {
             let rows = leaf.rows();
-            
+
             if (rows === undefined) {
                 return;
             }
@@ -124,25 +118,25 @@ window.Spotfire.initialize(async (mod) => {
                 return;
             }
             data.push({
-                    colors: {
-                        backGround: rows[0].color().hexCode != null ? rows[0].color().hexCode : "#FFFFFF",
-                        marking: context.styling.scales.font.color
-                    },
-                    value: dataRows[idx].continuous("Y").value() !== null  ? dataRows[idx].continuous("Y").value() : 1,
-                    clearMarking: dataView.clearMarking,
-                    label: dataRows !== null ? dataRows[idx].categorical("X").formattedValue() : "Null",
-                    isMarked: rows[0].isMarked(),
-                    displayValues: false,
-                    row: rows[0],
-                    mark() {
-                        if (d3.event.ctrlKey) {
-                            rows[0].mark("ToggleOrAdd");
-                            d3.event.stopPropagation();
-                            return;
-                        }
-                        rows[0].mark();
+                colors: {
+                    backGround: rows[0].color().hexCode != null ? rows[0].color().hexCode : "#FFFFFF",
+                    marking: context.styling.scales.font.color
+                },
+                value: dataRows[idx].continuous("Y").value() !== null ? dataRows[idx].continuous("Y").value() : 1,
+                clearMarking: dataView.clearMarking,
+                label: dataRows !== null ? dataRows[idx].categorical("X").formattedValue() : "Null",
+                isMarked: rows[0].isMarked(),
+                displayValues: false,
+                row: rows[0],
+                mark() {
+                    if (d3.event.ctrlKey) {
+                        rows[0].mark("ToggleOrAdd");
                         d3.event.stopPropagation();
+                        return;
                     }
+                    rows[0].mark();
+                    d3.event.stopPropagation();
+                }
             } as FunnelData);
         });
 
@@ -154,7 +148,7 @@ window.Spotfire.initialize(async (mod) => {
             showProcessName,
             showProcessQuantity,
             showProcessPercentage,
-            labelPosition,
+            labelPosition
         );
 
         let settings: FunnelSettings = {
@@ -189,7 +183,7 @@ function renderSettingsButton(
     showProcessName: ModProperty<boolean>,
     showProcessQuantity: ModProperty<boolean>,
     showProcessPercentage: ModProperty<boolean>,
-    labelPosition: ModProperty<string>,
+    labelPosition: ModProperty<string>
 ) {
     let settingsButton = document.querySelector<HTMLElement>(".settings");
     settingsButton?.classList.toggle("visible", mod.getRenderContext().isEditing);

@@ -17,7 +17,7 @@ export interface MarkingSettings {
      * Get the calculated center of a datum object. The default is to take the center of the bounding box.
      * @param datum  d3 Data object bound to the marked element.
      */
-    getCenter?(datum: unknown): {x: number, y: number};
+    getCenter?(datum: unknown): { x: number; y: number };
 
     /**
      * CSS Classes to ignore. Checks the parent of the marked element to see if any parent has an ignored class.
@@ -42,7 +42,7 @@ export interface MarkingSettings {
      */
     centerMarking?: boolean;
 
-    processes? : FunnelData[]
+    processes?: FunnelData[];
 }
 
 /**
@@ -96,22 +96,21 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
             .selectAll<SVGPathElement, unknown>(settings.markingSelector)
             .filter(settings.centerMarking ? partOfMarking : fullyPartOfMarking);
 
-        
-        let identified = markedSectors.nodes()
+        let identified = markedSectors.nodes();
 
-        if (identified.length === 0){
+        if (identified.length === 0) {
             return settings.clearMarking();
         }
 
-        let ids = identified.map((n : any) => n.id)
-        
+        let ids = identified.map((n: any) => n.id);
+
         let toMark = settings.processes?.filter((process) => {
             return ids.indexOf(process.label) > -1;
-        })
+        });
 
-        toMark?.forEach(process => {
-            process.mark()
-        })
+        toMark?.forEach((process) => {
+            process.mark();
+        });
 
         function fullyPartOfMarking(this: SVGPathElement) {
             const box = this.getBoundingClientRect();
@@ -125,9 +124,9 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
 
         function partOfMarking(this: SVGPathElement, d: unknown) {
             let centerX: number;
-            let centerY : number;
+            let centerY: number;
 
-            if(settings.getCenter) {
+            if (settings.getCenter) {
                 let center = settings.getCenter(d);
                 centerX = center.x;
                 centerY = center.y;
