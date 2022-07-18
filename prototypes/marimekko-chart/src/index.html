@@ -16,7 +16,7 @@
         <link rel="stylesheet" type="text/css" media="all" href="main.css" />
     </head>
     <body>
-        <div id="border">
+        <div id="mod-container">
             <div id="canvas"></div>
             <div id="x-scale"></div>
             <div id="y-scale"></div>
@@ -24,5 +24,7 @@
         </div>
         <script id="spotfire-loader">var Spotfire=function(e){"use strict";return e.initialize=function(e){var t="sfTemp"+1e4*Math.random()+"Cb",r=window;r[t]=e;var a={subject:"GetUrl",callbackId:-1,options:{cbId:t}};r.addEventListener("message",(function e(t){if(t.source!==r.parent||!t.data.src)return;r.removeEventListener("message",e);var a=document,n=a.createElement("script");n.src=t.data.src,(a.head||a.body).appendChild(n)})),r.parent.postMessage(a,"*")},e}({});</script>
         <script src="main.js"></script>
+        <script src="scales.js"></script>
+        <script src="d3.js"></script>
     </body>
 </html>

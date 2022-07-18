@@ -15,10 +15,20 @@ body {
     position: relative;
 }
 
-#border {
+#mod-container {
+    margin: 0;
+    overflow: hidden;
     position: relative;
     height: calc(100vh - 20px);
     width: calc(100vw - 20px);
+}
+
+#mod-container {
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 #canvas,
@@ -34,6 +44,7 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    justify-content: space-around;
     align-items: flex-end;
 }
 
@@ -51,11 +62,19 @@ body {
 
 .segment {
     display: block;
+    outline: none;
+    outline-offset: -1px;
+}
+
+.segment-label {
+    position: absolute;
+    text-align: center;
 }
 
 #y-scale {
     border-right: 1px solid currentColor;
     text-align: right;
+    cursor: pointer;
 }
 
 .y-scale-label {
@@ -67,22 +86,23 @@ body {
 
 #x-scale {
     border-top: 1px solid currentColor;
-    text-align: left;
+    text-align: center;
     cursor: pointer;
 }
 
 .x-scale-label {
+    text-align: center;
     line-height: 10px;
     font-size: 10px;
     position: absolute;
     top: 5px;
-    text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 #x-title {
-    text-align: left;
+    text-align: center;
     cursor: pointer;
 }
 

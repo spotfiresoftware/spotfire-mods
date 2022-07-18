@@ -9,6 +9,36 @@
             "name": "x-axis-mode",
             "type": "string",
             "defaultValue": "percentage"
+        },
+        {
+            "name": "mekko",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "title",
+            "type": "boolean",
+            "defaultValue": true
+        },
+        {
+            "name": "sort",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "reverse-segments",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "reverse-bars",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "show-label",
+            "type": "boolean",
+            "defaultValue": false
         }
     ],
     "dataViewDefinition": {
@@ -23,12 +53,12 @@
         "axes": [
             {
                 "name": "X",
-                "mode": "dual",
+                "mode": "categorical",
                 "placement": "bottom"
             },
             {
                 "name": "Y",
-                "mode": "dual",
+                "mode": "continuous",
                 "placement": "left",
                 "allowMultipleMeasures": true
             }
@@ -37,6 +67,8 @@
     "files": [
         "index.html",
         "main.css",
-        "main.js"
+        "main.js",
+        "scales.js",
+        "d3.js"
     ]
 }
