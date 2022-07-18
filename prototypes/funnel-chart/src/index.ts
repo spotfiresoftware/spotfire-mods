@@ -106,30 +106,44 @@ window.Spotfire.initialize(async (mod) => {
             }
         })
 
+        let data : FunnelData[] = [];
+
         let colorLeaves = colorRoot.leaves();
-        let data: FunnelData[] = colorLeaves.map((leaf: any, idx: number) => {
+        if (colorLeaves === undefined){
+            return;
+        }
+        
+        colorLeaves.map((leaf: any, idx: number) => {
             let rows = leaf.rows();
-            return {
-                colors: {
-                    backGround: rows[0].color().hexCode != null ? rows[0].color().hexCode : "#FFFFFF",
-                    marking: context.styling.scales.font.color
-                },
-                value: dataRows !== null ? dataRows[idx].continuous("Y").value() : 1,
-                clearMarking: dataView.clearMarking,
-                label: dataRows !== null ? dataRows[idx].categorical("X").formattedValue() : "Null",
-                isMarked: rows[0].isMarked(),
-                displayValues: false,
-                row: rows[0],
-                mark() {
-                    if (d3.event.ctrlKey) {
-                        rows[0].mark("ToggleOrAdd");
+            
+            if (rows === undefined) {
+                return;
+            }
+
+            if (dataRows === null) {
+                return;
+            }
+            data.push({
+                    colors: {
+                        backGround: rows[0].color().hexCode != null ? rows[0].color().hexCode : "#FFFFFF",
+                        marking: context.styling.scales.font.color
+                    },
+                    value: dataRows[idx].continuous("Y").value() !== null  ? dataRows[idx].continuous("Y").value() : 1,
+                    clearMarking: dataView.clearMarking,
+                    label: dataRows !== null ? dataRows[idx].categorical("X").formattedValue() : "Null",
+                    isMarked: rows[0].isMarked(),
+                    displayValues: false,
+                    row: rows[0],
+                    mark() {
+                        if (d3.event.ctrlKey) {
+                            rows[0].mark("ToggleOrAdd");
+                            d3.event.stopPropagation();
+                            return;
+                        }
+                        rows[0].mark();
                         d3.event.stopPropagation();
-                        return;
                     }
-                    rows[0].mark();
-                    d3.event.stopPropagation();
-                }
-            };
+            } as FunnelData);
         });
 
         renderSettingsButton(
@@ -161,6 +175,7 @@ window.Spotfire.initialize(async (mod) => {
                 style: context.styling.general.font.fontStyle
             }
         };
+
         funnel(size, data, settings);
         context.signalRenderComplete();
     }
