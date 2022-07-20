@@ -4,23 +4,13 @@
 * in the license file that is distributed with this file.
 */
 
-* {
-    box-sizing: border-box;
-}
-
-body {
-    white-space: pre-line;
-    margin: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
+html,
+body,
 #mod-container {
-    margin: 0;
+    margin-top: 0;
     overflow: hidden;
-    position: relative;
-    height: calc(100vh - 20px);
-    width: calc(100vw - 20px);
+    height: 100%;
+    width: 100%;
 }
 
 #mod-container {
@@ -31,10 +21,9 @@ body {
     -ms-user-select: none;
 }
 
+#scale,
 #canvas,
-#x-scale,
-#x-title,
-#y-scale {
+#x-title {
     position: absolute;
     left: 0;
     top: 0;
@@ -69,36 +58,6 @@ body {
 .segment-label {
     position: absolute;
     text-align: center;
-}
-
-#y-scale {
-    border-right: 1px solid currentColor;
-    text-align: right;
-    cursor: pointer;
-}
-
-.y-scale-label {
-    line-height: 10px;
-    font-size: 10px;
-    position: absolute;
-    right: 5px;
-}
-
-#x-scale {
-    border-top: 1px solid currentColor;
-    text-align: center;
-    cursor: pointer;
-}
-
-.x-scale-label {
-    text-align: center;
-    line-height: 10px;
-    font-size: 10px;
-    position: absolute;
-    top: 5px;
-    white-space: nowrap;
-    overflow: hidden; 
-    text-overflow: ellipsis;
 }
 
 #x-title {
