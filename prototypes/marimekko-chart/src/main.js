@@ -109,11 +109,7 @@ Spotfire.initialize(async (mod) => {
         let colorLeaves = colorRoot.leaves();
 
         let totalValue = calculatedValue(xLeaves);
-        let maxYValue = calculateMaxYValue(xLeaves);
-
-        
-        
-     
+        let maxYValue = calculateMaxYValue(xLeaves);     
         renderTitles(xLeaves, totalValue, titleMode);
         renderBars(dataView, xLeaves, totalValue, colorLeaves, chartMode, maxYValue, showLabel);
         renderAxis(xScaleHeight, 
@@ -130,7 +126,6 @@ Spotfire.initialize(async (mod) => {
                     totalValue, 
                     maxYValue, 
                     mod);
-
         context.signalRenderComplete();
     }
 
@@ -149,12 +144,13 @@ Spotfire.initialize(async (mod) => {
             xTitleDiv.style.bottom = "0px";
             xTitleDiv.style.right = "30px";
             xTitleDiv.style.top = "0px";
-    
+
+            let width = xTitleDiv.offsetWidth * 0.98 - (xLeafNodes.length - 2);
             let offset = 0;
     
             xLeafNodes.forEach((LeafNode) => {
                 let totalBarValue = sumValue(LeafNode.rows(), "Y");
-                let barWidth = (totalBarValue / totalValue) * xTitleDiv.offsetWidth;
+                let barWidth = (totalBarValue / totalValue) * width;
                 xTitleDiv.appendChild(createBarLabel(LeafNode, barWidth, offset));
                 offset += barWidth;
             });
@@ -199,7 +195,7 @@ Spotfire.initialize(async (mod) => {
 
         //Set width and height to align with axis range
         const canvasHeight = canvasDiv.offsetHeight * 0.98;
-        const canvasWidth = canvasDiv.offsetWidth * 0.98 - (xLeafNodes.length - 1);
+        const canvasWidth = canvasDiv.offsetWidth * 0.98 - (xLeafNodes.length - 2);
 
         canvasDiv.onclick = (e) => {
             if (e.target === canvasDiv) {
@@ -230,13 +226,25 @@ Spotfire.initialize(async (mod) => {
             let bar = createDiv("bar");
 
             let totalBarValue = sumValue(rows, "Y");
-            let barWidth = totalBarValue / totalValue;
+            let percentage = totalBarValue / totalValue;
+            let height;
             if (chartMode.value()){
-                bar.style.height = Math.round((totalBarValue / maxYValue) * canvasHeight) + "px";
+                height = Math.round((totalBarValue / maxYValue) * canvasHeight);
             } else {
-                bar.style.height =  canvasHeight + "px";
+                height = canvasHeight;
             }
-            bar.style.width = Math.round(barWidth * canvasWidth) + "px";
+            bar.style.height =  height + "px";
+            bar.style.width = Math.round(percentage * canvasWidth) + "px";
+
+            if(showLabel.value()){
+                let label = createDiv("bar-label", `${totalBarValue} (${(percentage * 100).toFixed(1)}%)`);
+                label.style.color = context.styling.scales.font.color;
+                label.style.fontSize = context.styling.scales.font.fontSize + "px";
+                label.style.fontFamily = context.styling.scales.font.fontFamily;
+                label.style.marginTop = canvasHeight - height + "px";
+                label.style.width = bar.style.width;
+                bar.appendChild(label); 
+            }
     
             rows.forEach((row) => {
                 let y = row.continuous("Y");
@@ -245,10 +253,12 @@ Spotfire.initialize(async (mod) => {
                 }
 
                 let segment = createDiv("segment");
+                let percentageMekko = +y.value() / maxYValue;
+                let percentageMarimekko = +y.value() / totalBarValue;
                 if (chartMode.value()){
-                    segment.style.height = (+y.value() / maxYValue) * canvasHeight + "px";
+                    segment.style.height = (percentageMekko) * canvasHeight + "px";
                 } else {
-                    segment.style.height = (+y.value() / totalBarValue) * canvasHeight + "px";
+                    segment.style.height = (percentageMarimekko) * canvasHeight + "px";
                 }
                 segment.style.backgroundColor = row.color().hexCode;
                 segment.style.width = bar.style.width;
@@ -276,7 +286,7 @@ Spotfire.initialize(async (mod) => {
                 };
 
                 if (showLabel.value()){
-                    let label = createDiv("segment-label", "" + +y.value());
+                    let label = createDiv("segment-label", `${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`);
                     label.style.color = context.styling.scales.font.color;
                     label.style.fontSize = context.styling.scales.font.fontSize + "px";
                     label.style.fontFamily = context.styling.scales.font.fontFamily;
@@ -360,12 +370,12 @@ function createDiv(className, content) {
     return elem;
 }
 
- /**
-         * Sorts bars depending on value
-         * @param {Spotfire.DataViewHierarchyNode} a
-         * @param {Spotfire.DataViewHierarchyNode} b
-         */
-  function sortBars(a, b){
+/**
+     * Sorts bars depending on value
+     * @param {Spotfire.DataViewHierarchyNode} a
+     * @param {Spotfire.DataViewHierarchyNode} b
+     */
+function sortBars(a, b){
     if(sumValue(b.rows() ,"Y") < sumValue(a.rows() ,"Y")){
         return -1;
     } else if (sumValue(a.rows() ,"Y") < sumValue(b.rows() ,"Y")){
@@ -373,6 +383,5 @@ function createDiv(className, content) {
     } else {
         return 0;
     }
-  }
-
+}
 

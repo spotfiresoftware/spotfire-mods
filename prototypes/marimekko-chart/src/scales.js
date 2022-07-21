@@ -1,13 +1,3 @@
-
-//const xScale = d3.select("#x-scale");
-//const yScale = d3.select("#y-scale");
-
-/**
- * A container for X axis labels.
- * Instead of figuring out the layout in special cases when labels don't fit, we delegate
- * this job to the DOM layout engine.
- */
-//const xLabelsContainer = modContainer.append("div").attr("class", "x-axis-label-container");
 /**
  * @param {number} xScaleHeight
  * @param {number} yScaleWidth
@@ -88,10 +78,12 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
         .selectAll("text")
         .attr("tooltip", (d) => d)
         .on("mouseover", function (d) {
+            d3.select(this).style("cursor", "pointer");
             if(!chartMode.value()){d = d * 100 + "%";}
             mod.controls.tooltip.show(d);
         })
         .on("mouseout", function () {
+            d3.select(this).style("cursor", "default");
             mod.controls.tooltip.hide();
         });
     
@@ -105,10 +97,12 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
         .selectAll("text")
         .attr("tooltip", (d) => d)
         .on("mouseover", function (d) {
+            d3.select(this).style("cursor", "pointer");
             if(xAxisMode.value() === "percentage"){d = d * 100 + "%";}
             mod.controls.tooltip.show(d);
         })
         .on("mouseout", function () {
+            d3.select(this).style("cursor", "default");
             mod.controls.tooltip.hide();
         });
 
@@ -342,7 +336,7 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
                             text: "Show values of segments",
                             checked: showLabel.value() === true,
                             enabled: true
-                        }),
+                        })
                     ]
                 })
             ];

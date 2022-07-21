@@ -48,6 +48,15 @@ body,
     border-color: currentColor;
 }
 
+.bar-label {
+    position: absolute;
+    top: -3px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
 .segment {
     display: block;
     outline: none;
@@ -57,6 +66,9 @@ body,
 .segment-label {
     position: absolute;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 #x-title {
