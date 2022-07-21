@@ -55,7 +55,6 @@ interface RectCoords {
 }
 
 const START_Y = 80;
-const FY = 800;
 let FULL_WIDTH = 180;
 let CENTER = 0;
 let lineGenerator = d3.line();
@@ -82,7 +81,6 @@ export async function funnel(size: Spotfire.Size, data: FunnelData[], settings: 
         .style("display", "block")
         .style("margin", "auto");
 
-    console.log(typeof svg);
     renderProcesses(size, svg, data, settings);
 }
 
