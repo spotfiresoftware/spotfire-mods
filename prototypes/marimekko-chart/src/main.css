@@ -33,16 +33,15 @@ body,
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-around;
     align-items: flex-end;
+    justify-content: start;
 }
 
 .bar {
     border-bottom-width: 0;
-    flex-shrink: 1;
-    flex-grow: 1;
     text-align: center;
     overflow: hidden;
+    margin-right: 1px;
 }
 
 .bar:hover {

@@ -30,7 +30,7 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
     const styling = context.styling;
     const margin = { top: xTitleHeight, right: 40, bottom: xScaleHeight, left: yScaleWidth - 1}
     var width = size.width - margin.right;
-    var height = size.height - margin.top;
+    var height = size.height;
 
     //remove previous content in svg
     d3.selectAll("#scale > *").remove();
@@ -44,12 +44,12 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
     if (xAxisMode.value() === "percentage"){
         var xFormat = d3.format(".0%");
         var xscale = d3.scaleLinear()
-        .domain([0, 1])
+        .domain([0, 1.02])
         .range([margin.left, width]);
     } else if (xAxisMode.value() === "numeric"){
         var xFormat = null;
         var xscale = d3.scaleLinear()
-        .domain([0, totalValue])
+        .domain([0, totalValue * 1.02])
         .range([margin.left, width]);
     }
     
@@ -62,25 +62,28 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
     //render y axis different depending on chart mode
     if (!chartMode.value()){
         var yFormat = d3.format(".0%");
+        var yScaleTickNumber = 10;
         var yscale = d3.scaleLinear()
-        .domain([1, 0])
-        .range([margin.top, height - margin.bottom]);
+            .domain([1.02, 0])
+            .range([margin.top, height - margin.bottom]);
     } else {
-        var yFormat = null;
+        var yFormat = d3.format("");
+        var yScaleTickNumber = size.height / (styling.scales.font.fontSize * 2 + 6);
         var yscale = d3.scaleLinear()
-            .domain([maxYvalue, 0]).nice()
+            .domain([(maxYvalue * 1.02), 0])
             .range([margin.top, height - margin.bottom]);
     }
 
     var y_axis = d3.axisLeft()
-            .ticks(10)
+            .ticks(yScaleTickNumber)
             .tickFormat(yFormat)
+            .tickSizeOuter([0])
             .scale(yscale);
 
     //append y axis to svg
     svg.append("g")
         .attr("id", "y-axis")
-        .attr("transform", "translate(" + margin.left +","+ margin.top +")")
+        .attr("transform", "translate(" + margin.left +",0)")
         .call(y_axis)
         .selectAll("text")
         .attr("tooltip", (d) => d)

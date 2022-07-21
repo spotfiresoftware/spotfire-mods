@@ -67,8 +67,8 @@
     "files": [
         "index.html",
         "main.css",
-        "main.js",
         "scales.js",
-        "d3.js"
+        "d3.js",
+        "main.js"
     ]
 }
