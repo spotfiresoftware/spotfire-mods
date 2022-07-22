@@ -22,7 +22,8 @@ Spotfire.initialize(async (mod) => {
         mod.property("x-axis-mode"),
         mod.property("mekko"),
         mod.property("title"),
-        mod.property("show-label"),
+        mod.property("numeric-segment"),
+        mod.property("percentage-segment"),
         mod.property("reverse-bars"),
         mod.property("sort"),
         mod.windowSize()
@@ -34,22 +35,17 @@ Spotfire.initialize(async (mod) => {
 
     /**
      * Render the Marimekko Chart.
-     * This visualization is very simple since the marimekko chart is a very set chart, with few variations in how to visualize the data.
-     *
-     * Limitations:
-     * - The bars cannot handle negative values
-     * - Naive rendering of y-axis labels
-     *
      * @param {Spotfire.DataView} dataView
      * @param {Spotfire.ModProperty<string>} xAxisMode
      * @param {Spotfire.ModProperty<boolean>} chartMode
      * @param {Spotfire.ModProperty<boolean>} titleMode
-     * @param {Spotfire.ModProperty<boolean>} showLabel
+     * @param {Spotfire.ModProperty<boolean>} numericSeg
+     * @param {Spotfire.ModProperty<boolean>} percentageSeg
      * @param {Spotfire.ModProperty<boolean>} reverseBars
      * @param {Spotfire.ModProperty<boolean>} sort
      * @param {Spotfire.Size} size
      */
-    async function render(dataView, xAxisMode, chartMode, titleMode, showLabel, reverseBars, sort, size) {
+    async function render(dataView, xAxisMode, chartMode, titleMode, numericSeg, percentageSeg, reverseBars, sort, size) {
         /**
          * Check for any errors.
          */
@@ -94,10 +90,6 @@ Spotfire.initialize(async (mod) => {
             xLeaves.reverse();
         }
 
-        var categories = xLeaves.map((leafNode) => {
-            return leafNode.key;
-        });
-
         let colorHierarchy = await dataView.hierarchy("Color");
         let colorRoot = await colorHierarchy.root();
         if (colorRoot == null) {
@@ -108,37 +100,49 @@ Spotfire.initialize(async (mod) => {
         }
         let colorLeaves = colorRoot.leaves();
 
+        if (numericSeg.value() || percentageSeg.value()) {
+            xTitleHeight = 20;
+        } else {
+            xTitleHeight = 0;
+        }
         let totalValue = calculatedValue(xLeaves);
         let maxYValue = calculateMaxYValue(xLeaves);     
-        renderTitles(xLeaves, totalValue, titleMode);
-        renderBars(dataView, xLeaves, totalValue, colorLeaves, chartMode, maxYValue, showLabel);
-        renderAxis(xScaleHeight, 
-                    yScaleWidth, 
-                    xTitleHeight, 
-                    size, 
-                    categories, 
+        renderTitles(xLeaves, titleMode, totalValue);
+        renderBars(dataView, 
+                    xLeaves,  
+                    colorLeaves, 
+                    chartMode, 
+                    numericSeg, 
+                    percentageSeg, 
+                    titleMode,
+                    totalValue,
+                    maxYValue);
+        renderAxis(mod, 
+                    size,  
                     xAxisMode, 
                     chartMode, 
                     titleMode,
-                    showLabel,
+                    numericSeg,
+                    percentageSeg,
                     reverseBars,
                     sort,
                     totalValue, 
                     maxYValue, 
-                    mod);
+                    xScaleHeight, 
+                    yScaleWidth, 
+                    xTitleHeight);
         context.signalRenderComplete();
     }
 
      /**
          * Render the horizontal scale.
          * @param {Spotfire.DataViewHierarchyNode[]} xLeafNodes - The leaf nodes on the x axis
+         * @param {Spotfire.ModProperty<boolean>} titleMode - Decides if titles should be rendered
          * @param {number} totalValue - The sum of all values in the graph
-         * @param {Spotfire.ModProperty<boolean>} titleMode
          */
-      function renderTitles(xLeafNodes, totalValue, titleMode) {
+      function renderTitles(xLeafNodes, titleMode, totalValue) {
         xTitleDiv.innerHTML = "";
         if (titleMode.value()){
-            xTitleHeight = 20;
             xTitleDiv.style.height = xTitleHeight + "px";
             xTitleDiv.style.left = yScaleWidth + "px";
             xTitleDiv.style.bottom = "0px";
@@ -180,13 +184,15 @@ Spotfire.initialize(async (mod) => {
      * Render all bars on the canvas div.
      * @param {Spotfire.DataView} dataView
      * @param {Spotfire.DataViewHierarchyNode[]} xLeafNodes
-     * @param {number} totalValue
      * @param {Spotfire.DataViewHierarchyNode[]} colorLeaves
      * @param {Spotfire.ModProperty<boolean>} chartMode
+     * @param {Spotfire.ModProperty<boolean>} numericSeg
+     * @param {Spotfire.ModProperty<boolean>} percentageSeg
+     * @param {Spotfire.ModProperty<boolean>} titleMode
+     * @param {number} totalValue
      * @param {number} maxYValue
-     * @param {Spotfire.ModProperty<boolean>} showLabel
      */
-    function renderBars(dataView, xLeafNodes, totalValue, colorLeaves , chartMode, maxYValue, showLabel) {
+    function renderBars(dataView, xLeafNodes, colorLeaves, chartMode, numericSeg, percentageSeg, titleMode, totalValue, maxYValue) {
         canvasDiv.innerHTML = "";
         canvasDiv.style.left = yScaleWidth + "px";
         canvasDiv.style.bottom = xScaleHeight + "px";
@@ -236,8 +242,23 @@ Spotfire.initialize(async (mod) => {
             bar.style.height =  height + "px";
             bar.style.width = Math.round(percentage * canvasWidth) + "px";
 
-            if(showLabel.value()){
-                let label = createDiv("bar-label", `${totalBarValue} (${(percentage * 100).toFixed(1)}%)`);
+            if(numericSeg.value() && percentageSeg.value()){
+                let labelText = `${totalBarValue} (${(percentage * 100).toFixed(1)}%)`;
+                renderBarValue(labelText);
+            } else if (numericSeg.value()){
+                let labelText = `${totalBarValue}`;
+                renderBarValue(labelText);
+            } else if (percentageSeg.value()){
+                let labelText = `${(percentage * 100).toFixed(1)}%`;
+                renderBarValue(labelText);
+            }
+
+            /**
+             * Renders a bar label containing the bar value
+             * @param {string} labelText 
+             */
+            function renderBarValue(labelText){
+                let label = createDiv("bar-label", labelText);
                 label.style.color = context.styling.scales.font.color;
                 label.style.fontSize = context.styling.scales.font.fontSize + "px";
                 label.style.fontFamily = context.styling.scales.font.fontFamily;
@@ -264,6 +285,7 @@ Spotfire.initialize(async (mod) => {
                 segment.style.width = bar.style.width;
                 segment.style.marginBottom = "1px";
                 
+                /** Hover over segment event */
                 segment.onmouseover = (e) => {
                     mod.controls.tooltip.show(row);
                     segment.style.outline = "1px solid currentColor";
@@ -273,6 +295,7 @@ Spotfire.initialize(async (mod) => {
                     segment.style.outline = "none";
                 };
 
+                /** Click on segment */
                 segment.onclick = (e) => {
                     /** @type{Spotfire.MarkingOperation} */
                     let mode = e.ctrlKey ? "Toggle" : "Replace";
@@ -285,8 +308,33 @@ Spotfire.initialize(async (mod) => {
                     }
                 };
 
-                if (showLabel.value()){
-                    let label = createDiv("segment-label", `${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`);
+                /** All possible combinations of showing labels for segments */
+                if (titleMode.value() && numericSeg.value() && percentageSeg.value()){
+                    let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`;
+                    renderLabel(labelText);
+                } else if(titleMode.value() && numericSeg.value()){
+                    let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()}`;
+                    renderLabel(labelText);
+                } else if (titleMode.value() && percentageSeg.value()){
+                    let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${(percentageMarimekko * 100).toFixed(1)}%`;
+                    renderLabel(labelText);
+                } else if(titleMode.value()){
+                    let labelText = `${colorLeaves[rows.indexOf(row)].key}`;
+                    renderLabel(labelText);
+                } else if (numericSeg.value()){
+                    let labelText = `${+y.value()}`;
+                    renderLabel(labelText);
+                } else if (percentageSeg.value()){
+                    let labelText = `${(percentageMarimekko * 100).toFixed(1)}%`;
+                    renderLabel(labelText);
+                }
+
+                /**
+                 * Render a segment label for the segment
+                 * @param {string} labelText
+                 */
+                 function renderLabel(labelText){
+                    let label = createDiv("segment-label", labelText);
                     label.style.color = context.styling.scales.font.color;
                     label.style.fontSize = context.styling.scales.font.fontSize + "px";
                     label.style.fontFamily = context.styling.scales.font.fontFamily;
@@ -304,7 +352,7 @@ Spotfire.initialize(async (mod) => {
 });
 
 /**
- * Calculate the maximum value from a hierarchy. If split bars is enabled, the single maximum value from all rows will be used.
+ * Calculate the maximum value from a hierarchy.
  * @param {Spotfire.DataViewHierarchyNode[]} xLeaves
  */
  function calculateMaxYValue(xLeaves) {
@@ -331,7 +379,7 @@ Spotfire.initialize(async (mod) => {
 }
 
 /**
- * Calculate the total value for an axis from a set of rows. Null values are treated a 0.
+ * Calculate the total value for an axis from a set of rows. Null values are treated as 0.
  * @param {Spotfire.DataViewRow[]} rows Rows to calculate the total value from
  * @param {string} axis Name of Axis to use to calculate the value.
  */
@@ -340,7 +388,7 @@ function sumValue(rows, axis) {
 }
 
 /**
- * Calculate the max value for an axis from a set of rows. Null values are treated a 0.
+ * Calculate the max value for an axis from a set of rows. Null values are treated as 0.
  * @param {Spotfire.DataViewRow[]} rows Rows to calculate the max value from
  * @param {string} axis Name of Axis to use to calculate the value.
  */

@@ -36,7 +36,12 @@
             "defaultValue": false
         },
         {
-            "name": "show-label",
+            "name": "numeric-segment",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "percentage-segment",
             "type": "boolean",
             "defaultValue": false
         }

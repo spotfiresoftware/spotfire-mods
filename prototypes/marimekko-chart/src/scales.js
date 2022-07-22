@@ -1,20 +1,21 @@
 /**
- * @param {number} xScaleHeight
- * @param {number} yScaleWidth
- * @param {number} xTitleHeight
+ * Renders the y and x axis for the mod using d3
+ * @param {Spotfire.Mod} mod
  * @param {Spotfire.Size} size
- * @param {string[]} categories
  * @param {Spotfire.ModProperty<string>} xAxisMode
  * @param {Spotfire.ModProperty<boolean>} chartMode
  * @param {Spotfire.ModProperty<boolean>} titleMode
- * @param {Spotfire.ModProperty<boolean>} showLabel
+ * @param {Spotfire.ModProperty<boolean>} numericSeg
+ * @param {Spotfire.ModProperty<boolean>} percentageSeg
  * @param {Spotfire.ModProperty<boolean>} reverse
  * @param {Spotfire.ModProperty<boolean>} sort
  * @param {number} totalValue
  * @param {number} maxYValue
- * @param {Spotfire.Mod} mod
+ * @param {number} xScaleHeight
+ * @param {number} yScaleWidth
+ * @param {number} xTitleHeight
  */
-function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, xAxisMode, chartMode, titleMode, showLabel, reverse, sort, totalValue, maxYvalue, mod){
+function renderAxis(mod, size, xAxisMode, chartMode, titleMode, numericSeg, percentageSeg, reverse, sort, totalValue, maxYvalue, xScaleHeight, yScaleWidth, xTitleHeight){
     //variables
     const context = mod.getRenderContext();
     const styling = context.styling;
@@ -292,14 +293,22 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
     mod.controls.contextMenu
         .show(e.clientX, e.clientY, [
             {
-                text: "Show value of bar",
-                checked: showLabel.value(),
+                text: "Show value of segments",
+                checked: numericSeg.value(),
+                enabled: true
+            },
+            {
+                text: "Show percentages of segments",
+                checked: percentageSeg.value(),
                 enabled: true
             }
         ])
         .then((clickedItem) => {
-            if (clickedItem.text === "Show value of bar") {
-                showLabel.set(!showLabel.value());
+            if (clickedItem.text === "Show value of segments") {
+                numericSeg.set(!numericSeg.value());
+            }
+            if (clickedItem.text === "Show percentages of segments") {
+                percentageSeg.set(!percentageSeg.value());
             }
         });
     };
@@ -321,8 +330,10 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
             autoClose: true,
             alignment: "Left",
             onChange(e) {
-                if (e.name === "value") {
-                    showLabel.set(e.value);
+                if (e.name === "numericSeg") {
+                    numericSeg.set(e.value);
+                } else if (e.name === "percentageSeg") {
+                    percentageSeg.set(e.value);
                 } 
             }
         },
@@ -332,9 +343,15 @@ function renderAxis(xScaleHeight, yScaleWidth, xTitleHeight, size, categories, x
                     heading: "Segment style",
                     children: [
                         factory.checkbox({
-                            name: "value",
+                            name: "numericSeg",
                             text: "Show values of segments",
-                            checked: showLabel.value() === true,
+                            checked: numericSeg.value() === true,
+                            enabled: true
+                        }),
+                        factory.checkbox({
+                            name: "percentageSeg",
+                            text: "Show percentages of segments",
+                            checked: percentageSeg.value() === true,
                             enabled: true
                         })
                     ]

@@ -81,7 +81,7 @@ body,
     line-height: 10px;
     font-size: 10px;
     position: absolute;
-    top: 5px;
+    top: 0;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;
