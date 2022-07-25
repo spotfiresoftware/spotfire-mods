@@ -214,7 +214,7 @@ Spotfire.initialize(async (mod) => {
             xTitleDiv.style.right = "30px";
             xTitleDiv.style.top = "0px";
 
-            //Set with to align with x axes rangegit 
+            //Set with to align with x axes range
             let width = xTitleDiv.offsetWidth * 0.98 - (xLeafNodes.length - 2);
             let offset = 0;
     
