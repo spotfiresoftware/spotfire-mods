@@ -74,6 +74,7 @@
         "main.css",
         "scales.js",
         "d3.js",
+        "rectangleSelection.js",
         "main.js"
     ]
 }

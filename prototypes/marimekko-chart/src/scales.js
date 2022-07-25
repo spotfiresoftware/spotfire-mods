@@ -15,7 +15,19 @@
  * @param {number} yScaleWidth
  * @param {number} xTitleHeight
  */
-function renderAxis(mod, size, xAxisMode, chartMode, titleMode, numericSeg, percentageSeg, reverse, sort, totalValue, maxYvalue, xScaleHeight, yScaleWidth, xTitleHeight){
+function renderAxis(mod, 
+                    size, 
+                    xAxisMode, 
+                    chartMode, 
+                    titleMode, 
+                    numericSeg, 
+                    percentageSeg, 
+                    reverse, sort, 
+                    totalValue, 
+                    maxYvalue, 
+                    xScaleHeight, 
+                    yScaleWidth, 
+                    xTitleHeight){
     //variables
     const context = mod.getRenderContext();
     const styling = context.styling;
@@ -34,7 +46,7 @@ function renderAxis(mod, size, xAxisMode, chartMode, titleMode, numericSeg, perc
     //render x axis different depending on configuration
     if (xAxisMode.value() === "percentage"){
         var xFormat = d3.format(".0%");
-        var xscale = d3.scaleLinear()
+        xscale = d3.scaleLinear()
         .domain([0, 1.02])
         .range([margin.left, width]);
     } else if (xAxisMode.value() === "numeric"){
@@ -54,7 +66,7 @@ function renderAxis(mod, size, xAxisMode, chartMode, titleMode, numericSeg, perc
     if (!chartMode.value()){
         var yFormat = d3.format(".0%");
         var yScaleTickNumber = 10;
-        var yscale = d3.scaleLinear()
+        yscale = d3.scaleLinear()
             .domain([1.02, 0])
             .range([margin.top, height - margin.bottom]);
     } else {
