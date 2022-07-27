@@ -263,7 +263,7 @@ Spotfire.initialize(async (mod) => {
         canvasDiv.style.left = yScaleWidth + "px";
         canvasDiv.style.bottom = xScaleHeight + "px";
         canvasDiv.style.top = xTitleHeight + "px";
-        canvasDiv.style.right = "40px";
+        canvasDiv.style.right = "20px";
 
         //Set width and height to align with axis range
         const canvasHeight = canvasDiv.offsetHeight * 0.98;
@@ -367,7 +367,8 @@ Spotfire.initialize(async (mod) => {
                     /** @type{Spotfire.MarkingOperation} */
                     let mode = e.ctrlKey ? "Toggle" : "Replace";
                     if (e.shiftKey) {
-                        rows.forEach((m) => m.mark(mode));
+                        row.mark("ToggleOrAdd")
+                        //rows.forEach((m) => m.mark(mode));
                     } else if (e.altKey) {
                         colorLeaves[rows.indexOf(row)].mark(mode);
                     } else {
@@ -384,6 +385,9 @@ Spotfire.initialize(async (mod) => {
                     renderLabel(labelText);
                 } else if (titleMode.value() && percentageSeg.value()){
                     let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${(percentageMarimekko * 100).toFixed(1)}%`;
+                    renderLabel(labelText);
+                } else if (numericSeg.value() && percentageSeg.value()){
+                    let labelText = `${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`;
                     renderLabel(labelText);
                 } else if(titleMode.value()){
                     let labelText = `${colorLeaves[rows.indexOf(row)].key}`;
@@ -402,13 +406,27 @@ Spotfire.initialize(async (mod) => {
                  */
                  function renderLabel(labelText){
                     let label = createDiv("segment-label", labelText);
-                    label.style.color = context.styling.scales.font.color;
+                    label.style.color = (getContrastYIQ(row.color().hexCode) === 'dark') ? context.styling.general.font.color : 'white';
                     label.style.fontSize = context.styling.scales.font.fontSize + "px";
                     label.style.fontFamily = context.styling.scales.font.fontFamily;
                     label.style.lineHeight = segment.style.height;
                     label.style.height = segment.style.height;
                     label.style.width = bar.style.width;
                     segment.appendChild(label);
+                }
+
+                /**
+                 * Decide if text should be light or dark
+                 * CAN THIS BE DONE DIFFERENTLY?? DOES THIS ALREADY EXIST??
+                 * @param {string} hexcolor  
+                 */
+                function getContrastYIQ(hexcolor){
+                    hexcolor = hexcolor.replace("#", "");
+                    var r = parseInt(hexcolor.substr(0,2),16);
+                    var g = parseInt(hexcolor.substr(2,2),16);
+                    var b = parseInt(hexcolor.substr(4,2),16);
+                    var yiq = ((r*299)+(g*587)+(b*114))/1000;
+                    return (yiq >= 160) ? 'dark' : 'light';
                 }
 
                 bar.appendChild(segment);

@@ -62,7 +62,6 @@ body,
 .bar {
     border-bottom-width: 0;
     text-align: center;
-    overflow: hidden;
     margin-right: 1px;
 }
 
@@ -82,7 +81,6 @@ body,
 .segment {
     display: block;
     outline: none;
-    outline-offset: -1px;
 }
 
 .segment-label {

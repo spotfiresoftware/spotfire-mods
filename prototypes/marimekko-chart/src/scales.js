@@ -31,7 +31,7 @@ function renderAxis(mod,
     //variables
     const context = mod.getRenderContext();
     const styling = context.styling;
-    const margin = { top: xTitleHeight, right: 40, bottom: xScaleHeight, left: yScaleWidth - 1}
+    const margin = { top: xTitleHeight, right: 20, bottom: xScaleHeight, left: yScaleWidth - 1}
     var width = size.width - margin.right;
     var height = size.height;
 
@@ -42,6 +42,9 @@ function renderAxis(mod,
     var svg = d3.select("#scale")
         .attr("width", width)
         .attr("height", height)
+        .style('font-size', styling.scales.font.fontSize)
+        .style('font-family', styling.scales.font.fontFamily)
+        .style('color', styling.scales.tick.stroke)
 
     //render x axis different depending on configuration
     if (xAxisMode.value() === "percentage"){
@@ -89,6 +92,7 @@ function renderAxis(mod,
         .attr("transform", "translate(" + margin.left +",0)")
         .call(y_axis)
         .selectAll("text")
+        .style('color', styling.scales.font.color)
         .attr("tooltip", (d) => d)
         .on("mouseover", function (d) {
             d3.select(this).style("cursor", "pointer");
@@ -108,6 +112,7 @@ function renderAxis(mod,
         .attr("transform", "translate( 0, " + xVerticalPlacement + ")")
         .call(x_axis)
         .selectAll("text")
+        .style('color', styling.scales.font.color)
         .attr("tooltip", (d) => d)
         .on("mouseover", function (d) {
             d3.select(this).style("cursor", "pointer");

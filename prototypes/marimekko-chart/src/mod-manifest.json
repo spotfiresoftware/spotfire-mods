@@ -2,7 +2,7 @@
     "apiVersion": "1.3",
     "version": "1.1",
     "name": "Marimekko Chart",
-    "id": "js-dev-marimekkochart",
+    "id": "sfire-mods-marimekko",
     "icon": "icon.svg",
     "properties": [
         {
