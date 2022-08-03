@@ -4,9 +4,12 @@
  * @param {Spotfire.Size} size
  * @param {Spotfire.ModProperty<string>} xAxisMode
  * @param {Spotfire.ModProperty<boolean>} chartMode
- * @param {Spotfire.ModProperty<boolean>} titleMode
- * @param {Spotfire.ModProperty<boolean>} numericSeg
- * @param {Spotfire.ModProperty<boolean>} percentageSeg
+ * @param {Spotfire.ModProperty<string>} labelMode
+ * @param {Spotfire.ModProperty<boolean>} labelBars
+ * @param {Spotfire.ModProperty<boolean>} labelSeg
+ * @param {Spotfire.ModProperty<boolean>} numeric
+ * @param {Spotfire.ModProperty<boolean>} percentage
+ * @param {Spotfire.ModProperty<boolean>} category
  * @param {Spotfire.ModProperty<boolean>} reverse
  * @param {Spotfire.ModProperty<boolean>} sort
  * @param {number} totalValue
@@ -19,9 +22,12 @@ function renderAxis(mod,
                     size, 
                     xAxisMode, 
                     chartMode, 
-                    titleMode, 
-                    numericSeg, 
-                    percentageSeg, 
+                    labelMode,
+                    labelBars,
+                    labelSeg,
+                    numeric,
+                    percentage,
+                    category, 
                     reverse, sort, 
                     totalValue, 
                     maxYvalue, 
@@ -167,11 +173,6 @@ function renderAxis(mod,
                     checked: reverse.value(),
                     enabled: true
                 },
-                {
-                    text: "Show Category Title",
-                    checked: titleMode.value(),
-                    enabled: true
-                }
             ])
             .then((clickedItem) => {
                 if (clickedItem.text === "Percentage") {
@@ -189,10 +190,7 @@ function renderAxis(mod,
                 } 
                 if (clickedItem.text === "Reverse scale") {
                     reverse.set(!reverse.value());
-                } 
-                if (clickedItem.text === "Show Category Title") {
-                    titleMode.set(!titleMode.value());
-                } 
+                }
             });
     };
 
@@ -216,8 +214,6 @@ function renderAxis(mod,
                     xAxisMode.set(e.value);
                 } else if (e.name === "chart") {
                     chartMode.set(e.value);
-                } else if (e.name === "title") {
-                    titleMode.set(e.value);
                 } else if (e.name === "sort") {
                     sort.set(e.value);
                 } else if (e.name === "reverse") {
@@ -280,16 +276,6 @@ function renderAxis(mod,
                             enabled: true
                         })
                     ]
-                }),
-                section({
-                    children: [
-                        factory.checkbox({
-                            name: "title",
-                            text: "Show Category Titles",
-                            checked: titleMode.value() === true,
-                            enabled: true
-                        }),
-                    ]
                 })
             ];
             }
@@ -310,23 +296,71 @@ function renderAxis(mod,
     mod.controls.contextMenu
         .show(e.clientX, e.clientY, [
             {
-                text: "Show value of segments",
-                checked: numericSeg.value(),
+                text: "Show labels for all",
+                checked: labelMode.value() === "all",
+                enabled: labelMode.value() !== "all"
+            },
+            {
+                text: "Hide labels",
+                checked: labelMode.value() === "none",
+                enabled: labelMode.value() !== "none"
+            },
+            {
+                text: "Show labels for marked",
+                checked: labelMode.value() === "marked",
+                enabled: labelMode.value() !== "marked"
+            },
+            {
+                text: "Show labels for complete bars",
+                checked: labelBars.value(),
                 enabled: true
             },
             {
-                text: "Show percentages of segments",
-                checked: percentageSeg.value(),
+                text: "Show labels for segments",
+                checked: labelSeg.value(),
+                enabled: true
+            },
+            {
+                text: "Show categories",
+                checked: category.value(),
+                enabled: true
+            },
+            {
+                text: "Show percentages",
+                checked: percentage.value(),
+                enabled: true
+            },
+            {
+                text: "Show numeric values",
+                checked: numeric.value(),
                 enabled: true
             }
+            
         ])
         .then((clickedItem) => {
-            if (clickedItem.text === "Show value of segments") {
-                numericSeg.set(!numericSeg.value());
+            if (clickedItem.text === "Show labels for all") {
+                labelMode.set("all");
+            } else if (clickedItem.text === "Hide labels") {
+                labelMode.set("none");
+            } else if (clickedItem.text === "Show labels for marked") {
+                labelMode.set("marked");
             }
-            if (clickedItem.text === "Show percentages of segments") {
-                percentageSeg.set(!percentageSeg.value());
+            if (clickedItem.text === "Show labels for complete bars") {
+                labelBars.set(!labelBars.value());
             }
+            if (clickedItem.text === "Show labels for segments") {
+                labelSeg.set(!labelSeg.value());
+            }
+            if (clickedItem.text === "Show categories") {
+                category.set(!category.value());
+            }
+            if (clickedItem.text === "Show numeric values") {
+                numeric.set(!numeric.value());
+            }
+            if (clickedItem.text === "Show percentages") {
+                percentage.set(!percentage.value());
+            }
+            
         });
     };
 
@@ -347,28 +381,77 @@ function renderAxis(mod,
             autoClose: true,
             alignment: "Left",
             onChange(e) {
-                if (e.name === "numericSeg") {
-                    numericSeg.set(e.value);
-                } else if (e.name === "percentageSeg") {
-                    percentageSeg.set(e.value);
-                } 
+                if (e.name === "label-mode") {
+                    labelMode.set(e.value);
+                } else if (e.name === "label-bars") {
+                    labelBars.set(e.value);
+                } else if (e.name === "label-segment") {
+                    labelSeg.set(e.value);
+                } else if (e.name === "numeric") {
+                    numeric.set(e.value);
+                } else if (e.name === "percentage") {
+                    percentage.set(e.value);
+                } else if (e.name === "category") {
+                    category.set(e.value);
+                }
             }
         },
         () => {
             return [
                 section({
-                    heading: "Segment style",
+                    heading: "Show labels for",
                     children: [
+                        factory.radioButton({
+                            name: "label-mode",
+                            text: "All",
+                            value: "all",
+                            checked: labelMode.value() === "all"
+                        }),
+                        factory.radioButton({
+                            name: "label-mode",
+                            text: "None",
+                            value: "none",
+                            checked: labelMode.value() === "none"
+                        }),
+                        factory.radioButton({
+                            name: "label-mode",
+                            text: "Marked",
+                            value: "marked",
+                            checked: labelMode.value() === "marked"
+                        }),
                         factory.checkbox({
-                            name: "numericSeg",
-                            text: "Show values of segments",
-                            checked: numericSeg.value() === true,
+                            name: "label-bars",
+                            text: "Bars",
+                            checked: labelBars.value() === true,
                             enabled: true
                         }),
                         factory.checkbox({
-                            name: "percentageSeg",
-                            text: "Show percentages of segments",
-                            checked: percentageSeg.value() === true,
+                            name: "label-segment",
+                            text: "Segments",
+                            checked: labelSeg.value() === true,
+                            enabled: true
+                        })
+                    ]
+                }),
+                section({
+                    heading: "Label contains",
+                    children: [
+                        factory.checkbox({
+                            name: "category",
+                            text: "Category",
+                            checked: category.value() === true,
+                            enabled: true
+                        }),
+                        factory.checkbox({
+                            name: "numeric",
+                            text: "Numeric Value",
+                            checked: numeric.value() === true,
+                            enabled: true
+                        }),
+                        factory.checkbox({
+                            name: "percentage",
+                            text: "Percentages",
+                            checked: percentage.value() === true,
                             enabled: true
                         })
                     ]

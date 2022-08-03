@@ -16,17 +16,22 @@
             "defaultValue": false
         },
         {
-            "name": "title",
+            "name": "label-bars",
             "type": "boolean",
             "defaultValue": true
         },
         {
-            "name": "sort",
+            "name": "label-segment",
             "type": "boolean",
-            "defaultValue": false
+            "defaultValue": true
         },
         {
-            "name": "reverse-segments",
+            "name": "label-mode",
+            "type": "string",
+            "defaultValue": "all"
+        },
+        {
+            "name": "sort",
             "type": "boolean",
             "defaultValue": false
         },
@@ -36,12 +41,22 @@
             "defaultValue": false
         },
         {
-            "name": "numeric-segment",
+            "name": "reverse-segment",
             "type": "boolean",
             "defaultValue": false
         },
         {
-            "name": "percentage-segment",
+            "name": "category",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "numeric",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "percentage",
             "type": "boolean",
             "defaultValue": false
         }
@@ -57,14 +72,19 @@
         },
         "axes": [
             {
-                "name": "X",
-                "mode": "categorical",
-                "placement": "bottom"
+                "name": "Z",
+                "mode": "categorical"
             },
             {
                 "name": "Y",
                 "mode": "continuous",
                 "placement": "left",
+                "allowMultipleMeasures": true
+            },
+            {
+                "name": "X",
+                "mode": "continuous",
+                "placement": "bottom",
                 "allowMultipleMeasures": true
             }
         ]
@@ -75,6 +95,7 @@
         "scales.js",
         "d3.js",
         "rectangleSelection.js",
+        "optionsPopout.js",
         "main.js"
     ]
 }

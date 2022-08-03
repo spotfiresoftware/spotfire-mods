@@ -21,10 +21,13 @@ Spotfire.initialize(async (mod) => {
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.property("x-axis-mode"),
+        mod.property("label-mode"),
         mod.property("mekko"),
-        mod.property("title"),
-        mod.property("numeric-segment"),
-        mod.property("percentage-segment"),
+        mod.property("label-bars"),
+        mod.property("label-segment"),
+        mod.property("numeric"),
+        mod.property("percentage"),
+        mod.property("category"),
         mod.property("reverse-bars"),
         mod.property("sort"),
         mod.windowSize()
@@ -38,15 +41,18 @@ Spotfire.initialize(async (mod) => {
      * Render the Marimekko Chart.
      * @param {Spotfire.DataView} dataView
      * @param {Spotfire.ModProperty<string>} xAxisMode
+     * @param {Spotfire.ModProperty<string>} labelMode
      * @param {Spotfire.ModProperty<boolean>} chartMode
-     * @param {Spotfire.ModProperty<boolean>} titleMode
-     * @param {Spotfire.ModProperty<boolean>} numericSeg
-     * @param {Spotfire.ModProperty<boolean>} percentageSeg
+     * @param {Spotfire.ModProperty<boolean>} labelBars
+     * @param {Spotfire.ModProperty<boolean>} labelSeg
+     * @param {Spotfire.ModProperty<boolean>} numeric
+     * @param {Spotfire.ModProperty<boolean>} percentage
+     * @param {Spotfire.ModProperty<boolean>} category
      * @param {Spotfire.ModProperty<boolean>} reverseBars
      * @param {Spotfire.ModProperty<boolean>} sort
      * @param {Spotfire.Size} size
      */
-    async function render(dataView, xAxisMode, chartMode, titleMode, numericSeg, percentageSeg, reverseBars, sort, size) {
+    async function render(dataView, xAxisMode, labelMode, chartMode, labelBars, labelSeg, numeric, percentage, category, reverseBars, sort, size) {
 
         const onSelection = ({ dragSelectActive }) => {
             state.preventRender = dragSelectActive;
@@ -64,28 +70,26 @@ Spotfire.initialize(async (mod) => {
 
         mod.controls.errorOverlay.hide("dataView");
 
-            // Return and wait for next call to render when reading data was aborted.
+        // Return and wait for next call to render when reading data was aborted.
         // Last rendered data view is still valid from a users perspective since
         // a document modification was made during a progress indication.
         // Hard abort if row count exceeds an arbitrary selected limit
-        const xLimit = 10000;
+        const zLimit = 10000;
         const colorLimit = 20;
         const colorCount = (await dataView.hierarchy("Color")).leafCount;
-        const xCount = (await dataView.hierarchy("X")).leafCount;
-        if (colorCount > colorLimit || xCount > xLimit) {
+        const zCount = (await dataView.hierarchy("Z")).leafCount;
+        if (colorCount > colorLimit || zCount > zLimit) {
             canvasDiv.remove();
-
-            mod.controls.errorOverlay.show("The resulting data view exceeded the size limit.", "dataViewSize1");
-            if (xCount > xLimit) {
+                        mod.controls.errorOverlay.show("The resulting data view exceeded the size limit.", "dataViewSize1");
+            if (zCount > zLimit) {
                 mod.controls.errorOverlay.show(
-                    `Maximum allowed X axis values is ${xLimit}. Try aggregating the expression further.`,
+                    `Maximum allowed X axis values is ${zLimit}. Try aggregating the expression further.`,
                     "dataViewSize2"
                 );
             } else {
                 mod.controls.errorOverlay.hide("dataViewSize2");
             }
-
-            if (colorCount > colorLimit) {
+                        if (colorCount > colorLimit) {
                 mod.controls.errorOverlay.show(
                     `Maximum number of colors is limited to ${colorLimit} for readability reasons.`,
                     "dataViewSize3"
@@ -93,8 +97,7 @@ Spotfire.initialize(async (mod) => {
             } else {
                 mod.controls.errorOverlay.hide("dataViewSize3");
             }
-
-            return;
+                        return;
         } else {
             mod.controls.errorOverlay.hide("dataViewSize1");
             mod.controls.errorOverlay.hide("dataViewSize2");
@@ -103,9 +106,9 @@ Spotfire.initialize(async (mod) => {
 
         // Get the leaf nodes for the x hierarchy. We will iterate over them to
         // render the bars.
-        let xHierarchy = await dataView.hierarchy("X");
-        let xRoot = await xHierarchy.root();
-        if (xRoot == null) {
+        let Hierarchy = await dataView.hierarchy("Z");
+        let Root = await Hierarchy.root();
+        if (Root == null) {
             // Return and wait for next call to render when reading data was aborted.
             // Last rendered data view is still valid from a users perspective since
             // a document modification was made during a progress indication.
@@ -120,17 +123,25 @@ Spotfire.initialize(async (mod) => {
             mod.controls.errorOverlay.hide("y");
         }
 
+        let dataViewXAxis = await dataView.continuousAxis("X");
+        if (dataViewXAxis == null) {
+            mod.controls.errorOverlay.show("No data on x axis.", "x");
+            return;
+        } else {
+            mod.controls.errorOverlay.hide("x");
+        }
+
         // Hide tooltip
         mod.controls.tooltip.hide();
 
-        let xLeaves = xRoot.leaves();
+        let Leaves = Root.leaves();
 
         if(sort.value()){
-            xLeaves.sort(sortBars);
+            Leaves.sort(sortBars);
         }
 
         if(reverseBars.value()){
-            xLeaves.reverse();
+            Leaves.reverse();
         }
 
         let colorHierarchy = await dataView.hierarchy("Color");
@@ -143,53 +154,65 @@ Spotfire.initialize(async (mod) => {
         }
         let colorLeaves = colorRoot.leaves();
 
-        if (numericSeg.value() || percentageSeg.value()) {
+        if (labelBars.value() && (numeric.value() || percentage.value())) {
             xTitleHeight = 20;
         } else {
             xTitleHeight = 0;
         }
-        let totalValue = calculatedValue(xLeaves);
-        let maxYValue = calculateMaxYValue(xLeaves);     
-        renderTitles(xLeaves, titleMode, totalValue);
+        let totalValue = calculatedValue(Leaves);
+        let maxYValue = calculateMaxYValue(Leaves); 
+        
+        context.isEditing && 
+            initializeSettingsPopout(mod, labelMode, chartMode, labelBars, labelSeg, numeric, percentage, reverseBars, sort, category);
+        
+        renderTitles(Leaves, labelBars, category, totalValue, labelMode);
         renderBars(dataView, 
-                    xLeaves,  
+                    Leaves,  
                     colorLeaves, 
                     chartMode, 
-                    numericSeg, 
-                    percentageSeg, 
-                    titleMode,
+                    numeric, 
+                    percentage, 
+                    labelBars,
+                    labelSeg,
+                    labelMode,
+                    category,
                     totalValue,
                     maxYValue);
        renderAxis(mod, 
                     size,  
                     xAxisMode, 
                     chartMode, 
-                    titleMode,
-                    numericSeg,
-                    percentageSeg,
+                    labelMode,
+                    labelBars,
+                    labelSeg,
+                    numeric,
+                    percentage,
+                    category,
                     reverseBars,
                     sort,
                     totalValue, 
                     maxYValue, 
-                    xScaleHeight, 
+                    xScaleHeight - Leaves.length + 1, //to align with canvasheight
                     yScaleWidth, 
                     xTitleHeight);
-
+        
         /**Mark segments after drawn rectangular selection*/
         rectangleMarking((result) => {
             onSelection(result);
 
             const { x, y, width, height, ctrlKey } = result;
 
-            xLeaves.forEach((leaf) => {
+            Leaves.forEach((leaf) => {
                 leaf.rows()
                     .forEach((row) => {
-                        const xId = row.categorical("X").leafIndex;
-                        const yId = xLeaves[row.categorical("X").leafIndex].rows().indexOf(row);
+                        const xId = row.categorical("Z").leafIndex;
+                        const yId = Leaves[row.categorical("Z").leafIndex].rows().indexOf(row);
                         let rowSegment = document.getElementById(`${xId},${yId}`);
-                        const xPos = rowSegment.getBoundingClientRect().left;
-                        const yPos = rowSegment.getBoundingClientRect().top;
-                        if (xPos >= x && xPos <= x + width && yPos >= y && yPos <= y + height) {
+                        const xSeg = rowSegment.getBoundingClientRect().left;
+                        const ySeg = rowSegment.getBoundingClientRect().top;
+                        const wSeg = rowSegment.getBoundingClientRect().width;
+                        const hSeg = rowSegment.getBoundingClientRect().height;
+                        if (x < xSeg + wSeg && x + width > xSeg && y < ySeg + hSeg && y + height > ySeg) {
                             ctrlKey ? row.mark("ToggleOrAdd") : row.mark();
                         }
                     });
@@ -201,45 +224,49 @@ Spotfire.initialize(async (mod) => {
 
      /**
          * Render the horizontal scale.
-         * @param {Spotfire.DataViewHierarchyNode[]} xLeafNodes - The leaf nodes on the x axis
-         * @param {Spotfire.ModProperty<boolean>} titleMode - Decides if titles should be rendered
+         * @param {Spotfire.DataViewHierarchyNode[]} LeafNodes - The leaf nodes on the x axis
+         * @param {Spotfire.ModProperty<boolean>} labelBars - Decides if titles should be rendered
+         * @param {Spotfire.ModProperty<boolean>} category
          * @param {number} totalValue - The sum of all values in the graph
+         * @param {Spotfire.ModProperty<string>} labelMode
          */
-      function renderTitles(xLeafNodes, titleMode, totalValue) {
+      function renderTitles(LeafNodes, labelBars, category, totalValue, labelMode) {
         xTitleDiv.innerHTML = "";
-        if (titleMode.value()){
+        if (labelBars.value() && category.value() && (labelMode.value() === "all" || labelMode.value() === "marked")){
             xTitleDiv.style.height = xTitleHeight + "px";
             xTitleDiv.style.left = yScaleWidth + "px";
             xTitleDiv.style.bottom = "0px";
-            xTitleDiv.style.right = "30px";
+            xTitleDiv.style.right = "20px";
             xTitleDiv.style.top = "0px";
 
             //Set with to align with x axes range
-            let width = xTitleDiv.offsetWidth * 0.98 - (xLeafNodes.length - 2);
+            let width = xTitleDiv.offsetWidth * 0.98 - (LeafNodes.length - 1);
             let offset = 0;
     
-            xLeafNodes.forEach((LeafNode) => {
-                let totalBarValue = sumValue(LeafNode.rows(), "Y");
+            LeafNodes.forEach((LeafNode) => {
+                let totalBarValue = sumValue(LeafNode.rows(), "X");
                 let barWidth = (totalBarValue / totalValue) * width;
-                xTitleDiv.appendChild(createBarLabel(LeafNode, barWidth, offset));
+                if ((labelMode.value() === "all" || (labelMode.value() === "marked" && LeafNode.markedRowCount() > 0))){
+                    xTitleDiv.appendChild(createBarLabel(LeafNode, barWidth, offset));
+                }
                 offset += barWidth;
             });
         } else {
             xTitleHeight = 0;
         }
-        
+
         /**
          * Render a scale label for titles of the leaf node on the x axis
          * @param {Spotfire.DataViewHierarchyNode} LeafNode
-         * @param {number} xPosition
+         * @param {number} xSegition
          * @param {number} offset
          */
-        function createBarLabel(LeafNode, xPosition, offset) {
+        function createBarLabel(LeafNode, xSegition, offset) {
             let label = createDiv("x-title-label", "" + LeafNode.key);
             label.style.color = context.styling.scales.font.color;
             label.style.fontSize = context.styling.scales.font.fontSize + "px";
             label.style.fontFamily = context.styling.scales.font.fontFamily;
-            label.style.width =  xPosition + "px";
+            label.style.width =  xSegition + "px";
             label.style.left = offset + "px";
             label.style.textAlign = "center";
             return label;
@@ -249,16 +276,19 @@ Spotfire.initialize(async (mod) => {
     /**
      * Render all bars on the canvas div.
      * @param {Spotfire.DataView} dataView
-     * @param {Spotfire.DataViewHierarchyNode[]} xLeafNodes
+     * @param {Spotfire.DataViewHierarchyNode[]} LeafNodes
      * @param {Spotfire.DataViewHierarchyNode[]} colorLeaves
      * @param {Spotfire.ModProperty<boolean>} chartMode
-     * @param {Spotfire.ModProperty<boolean>} numericSeg
-     * @param {Spotfire.ModProperty<boolean>} percentageSeg
-     * @param {Spotfire.ModProperty<boolean>} titleMode
+     * @param {Spotfire.ModProperty<boolean>} numericVal
+     * @param {Spotfire.ModProperty<boolean>} percentageVal
+     * @param {Spotfire.ModProperty<boolean>} labelBars
+     * @param {Spotfire.ModProperty<boolean>} labelSeg
+     * @param {Spotfire.ModProperty<string>} labelMode
+     * @param {Spotfire.ModProperty<boolean>} title
      * @param {number} totalValue
      * @param {number} maxYValue
      */
-    function renderBars(dataView, xLeafNodes, colorLeaves, chartMode, numericSeg, percentageSeg, titleMode, totalValue, maxYValue) {
+    function renderBars(dataView, LeafNodes, colorLeaves, chartMode, numericVal, percentageVal, labelBars, labelSeg, labelMode, title, totalValue, maxYValue) {
         canvasDiv.innerHTML = "";
         canvasDiv.style.left = yScaleWidth + "px";
         canvasDiv.style.bottom = xScaleHeight + "px";
@@ -267,7 +297,7 @@ Spotfire.initialize(async (mod) => {
 
         //Set width and height to align with axis range
         const canvasHeight = canvasDiv.offsetHeight * 0.98;
-        const canvasWidth = canvasDiv.offsetWidth * 0.98 - (xLeafNodes.length - 2);
+        const canvasWidth = canvasDiv.offsetWidth * 0.98 - (LeafNodes.length - 1);
 
         canvasDiv.onclick = (e) => {
             if (e.target === canvasDiv) {
@@ -275,7 +305,7 @@ Spotfire.initialize(async (mod) => {
             }
         };
 
-        xLeafNodes.forEach((leafNode) => canvasDiv.appendChild(renderBar(leafNode)));
+        LeafNodes.forEach((leafNode) => canvasDiv.appendChild(renderBar(leafNode)));
 
         /**
          * Renders bars/segments for a single x axis node.
@@ -296,8 +326,9 @@ Spotfire.initialize(async (mod) => {
          */
         function renderStackedBar(rows) {
             let bar = createDiv("bar");
+            var isMarked = 0;
 
-            let totalBarValue = sumValue(rows, "Y");
+            let totalBarValue = sumValue(rows, "X");
             let percentage = totalBarValue / totalValue;
             let height;
             if (chartMode.value()){
@@ -308,31 +339,6 @@ Spotfire.initialize(async (mod) => {
             bar.style.height =  height + "px";
             bar.style.width = Math.round(percentage * canvasWidth) + "px";
 
-            if(numericSeg.value() && percentageSeg.value()){
-                let labelText = `${totalBarValue} (${(percentage * 100).toFixed(1)}%)`;
-                renderBarValue(labelText);
-            } else if (numericSeg.value()){
-                let labelText = `${totalBarValue}`;
-                renderBarValue(labelText);
-            } else if (percentageSeg.value()){
-                let labelText = `${(percentage * 100).toFixed(1)}%`;
-                renderBarValue(labelText);
-            }
-
-            /**
-             * Renders a bar label containing the bar value
-             * @param {string} labelText 
-             */
-            function renderBarValue(labelText){
-                let label = createDiv("bar-label", labelText);
-                label.style.color = context.styling.scales.font.color;
-                label.style.fontSize = context.styling.scales.font.fontSize + "px";
-                label.style.fontFamily = context.styling.scales.font.fontFamily;
-                label.style.marginTop = canvasHeight - height + "px";
-                label.style.width = bar.style.width;
-                bar.appendChild(label); 
-            }
-
             rows.forEach((row) => {
                 let y = row.continuous("Y");
                 if (y.value() === null) {
@@ -340,7 +346,7 @@ Spotfire.initialize(async (mod) => {
                 }
 
                 let segment = createDiv("segment");
-                segment.id = `${row.categorical("X").leafIndex},${rows.indexOf(row)}`;
+                segment.id = `${row.categorical("Z").leafIndex},${rows.indexOf(row)}`;
                 let percentageMekko = +y.value() / maxYValue;
                 let percentageMarimekko = +y.value() / totalBarValue;
                 if (chartMode.value()){
@@ -367,38 +373,39 @@ Spotfire.initialize(async (mod) => {
                     /** @type{Spotfire.MarkingOperation} */
                     let mode = e.ctrlKey ? "Toggle" : "Replace";
                     if (e.shiftKey) {
-                        row.mark("ToggleOrAdd")
-                        //rows.forEach((m) => m.mark(mode));
-                    } else if (e.altKey) {
-                        colorLeaves[rows.indexOf(row)].mark(mode);
+                        row.mark("Add");
                     } else {
                         row.mark(mode);
                     }
                 };
 
                 /** All possible combinations of showing labels for segments */
-                if (titleMode.value() && numericSeg.value() && percentageSeg.value()){
-                    let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`;
-                    renderLabel(labelText);
-                } else if(titleMode.value() && numericSeg.value()){
-                    let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()}`;
-                    renderLabel(labelText);
-                } else if (titleMode.value() && percentageSeg.value()){
-                    let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${(percentageMarimekko * 100).toFixed(1)}%`;
-                    renderLabel(labelText);
-                } else if (numericSeg.value() && percentageSeg.value()){
-                    let labelText = `${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`;
-                    renderLabel(labelText);
-                } else if(titleMode.value()){
-                    let labelText = `${colorLeaves[rows.indexOf(row)].key}`;
-                    renderLabel(labelText);
-                } else if (numericSeg.value()){
-                    let labelText = `${+y.value()}`;
-                    renderLabel(labelText);
-                } else if (percentageSeg.value()){
-                    let labelText = `${(percentageMarimekko * 100).toFixed(1)}%`;
-                    renderLabel(labelText);
+                if(labelSeg.value() && (labelMode.value() === "all" || (labelMode.value() === "marked" && row.isMarked()))){
+                    if (title.value() && numericVal.value() && percentageVal.value()){
+                        let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`;
+                        renderLabel(labelText);
+                    } else if(title.value() && numericVal.value()){
+                        let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()}`;
+                        renderLabel(labelText);
+                    } else if (title.value() && percentageVal.value()){
+                        let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${(percentageMarimekko * 100).toFixed(1)}%`;
+                        renderLabel(labelText);
+                    } else if (numericVal.value() && percentageVal.value()){
+                        let labelText = `${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`;
+                        renderLabel(labelText);
+                    } else if(title.value()){
+                        let labelText = `${colorLeaves[rows.indexOf(row)].key}`;
+                        renderLabel(labelText);
+                    } else if (numericVal.value()){
+                        let labelText = `${+y.value()}`;
+                        renderLabel(labelText);
+                    } else if (percentageVal.value()){
+                        let labelText = `${(percentageMarimekko * 100).toFixed(1)}%`;
+                        renderLabel(labelText);
+                    }
                 }
+
+                isMarked += row.isMarked() ? 1 : 0;
 
                 /**
                  * Render a segment label for the segment
@@ -431,6 +438,33 @@ Spotfire.initialize(async (mod) => {
 
                 bar.appendChild(segment);
             });
+
+            if(labelBars.value() && (labelMode.value() === "all" || (labelMode.value() === "marked" && isMarked > 0))){
+                if(numericVal.value() && percentageVal.value()){
+                    let labelText = `${totalBarValue} (${(percentage * 100).toFixed(1)}%)`;
+                    renderBarValue(labelText);
+                } else if (numericVal.value()){
+                    let labelText = `${totalBarValue}`;
+                    renderBarValue(labelText);
+                } else if (percentageVal.value()){
+                    let labelText = `${(percentage * 100).toFixed(1)}%`;
+                    renderBarValue(labelText);
+                }
+            }
+            
+            /**
+             * Renders a bar label containing the bar value
+             * @param {string} labelText 
+             */
+            function renderBarValue(labelText){
+                let label = createDiv("bar-label", labelText);
+                label.style.color = context.styling.scales.font.color;
+                label.style.fontSize = context.styling.scales.font.fontSize + "px";
+                label.style.fontFamily = context.styling.scales.font.fontFamily;
+                label.style.marginTop = canvasHeight - height + "px";
+                label.style.width = bar.style.width;
+                bar.appendChild(label); 
+            }
             return bar;
         }
     }
@@ -438,11 +472,11 @@ Spotfire.initialize(async (mod) => {
 
 /**
  * Calculate the maximum value from a hierarchy.
- * @param {Spotfire.DataViewHierarchyNode[]} xLeaves
+ * @param {Spotfire.DataViewHierarchyNode[]} Leaves
  */
- function calculateMaxYValue(xLeaves) {
+ function calculateMaxYValue(Leaves) {
     let maxYValue = 0;
-    xLeaves.forEach((node) => {
+    Leaves.forEach((node) => {
         let sum = sumValue(node.rows(), "Y");
         maxYValue = Math.max(maxYValue, sum);
     });
@@ -451,12 +485,12 @@ Spotfire.initialize(async (mod) => {
 
 /**
  * Calculate total value of the dataset to get percentages.
- * @param {Spotfire.DataViewHierarchyNode[]} xLeaves
+ * @param {Spotfire.DataViewHierarchyNode[]} Leaves
  */
- function calculatedValue(xLeaves) {
+ function calculatedValue(Leaves) {
     let totalValue = 0;
-    xLeaves.forEach((node) => {
-        let sum = sumValue(node.rows(), "Y");
+    Leaves.forEach((node) => {
+        let sum = sumValue(node.rows(), "X");
         totalValue = totalValue + sum;
     });
 
@@ -509,9 +543,9 @@ function createDiv(className, content) {
      * @param {Spotfire.DataViewHierarchyNode} b
      */
 function sortBars(a, b){
-    if(sumValue(b.rows() ,"Y") < sumValue(a.rows() ,"Y")){
+    if(sumValue(b.rows() ,"X") < sumValue(a.rows() ,"X")){
         return -1;
-    } else if (sumValue(a.rows() ,"Y") < sumValue(b.rows() ,"Y")){
+    } else if (sumValue(a.rows() ,"X") < sumValue(b.rows() ,"X")){
         return 1;
     } else {
         return 0;
