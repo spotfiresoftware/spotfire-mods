@@ -31,7 +31,7 @@
             "defaultValue": "all"
         },
         {
-            "name": "sort",
+            "name": "sort-bars",
             "type": "boolean",
             "defaultValue": false
         },

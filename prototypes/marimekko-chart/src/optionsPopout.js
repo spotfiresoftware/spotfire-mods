@@ -1,21 +1,24 @@
 /**
  * Function initializes the popout and sets/creates and updates the components for the settings popout given the property
  * @param {Spotfire.Mod} mod
- * @param {Spotfire.ModProperty<string>} labelMode
- * @param {Spotfire.ModProperty<boolean>} chartMode
- * @param {Spotfire.ModProperty<boolean>} labelBars
- * @param {Spotfire.ModProperty<boolean>} labelSeg
- * @param {Spotfire.ModProperty<boolean>} numeric
- * @param {Spotfire.ModProperty<boolean>} percentage
- * @param {Spotfire.ModProperty<boolean>} reverse
- * @param {Spotfire.ModProperty<boolean>} sort
- * @param {Spotfire.ModProperty<boolean>} category
+ * @param {*} modProperty
  */
- function initializeSettingsPopout(mod, labelMode, chartMode, labelBars, labelSeg, numeric, percentage, reverse, sort, category) {
+ function initializeSettingsPopout(mod, modProperty) {
     const tooltip = mod.controls.tooltip;
     const popout = mod.controls.popout;
     const factory = popout.components;
     const section = popout.section;
+    const { xAxisMode, 
+        chartMode,
+        labelMode,
+        labelBars,
+        labelSeg,
+        numeric,
+        percentage,
+        category,
+        reverseBars,
+        reverseSeg,
+        sortBar } = modProperty;
 
     // Select the dom-container
     const modContainer = d3.select("#mod-container");
@@ -43,10 +46,12 @@
                         labelBars.set(e.value);
                     }  else if (e.name === "label-segment") {
                         labelSeg.set(e.value);
-                    } else if (e.name === "sort") {
-                        sort.set(e.value);
-                    } else if (e.name === "reverse") {
-                        reverse.set(e.value);
+                    } else if (e.name === "sort-bar") {
+                        sortBar.set(e.value);
+                    } else if (e.name === "reverseBars") {
+                        reverseBars.set(e.value);
+                    } else if (e.name === "reverseSeg") {
+                        reverseSeg.set(e.value);
                     } else if (e.name === "numeric") {
                         numeric.set(e.value);
                     } else if (e.name === "percentage") {
@@ -87,17 +92,23 @@
             section({
                 children: [
                     factory.checkbox({
-                        name: "sort",
+                        name: "sort-bar",
                         text: "Sort bars by value",
-                        checked: sort.value() === true,
+                        checked: sortBar.value() === true,
                         enabled: true
                     }),
                     factory.checkbox({
-                        name: "reverse",
-                        text: "Reverse scale",
-                        checked: reverse.value() === true,
+                        name: "reverseBars",
+                        text: "Reverse bars",
+                        checked: reverseBars.value() === true,
                         enabled: true
-                    })
+                    }),
+                    factory.checkbox({
+                        name: "reverseSeg",
+                        text: "Reverse segments",
+                        checked: reverseSeg.value() === true,
+                        enabled: true
+                    }),
                 ]
             }),
             section({

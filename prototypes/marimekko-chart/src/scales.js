@@ -2,41 +2,29 @@
  * Renders the y and x axis for the mod using d3
  * @param {Spotfire.Mod} mod
  * @param {Spotfire.Size} size
- * @param {Spotfire.ModProperty<string>} xAxisMode
- * @param {Spotfire.ModProperty<boolean>} chartMode
- * @param {Spotfire.ModProperty<string>} labelMode
- * @param {Spotfire.ModProperty<boolean>} labelBars
- * @param {Spotfire.ModProperty<boolean>} labelSeg
- * @param {Spotfire.ModProperty<boolean>} numeric
- * @param {Spotfire.ModProperty<boolean>} percentage
- * @param {Spotfire.ModProperty<boolean>} category
- * @param {Spotfire.ModProperty<boolean>} reverse
- * @param {Spotfire.ModProperty<boolean>} sort
+ * @param {*} modProperty
  * @param {number} totalValue
  * @param {number} maxYValue
  * @param {number} xScaleHeight
  * @param {number} yScaleWidth
  * @param {number} xTitleHeight
  */
-function renderAxis(mod, 
-                    size, 
-                    xAxisMode, 
-                    chartMode, 
-                    labelMode,
-                    labelBars,
-                    labelSeg,
-                    numeric,
-                    percentage,
-                    category, 
-                    reverse, sort, 
-                    totalValue, 
-                    maxYvalue, 
-                    xScaleHeight, 
-                    yScaleWidth, 
-                    xTitleHeight){
+function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight, yScaleWidth, xTitleHeight){
     //variables
     const context = mod.getRenderContext();
     const styling = context.styling;
+    const { xAxisMode, 
+        chartMode,
+        labelMode,
+        labelBars,
+        labelSeg,
+        numeric,
+        percentage,
+        category,
+        reverseBars,
+        reverseSeg,
+        sortBar } = modProperty;
+
     const margin = { top: xTitleHeight, right: 22, bottom: xScaleHeight + 1, left: yScaleWidth - 1}
     var width = size.width - margin.right;
     var height = size.height;
@@ -166,12 +154,17 @@ function renderAxis(mod,
                 },
                 {
                     text: "Sort bars by value",
-                    checked: sort.value(),
+                    checked: sortBar.value(),
                     enabled: true
                 },
                 {
-                    text: "Reverse Scale",
-                    checked: reverse.value(),
+                    text: "Reverse Bars",
+                    checked: reverseBars.value(),
+                    enabled: true
+                },
+                {
+                    text: "Reverse Segments",
+                    checked: reverseSeg.value(),
                     enabled: true
                 },
             ])
@@ -187,10 +180,13 @@ function renderAxis(mod,
                     chartMode.set(true);
                 }
                 if (clickedItem.text === "Sort bars by value") {
-                    sort.set(!sort.value());
+                    sortBar.set(!sortBar.value());
                 } 
-                if (clickedItem.text === "Reverse scale") {
-                    reverse.set(!reverse.value());
+                if (clickedItem.text === "Reverse Bars") {
+                    reverseBars.set(!reverseBars.value());
+                }
+                if (clickedItem.text === "Reverse Segments") {
+                    reverseSeg.set(!reverseSeg.value());
                 }
             });
     };
@@ -216,9 +212,11 @@ function renderAxis(mod,
                 } else if (e.name === "chart") {
                     chartMode.set(e.value);
                 } else if (e.name === "sort") {
-                    sort.set(e.value);
-                } else if (e.name === "reverse") {
-                    reverse.set(e.value);
+                    sortBar.set(e.value);
+                } else if (e.name === "reverseBars") {
+                    reverseBars.set(e.value);
+                } else if (e.name === "reverseSeg") {
+                    reverseSeg.set(e.value);
                 }
                 }
             },
@@ -263,7 +261,7 @@ function renderAxis(mod,
                         factory.checkbox({
                             name: "sort",
                             text: "Sort bars by value",
-                            checked: sort.value() === true,
+                            checked: sortBar.value() === true,
                             enabled: true
                         })
                     ]
@@ -271,11 +269,17 @@ function renderAxis(mod,
                 section({
                     children: [
                         factory.checkbox({
-                            name: "reverse",
-                            text: "Reverse scale",
-                            checked: reverse.value() === true,
+                            name: "reverseBars",
+                            text: "Reverse bars",
+                            checked: reverseBars.value() === true,
                             enabled: true
-                        })
+                        }),
+                        factory.checkbox({
+                            name: "reverseSeg",
+                            text: "Reverse segments",
+                            checked: reverseSeg.value() === true,
+                            enabled: true
+                        }),
                     ]
                 })
             ];
