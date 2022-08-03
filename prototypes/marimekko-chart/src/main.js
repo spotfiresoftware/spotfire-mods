@@ -13,6 +13,7 @@ Spotfire.initialize(async (mod) => {
 
     const canvasDiv = findElem("#canvas");
     const xTitleDiv = findElem("#x-title");
+    const scale = findElem("#scale");
 
     const xScaleHeight = 20;
     const yScaleWidth = 60;
@@ -70,12 +71,18 @@ Spotfire.initialize(async (mod) => {
 
         mod.controls.errorOverlay.hide("dataView");
 
+        scale.onclick = (e) => {
+            if (e.target === scale) {
+                dataView.clearMarking();
+            }
+        };
+
         // Return and wait for next call to render when reading data was aborted.
         // Last rendered data view is still valid from a users perspective since
         // a document modification was made during a progress indication.
         // Hard abort if row count exceeds an arbitrary selected limit
-        const zLimit = 10000;
-        const colorLimit = 20;
+        const zLimit = 1000;
+        const colorLimit = 40;
         const colorCount = (await dataView.hierarchy("Color")).leafCount;
         const zCount = (await dataView.hierarchy("Z")).leafCount;
         if (colorCount > colorLimit || zCount > zLimit) {
@@ -83,7 +90,7 @@ Spotfire.initialize(async (mod) => {
                         mod.controls.errorOverlay.show("The resulting data view exceeded the size limit.", "dataViewSize1");
             if (zCount > zLimit) {
                 mod.controls.errorOverlay.show(
-                    `Maximum allowed X axis values is ${zLimit}. Try aggregating the expression further.`,
+                    `Maximum allowed Z axis values is ${zLimit}. Try aggregating the expression further.`,
                     "dataViewSize2"
                 );
             } else {
@@ -135,11 +142,9 @@ Spotfire.initialize(async (mod) => {
         mod.controls.tooltip.hide();
 
         let Leaves = Root.leaves();
-
         if(sort.value()){
             Leaves.sort(sortBars);
         }
-
         if(reverseBars.value()){
             Leaves.reverse();
         }
@@ -192,7 +197,7 @@ Spotfire.initialize(async (mod) => {
                     sort,
                     totalValue, 
                     maxYValue, 
-                    xScaleHeight - Leaves.length + 1, //to align with canvasheight
+                    xScaleHeight,
                     yScaleWidth, 
                     xTitleHeight);
         
@@ -208,12 +213,16 @@ Spotfire.initialize(async (mod) => {
                         const xId = row.categorical("Z").leafIndex;
                         const yId = Leaves[row.categorical("Z").leafIndex].rows().indexOf(row);
                         let rowSegment = document.getElementById(`${xId},${yId}`);
-                        const xSeg = rowSegment.getBoundingClientRect().left;
-                        const ySeg = rowSegment.getBoundingClientRect().top;
-                        const wSeg = rowSegment.getBoundingClientRect().width;
-                        const hSeg = rowSegment.getBoundingClientRect().height;
-                        if (x < xSeg + wSeg && x + width > xSeg && y < ySeg + hSeg && y + height > ySeg) {
-                            ctrlKey ? row.mark("ToggleOrAdd") : row.mark();
+                        if (rowSegment) {
+                            const divRect = rowSegment.getBoundingClientRect();
+                            if (
+                                x < divRect.x + divRect.width &&
+                                x + width > divRect.x &&
+                                y < divRect.y + divRect.height &&
+                                y + height > divRect.y
+                            ) {
+                                ctrlKey ? row.mark("ToggleOrAdd") : row.mark();
+                            }
                         }
                     });
             });
@@ -240,12 +249,12 @@ Spotfire.initialize(async (mod) => {
             xTitleDiv.style.top = "0px";
 
             //Set with to align with x axes range
-            let width = xTitleDiv.offsetWidth * 0.98 - (LeafNodes.length - 1);
+            let width = xTitleDiv.offsetWidth * 0.98;
             let offset = 0;
     
             LeafNodes.forEach((LeafNode) => {
-                let totalBarValue = sumValue(LeafNode.rows(), "X");
-                let barWidth = (totalBarValue / totalValue) * width;
+                let totalWidthValue = sumValue(LeafNode.rows(), "X");
+                let barWidth = (totalWidthValue / totalValue) * width - 1;
                 if ((labelMode.value() === "all" || (labelMode.value() === "marked" && LeafNode.markedRowCount() > 0))){
                     xTitleDiv.appendChild(createBarLabel(LeafNode, barWidth, offset));
                 }
@@ -258,15 +267,15 @@ Spotfire.initialize(async (mod) => {
         /**
          * Render a scale label for titles of the leaf node on the x axis
          * @param {Spotfire.DataViewHierarchyNode} LeafNode
-         * @param {number} xSegition
+         * @param {number} xPosition
          * @param {number} offset
          */
-        function createBarLabel(LeafNode, xSegition, offset) {
+        function createBarLabel(LeafNode, xPosition, offset) {
             let label = createDiv("x-title-label", "" + LeafNode.key);
             label.style.color = context.styling.scales.font.color;
             label.style.fontSize = context.styling.scales.font.fontSize + "px";
             label.style.fontFamily = context.styling.scales.font.fontFamily;
-            label.style.width =  xSegition + "px";
+            label.style.width =  xPosition + "px";
             label.style.left = offset + "px";
             label.style.textAlign = "center";
             return label;
@@ -297,7 +306,7 @@ Spotfire.initialize(async (mod) => {
 
         //Set width and height to align with axis range
         const canvasHeight = canvasDiv.offsetHeight * 0.98;
-        const canvasWidth = canvasDiv.offsetWidth * 0.98 - (LeafNodes.length - 1);
+        const canvasWidth = canvasDiv.offsetWidth * 0.98;
 
         canvasDiv.onclick = (e) => {
             if (e.target === canvasDiv) {
@@ -309,11 +318,11 @@ Spotfire.initialize(async (mod) => {
 
         /**
          * Renders bars/segments for a single x axis node.
-         * @param {Spotfire.DataViewHierarchyNode} xLeafNode
+         * @param {Spotfire.DataViewHierarchyNode} LeafNode
          */
-        function renderBar(xLeafNode) {
+        function renderBar(LeafNode) {
             let fragment = document.createDocumentFragment();
-            let rows = xLeafNode.rows();
+            let rows = LeafNode.rows();
 
             fragment.appendChild(renderStackedBar(rows));
 
@@ -326,34 +335,33 @@ Spotfire.initialize(async (mod) => {
          */
         function renderStackedBar(rows) {
             let bar = createDiv("bar");
-            var isMarked = 0;
+            var isMarked = 0; 
 
-            let totalBarValue = sumValue(rows, "X");
-            let percentage = totalBarValue / totalValue;
+            var totalWidthValue = sumValue(rows, "X");
+            var totalHeightValue = sumValue(rows, "Y");
+            let percentage = totalWidthValue / totalValue;
+
             let height;
             if (chartMode.value()){
-                height = Math.round((totalBarValue / maxYValue) * canvasHeight);
+                height = (totalHeightValue / maxYValue) * canvasHeight;
             } else {
                 height = canvasHeight;
             }
             bar.style.height =  height + "px";
-            bar.style.width = Math.round(percentage * canvasWidth) + "px";
+            bar.style.width = percentage * canvasWidth - 1 + "px";
 
             rows.forEach((row) => {
                 let y = row.continuous("Y");
-                if (y.value() === null) {
+                if (y.value() === null || y.value() < 1) {
                     return;
                 }
 
                 let segment = createDiv("segment");
                 segment.id = `${row.categorical("Z").leafIndex},${rows.indexOf(row)}`;
-                let percentageMekko = +y.value() / maxYValue;
-                let percentageMarimekko = +y.value() / totalBarValue;
-                if (chartMode.value()){
-                    segment.style.height = (percentageMekko) * canvasHeight + "px";
-                } else {
-                    segment.style.height = (percentageMarimekko) * canvasHeight + "px";
-                }
+                
+                let percentSeg = ((+y.value() / totalHeightValue) * 100).toFixed(1);
+                let percentageHeight = chartMode.value() ? +y.value() / maxYValue : +y.value() / totalHeightValue;
+                segment.style.height = (percentageHeight * canvasHeight) - 1 + "px";
                 segment.style.backgroundColor = row.color().hexCode;
                 segment.style.width = bar.style.width;
                 segment.style.marginBottom = "1px";
@@ -379,19 +387,21 @@ Spotfire.initialize(async (mod) => {
                     }
                 };
 
+                
+
                 /** All possible combinations of showing labels for segments */
                 if(labelSeg.value() && (labelMode.value() === "all" || (labelMode.value() === "marked" && row.isMarked()))){
                     if (title.value() && numericVal.value() && percentageVal.value()){
-                        let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`;
+                        let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()} (${percentSeg}%)`;
                         renderLabel(labelText);
                     } else if(title.value() && numericVal.value()){
                         let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${+y.value()}`;
                         renderLabel(labelText);
                     } else if (title.value() && percentageVal.value()){
-                        let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${(percentageMarimekko * 100).toFixed(1)}%`;
+                        let labelText = `${colorLeaves[rows.indexOf(row)].key}: ${percentSeg}%`;
                         renderLabel(labelText);
                     } else if (numericVal.value() && percentageVal.value()){
-                        let labelText = `${+y.value()} (${(percentageMarimekko * 100).toFixed(1)}%)`;
+                        let labelText = `${+y.value()} (${percentSeg}%)`;
                         renderLabel(labelText);
                     } else if(title.value()){
                         let labelText = `${colorLeaves[rows.indexOf(row)].key}`;
@@ -400,7 +410,7 @@ Spotfire.initialize(async (mod) => {
                         let labelText = `${+y.value()}`;
                         renderLabel(labelText);
                     } else if (percentageVal.value()){
-                        let labelText = `${(percentageMarimekko * 100).toFixed(1)}%`;
+                        let labelText = `${percentSeg}%`;
                         renderLabel(labelText);
                     }
                 }
@@ -418,7 +428,7 @@ Spotfire.initialize(async (mod) => {
                     label.style.fontFamily = context.styling.scales.font.fontFamily;
                     label.style.lineHeight = segment.style.height;
                     label.style.height = segment.style.height;
-                    label.style.width = bar.style.width;
+                    label.style.width = segment.style.width;
                     segment.appendChild(label);
                 }
 
@@ -439,12 +449,14 @@ Spotfire.initialize(async (mod) => {
                 bar.appendChild(segment);
             });
 
+            //console.log(percentageWidth);
+
             if(labelBars.value() && (labelMode.value() === "all" || (labelMode.value() === "marked" && isMarked > 0))){
                 if(numericVal.value() && percentageVal.value()){
-                    let labelText = `${totalBarValue} (${(percentage * 100).toFixed(1)}%)`;
+                    let labelText = `${totalWidthValue} (${(percentage * 100).toFixed(1)}%)`;
                     renderBarValue(labelText);
                 } else if (numericVal.value()){
-                    let labelText = `${totalBarValue}`;
+                    let labelText = `${totalWidthValue}`;
                     renderBarValue(labelText);
                 } else if (percentageVal.value()){
                     let labelText = `${(percentage * 100).toFixed(1)}%`;

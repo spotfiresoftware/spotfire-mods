@@ -37,7 +37,7 @@ function renderAxis(mod,
     //variables
     const context = mod.getRenderContext();
     const styling = context.styling;
-    const margin = { top: xTitleHeight, right: 20, bottom: xScaleHeight, left: yScaleWidth - 1}
+    const margin = { top: xTitleHeight, right: 22, bottom: xScaleHeight + 1, left: yScaleWidth - 1}
     var width = size.width - margin.right;
     var height = size.height;
 
@@ -51,6 +51,7 @@ function renderAxis(mod,
         .style('font-size', styling.scales.font.fontSize)
         .style('font-family', styling.scales.font.fontFamily)
         .style('color', styling.scales.tick.stroke)
+        .on("click", () => dataView.clearMarking());
 
     //render x axis different depending on configuration
     if (xAxisMode.value() === "percentage"){
