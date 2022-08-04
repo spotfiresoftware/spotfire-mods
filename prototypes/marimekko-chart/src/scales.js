@@ -23,7 +23,8 @@ function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight,
         category,
         reverseBars,
         reverseSeg,
-        sortBar } = modProperty;
+        sortBar,
+        sortSeg } = modProperty;
 
     const margin = { top: xTitleHeight, right: 22, bottom: xScaleHeight + 1, left: yScaleWidth - 1}
     var width = size.width - margin.right;
@@ -38,8 +39,7 @@ function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight,
         .attr("height", height)
         .style('font-size', styling.scales.font.fontSize)
         .style('font-family', styling.scales.font.fontFamily)
-        .style('color', styling.scales.tick.stroke)
-        .on("click", () => dataView.clearMarking());
+        .style('color', styling.scales.tick.stroke);
 
     //render x axis different depending on configuration
     if (xAxisMode.value() === "percentage"){
@@ -158,6 +158,11 @@ function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight,
                     enabled: true
                 },
                 {
+                    text: "Sort segments by value",
+                    checked: sortSeg.value(),
+                    enabled: true
+                },
+                {
                     text: "Reverse Bars",
                     checked: reverseBars.value(),
                     enabled: true
@@ -181,6 +186,9 @@ function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight,
                 }
                 if (clickedItem.text === "Sort bars by value") {
                     sortBar.set(!sortBar.value());
+                } 
+                if (clickedItem.text === "Sort segments by value") {
+                    sortSeg.set(!sortSeg.value());
                 } 
                 if (clickedItem.text === "Reverse Bars") {
                     reverseBars.set(!reverseBars.value());
@@ -211,8 +219,10 @@ function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight,
                     xAxisMode.set(e.value);
                 } else if (e.name === "chart") {
                     chartMode.set(e.value);
-                } else if (e.name === "sort") {
+                } else if (e.name === "sort-bars") {
                     sortBar.set(e.value);
+                } else if (e.name === "sort-segment") {
+                    sortSeg.set(e.value);
                 } else if (e.name === "reverseBars") {
                     reverseBars.set(e.value);
                 } else if (e.name === "reverseSeg") {
@@ -259,9 +269,15 @@ function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight,
                 section({
                     children: [
                         factory.checkbox({
-                            name: "sort",
+                            name: "sort-bars",
                             text: "Sort bars by value",
                             checked: sortBar.value() === true,
+                            enabled: true
+                        }),
+                        factory.checkbox({
+                            name: "sort-segment",
+                            text: "Sort segments by value",
+                            checked: sortSeg.value() === true,
                             enabled: true
                         })
                     ]

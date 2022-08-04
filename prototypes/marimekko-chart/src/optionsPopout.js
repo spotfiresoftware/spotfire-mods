@@ -18,7 +18,8 @@
         category,
         reverseBars,
         reverseSeg,
-        sortBar } = modProperty;
+        sortBar,
+        sortSeg } = modProperty;
 
     // Select the dom-container
     const modContainer = d3.select("#mod-container");
@@ -48,6 +49,8 @@
                         labelSeg.set(e.value);
                     } else if (e.name === "sort-bar") {
                         sortBar.set(e.value);
+                    } else if (e.name === "sort-segment") {
+                        sortSeg.set(e.value);
                     } else if (e.name === "reverseBars") {
                         reverseBars.set(e.value);
                     } else if (e.name === "reverseSeg") {
@@ -95,6 +98,12 @@
                         name: "sort-bar",
                         text: "Sort bars by value",
                         checked: sortBar.value() === true,
+                        enabled: true
+                    }),
+                    factory.checkbox({
+                        name: "sort-segment",
+                        text: "Sort segments by value",
+                        checked: sortSeg.value() === true,
                         enabled: true
                     }),
                     factory.checkbox({

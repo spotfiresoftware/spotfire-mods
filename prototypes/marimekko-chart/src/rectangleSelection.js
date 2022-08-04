@@ -58,7 +58,7 @@ const rectangleMarking = (callback) => {
                 ...meta
             });
         } else {
-            callback({ dragSelectActive: false});
+            callback({ dragSelectActive: false });
         }
 
         document.removeEventListener("mousemove", mousemove);

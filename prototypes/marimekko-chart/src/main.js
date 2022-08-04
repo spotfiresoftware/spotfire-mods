@@ -11,6 +11,7 @@ Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
     const state = {};
 
+    const modContainer = findElem("#mod-container");
     const canvasDiv = findElem("#canvas");
     const xTitleDiv = findElem("#x-title");
     const scale = findElem("#scale");
@@ -32,6 +33,7 @@ Spotfire.initialize(async (mod) => {
         mod.property("reverse-bars"),
         mod.property("reverse-segment"),
         mod.property("sort-bars"),
+        mod.property("sort-segment"),
         mod.windowSize()
     );
 
@@ -53,6 +55,7 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.ModProperty<boolean>} reverseBars
      * @param {Spotfire.ModProperty<boolean>} reverseSeg
      * @param {Spotfire.ModProperty<boolean>} sortBar
+     * @param {Spotfire.ModProperty<boolean>} sortSeg
      * @param {Spotfire.Size} size
      */
     async function render(dataView, 
@@ -66,8 +69,14 @@ Spotfire.initialize(async (mod) => {
                         category, 
                         reverseBars, 
                         reverseSeg, 
-                        sortBar, 
+                        sortBar,
+                        sortSeg, 
                         size) {
+
+        if (state.preventRender) {
+            // Early return if the state currently disallows rendering.
+            return;
+        }
 
         const onSelection = ({ dragSelectActive }) => {
             state.preventRender = dragSelectActive;
@@ -84,7 +93,8 @@ Spotfire.initialize(async (mod) => {
             category: category,
             reverseBars: reverseBars,
             reverseSeg: reverseSeg,
-            sortBar: sortBar
+            sortBar: sortBar,
+            sortSeg: sortSeg
         };
         
         /**
@@ -98,12 +108,6 @@ Spotfire.initialize(async (mod) => {
         }
 
         mod.controls.errorOverlay.hide("dataView");
-
-        scale.onclick = (e) => {
-            if (e.target === scale) {
-                dataView.clearMarking();
-            }
-        };
 
         // Return and wait for next call to render when reading data was aborted.
         // Last rendered data view is still valid from a users perspective since
@@ -139,6 +143,15 @@ Spotfire.initialize(async (mod) => {
             mod.controls.errorOverlay.hide("dataViewSize3");
         }
 
+        modContainer.onclick = (e) => {
+            if (e.target === xTitleDiv ||
+                e.target === modContainer ||
+                e.target === canvasDiv ||
+                e.target === scale) {
+                dataView.clearMarking();
+            }
+        };
+
         // Get the leaf nodes for the x hierarchy. We will iterate over them to
         // render the bars.
         let Hierarchy = await dataView.hierarchy("Z");
@@ -170,15 +183,12 @@ Spotfire.initialize(async (mod) => {
         mod.controls.tooltip.hide();
 
         let Leaves = Root.leaves();
+        let orderLeaves = Leaves;
         if(sortBar.value()){
-            Leaves.sort(sortBars);
+            orderLeaves = [...Leaves].sort(sortBars);
         }
         if(reverseBars.value()){
-            Leaves.reverse();
-        }
-
-        if (reverseSeg.value()) {
-            Leaves.forEach(node => node.rows().reverse());
+            orderLeaves = [...Leaves].reverse();
         }
 
         let colorHierarchy = await dataView.hierarchy("Color");
@@ -202,8 +212,8 @@ Spotfire.initialize(async (mod) => {
         context.isEditing && 
             initializeSettingsPopout(mod, modProperty);
         
-        renderTitles(Leaves, labelBars, category, totalValue, labelMode);
-        renderBars(dataView, Leaves, colorLeaves, modProperty, totalValue, maxYValue);
+        renderTitles(orderLeaves, labelBars, category, totalValue, labelMode);
+        renderBars(dataView, orderLeaves, colorLeaves, modProperty, totalValue, maxYValue);
         renderAxis(mod, size, modProperty, totalValue, maxYValue, xScaleHeight, yScaleWidth, xTitleHeight);
         
         /**Mark segments after drawn rectangular selection*/
@@ -217,7 +227,9 @@ Spotfire.initialize(async (mod) => {
                     .forEach((row) => {
                         const xId = row.categorical("Z").leafIndex;
                         const yId = Leaves[row.categorical("Z").leafIndex].rows().indexOf(row);
+                        //console.log(`${xId},${yId}`);
                         let rowSegment = document.getElementById(`${xId},${yId}`);
+                        //console.log(rowSegment);
                         if (rowSegment) {
                             const divRect = rowSegment.getBoundingClientRect();
                             if (
@@ -313,17 +325,12 @@ Spotfire.initialize(async (mod) => {
             category,
             reverseBars,
             reverseSeg,
-            sortBar } = modProperty;
+            sortBar,
+            sortSeg } = modProperty;
 
         //Set width and height to align with axis range
         const canvasHeight = canvasDiv.offsetHeight * 0.98;
         const canvasWidth = canvasDiv.offsetWidth * 0.98;
-
-        canvasDiv.onclick = (e) => {
-            if (e.target === canvasDiv) {
-                dataView.clearMarking();
-            }
-        };
 
         LeafNodes.forEach((leafNode) => canvasDiv.appendChild(renderBar(leafNode)));
 
@@ -361,7 +368,15 @@ Spotfire.initialize(async (mod) => {
             bar.style.height =  height + "px";
             bar.style.width = percentageWidth * canvasWidth - 1 + "px";
 
-            rows.forEach((row) => {
+            let orderedRows = rows;
+            if(sortSeg.value()){
+                orderedRows = [...rows].sort(sortSegments);
+            }
+            if (reverseSeg.value()) {
+                orderedRows = [...rows].reverse();
+            }
+
+            orderedRows.forEach((row) => {
                 let y = row.continuous("Y");
                 if (y.value() === null || y.value() < 1) {
                     return;
@@ -579,9 +594,9 @@ function sortBars(a, b){
      * @param {Spotfire.DataViewRow} b
      */
  function sortSegments(a, b){
-    if(+b.continuous("Y") < +a.continuous("Y")){
+    if(+b.continuous("Y").value() < +a.continuous("Y").value()){
         return -1;
-    } else if (+a.continuous("Y") < +b.continuous("Y")){
+    } else if (+a.continuous("Y").value() < +b.continuous("Y").value()){
         return 1;
     } else {
         return 0;

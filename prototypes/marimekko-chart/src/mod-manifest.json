@@ -36,6 +36,11 @@
             "defaultValue": false
         },
         {
+            "name": "sort-segment",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
             "name": "reverse-bars",
             "type": "boolean",
             "defaultValue": false
