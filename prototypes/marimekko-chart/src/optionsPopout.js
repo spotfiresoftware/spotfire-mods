@@ -10,6 +10,7 @@
     const section = popout.section;
     const { xAxisMode, 
         chartMode,
+        titleMode, 
         labelMode,
         labelBars,
         labelSeg,
@@ -43,6 +44,8 @@
                         labelMode.set(e.value);
                     } else if (e.name === "chart") {
                         chartMode.set(e.value);
+                    } else if (e.name === "title-mode") {
+                        titleMode.set(e.value);
                     } else if (e.name === "label-bars") {
                         labelBars.set(e.value);
                     }  else if (e.name === "label-segment") {
@@ -81,18 +84,25 @@
                     factory.radioButton({
                         name: "chart",
                         text: "Marimekko Chart",
-                        value: false,
-                        checked: chartMode.value() === false
+                        value: "marimekko",
+                        checked: chartMode.value() === "marimekko"
                     }),
                     factory.radioButton({
                         name: "chart",
                         text: "Mekko Chart",
-                        value: true,
-                        checked: chartMode.value() === true
+                        value: "mekko",
+                        checked: chartMode.value() === "mekko"
                     }),
+                    factory.checkbox({
+                        name: "title-mode",
+                        text: "Show category labels",
+                        checked: titleMode.value() === true,
+                        enabled: true
+                    })
                 ]
             }),
             section({
+                heading: "Sorting",
                 children: [
                     factory.checkbox({
                         name: "sort-bar",
@@ -101,22 +111,22 @@
                         enabled: true
                     }),
                     factory.checkbox({
+                        name: "reverseBars",
+                        text: "Reverse bars order",
+                        checked: reverseBars.value() === true,
+                        enabled: sortBar.value()
+                    }),
+                    factory.checkbox({
                         name: "sort-segment",
-                        text: "Sort segments by value",
+                        text: "Sort bar segments by value",
                         checked: sortSeg.value() === true,
                         enabled: true
                     }),
                     factory.checkbox({
-                        name: "reverseBars",
-                        text: "Reverse bars",
-                        checked: reverseBars.value() === true,
-                        enabled: true
-                    }),
-                    factory.checkbox({
                         name: "reverseSeg",
-                        text: "Reverse segments",
+                        text: "Reverse bar segments order",
                         checked: reverseSeg.value() === true,
-                        enabled: true
+                        enabled: sortSeg.value()
                     }),
                 ]
             }),
@@ -131,50 +141,50 @@
                     }),
                     factory.radioButton({
                         name: "label-mode",
-                        text: "None",
-                        value: "none",
-                        checked: labelMode.value() === "none"
-                    }),
-                    factory.radioButton({
-                        name: "label-mode",
-                        text: "Marked",
+                        text: "Marked rows",
                         value: "marked",
                         checked: labelMode.value() === "marked"
                     }),
-                    factory.checkbox({
-                        name: "label-bars",
-                        text: "Bars",
-                        checked: labelBars.value() === true,
-                        enabled: true
-                    }),
-                    factory.checkbox({
-                        name: "label-segment",
-                        text: "Segments",
-                        checked: labelSeg.value() === true,
-                        enabled: true
+                    factory.radioButton({
+                        name: "label-mode",
+                        text: "None",
+                        value: "none",
+                        checked: labelMode.value() === "none"
                     })
                 ]
             }),
             section({
-                heading: "Label contains",
+                heading: "Types of labels",
                 children: [
+                    factory.checkbox({
+                        name: "label-bars",
+                        text: "Complete bars",
+                        checked: labelBars.value() === true,
+                        enabled: !(labelMode.value() === "none")
+                    }),
+                    factory.checkbox({
+                        name: "label-segment",
+                        text: "Bar segments",
+                        checked: labelSeg.value() === true,
+                        enabled: !(labelMode.value() === "none")
+                    }),
+                    factory.checkbox({
+                        name: "percentage",
+                        text: "Percentage",
+                        checked: percentage.value() === true,
+                        enabled: !(labelMode.value() === "none") && (labelBars.value() || labelSeg.value())
+                    }),
+                    factory.checkbox({
+                        name: "numeric",
+                        text: "Value",
+                        checked: numeric.value() === true,
+                        enabled: !(labelMode.value() === "none") && (labelBars.value() || labelSeg.value())
+                    }),
                     factory.checkbox({
                         name: "category",
                         text: "Category",
                         checked: category.value() === true,
-                        enabled: true
-                    }),
-                    factory.checkbox({
-                        name: "numeric",
-                        text: "Numeric Value",
-                        checked: numeric.value() === true,
-                        enabled: true
-                    }),
-                    factory.checkbox({
-                        name: "percentage",
-                        text: "Percentages",
-                        checked: percentage.value() === true,
-                        enabled: true
+                        enabled: !(labelMode.value() === "none") && (labelBars.value() || labelSeg.value())
                     })
                 ]
             })

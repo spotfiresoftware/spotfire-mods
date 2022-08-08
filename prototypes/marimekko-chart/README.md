@@ -1,9 +1,7 @@
 # Marimekko Chart 
 This mod example demonstrates a marimekko chart written in `JavaScript`, rendered partially with `d3`. 
 
-All source code for the mod example can be found in the `src` folder. 
-
-The purpose of this example is to illustrate, with commented and understandable code, how to construct a well-known visualization using the mod API. 
+All source code for the mod example can be found in the `src` folder.  
 
 All necessary files for the mod example can be found in the `src` folder. Read below for further explanation.
 
