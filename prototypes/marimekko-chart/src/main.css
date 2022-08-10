@@ -63,6 +63,7 @@ body,
     border-bottom-width: 0;
     text-align: center;
     margin-right: 1px;
+    position: relative;
 }
 
 .bar:hover {
@@ -71,7 +72,7 @@ body,
 
 .bar-label {
     position: absolute;
-    top: -3px;
+    top: -14px;
     text-align: center;
     white-space: nowrap;
     overflow: hidden; 
@@ -96,12 +97,11 @@ body,
     cursor: pointer;
 }
 
-.x-title-label {
+.bar-category-label {
     text-align: center;
     line-height: 10px;
-    font-size: 10px;
     position: absolute;
-    top: 0;
+    top: 0px;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;

@@ -208,12 +208,15 @@ Spotfire.initialize(async (mod) => {
         }
         let colorLeaves = colorRoot.leaves();
         let categoricalColorCount = colorHierarchy ? colorHierarchy.leafCount : 0;
+        console.log(size.height/(canvasDiv.offsetHeight));
 
-        // Create space for bar label if needed
+        // Create space for bar labels
         if ((labelMode.value() === "all" || 
             (labelMode.value() === "marked" && markedElem(Leaves))) 
             && (labelBars.value() && (numeric.value() || percentage.value()))) {
-            xTitleHeight = 20;
+            xTitleHeight = 15 * size.height/(canvasDiv.offsetHeight);
+        } else if (titleMode.value()){
+            xTitleHeight = 10;
         } else {
             xTitleHeight = 0;
         }
@@ -286,9 +289,7 @@ Spotfire.initialize(async (mod) => {
                 xTitleDiv.appendChild(createBarLabel(LeafNode, barWidth, offset));
                 offset += barWidth;
             });
-        } else {
-            xTitleHeight = 0;
-        }
+        } 
 
         /**
          * Render a scale label for titles of the leaf node on the x axis
@@ -297,7 +298,7 @@ Spotfire.initialize(async (mod) => {
          * @param {number} offset
          */
         function createBarLabel(LeafNode, xPosition, offset) {
-            let label = createDiv("x-title-label", "" + LeafNode.key);
+            let label = createDiv("bar-category-label", "" + LeafNode.key);
             label.style.color = context.styling.scales.font.color;
             label.style.fontSize = context.styling.scales.font.fontSize + "px";
             label.style.fontFamily = context.styling.scales.font.fontFamily;
@@ -345,7 +346,9 @@ Spotfire.initialize(async (mod) => {
         const canvasWidth = canvasDiv.offsetWidth * 0.98;
         const setWidth = canvasWidth / LeafNodes.length;
 
-        LeafNodes.forEach((leafNode) => canvasDiv.appendChild(renderBar(leafNode)));
+        LeafNodes.forEach((leafNode) => {
+            canvasDiv.appendChild(renderBar(leafNode));
+        });
 
         /**
          * Renders bars/segments for a single x axis node.
@@ -475,7 +478,6 @@ Spotfire.initialize(async (mod) => {
                         renderLabel(labelText);
                     }
                 }
-                console.log(segValue);
 
                 /**
                  * Render a segment label for the segment
@@ -531,7 +533,6 @@ Spotfire.initialize(async (mod) => {
                 label.style.color = context.styling.scales.font.color;
                 label.style.fontSize = context.styling.scales.font.fontSize + "px";
                 label.style.fontFamily = context.styling.scales.font.fontFamily;
-                label.style.marginTop = canvasHeight - height + "px";
                 label.style.width = bar.style.width;
                 bar.appendChild(label); 
             }
