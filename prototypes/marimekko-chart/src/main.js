@@ -208,8 +208,7 @@ Spotfire.initialize(async (mod) => {
         }
         let colorLeaves = colorRoot.leaves();
         let categoricalColorCount = colorHierarchy ? colorHierarchy.leafCount : 0;
-        console.log(size.height/(canvasDiv.offsetHeight));
-
+        
         // Create space for bar labels
         if ((labelMode.value() === "all" || 
             (labelMode.value() === "marked" && markedElem(Leaves))) 
