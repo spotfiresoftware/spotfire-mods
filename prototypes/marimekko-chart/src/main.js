@@ -74,8 +74,8 @@ Spotfire.initialize(async (mod) => {
                         reverseSeg, 
                         sortBar,
                         sortSeg, 
-                        size) {
-
+                        size)
+    {
         if (state.preventRender) {
             // Early return if the state currently disallows rendering.
             return;
@@ -118,15 +118,15 @@ Spotfire.initialize(async (mod) => {
         // a document modification was made during a progress indication.
         // Hard abort if row count exceeds an arbitrary selected limit
         const xLimit = 1000;
-        const colorLimit = 40;
+        const colorLimit = 100;
         const colorCount = (await dataView.hierarchy("Color")).leafCount;
-        const xCount = (await dataView.hierarchy("X")).leafCount;
+        const xCount = (await dataView.hierarchy("Categories")).leafCount;
         if (colorCount > colorLimit || xCount > xLimit) {
             canvasDiv.remove();
                         mod.controls.errorOverlay.show("The resulting data view exceeded the size limit.", "dataViewSize1");
             if (xCount > xLimit) {
                 mod.controls.errorOverlay.show(
-                    `Maximum allowed X axis values is ${xLimit}. Try aggregating the expression further.`,
+                    `Maximum number of categories is limited to ${xLimit}. Try aggregating the expression further.`,
                     "dataViewSize2"
                 );
             } else {
@@ -157,9 +157,9 @@ Spotfire.initialize(async (mod) => {
             }
         };
 
-        // Get the leaf nodes for the x hierarchy. We will iterate over them to
+        // Get the leaf nodes for the category hierarchy. We will iterate over them to
         // render the bars.
-        let Hierarchy = await dataView.hierarchy("X");
+        let Hierarchy = await dataView.hierarchy("Categories");
         let Root = await Hierarchy.root();
         if (Root == null) {
             // Return and wait for next call to render when reading data was aborted.
@@ -168,10 +168,10 @@ Spotfire.initialize(async (mod) => {
             return;
         }
 
-        // Only stop visualization if both Y and Z are not set
+        // Only stop visualization if both Y and X are not set
         let dataViewYAxis = await dataView.continuousAxis("Y");
-        let dataViewZAxis = await dataView.continuousAxis("Z");
-        if (dataViewYAxis == null && dataViewZAxis == null) {
+        let dataViewXAxis = await dataView.continuousAxis("X");
+        if (dataViewYAxis == null && dataViewXAxis == null) {
             mod.controls.errorOverlay.show("No data to visualize.", "dataViewSize4");
             return;
         } else {
@@ -183,7 +183,7 @@ Spotfire.initialize(async (mod) => {
 
         //The visualization cannot handle negative values
         let Leaves = Root.leaves();
-        if (lowestValue(Leaves, "Y", dataViewYAxis) < 0 || lowestValue(Leaves, "Z", dataViewZAxis) < 0){
+        if (lowestValue(Leaves, "Y", dataViewYAxis) < 0 || lowestValue(Leaves, "X", dataViewXAxis) < 0){
             mod.controls.errorOverlay.show("The data contains negative values which this mod can not visualize, please filter out the negative data and try again!", "dataViewSize5")
         } else {
             mod.controls.errorOverlay.hide("dataViewSize5");
@@ -220,15 +220,15 @@ Spotfire.initialize(async (mod) => {
             xTitleHeight = 0;
         }
         
-        let maxXValue = (dataViewZAxis == null) ? 0 : calculatedValue(Leaves);
+        let maxXValue = (dataViewXAxis == null) ? 0 : calculatedValue(Leaves);
         let maxYValue = (dataViewYAxis == null) ? 0 : calculateMaxYValue(Leaves); 
         
         // Options menu not visible when viewing
         context.isEditing && 
             initializeSettingsPopout(mod, modProperty);
         
-        renderTitles(orderLeaves, titleMode, dataViewZAxis, maxXValue);
-        renderBars(orderLeaves, colorLeaves, modProperty, maxXValue, maxYValue, dataViewYAxis, dataViewZAxis, categoricalColorCount);
+        renderTitles(orderLeaves, titleMode, dataViewXAxis, maxXValue);
+        renderBars(orderLeaves, colorLeaves, modProperty, maxXValue, maxYValue, dataViewYAxis, dataViewXAxis, categoricalColorCount);
         renderAxis(mod, size, modProperty, maxXValue, maxYValue, xScaleHeight, yScaleWidth, xTitleHeight);
         
         // Mark segments after drawn rectangular selection
@@ -240,8 +240,8 @@ Spotfire.initialize(async (mod) => {
             Leaves.forEach((leaf) => {
                 leaf.rows()
                     .forEach((row) => {
-                        const xId = row.categorical("X").leafIndex;
-                        const yId = Leaves[row.categorical("X").leafIndex].rows().indexOf(row);
+                        const xId = row.categorical("Categories").leafIndex;
+                        const yId = Leaves[row.categorical("Categories").leafIndex].rows().indexOf(row);
                         let rowSegment = document.getElementById(`${xId},${yId}`);
                         if (rowSegment) {
                             const divRect = rowSegment.getBoundingClientRect();
@@ -265,10 +265,10 @@ Spotfire.initialize(async (mod) => {
          * Render the horizontal scale.
          * @param {Spotfire.DataViewHierarchyNode[]} LeafNodes - The leaf nodes on the x axis
          * @param {Spotfire.ModProperty<boolean>} titleMode 
-         * @param {Spotfire.DataViewContinuousAxis} dataViewZAxis
+         * @param {Spotfire.DataViewContinuousAxis} dataViewXAxis
          * @param {number} maxXValue - The sum of all values in the graph
          */
-      function renderTitles(LeafNodes, titleMode, dataViewZAxis, maxXValue) {
+      function renderTitles(LeafNodes, titleMode, dataViewXAxis, maxXValue) {
         xTitleDiv.innerHTML = "";
         if (titleMode.value()){
             xTitleDiv.style.height = xTitleHeight + "px";
@@ -283,8 +283,8 @@ Spotfire.initialize(async (mod) => {
             const setWidth = width / LeafNodes.length;
     
             LeafNodes.forEach((LeafNode) => {
-                let percentageWidth = (dataViewZAxis !== null) ? sumValue(LeafNode.rows(), "Z") / maxXValue * width : 0;
-                let barWidth = (dataViewZAxis === null) ? setWidth - 1 : percentageWidth - 1;
+                let percentageWidth = (dataViewXAxis !== null) ? sumValue(LeafNode.rows(), "X") / maxXValue * width : 0;
+                let barWidth = (dataViewXAxis === null) ? setWidth - 1 : percentageWidth - 1;
                 xTitleDiv.appendChild(createBarLabel(LeafNode, barWidth, offset));
                 offset += barWidth;
             });
@@ -316,10 +316,10 @@ Spotfire.initialize(async (mod) => {
      * @param {number} maxXValue
      * @param {number} maxYValue
      * @param {Spotfire.DataViewContinuousAxis} dataViewYAxis
-     * @param {Spotfire.DataViewContinuousAxis} dataViewZAxis
+     * @param {Spotfire.DataViewContinuousAxis} dataViewXAxis
      * @param {number} categoricalColorCount
      */
-    function renderBars(LeafNodes, colorLeaves, modProperty, maxXValue, maxYValue, dataViewYAxis, dataViewZAxis, categoricalColorCount) {
+    function renderBars(LeafNodes, colorLeaves, modProperty, maxXValue, maxYValue, dataViewYAxis, dataViewXAxis, categoricalColorCount) {
         canvasDiv.innerHTML = "";
         canvasDiv.style.left = yScaleWidth + "px";
         canvasDiv.style.bottom = xScaleHeight + "px";
@@ -386,17 +386,17 @@ Spotfire.initialize(async (mod) => {
         function renderStackedBar(rows) {
             let bar = createDiv("bar");
 
-            var totalWidthValue = (dataViewZAxis !== null) ? sumValue(rows, "Z") : 0;
+            var totalWidthValue = (dataViewXAxis !== null) ? sumValue(rows, "X") : 0;
             var totalHeightValue = (dataViewYAxis !== null) ? sumValue(rows, "Y") : 0;
             let percentageWidth = totalWidthValue / maxXValue;
 
-            let height = (chartMode.value() == "mekko" || dataViewZAxis === null) ? 
+            let height = (chartMode.value() == "mekko" || dataViewXAxis === null) ? 
                 (totalHeightValue / maxYValue) * canvasHeight 
                 : canvasHeight;
             bar.style.height =  height + "px";
 
-            // Bar width is constant if Z axis is not set
-            let width = (dataViewZAxis === null) ? setWidth : percentageWidth * canvasWidth;
+            // Bar width is constant if X axis is not set
+            let width = (dataViewXAxis === null) ? setWidth : percentageWidth * canvasWidth;
             bar.style.width = width - 1 + "px";
             
             // Set order of bar segments
@@ -411,7 +411,7 @@ Spotfire.initialize(async (mod) => {
             // Draw segments
             orderedRows.forEach((row) => {
                 let segment = createDiv("segment");
-                segment.id = `${row.categorical("X").leafIndex},${rows.indexOf(row)}`;
+                segment.id = `${row.categorical("Categories").leafIndex},${rows.indexOf(row)}`;
                 let y, percentageHeight, percentageSeg;
 
                 // Only possible with Y axis set
@@ -422,7 +422,7 @@ Spotfire.initialize(async (mod) => {
                     }
 
                     percentageSeg = ((+y.value() / totalHeightValue) * 100).toFixed(1);
-                    percentageHeight = (chartMode.value() == "mekko" || dataViewZAxis === null) ? +y.value() / maxYValue : +y.value() / totalHeightValue;
+                    percentageHeight = (chartMode.value() == "mekko" || dataViewXAxis === null) ? +y.value() / maxYValue : +y.value() / totalHeightValue;
                 } 
                 
                 segment.style.height = (dataViewYAxis !== null) ? (percentageHeight * canvasHeight) - 1 + "px" : canvasHeight + "px";
@@ -451,7 +451,7 @@ Spotfire.initialize(async (mod) => {
                     }
                 };
 
-                let segValue = (dataViewYAxis === null) ? +row.continuous("Z").value : +y.value();
+                let segValue = (dataViewYAxis === null) ? +row.continuous("X").value : +y.value();
                 // All possible combinations of showing labels for segments 
                 if(labelSeg.value() && (labelMode.value() === "all" || (labelMode.value() === "marked" && row.isMarked()))){
                     if (category.value() && numeric.value() && percentage.value()){
@@ -607,7 +607,7 @@ function markedElem(Leaves) {
  function calculatedValue(Leaves) {
     let totalValue = 0;
     Leaves.forEach((node) => {
-        let sum = sumValue(node.rows(), "Z");
+        let sum = sumValue(node.rows(), "X");
         totalValue = totalValue + sum;
     });
 
@@ -660,9 +660,9 @@ function createDiv(className, content) {
      * @param {Spotfire.DataViewHierarchyNode} b
      */
 function sortBars(a, b){
-    if(sumValue(b.rows() ,"Z") < sumValue(a.rows() ,"Z")){
+    if(sumValue(b.rows() ,"X") < sumValue(a.rows() ,"X")){
         return 1;
-    } else if (sumValue(a.rows() ,"Z") < sumValue(b.rows() ,"Z")){
+    } else if (sumValue(a.rows() ,"X") < sumValue(b.rows() ,"X")){
         return -1;
     } else {
         return 0;

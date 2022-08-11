@@ -82,20 +82,26 @@
         },
         "axes": [
             {
-                "name": "X",
+                "name": "Categories",
                 "mode": "categorical"
             },
             {
                 "name": "Y",
                 "mode": "continuous",
                 "placement": "left",
-                "allowMultipleMeasures": true
+                "allowMultipleMeasures": true,
+                "legendItem": {
+                    "defaultVisibility": "hidden"
+                }
             },
             {
-                "name": "Z",
+                "name": "X",
                 "mode": "continuous",
                 "placement": "bottom",
-                "allowMultipleMeasures": true
+                "allowMultipleMeasures": true,
+                "legendItem": {
+                    "defaultVisibility": "hidden"
+                }
             }
             
         ]
