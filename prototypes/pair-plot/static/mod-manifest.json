@@ -1,6 +1,6 @@
 {
     "apiVersion": "1.3",
-    "version": "1.1",
+    "version": "1.3",
     "name": "Pair-plot",
     "id": "spotfire-pair-plot-prototype-mod",
     "icon": "icon.svg",

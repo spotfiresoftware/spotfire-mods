@@ -24,6 +24,10 @@ body,
     width: 100%;
 }
 
+#resetMandatoryExpressions {
+    white-space: pre;
+}
+
 #content {
     display: grid;
     grid-template-columns: 50px auto 24px;
@@ -91,16 +95,15 @@ body,
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
     grid-gap: 1px;
-    height:100%;
-    width:100%;
-    background-color:#ccc;
+    height: 100%;
+    width: 100%;
+    background-color: #ccc;
     border: solid 1px #ccc
 }
 
-#html-content div
-{
+#html-content div {
     /* TODO Set this via API */
-    background-color:white;
+    background-color: white;
 }
 
 .rectangle {
@@ -161,5 +164,5 @@ circle {
 }
 
 .hidden {
-    display: none!important;
+    display: none !important;
 }
