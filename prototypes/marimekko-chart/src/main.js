@@ -151,9 +151,9 @@ Spotfire.initialize(async (mod) => {
 
         // Get the leaf nodes for the category hierarchy. We will iterate over them to
         // render the bars.
-        let Hierarchy = await dataView.hierarchy("Categories");
-        let Root = await Hierarchy.root();
-        if (Root == null) {
+        let categoryHierarchy = await dataView.hierarchy("Categories");
+        let root = await categoryHierarchy.root();
+        if (root == null) {
             // Return and wait for next call to render when reading data was aborted.
             // Last rendered data view is still valid from a users perspective since
             // a document modification was made during a progress indication.
@@ -174,20 +174,20 @@ Spotfire.initialize(async (mod) => {
         mod.controls.tooltip.hide();
 
         //The visualization cannot handle negative values
-        let Leaves = Root.leaves();
-        if (lowestValue(Leaves, "Y", dataViewYAxis) < 0 || lowestValue(Leaves, "X", dataViewXAxis) < 0){
+        let leaves = root.leaves();
+        if (lowestValue(leaves, "Y", dataViewYAxis) < 0 || lowestValue(leaves, "X", dataViewXAxis) < 0){
             mod.controls.errorOverlay.show("The data contains negative values which this mod can not visualize, please filter out the negative data and try again!", "dataViewSize5")
         } else {
             mod.controls.errorOverlay.hide("dataViewSize5");
         }
         
         // Set order of bars
-        let orderLeaves = Leaves;
+        let orderLeaves = leaves;
         if(sortBar.value()){
-            orderLeaves = [...Leaves].sort(sortBars);
+            orderLeaves = [...leaves].sort(sortBars);
         }
         if(reverseBars.value()){
-            orderLeaves = [...Leaves].sort(sortBars).reverse();
+            orderLeaves = [...leaves].sort(sortBars).reverse();
         }
 
         let colorHierarchy = await dataView.hierarchy("Color");
@@ -203,7 +203,7 @@ Spotfire.initialize(async (mod) => {
         
         // Create space for bar labels
         if ((labelMode.value() === "all" || 
-            (labelMode.value() === "marked" && markedElem(Leaves))) 
+            (labelMode.value() === "marked" && markedElem(leaves))) 
             && (labelBars.value() && (numeric.value() || percentage.value()))) {
             xTitleHeight = 15 * size.height/(canvasDiv.offsetHeight);
         } else if (titleMode.value()){
@@ -212,8 +212,8 @@ Spotfire.initialize(async (mod) => {
             xTitleHeight = 0;
         }
         
-        let maxXValue = (dataViewXAxis == null) ? 0 : calculatedValue(Leaves);
-        let maxYValue = (dataViewYAxis == null) ? 0 : calculateMaxYValue(Leaves); 
+        let maxXValue = (dataViewXAxis == null) ? 0 : calculatedValue(leaves);
+        let maxYValue = (dataViewYAxis == null) ? 0 : calculateMaxYValue(leaves); 
         
         // Options menu not visible when viewing
         context.isEditing && 
@@ -229,11 +229,11 @@ Spotfire.initialize(async (mod) => {
 
             const { x, y, width, height, ctrlKey } = result;
 
-            Leaves.forEach((leaf) => {
+            leaves.forEach((leaf) => {
                 leaf.rows()
                     .forEach((row) => {
                         const xId = row.categorical("Categories").leafIndex;
-                        const yId = Leaves[row.categorical("Categories").leafIndex].rows().indexOf(row);
+                        const yId = leaves[row.categorical("Categories").leafIndex].rows().indexOf(row);
                         let rowSegment = document.getElementById(`${xId},${yId}`);
                         if (rowSegment) {
                             const divRect = rowSegment.getBoundingClientRect();
@@ -255,12 +255,12 @@ Spotfire.initialize(async (mod) => {
 
      /**
          * Render the horizontal scale.
-         * @param {Spotfire.DataViewHierarchyNode[]} LeafNodes - The leaf nodes on the x axis
+         * @param {Spotfire.DataViewHierarchyNode[]} leafNodes - The leaf nodes on the x axis
          * @param {Spotfire.ModProperty<boolean>} titleMode 
          * @param {Spotfire.DataViewContinuousAxis} dataViewXAxis
          * @param {number} maxXValue - The sum of all values in the graph
          */
-      function renderTitles(LeafNodes, titleMode, dataViewXAxis, maxXValue) {
+      function renderTitles(leafNodes, titleMode, dataViewXAxis, maxXValue) {
         xTitleDiv.innerHTML = "";
         if (titleMode.value()){
             xTitleDiv.style.height = xTitleHeight + "px";
@@ -272,24 +272,24 @@ Spotfire.initialize(async (mod) => {
             // Set width to align with x axis range
             let width = xTitleDiv.offsetWidth * 0.98;
             let offset = 0;
-            const setWidth = width / LeafNodes.length;
+            const setWidth = width / leafNodes.length;
     
-            LeafNodes.forEach((LeafNode) => {
-                let percentageWidth = (dataViewXAxis !== null) ? sumValue(LeafNode.rows(), "X") / maxXValue * width : 0;
+            leafNodes.forEach((leafNode) => {
+                let percentageWidth = (dataViewXAxis !== null) ? sumValue(leafNode.rows(), "X") / maxXValue * width : 0;
                 let barWidth = (dataViewXAxis === null) ? setWidth - 1 : percentageWidth - 1;
-                xTitleDiv.appendChild(createBarLabel(LeafNode, barWidth, offset));
+                xTitleDiv.appendChild(createBarLabel(leafNode, barWidth, offset));
                 offset += barWidth;
             });
         } 
 
         /**
          * Render a scale label for titles of the leaf node on the x axis
-         * @param {Spotfire.DataViewHierarchyNode} LeafNode
+         * @param {Spotfire.DataViewHierarchyNode} leafNode
          * @param {number} xPosition
          * @param {number} offset
          */
-        function createBarLabel(LeafNode, xPosition, offset) {
-            let label = createDiv("bar-category-label", "" + LeafNode.key);
+        function createBarLabel(leafNode, xPosition, offset) {
+            let label = createDiv("bar-category-label", "" + leafNode.key);
             label.style.color = context.styling.scales.font.color;
             label.style.fontSize = context.styling.scales.font.fontSize + "px";
             label.style.fontFamily = context.styling.scales.font.fontFamily;
@@ -302,7 +302,7 @@ Spotfire.initialize(async (mod) => {
 
     /**
      * Render all bars on the canvas div.
-     * @param {Spotfire.DataViewHierarchyNode[]} LeafNodes
+     * @param {Spotfire.DataViewHierarchyNode[]} leafNodes
      * @param {Spotfire.DataViewHierarchyNode[]} colorLeaves
      * @param {*} modProperty
      * @param {number} maxXValue
@@ -311,7 +311,7 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.DataViewContinuousAxis} dataViewXAxis
      * @param {number} categoricalColorCount
      */
-    function renderBars(LeafNodes, colorLeaves, modProperty, maxXValue, maxYValue, dataViewYAxis, dataViewXAxis, categoricalColorCount) {
+    function renderBars(leafNodes, colorLeaves, modProperty, maxXValue, maxYValue, dataViewYAxis, dataViewXAxis, categoricalColorCount) {
         canvasDiv.innerHTML = "";
         canvasDiv.style.left = yScaleWidth + "px";
         canvasDiv.style.bottom = xScaleHeight + "px";
@@ -335,19 +335,19 @@ Spotfire.initialize(async (mod) => {
         // Set width and height to align with axis range
         const canvasHeight = canvasDiv.offsetHeight * 0.98;
         const canvasWidth = canvasDiv.offsetWidth * 0.98;
-        const setWidth = canvasWidth / LeafNodes.length;
+        const setWidth = canvasWidth / leafNodes.length;
 
-        LeafNodes.forEach((leafNode) => {
+        leafNodes.forEach((leafNode) => {
             canvasDiv.appendChild(renderBar(leafNode));
         });
 
         /**
          * Renders bars/segments for a single x axis node.
-         * @param {Spotfire.DataViewHierarchyNode} LeafNode
+         * @param {Spotfire.DataViewHierarchyNode} leafNode
          */
-        function renderBar(LeafNode) {
+        function renderBar(leafNode) {
             let fragment = document.createDocumentFragment();
-            let rows = LeafNode.rows();
+            let rows = leafNode.rows();
 
             // If Y axis is not set, render chart with 100% bars for every category
             if (dataViewYAxis == null) {
@@ -534,14 +534,14 @@ Spotfire.initialize(async (mod) => {
 
 /**
  * Gets the lowest data value, used to determine if any value is lower than 0
- * @param {Spotfire.DataViewHierarchyNode[]} Leaves
+ * @param {Spotfire.DataViewHierarchyNode[]} leaves
  * @param {string} axis 
  * @param {Spotfire.DataViewContinuousAxis} dataViewAxis
  */
-function lowestValue(Leaves, axis, dataViewAxis) {
+function lowestValue(leaves, axis, dataViewAxis) {
     let lowestValue = 0;
     if (dataViewAxis !== null) {
-        Leaves.forEach((leaf) => 
+        leaves.forEach((leaf) => 
             leaf.rows().forEach((row) => {
                 lowestValue = Math.min(row.continuous(axis).value(), lowestValue);
             }
@@ -553,12 +553,12 @@ function lowestValue(Leaves, axis, dataViewAxis) {
 
 /**
  * Check if any segment is marked
- * @param {Spotfire.DataViewHierarchyNode[]} Leaves 
+ * @param {Spotfire.DataViewHierarchyNode[]} leaves 
  * @returns {boolean}
  */
-function markedElem(Leaves) {
+function markedElem(leaves) {
     let isMarked = 0;
-    Leaves.forEach((leaf) =>
+    leaves.forEach((leaf) =>
         leaf.rows().forEach((row) => {
             isMarked += row.isMarked() ? 1 : 0;
         }
@@ -581,11 +581,11 @@ function markedElem(Leaves) {
 
 /**
  * Calculate the maximum value from a hierarchy.
- * @param {Spotfire.DataViewHierarchyNode[]} Leaves
+ * @param {Spotfire.DataViewHierarchyNode[]} leaves
  */
- function calculateMaxYValue(Leaves) {
+ function calculateMaxYValue(leaves) {
     let maxYValue = 0;
-    Leaves.forEach((node) => {
+    leaves.forEach((node) => {
         let sum = sumValue(node.rows(), "Y");
         maxYValue = Math.max(maxYValue, sum);
     });
@@ -594,11 +594,11 @@ function markedElem(Leaves) {
 
 /**
  * Calculate total value of the dataset to get percentages.
- * @param {Spotfire.DataViewHierarchyNode[]} Leaves
+ * @param {Spotfire.DataViewHierarchyNode[]} leaves
  */
- function calculatedValue(Leaves) {
+ function calculatedValue(leaves) {
     let totalValue = 0;
-    Leaves.forEach((node) => {
+    leaves.forEach((node) => {
         let sum = sumValue(node.rows(), "X");
         totalValue = totalValue + sum;
     });
