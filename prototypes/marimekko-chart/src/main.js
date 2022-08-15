@@ -121,30 +121,22 @@ Spotfire.initialize(async (mod) => {
         const colorLimit = 100;
         const colorCount = (await dataView.hierarchy("Color")).leafCount;
         const xCount = (await dataView.hierarchy("Categories")).leafCount;
+        var errorMsg = [];
         if (colorCount > colorLimit || xCount > xLimit) {
-            canvasDiv.remove();
-                        mod.controls.errorOverlay.show("The resulting data view exceeded the size limit.", "dataViewSize1");
             if (xCount > xLimit) {
-                mod.controls.errorOverlay.show(
-                    `Maximum number of categories is limited to ${xLimit}. Try aggregating the expression further.`,
-                    "dataViewSize2"
-                );
+                errorMsg.push(`Maximum number of categories is limited to ${xLimit}. Try aggregating the expression further.`);
             } else {
-                mod.controls.errorOverlay.hide("dataViewSize2");
+                errorMsg = errorMsg.filter(msg => msg !== `Maximum number of categories is limited to ${xLimit}. Try aggregating the expression further.`);
             }
-                        if (colorCount > colorLimit) {
-                mod.controls.errorOverlay.show(
-                    `Maximum number of colors is limited to ${colorLimit} for readability reasons.`,
-                    "dataViewSize3"
-                );
+            if (colorCount > colorLimit) {
+                errorMsg.push( `Maximum number of colors is limited to ${colorLimit} for readability reasons.`);
             } else {
-                mod.controls.errorOverlay.hide("dataViewSize3");
+                errorMsg = errorMsg.filter(msg => msg !== `Maximum number of colors is limited to ${colorLimit} for readability reasons.`);
             }
-                        return;
+            mod.controls.errorOverlay.show(errorMsg, "dataViewSize");
+            return;
         } else {
-            mod.controls.errorOverlay.hide("dataViewSize1");
-            mod.controls.errorOverlay.hide("dataViewSize2");
-            mod.controls.errorOverlay.hide("dataViewSize3");
+            mod.controls.errorOverlay.hide("dataViewSize");
         }
 
         //Clear marking of segments
