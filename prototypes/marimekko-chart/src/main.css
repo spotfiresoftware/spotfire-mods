@@ -5,10 +5,15 @@
 */
 
 html,
-body,
+body{
+    margin: 0;
+    overflow: visible;
+    height: 100%;
+    width: 100%;
+}
+
 #mod-container {
-    margin-top: 0;
-    overflow: hidden;
+    display: grid;
     height: 100%;
     width: 100%;
 }
@@ -21,20 +26,33 @@ body,
     -ms-user-select: none;
 }
 
-#scale,
+#y-scale,
+#x-scale,
 #canvas,
 #x-title {
-    position: absolute;
-    left: 0;
-    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#y-scale {
+    overflow: visible;
+    grid-column: 1/2;
+    grid-row: 2/3;
+}
+
+#x-scale {
+    overflow: visible;
+    grid-column: 2/3;
+    grid-row: 3/4;
 }
 
 #canvas {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    justify-content: start;
+    grid-column: 2/3;
+    grid-row: 2/3;
+    display: grid;
+    gap: 1px 1px;
+    justify-items: start;
+    align-items: end;
 }
 
 .selection {
@@ -62,7 +80,6 @@ body,
 .bar {
     border-bottom-width: 0;
     text-align: center;
-    margin-right: 1px;
     position: relative;
 }
 
@@ -72,16 +89,17 @@ body,
 
 .bar-label {
     position: absolute;
-    top: -14px;
+    top: -15px;
     text-align: center;
     white-space: nowrap;
-    overflow: hidden; 
+    overflow-x: hidden; 
+    overflow-y: visible;
     text-overflow: ellipsis;
 }
 
 .segment {
     display: block;
-    outline: none;
+    outline: "1px solid white";
 }
 
 .segment-label {
@@ -93,26 +111,26 @@ body,
 }
 
 #x-title {
+    position: relative;
+    grid-column: 2/3;
+    grid-row: 1/2;
     text-align: center;
     cursor: pointer;
 }
 
 .bar-category-label {
     text-align: center;
-    line-height: 10px;
     position: absolute;
-    top: 0px;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;
 }
 
 #settings-icon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 21px;
-    height: 21px;
+    grid-column: 3/4;
+    grid-row: 1/2;
+    height: 16px;
+    width: 16px;
     fill: #bdbfc3;
     transition: opacity 0.25s cubic-bezier(1, 0.28, 0, 0.94);
     cursor: pointer;

@@ -2,101 +2,78 @@
  * Renders the Y and X axis for the mod using d3
  * @param {Spotfire.Mod} mod
  * @param {Spotfire.Size} size
+ * @param {Spotfire.DataViewHierarchyNode[]} leafNodes
  * @param {*} modProperty
  * @param {number} totalValue
  * @param {number} maxYValue
- * @param {number} xScaleHeight
- * @param {number} yScaleWidth
- * @param {number} xTitleHeight
  */
-function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight, yScaleWidth, xTitleHeight){
+function renderAxis(mod, size, leafNodes, modProperty, totalValue, maxYvalue){
     // Variables
     const context = mod.getRenderContext();
     const styling = context.styling;
     const { xAxisMode, 
-        chartMode,
-        } = modProperty;
+            chartMode,
+            } = modProperty;
 
-    const margin = { top: xTitleHeight, right: 22, bottom: xScaleHeight + 1, left: yScaleWidth - 1}
-    var width = size.width - margin.right;
-    var height = size.height;
+    const xOffset = leafNodes.length - 2;
+    const widthX = d3.select("#canvas").style('width').slice(0, -2);
+    const widthY = d3.select("#y-scale").style('width').slice(0, -2) - 1;
+    const heightY = d3.select("#y-scale").style('height').slice(0, -2);
+    var ScaleTickNumber = size.height / (styling.scales.font.fontSize * 4 + 6);
 
     // Remove previous content in svg
-    d3.selectAll("#scale > *").remove();
+   // d3.selectAll("#y-scale > *").remove();
+   // d3.selectAll("#x-scale > *").remove();
 
     // Svg container for the scales
-    var svg = d3.select("#scale")
-        .attr("width", width)
-        .attr("height", height)
+    var svgX = d3.select("#x-scale")
+        .style('color', styling.scales.tick.stroke);
+    
+    var svgY = d3.select("#y-scale")
         .style('color', styling.scales.tick.stroke);
 
     // Render x axis different depending on configuration
     if (xAxisMode.value() === "percentage"){
         var xFormat = d3.format(".0%");
         xscale = d3.scaleLinear()
-        .domain([0, 1.02])
-        .range([margin.left, width]);
+        .domain([0, 1])
+        .range([0, widthX]);
     } else if (xAxisMode.value() === "numeric"){
-        var xFormat = null;
+        var xFormat = d3.format("");
         var xscale = d3.scaleLinear()
-        .domain([0, totalValue * 1.02])
-        .range([margin.left, width]);
+        .domain([0, totalValue])
+        .range([0, widthX]);
     }
     
     var x_axis = d3.axisBottom()
+            .ticks(ScaleTickNumber)
             .tickSize(5)
             .tickFormat(xFormat)
             .tickPadding(styling.scales.tick.stroke != "none" ? 3 : 9)
-            .tickSizeOuter([0])
             .scale(xscale); 
 
     // Render y axis different depending on chart mode
     if (chartMode.value() === "marimekko"){
         var yFormat = d3.format(".0%");
-        var yScaleTickNumber = 10;
         yscale = d3.scaleLinear()
-            .domain([1.02, 0])
-            .range([margin.top, height - margin.bottom]);
+            .domain([1, 0])
+            .range([-xOffset, heightY]);
     } else {
         var yFormat = d3.format("");
-        var yScaleTickNumber = size.height / (styling.scales.font.fontSize * 2 + 6);
         var yscale = d3.scaleLinear()
-            .domain([(maxYvalue * 1.02), 0])
-            .range([margin.top, height - margin.bottom]);
+            .domain([(maxYvalue), 0])
+            .range([-xOffset, heightY]);
     }
 
     var y_axis = d3.axisLeft()
-            .ticks(yScaleTickNumber)
+            .ticks(ScaleTickNumber)
             .tickFormat(yFormat)
-            .tickSizeOuter([0])
             .scale(yscale);
 
-    // Append y axis to svg
-    svg.append("g")
-        .attr("id", "y-axis")
-        .attr("transform", "translate(" + margin.left +",0)")
-        .call(y_axis)
-        .selectAll("text")
-        .style('color', styling.scales.font.color)
-        .style('font-size', styling.scales.font.fontSize)
-        .style('font-family', styling.scales.font.fontFamily)
-        .attr("tooltip", (d) => d)
-        .on("mouseover", function (d) {
-            d3.select(this).style("cursor", "pointer");
-            if(!chartMode.value()){d = d * 100 + "%";}
-            mod.controls.tooltip.show(d);
-        })
-        .on("mouseout", function () {
-            d3.select(this).style("cursor", "default");
-            mod.controls.tooltip.hide();
-        });
-    
-    var xVerticalPlacement = height - margin.bottom;
-
     // Append x axis to svg
-    svg.append("g")
+    svgX.append("g")
         .attr("id", "x-axis")
-        .attr("transform", "translate( 0, " + xVerticalPlacement + ")")
+        .attr("transform", "translate(-1, " + xOffset + ")")
         .call(x_axis)
         .selectAll("text")
         .style('color', styling.scales.font.color)
@@ -106,6 +83,26 @@ function renderAxis(mod, size, modProperty, totalValue, maxYvalue, xScaleHeight,
         .on("mouseover", function (d) {
             d3.select(this).style("cursor", "pointer");
             if(xAxisMode.value() === "percentage"){d = d * 100 + "%";}
+            mod.controls.tooltip.show(d);
+        })
+        .on("mouseout", function () {
+            d3.select(this).style("cursor", "default");
+            mod.controls.tooltip.hide();
+        });
+
+    // Append y axis to svg
+    svgY.append("g")
+        .attr("id", "y-axis")
+        .attr("transform", "translate(" + widthY + ", " + xOffset + ")")
+        .call(y_axis)
+        .selectAll("text")
+        .style('color', styling.scales.font.color)
+        .style('font-size', styling.scales.font.fontSize)
+        .style('font-family', styling.scales.font.fontFamily)
+        .attr("tooltip", (d) => d)
+        .on("mouseover", function (d) {
+            d3.select(this).style("cursor", "pointer");
+            if(!chartMode.value()){d = d * 100 + "%";}
             mod.controls.tooltip.show(d);
         })
         .on("mouseout", function () {

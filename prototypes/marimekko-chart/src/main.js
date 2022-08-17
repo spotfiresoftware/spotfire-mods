@@ -16,10 +16,6 @@ Spotfire.initialize(async (mod) => {
     const xTitleDiv = findElem("#x-title");
     const scale = findElem("#scale");
 
-    const xScaleHeight = 20;
-    const yScaleWidth = 60;
-    var xTitleHeight = 0;
-
     const reader = mod.createReader(
         mod.visualization.data(),
         mod.property("x-axis-mode"),
@@ -76,6 +72,11 @@ Spotfire.initialize(async (mod) => {
                         sortSeg, 
                         size)
     {
+        xTitleDiv.innerHTML = "";
+        canvasDiv.innerHTML = "";
+        findElem("#y-scale").innerHTML = "";
+        findElem("#x-scale").innerHTML = "";
+        
         if (state.preventRender) {
             // Early return if the state currently disallows rendering.
             return;
@@ -180,6 +181,15 @@ Spotfire.initialize(async (mod) => {
         } else {
             mod.controls.errorOverlay.hide("dataViewSize5");
         }
+
+        const yScaleWidth = context.styling.scales.font.fontSize * 2 + 50;
+        const xScaleHeight = context.styling.scales.font.fontSize * 2;
+        var xTitleHeight = context.styling.scales.font.fontSize * 2;
+        if (labelBars.value() && (labelMode.value() === "all" || (labelMode.value() === "marked" && markedElem(leaves)))){
+            xTitleHeight = context.styling.scales.font.fontSize * 2 + 5;
+        }
+        modContainer.style.gridTemplateColumns = yScaleWidth + "px 1fr 30px";
+        modContainer.style.gridTemplateRows = xTitleHeight + "px 1fr " + xScaleHeight + "px";
         
         // Set order of bars
         let orderLeaves = leaves;
@@ -201,17 +211,6 @@ Spotfire.initialize(async (mod) => {
         let colorLeaves = colorRoot.leaves();
         let categoricalColorCount = colorHierarchy ? colorHierarchy.leafCount : 0;
         
-        // Create space for bar labels
-        if ((labelMode.value() === "all" || 
-            (labelMode.value() === "marked" && markedElem(leaves))) 
-            && (labelBars.value() && (numeric.value() || percentage.value()))) {
-            xTitleHeight = 15 * size.height/(canvasDiv.offsetHeight);
-        } else if (titleMode.value()){
-            xTitleHeight = 10;
-        } else {
-            xTitleHeight = 0;
-        }
-        
         let maxXValue = (dataViewXAxis == null) ? 0 : calculatedValue(leaves);
         let maxYValue = (dataViewYAxis == null) ? 0 : calculateMaxYValue(leaves); 
         
@@ -221,7 +220,7 @@ Spotfire.initialize(async (mod) => {
         
         renderTitles(orderLeaves, titleMode, dataViewXAxis, maxXValue);
         renderBars(orderLeaves, colorLeaves, modProperty, maxXValue, maxYValue, dataViewYAxis, dataViewXAxis, categoricalColorCount);
-        renderAxis(mod, size, modProperty, maxXValue, maxYValue, xScaleHeight, yScaleWidth, xTitleHeight);
+        renderAxis(mod, size, leaves, modProperty, maxXValue, maxYValue);
         
         // Mark segments after drawn rectangular selection
         rectangleMarking((result) => {
@@ -261,22 +260,14 @@ Spotfire.initialize(async (mod) => {
          * @param {number} maxXValue - The sum of all values in the graph
          */
       function renderTitles(leafNodes, titleMode, dataViewXAxis, maxXValue) {
-        xTitleDiv.innerHTML = "";
         if (titleMode.value()){
-            xTitleDiv.style.height = xTitleHeight + "px";
-            xTitleDiv.style.left = yScaleWidth + "px";
-            xTitleDiv.style.bottom = "0px";
-            xTitleDiv.style.right = "20px";
-            xTitleDiv.style.top = "0px";
-
-            // Set width to align with x axis range
-            let width = xTitleDiv.offsetWidth * 0.98;
+            let width = xTitleDiv.offsetWidth;
             let offset = 0;
             const setWidth = width / leafNodes.length;
     
             leafNodes.forEach((leafNode) => {
                 let percentageWidth = (dataViewXAxis !== null) ? sumValue(leafNode.rows(), "X") / maxXValue * width : 0;
-                let barWidth = (dataViewXAxis === null) ? setWidth - 1 : percentageWidth - 1;
+                let barWidth = (dataViewXAxis === null) ? setWidth: percentageWidth;
                 xTitleDiv.appendChild(createBarLabel(leafNode, barWidth, offset));
                 offset += barWidth;
             });
@@ -312,12 +303,6 @@ Spotfire.initialize(async (mod) => {
      * @param {number} categoricalColorCount
      */
     function renderBars(leafNodes, colorLeaves, modProperty, maxXValue, maxYValue, dataViewYAxis, dataViewXAxis, categoricalColorCount) {
-        canvasDiv.innerHTML = "";
-        canvasDiv.style.left = yScaleWidth + "px";
-        canvasDiv.style.bottom = xScaleHeight + "px";
-        canvasDiv.style.top = xTitleHeight + "px";
-        canvasDiv.style.right = "20px";
-
         const { xAxisMode, 
             chartMode,
             titleMode, 
@@ -331,10 +316,12 @@ Spotfire.initialize(async (mod) => {
             reverseSeg,
             sortBar,
             sortSeg } = modProperty;
+        
+        canvasDiv.style.gridTemplateColumns = "repeat(" + leafNodes.length + ", auto)";
 
         // Set width and height to align with axis range
-        const canvasHeight = canvasDiv.offsetHeight * 0.98;
-        const canvasWidth = canvasDiv.offsetWidth * 0.98;
+        const canvasHeight = canvasDiv.offsetHeight;
+        const canvasWidth = canvasDiv.offsetWidth;
         const setWidth = canvasWidth / leafNodes.length;
 
         leafNodes.forEach((leafNode) => {
@@ -389,7 +376,7 @@ Spotfire.initialize(async (mod) => {
 
             // Bar width is constant if X axis is not set
             let width = (dataViewXAxis === null) ? setWidth : percentageWidth * canvasWidth;
-            bar.style.width = width - 1 + "px";
+            bar.style.width = width + "px";
             
             // Set order of bar segments
             let orderedRows = rows;
@@ -417,7 +404,7 @@ Spotfire.initialize(async (mod) => {
                     percentageHeight = (chartMode.value() == "mekko" || dataViewXAxis === null) ? +y.value() / maxYValue : +y.value() / totalHeightValue;
                 } 
                 
-                segment.style.height = (dataViewYAxis !== null) ? (percentageHeight * canvasHeight) - 1 + "px" : canvasHeight + "px";
+                segment.style.height = (dataViewYAxis !== null) ? (percentageHeight * canvasHeight) + "px" : canvasHeight + "px";
                 segment.style.backgroundColor = row.color().hexCode;
                 segment.style.width = bar.style.width;
                 segment.style.marginBottom = "1px";
@@ -477,8 +464,8 @@ Spotfire.initialize(async (mod) => {
                  function renderLabel(labelText){
                     let label = createDiv("segment-label", labelText);
                     label.style.color = (getContrastYIQ(row.color().hexCode) === 'dark') ? context.styling.general.font.color : 'white';
-                    label.style.fontSize = context.styling.scales.font.fontSize + "px";
-                    label.style.fontFamily = context.styling.scales.font.fontFamily;
+                    label.style.fontSize = context.styling.general.font.fontSize + "px";
+                    label.style.fontFamily = context.styling.general.font.fontFamily;
                     label.style.lineHeight = segment.style.height;
                     label.style.height = segment.style.height;
                     label.style.width = segment.style.width;
@@ -521,9 +508,9 @@ Spotfire.initialize(async (mod) => {
              */
             function renderBarValue(labelText){
                 let label = createDiv("bar-label", labelText);
-                label.style.color = context.styling.scales.font.color;
-                label.style.fontSize = context.styling.scales.font.fontSize + "px";
-                label.style.fontFamily = context.styling.scales.font.fontFamily;
+                label.style.color = context.styling.general.font.color;
+                label.style.fontSize = context.styling.general.font.fontSize + "px";
+                label.style.fontFamily = context.styling.general.font.fontFamily;
                 label.style.width = bar.style.width;
                 bar.appendChild(label); 
             }
