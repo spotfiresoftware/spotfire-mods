@@ -10,14 +10,14 @@
 
 
 <title>Working with mod readers | Spotfire® Mods</title><meta property="og:title" content="Working with mod readers" />
-<meta property="og:description" content="This document gives an introduction to the mod [reader](/spotfire-mods/api-docs/interfaces/reader.html).
+<meta property="og:description" content="This document gives an introduction to the mod [reader](/spotfire-mods/api-docs/interfaces/Reader.html).
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/spotfire-mods/docs/using-the-api/working-with-readables/" />
 <meta property="article:published_time" content="2020-11-13T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-11-13T00:00:00+00:00" /><meta property="og:site_name" content="Spotfire® Mods" />
 <meta itemprop="name" content="Working with mod readers">
-<meta itemprop="description" content="This document gives an introduction to the mod [reader](/spotfire-mods/api-docs/interfaces/reader.html).
+<meta itemprop="description" content="This document gives an introduction to the mod [reader](/spotfire-mods/api-docs/interfaces/Reader.html).
 ">
 <meta itemprop="datePublished" content="2020-11-13T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-11-13T00:00:00+00:00" />
@@ -28,7 +28,7 @@
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Working with mod readers"/>
-<meta name="twitter:description" content="This document gives an introduction to the mod [reader](/spotfire-mods/api-docs/interfaces/reader.html).
+<meta name="twitter:description" content="This document gives an introduction to the mod [reader](/spotfire-mods/api-docs/interfaces/Reader.html).
 "/>
 
 
@@ -374,19 +374,19 @@
 <p>
 <div class="td-content">
 	<h1>Working with mod readers</h1>
-    <div class="lead">This document gives an introduction to the mod <a href="/spotfire-mods/api-docs/interfaces/reader.html">reader</a>.</div>
+    <div class="lead">This document gives an introduction to the mod <a href="/spotfire-mods/api-docs/interfaces/Reader.html">reader</a>.</div>
 	       
-	<p>The Spotfire Mod API exposes a set of <a href="/spotfire-mods/overview/#Readable">Readables</a>, such as the <a href="/spotfire-mods/api-docs/interfaces/dataview.html"><code>DataView</code></a> and <a href="/spotfire-mods/api-docs/interfaces/analysisproperty.html"><code>properties</code></a>. These can be consumed by a <a href="/spotfire-mods/api-docs/interfaces/reader.html">Reader</a> in order to read their values and subscribe to changes.</p>
+	<p>The Spotfire Mod API exposes a set of <a href="/spotfire-mods/overview/#Readable">Readables</a>, such as the <a href="/spotfire-mods/api-docs/interfaces/DataView.html"><code>DataView</code></a> and <a href="/spotfire-mods/api-docs/interfaces/AnalysisProperty.html"><code>properties</code></a>. These can be consumed by a <a href="/spotfire-mods/api-docs/interfaces/Reader.html">Reader</a> in order to read their values and subscribe to changes.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">property</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;myProperty&#34;</span><span style="color:#000;font-weight:bold">),</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">windowSize</span><span style="color:#000;font-weight:bold">());</span>
 </code></pre></div><h2 id="introduction">Introduction</h2>
 <!-- managing state, the callback will always be invoked with the latest up to date state. -->
 <p>The aim of a <code>reader</code> is to simplify the synchronization of reading related values. An example is a visualization that depends on the window&rsquo;s <code>size</code> and the <code>dataview</code>. When one of the two changes, the visualization needs to be redrawn. The <code>reader</code> fetches new values and keeps unchanged values in memory.</p>
-<p>The API exposes readables for the <a href="/spotfire-mods/api-docs/interfaces/dataview.html">Data</a>, <a href="/spotfire-mods/api-docs/interfaces/modproperty.html">Properties</a>, <a href="/spotfire-mods/api-docs/interfaces/analysisproperty.html">Document Properties</a>, <a href="/spotfire-mods/api-docs/interfaces/page.html">Pages</a>, <a href="/spotfire-mods/api-docs/interfaces/size.html">Window size</a>, <a href="/spotfire-mods/api-docs/interfaces/axis.html">Axes</a>, <a href="/spotfire-mods/api-docs/interfaces/datatable.html">Tables</a> and <a href="/spotfire-mods/api-docs/interfaces/column.html">Columns</a>.</p>
+<p>The API exposes readables for the <a href="/spotfire-mods/api-docs/interfaces/DataView.html">Data</a>, <a href="/spotfire-mods/api-docs/interfaces/ModProperty.html">Properties</a>, <a href="/spotfire-mods/api-docs/interfaces/AnalysisProperty.html">Document Properties</a>, <a href="/spotfire-mods/api-docs/interfaces/Page.html">Pages</a>, <a href="/spotfire-mods/api-docs/interfaces/Size.html">Window size</a>, <a href="/spotfire-mods/api-docs/interfaces/Axis.html">Axes</a>, <a href="/spotfire-mods/api-docs/interfaces/DataTable.html">Tables</a> and <a href="/spotfire-mods/api-docs/interfaces/Column.html">Columns</a>.</p>
 <h3 id="methods">Methods</h3>
 <p>A <code>reader</code> has three methods; <code>subscribe</code>, <code>once</code> and <code>hasExpired</code>.</p>
 <h4 id="subscribecallback"><code>subscribe(callback)</code></h4>
 <p>Subscribe will be the most common way to work with <code>readables</code>. It sets up a subscription to new changes of the <code>readables</code> provided to the <code>reader</code>. When one or more <code>readables</code> gets updated on the server, the <code>reader</code> fetch all new values and invoke the provided <code>callback</code> with updated values.</p>
-<p>The <code>reader</code> will only allow one <code>subscribe</code> <code>callback</code> to be active at a time. This means that the <code>callback</code> will finish executing before a new <code>callback</code> is scheduled. The following example shows how the <code>callback</code> will not be invoked again until its returning <code>promise</code> has settled. Even if the <code>dataView</code> is changed by marking or filtering. After the <code>callback</code> has finished executing, the <code>callback</code> is invoked again if there are any changed values. The <a href="/spotfire-mods/api-docs/interfaces/reader.html#hasexpired"><code>hasExpired</code></a> method can be used to check whether any <code>readables</code> have been invalidated while the <code>callback</code> has been executing.</p>
+<p>The <code>reader</code> will only allow one <code>subscribe</code> <code>callback</code> to be active at a time. This means that the <code>callback</code> will finish executing before a new <code>callback</code> is scheduled. The following example shows how the <code>callback</code> will not be invoked again until its returning <code>promise</code> has settled. Even if the <code>dataView</code> is changed by marking or filtering. After the <code>callback</code> has finished executing, the <code>callback</code> is invoked again if there are any changed values. The <a href="/spotfire-mods/api-docs/interfaces/Reader.html#hasExpired"><code>hasExpired</code></a> method can be used to check whether any <code>readables</code> have been invalidated while the <code>callback</code> has been executing.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">());</span>
 
 <span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">render</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
@@ -498,7 +498,7 @@
 </li>
 </ul>
 <h2 id="separating-initial-setup-from-updates">Separating initial setup from updates</h2>
-<p>If a mod needs some initial setup before starting to listen for changes, <a href="/spotfire-mods/api-docs/interfaces/reader.html#once"><code>reader.once</code></a> can be used with a setup <code>callback</code>.</p>
+<p>If a mod needs some initial setup before starting to listen for changes, <a href="/spotfire-mods/api-docs/interfaces/Reader.html#once"><code>reader.once</code></a> can be used with a setup <code>callback</code>.</p>
 <p>A <code>reader</code> will only trigger a new <code>callback</code> if any of its <code>Readables</code> has changed since it was last part of a <code>reader</code> <code>callback</code>. That means we can separate the setup from upcoming updates without triggering unnecessary <code>callbacks</code>.</p>
 <p>In the following example, there are three <code>Readables</code>. They are first read together in an initial <code>once</code> <code>callback</code> as a setup for the mod. They are afterwards separated into two <code>readers</code>, one for the property and one for the rendering loop. Neither of the subscription <code>callbacks</code> will be invoked immediately. Instead they will wait until one of the <code>readables</code> change.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">setupReader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span>
@@ -593,7 +593,7 @@
 </span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">myProperty</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">property</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;myProperty&#34;</span><span style="color:#000;font-weight:bold">);</span>
 <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">myProperty</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><h3 id="readableproxy">ReadableProxy</h3>
-<p>If a value has synchronous methods, e.g a <a href="/spotfire-mods/api-docs/interfaces/modproperty.html#set">mod property</a>, a <code>ReadableProxy</code> will be returned from the API instead of a <code>Readable</code>. The <code>ReadableProxy</code> is a <code>Readable</code> augmented with all synchronous methods of the encapsulated value, without the need to await the encapuslated value. This means a property can be set, without knowing its value.</p>
+<p>If a value has synchronous methods, e.g a <a href="/spotfire-mods/api-docs/interfaces/ModProperty.html#set">mod property</a>, a <code>ReadableProxy</code> will be returned from the API instead of a <code>Readable</code>. The <code>ReadableProxy</code> is a <code>Readable</code> augmented with all synchronous methods of the encapsulated value, without the need to await the encapuslated value. This means a property can be set, without knowing its value.</p>
 <!-- When the encapsulated value of a Readable has a set of methods, the API returns a ReadableProxy instead.  -->
 <p>In the following example the mod property <code>myProperty</code> is modified without awaiting its encapsulated value.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">property</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;myProperty&#34;</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">set</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;new value&#34;</span><span style="color:#000;font-weight:bold">);</span>
@@ -724,7 +724,7 @@
   </li>
   
   <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="TIBCO Community" aria-label="TIBCO Community">
-    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://community.tibco.com/wiki/">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://community.tibco.com/s/article/TIBCO-Spotfire-Mods-Overview">
       <i class="fa fa-comment-alt"></i>
     </a>
   </li>
