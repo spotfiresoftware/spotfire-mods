@@ -74,7 +74,7 @@
     "dataViewDefinition": {
         "tooltip": { "enabled": true },
         "colorAxis": {
-            "mode": "dual",
+            "mode": "categorical",
             "dropTarget": {
                 "icon": "Color",
                 "description": "Color by {0}"
