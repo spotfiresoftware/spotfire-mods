@@ -279,8 +279,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .attr("fill", styling.scales.font.color)
         .attr("font-family", styling.scales.font.fontFamily)
         .attr("font-size", styling.scales.font.fontSize);
-
-    console.log(xScale.domain().filter(d=>d % drawEvery == 0));
+    
     /**
      * Draws X labels as divs (not SVG)
      */
@@ -547,8 +546,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         drawMarkedLine(g, group);
         drawMarkedCircles(g, group);
 
-        function handleMouseOver(event, colorIndex) {
-            console.log("handleMouseOver", colorIndex);
+        function handleMouseOver(event, colorIndex) {            
             g.attr("visibility", "visible");
             tooltip.show(createColorSerieTooltip(colorIndex));
         }
