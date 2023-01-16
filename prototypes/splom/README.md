@@ -1,9 +1,9 @@
-# Pair plot
+# Scatterplot Matrix
 
-![Pair plot example](sunburst.png)
+![Scatterplot matrix example](sunburst.png)
 
-This is a mod example demonstrating a pair plot written in `TypeScript`, rendered with `d3` and bundled with `Webpack`.
-A pair plot is used to visualize pair wise relationships between different numeric columns in a dataset.
+This is a mod example demonstrating a scatterplot matrix written in `TypeScript`, rendered with `d3` and bundled with `Webpack`.
+A scatterplot matrix is used to visualize pair wise relationships between different numeric columns in a dataset.
 
 All source code for the mod example can be found in the `src` folder. Other necessary files reside in the `static` folder. Read below for further explanation.
 

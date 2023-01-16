@@ -5,7 +5,7 @@ import { CellContent } from "./resources";
 import { asyncForeach } from "./util";
 
 const padding = 0.1;
-export interface PairPlotData {
+export interface SplotDataset {
     measures: string[];
     points: (number | null)[][];
     mark: (index: number) => void;
@@ -17,7 +17,7 @@ export interface PairPlotData {
 }
 
 export async function render(
-    data: PairPlotData,
+    data: SplotDataset,
     diagonal: CellContent | null,
     upper: CellContent | null,
     lower: CellContent | null,

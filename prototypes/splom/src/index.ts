@@ -1,5 +1,5 @@
-import { Axis, DataView, Mod, ModProperty, Size } from "spotfire-api";
-import { render, PairPlotData } from "./pair-plot";
+import { Axis, AxisPart, DataView, Mod, ModProperty, Size } from "spotfire-api";
+import { render, SplotDataset } from "./splom";
 import { ManifestConst, resources, CellContent } from "./resources";
 import { createSettingsButton } from "./settings";
 
@@ -29,10 +29,14 @@ function getSelectValues(elements: NodeListOf<HTMLInputElement>) {
     return result;
 }
 
-window.Spotfire.initialize(async (mod) => {
-    const context = mod.getRenderContext();
 
-    document.querySelector("#resetMandatoryExpressions button")!.addEventListener("click", () => {
+/**
+ * Gets a function to invoke when the user requests resetting the Mod to the required state. 
+ * @param mod 
+ * @returns The reset function
+ */
+function getResetFunction(mod: Mod) {
+    return () => {
         const columns = getSelectValues(
             document.querySelectorAll(
                 "#column-selection input[type='checkbox']:checked"
@@ -41,8 +45,14 @@ window.Spotfire.initialize(async (mod) => {
         document.querySelector("#resetMandatoryExpressions")!.classList.toggle("hidden", true);
         mod.visualization.axis(ManifestConst.ColumnNamesAxis).setExpression("<[Axis.Default.Names]>");
         mod.visualization.axis(ManifestConst.CountAxis).setExpression("Count()");
-        mod.visualization.axis(ManifestConst.MeasureAxis).setExpression(columns.map((name) => `[${name}]`).join(","));
-    });
+        mod.visualization.axis(ManifestConst.MeasureAxis).setExpression(columns.map((name) => name.startsWith("[") ? name : `[${name}]`).join(","));
+    }
+}
+
+window.Spotfire.initialize(async (mod) => {
+    const context = mod.getRenderContext();
+
+    document.querySelector("#resetMandatoryExpressions button")!.addEventListener("click", getResetFunction(mod));
 
     const reader = mod.createReader(
         mod.visualization.data(),
@@ -96,24 +106,47 @@ window.Spotfire.initialize(async (mod) => {
         document.getElementById("resetMandatoryExpressions")!.classList.toggle("hidden", !showConfigError);
         document.getElementById("content")!.classList.toggle("hidden", showConfigError);
 
+        const columnNameOrExpression = (part: AxisPart) => {
+            // There is no API for this, but all simple columns in the axis expression are escaped like [ColumnName].
+            // Extract the column name for nicer UI.
+            // TODO Handle multiple data tables that are escaped [TableName].[ColumnName]
+            const isSimpleColumn = part.expression.startsWith("[")
+                && part.expression.endsWith("]")
+                && part.expression.lastIndexOf("[") == part.expression.indexOf("[")
+                && part.expression.lastIndexOf("]") == part.expression.indexOf("]");
+            return isSimpleColumn ? part.expression.substring(1, part.expression.length - 1) : part.expression;
+        };
+
+
         if (showConfigError) {
-            const selectionWrapper = document.querySelector("#column-selection");
-            selectionWrapper!.textContent = "";
+            const selectionDiv = document.querySelector("#column-selection");
+            const currentMeasures = (await mod.visualization.axis(ManifestConst.MeasureAxis)).parts.map(columnNameOrExpression);
+            const addMeasure = (measure: string, isChecked: boolean) => {
+                const input = document.createElement("input");
+                input.type = "checkbox";
+                input.value = measure;
+                input.checked = isChecked;
+                input.name = "column";
+                const label = document.createElement("label");
+                label.setAttribute("for", input.id);
+                label.textContent = measure;
+                const div = document.createElement("div");
+                div.replaceChildren(input, label);
+                selectionDiv?.appendChild(div);
+            }
+
+
+            selectionDiv!.textContent = "";
             const columns = await (
                 await (await mod.visualization.mainTable()).columns()
             ).filter((c) => c.dataType.isNumber());
-            columns.forEach((c, i) => {
-                const input = document.createElement("input");
-                input.type = "checkbox";
-                input.value = c.name;
-                input.name = "column";
-                input.id = `column-${i}`;
-                const label = document.createElement("label")
-                label.setAttribute("for", input.id);
-                label.textContent = c.name
-                const div = document.createElement("div");
-                div.replaceChildren(input, label);
-                selectionWrapper?.appendChild(div);
+
+            currentMeasures.forEach(measure => {
+                addMeasure(measure, true);
+            })
+
+            columns.filter(c => currentMeasures.findIndex(m => c.name == m) == -1).forEach((c, i) => {
+                addMeasure(c.name, false);
             });
 
             return;
@@ -144,7 +177,7 @@ window.Spotfire.initialize(async (mod) => {
         const tallSkinny = rows!.map((r, i) => r.continuous(ManifestConst.MeasureAxis).value());
         const points = transpose<number>(arrayToMatrix(tallSkinny, markerCount));
 
-        var data: PairPlotData = {
+        var data: SplotDataset = {
             measures: measures!.map((m) => m.formattedValue()),
             points,
             colors,
@@ -180,4 +213,6 @@ window.Spotfire.initialize(async (mod) => {
 
         return results;
     }
+
 });
+
