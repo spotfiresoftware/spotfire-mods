@@ -1,5 +1,5 @@
 import { Axis, AxisPart, DataView, Mod, ModProperty, Size } from "spotfire-api";
-import { render, SplotDataset } from "./splom";
+import { render, SplomDataset } from "./splom";
 import { ManifestConst, resources, CellContent } from "./resources";
 import { createSettingsButton } from "./settings";
 
@@ -79,14 +79,6 @@ window.Spotfire.initialize(async (mod) => {
         colorAxis: Axis,
         size: Size
     ) {
-        let timerLog = createTimerLog();
-        // if (measureAxis.parts.length < 2) {
-        //     mod.controls.errorOverlay.show("Select two or more measures.", "Measures");
-        //     return;
-        // }
-
-        // mod.controls.errorOverlay.hide("Measures");
-
         if (colorAxis.isCategorical && colorAxis.parts.find((p) => p.expression.includes("[Axis.Default.Names]"))) {
             mod.controls.errorOverlay.show(
                 "'(Column Names)' is invalid as color expression since this will yield multi colored markers.",
@@ -119,24 +111,26 @@ window.Spotfire.initialize(async (mod) => {
 
 
         if (showConfigError) {
-            const selectionDiv = document.querySelector("#column-selection");
+            const selectionDiv = document.querySelector("#column-selection")!;
+            selectionDiv.textContent = "";
+
             const currentMeasures = (await mod.visualization.axis(ManifestConst.MeasureAxis)).parts.map(columnNameOrExpression);
             const addMeasure = (measure: string, isChecked: boolean) => {
                 const input = document.createElement("input");
                 input.type = "checkbox";
+                input.name = "column";
                 input.value = measure;
                 input.checked = isChecked;
-                input.name = "column";
+
                 const label = document.createElement("label");
                 label.setAttribute("for", input.id);
                 label.textContent = measure;
+
                 const div = document.createElement("div");
                 div.replaceChildren(input, label);
-                selectionDiv?.appendChild(div);
+                selectionDiv.appendChild(div);
             }
 
-
-            selectionDiv!.textContent = "";
             const columns = await (
                 await (await mod.visualization.mainTable()).columns()
             ).filter((c) => c.dataType.isNumber());
@@ -159,8 +153,6 @@ window.Spotfire.initialize(async (mod) => {
             return;
         }
 
-        timerLog.add(`Read all data (${rows.length} rows).`);
-
         var measureCount = columnNamesLeafIndices.length;
         var markerCount = rows!.length / measureCount;
 
@@ -172,12 +164,11 @@ window.Spotfire.initialize(async (mod) => {
             : null;
 
         const tooltips = rows!.slice(0, markerCount).map((r) => () => mod.controls.tooltip.show(r));
-        timerLog.add("Read colors");
 
         const tallSkinny = rows!.map((r, i) => r.continuous(ManifestConst.MeasureAxis).value());
         const points = transpose<number>(arrayToMatrix(tallSkinny, markerCount));
 
-        var data: SplotDataset = {
+        var data: SplomDataset = {
             measures: measures!.map((m) => m.formattedValue()),
             points,
             colors,
@@ -187,14 +178,11 @@ window.Spotfire.initialize(async (mod) => {
             tooltips,
             hideTooltips: () => mod.controls.tooltip.hide()
         };
-        timerLog.add("Transpose");
 
         render(data, diagonalContent.value(), upperContent.value(), lowerContent.value(), size, () =>
             dataView.hasExpired()
         );
 
-        timerLog.add("Render");
-        //timerLog.log();
 
         createSettingsButton(mod, diagonalContent, upperContent, lowerContent);
 
@@ -213,6 +201,5 @@ window.Spotfire.initialize(async (mod) => {
 
         return results;
     }
-
 });
 

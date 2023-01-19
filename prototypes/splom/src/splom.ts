@@ -1,11 +1,12 @@
 import * as d3 from "d3";
+import { BaseType } from "d3";
 import { Size } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
 import { CellContent } from "./resources";
 import { asyncForeach } from "./util";
 
 const padding = 0.1;
-export interface SplotDataset {
+export interface SplomDataset {
     measures: string[];
     points: (number | null)[][];
     mark: (index: number) => void;
@@ -17,13 +18,14 @@ export interface SplotDataset {
 }
 
 export async function render(
-    data: SplotDataset,
+    data: SplomDataset,
     diagonal: CellContent | null,
     upper: CellContent | null,
     lower: CellContent | null,
     size: Size,
     hasExpired: () => Promise<boolean>
 ) {
+    //console.log(data);
     const measureCount = data.measures.length;
     const { clientWidth, clientHeight } = document.querySelector("#canvas-content")!;
     const width = clientWidth / measureCount;
@@ -73,6 +75,7 @@ export async function render(
 
     document.querySelector("#html-content")?.replaceChildren(...htmlCells);
 
+    // TODO drawCell uses context :(
     let { canvas, context } = createCanvas();
     try {
         await asyncForeach(cells, drawCell);
@@ -126,7 +129,7 @@ export async function render(
         let htmlCell = document.querySelector(`#html-cell-${row}-${col}`)!;
         switch (content) {
             case CellContent.ScatterPlot:
-                drawScatterCell(row, col);
+                drawScatterCell(row, col, htmlCell);
                 break;
             case CellContent.Stats:
                 htmlCell.textContent = `TODO - Calculate stats (min, max, mean, quartiles etc for ${data.measures[row]}.`;
@@ -158,15 +161,25 @@ export async function render(
         }
     }
 
-    function drawScatterCell(row: number, col: number) {
+    function drawScatterCell(row: number, col: number, element: Element) {
         const lineWidth = Math.max(0.2, Math.min(width, height) / 4000);
 
         data.points.forEach(getRenderer(false));
         data.points.forEach(getRenderer(true));
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("style", `position:absolute;width:${Math.floor(clientWidth / measureCount) - padding * measureCount}px;height:${Math.floor(clientHeight / measureCount) - padding * measureCount}px`);
+        svg.setAttribute("viewBox", `0 0 ${Math.floor(clientWidth / measureCount) - padding * measureCount} ${Math.floor(clientHeight / measureCount) - padding * measureCount}`);
+        element.appendChild(svg);
+        rectangularSelection(d3.select<BaseType, any>(svg), {
+            clearMarking: () => console.log("Clear marking"),
+            mark: (data: unknown) => console.log("Mark", data),
+            ignoredClickClasses: [],
+            classesToMark: ""
+        });
 
         function getRenderer(renderMarkedRows: boolean) {
             return (point: (number | null)[], index: number) => {
-                if (point[col] && point[row] && data.marked[index] == renderMarkedRows) {
+                if (typeof point[col] == "number" && typeof point[row] == "number" && data.marked[index] == renderMarkedRows) {
                     const left = scales[col].xScale(point[col]!)! + (padding + col) * (clientWidth / measureCount);
                     const top = scales[row].yScale(point[row]!)! + (padding + row) * (clientHeight / measureCount);
                     const r = Math.min(clientHeight, clientWidth) / 50 / measureCount;

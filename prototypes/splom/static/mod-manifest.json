@@ -21,7 +21,7 @@
             "defaultValue": 2
         }
     ],
-    "dataViewDefinition": {
+    "dataViewDefinition": { 
         "tooltip": { "enabled": true },
         "colorAxis": {
             "mode": "dual",
@@ -37,7 +37,7 @@
                 "automaticConfiguration": {
                     "expressionHeuristics": "none"
                 },
-                "mode": "continuous",
+                "mode": "dual",
                 "allowMultipleMeasures": true,
                 "allowNonAggregatingMeasures": true,
                 "placement": "bottom"

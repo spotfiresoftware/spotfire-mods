@@ -17,7 +17,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         return "M" + [x, y] + " l" + [w, 0] + " l" + [0, h] + " l" + [-w, 0] + "z";
     }
 
-    d3.select(".rectangle").remove();
+    svg.select(".rectangle").remove();
 
     const rectangle = svg.append("path").attr("class", "rectangle").attr("visibility", "hidden");
 
