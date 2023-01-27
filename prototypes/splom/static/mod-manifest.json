@@ -2,7 +2,7 @@
     "apiVersion": "1.3",
     "version": "1.3",
     "name": "Scatterplot matrix",
-    "id": "spotfire-splom-mod",
+    "id": "spotfire-canvas-splom-mod",
     "icon": "icon.svg",
     "properties": [
         {
@@ -21,8 +21,7 @@
             "defaultValue": 2
         }
     ],
-    "dataViewDefinition": { 
-        "tooltip": { "enabled": true },
+    "dataViewDefinition": {
         "colorAxis": {
             "mode": "dual",
             "dropTarget": {
@@ -37,18 +36,8 @@
                 "automaticConfiguration": {
                     "expressionHeuristics": "none"
                 },
-                "mode": "dual",
-                "allowMultipleMeasures": true,
-                "allowNonAggregatingMeasures": true,
-                "placement": "bottom"
-            },
-            {
-                "name": "ColumnNames",
                 "mode": "categorical",
-                "placement": "none",
-                "legendItem": { "defaultVisibility": "hidden" },
-                "propertyControl": { "visibility": "visible" },
-                "automaticConfiguration": { "expressionHeuristics": "none" }
+                "placement": "bottom"
             },
             {
                 "name": "Count",

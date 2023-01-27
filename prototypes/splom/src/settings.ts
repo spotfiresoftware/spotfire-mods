@@ -5,13 +5,15 @@ export function createSettingsButton(
     mod: Mod,
     diagonal: ModProperty<CellContent>,
     upper: ModProperty<CellContent>,
-    lower: ModProperty<CellContent>
+    lower: ModProperty<CellContent>,
+    onShowMeasures: () => void
 ) {
     const settingsButton = document.querySelector<HTMLElement>(".settings");
     settingsButton?.classList.toggle("visible", mod.getRenderContext().isEditing);
     const pos = settingsButton!.getBoundingClientRect();
     const p = mod.controls.popout;
     const rb = p.components.radioButton;
+    const b = p.components.button;
 
     function diagBtn(value: CellContent, text: string) {
         return {
@@ -54,9 +56,17 @@ export function createSettingsButton(
                     event.name == ManifestConst.Diagonal && diagonal.set(event.value);
                     event.name == ManifestConst.Upper && upper.set(event.value);
                     event.name == ManifestConst.Lower && lower.set(event.value);
+                    event.name == "showColumnConfig" && onShowMeasures();
                 }
             },
             () => [
+                p.section({
+                    heading: undefined,
+                    children: [b({
+                        name: "showColumnConfig",
+                        text: "Show column selector"
+                    })]
+                }),
                 p.section({
                     heading: resources.diagonal,
                     children: [

@@ -35,7 +35,6 @@ export const ManifestConst = {
     MeasureAxis: "Measures",
     ColorAxis: "Color",
     CountAxis: "Count",
-    ColumnNamesAxis: "ColumnNames",
     Diagonal: "Diagonal",
     Upper: "Upper",
     Lower: "Lower"

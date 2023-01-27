@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { BaseType } from "d3";
-import { Size } from "spotfire-api";
+import { DataViewValueType, Size } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
 import { CellContent } from "./resources";
 import { asyncForeach } from "./util";
@@ -8,12 +8,13 @@ import { asyncForeach } from "./util";
 const padding = 0.1;
 export interface SplomDataset {
     measures: string[];
-    points: (number | null)[][];
+    dataTypes: (string|undefined)[];
+    points: (DataViewValueType | null)[][];
     mark: (index: number) => void;
     marked: boolean[];
-    count: number[] | null;
+    // count: number[] | null;
     colors: string[];
-    tooltips: (() => void)[];
+    // tooltips: (() => void)[];
     hideTooltips: () => void;
 }
 
@@ -25,7 +26,7 @@ export async function render(
     size: Size,
     hasExpired: () => Promise<boolean>
 ) {
-    //console.log(data);
+    // console.log(data);
     const measureCount = data.measures.length;
     const { clientWidth, clientHeight } = document.querySelector("#canvas-content")!;
     const width = clientWidth / measureCount;
@@ -44,20 +45,30 @@ export async function render(
             const min = Math.min(...(values as number[]));
             const max = Math.max(...(values as number[]));
             return {
-                xScale: d3
+                xScaleCat: d3
+                    .scalePoint()
+                    .domain(values.map(v => v?.toString() ?? "(null)"))
+                    .range([0, width * (1 - 2 * padding)]),
+                yScaleCat: d3
+                    .scalePoint()
+                    .domain(values.map(v => v?.toString() ?? "(null)"))
+                    .range([0, height * (1 - 2 * padding)]),
+                xScaleCont: d3
                     .scaleLinear()
                     .domain([min, max])
                     .range([0, width * (1 - 2 * padding)]),
-                yScale: d3
+                yScaleCont: d3
                     .scaleLinear()
                     .domain([max, min])
                     .range([0, height * (1 - 2 * padding)])
             };
         });
 
-    const axes = scales.map((a) => ({
-        xAxis: d3.axisBottom(a.xScale).ticks(Math.max(2, Math.min(5, width / 100))),
-        yAxis: d3.axisLeft(a.yScale).ticks(Math.max(2, Math.min(5, height / 100)))
+    // console.log(scales);
+
+    const axes = scales.map((a, i) => ({
+        xAxis: (data.dataTypes[i] == "number" ? d3.axisBottom(a.xScaleCont) : d3.axisBottom(a.xScaleCat)).ticks(Math.max(2, Math.min(5, width / 100))),
+        yAxis: (data.dataTypes[i] == "number" ? d3.axisLeft(a.yScaleCont) : d3.axisLeft(a.yScaleCat)).ticks(Math.max(2, Math.min(5, height / 100)))
     }));
 
     // Create the html cells and the border
@@ -162,10 +173,11 @@ export async function render(
     }
 
     function drawScatterCell(row: number, col: number, element: Element) {
-        const lineWidth = Math.max(0.2, Math.min(width, height) / 4000);
+        const lineWidth = Math.max(0.15, Math.min(width, height) / 4000);
 
         data.points.forEach(getRenderer(false));
         data.points.forEach(getRenderer(true));
+
         var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg.setAttribute("style", `position:absolute;width:${Math.floor(clientWidth / measureCount) - padding * measureCount}px;height:${Math.floor(clientHeight / measureCount) - padding * measureCount}px`);
         svg.setAttribute("viewBox", `0 0 ${Math.floor(clientWidth / measureCount) - padding * measureCount} ${Math.floor(clientHeight / measureCount) - padding * measureCount}`);
@@ -178,20 +190,25 @@ export async function render(
         });
 
         function getRenderer(renderMarkedRows: boolean) {
-            return (point: (number | null)[], index: number) => {
-                if (typeof point[col] == "number" && typeof point[row] == "number" && data.marked[index] == renderMarkedRows) {
-                    const left = scales[col].xScale(point[col]!)! + (padding + col) * (clientWidth / measureCount);
-                    const top = scales[row].yScale(point[row]!)! + (padding + row) * (clientHeight / measureCount);
-                    const r = Math.min(clientHeight, clientWidth) / 50 / measureCount;
-                    const color = data.colors[index];
-                    if (context) {
-                        context.beginPath();
-                        context.arc(left, top, r, 0, 2 * Math.PI);
-                        context.fillStyle = color;
-                        context.fill();
-                        context.lineWidth = lineWidth;
-                        context.strokeStyle = "black";
-                        context.stroke();
+            return (point: (DataViewValueType | null)[], index: number) => {
+                // console.log("Point", point);
+                if (!!point[col] && !!point[row] && data.marked[index] == renderMarkedRows) {
+                    var left = data.dataTypes[col] == "number" ? scales[col].xScaleCont(point[col] as number) : scales[col].xScaleCat(point[col] as string);
+                    var top = data.dataTypes[row] == "number" ? scales[row].yScaleCont(point[row] as number) : scales[row].yScaleCat(point[row] as string);
+                    if (left !== undefined && top !== undefined) {
+                        left += (padding + col) * (clientWidth / measureCount);
+                        top += (padding + row) * (clientHeight / measureCount);
+                        const radius = Math.min(clientHeight, clientWidth) / 50 / measureCount;
+                        const color = data.colors[index];
+                        if (context) {
+                            context.beginPath();
+                            context.arc(left, top, radius, 0, 2 * Math.PI);
+                            context.fillStyle = color;
+                            context.fill();
+                            context.lineWidth = lineWidth;
+                            context.strokeStyle = "black";
+                            context.stroke();
+                        }
                     }
                 }
             };

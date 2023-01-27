@@ -43,9 +43,8 @@ function getResetFunction(mod: Mod) {
             ) as NodeListOf<HTMLInputElement>
         );
         document.querySelector("#resetMandatoryExpressions")!.classList.toggle("hidden", true);
-        mod.visualization.axis(ManifestConst.ColumnNamesAxis).setExpression("<[Axis.Default.Names]>");
         mod.visualization.axis(ManifestConst.CountAxis).setExpression("Count()");
-        mod.visualization.axis(ManifestConst.MeasureAxis).setExpression(columns.map((name) => name.startsWith("[") ? name : `[${name}]`).join(","));
+        mod.visualization.axis(ManifestConst.MeasureAxis).setExpression("<" + columns.map((name) => name.startsWith("[") ? name : `[${name}]`).join(" NEST ") + ">");
     }
 }
 
@@ -60,7 +59,6 @@ window.Spotfire.initialize(async (mod) => {
         mod.property(ManifestConst.Upper),
         mod.property(ManifestConst.Lower),
         mod.visualization.axis(ManifestConst.MeasureAxis),
-        mod.visualization.axis(ManifestConst.ColumnNamesAxis),
         mod.visualization.axis(ManifestConst.CountAxis),
         mod.visualization.axis(ManifestConst.ColorAxis),
         mod.windowSize()
@@ -74,7 +72,6 @@ window.Spotfire.initialize(async (mod) => {
         upperContent: ModProperty<CellContent>,
         lowerContent: ModProperty<CellContent>,
         measureAxis: Axis,
-        measureNamesAxis: Axis,
         countAxis: Axis,
         colorAxis: Axis,
         size: Size
@@ -92,7 +89,6 @@ window.Spotfire.initialize(async (mod) => {
         // Ideally would these axes expressions be set by the manifest.
         const showConfigError =
             measureAxis.parts.length < 2 ||
-            (measureAxis.parts.length > 1 && measureNamesAxis.expression != "<[Axis.Default.Names]>") ||
             countAxis.expression.toLowerCase() != "count()";
 
         document.getElementById("resetMandatoryExpressions")!.classList.toggle("hidden", !showConfigError);
@@ -111,7 +107,63 @@ window.Spotfire.initialize(async (mod) => {
 
 
         if (showConfigError) {
+            showConfigErrorDialog();
+        }
+
+        const measures = measureAxis.parts.map(p => p.displayName);
+
+        const rows = await dataView.allRows();
+        if (!measures || !rows) {
+            return;
+        }
+
+        var measureCount = measures.length;
+        // var markerCount = rows!.length / measureCount;
+
+        // Color and count axes will have the same value for all "column names", i.e. it is sufficient to retrieve the first occurance.
+        const { marked, colors, dataTypes } = rows.reduce((acc, row) => {
+            acc.marked.push(row.isMarked());
+            acc.colors.push(row.color().hexCode);
+            acc.dataTypes = acc.dataTypes.map((type, idx) => {
+                if (type) {
+                    return type;
+                }
+
+                var value = row.categorical(ManifestConst.MeasureAxis).value()[idx].value();
+                return value != null ? typeof value : undefined;
+            });
+
+            return acc;
+        }, ({ marked: [] as boolean[], colors: [] as string[], dataTypes: new Array(measureCount).fill(undefined) as (string | undefined)[] }));
+
+        const points = rows!.map(r => r.categorical(ManifestConst.MeasureAxis).value().map(p => p.value()));
+
+        console.log(dataTypes);
+        var data: SplomDataset = {
+            measures,
+            dataTypes,
+            points,
+            colors,
+            // count,
+            marked,
+            mark: (index: number) => rows![index].mark(),
+            // tooltips,
+            hideTooltips: () => mod.controls.tooltip.hide()
+        };
+
+        render(data, diagonalContent.value(), upperContent.value(), lowerContent.value(), size, () =>
+            dataView.hasExpired()
+        );
+
+
+        createSettingsButton(mod, diagonalContent, upperContent, lowerContent, showConfigErrorDialog);
+
+        context.signalRenderComplete();
+
+        async function showConfigErrorDialog() {
             const selectionDiv = document.querySelector("#column-selection")!;
+            document.getElementById("resetMandatoryExpressions")!.classList.toggle("hidden", false);
+            document.getElementById("content")!.classList.toggle("hidden", true);
             selectionDiv.textContent = "";
 
             const currentMeasures = (await mod.visualization.axis(ManifestConst.MeasureAxis)).parts.map(columnNameOrExpression);
@@ -131,9 +183,9 @@ window.Spotfire.initialize(async (mod) => {
                 selectionDiv.appendChild(div);
             }
 
-            const columns = await (
-                await (await mod.visualization.mainTable()).columns()
-            ).filter((c) => c.dataType.isNumber());
+            const columns = await(
+                await(await mod.visualization.mainTable()).columns()
+            ).filter((c) => !c.dataType.isDate() && !c.dataType.isTime() && !c.dataType.isTimeSpan());
 
             currentMeasures.forEach(measure => {
                 addMeasure(measure, true);
@@ -144,62 +196,8 @@ window.Spotfire.initialize(async (mod) => {
             });
 
             return;
+
         }
-
-        const measures = (await (await dataView.hierarchy(ManifestConst.ColumnNamesAxis))!.root())?.leaves();
-        const columnNamesLeafIndices = measures?.map((l) => l.leafIndex) || [];
-        const rows = await dataView.allRows();
-        if (!measures || rows == null) {
-            return;
-        }
-
-        var measureCount = columnNamesLeafIndices.length;
-        var markerCount = rows!.length / measureCount;
-
-        // Color and count axes will have the same value for all "column names", i.e. it is sufficient to retrieve the first occurance.
-        const marked = rows!.slice(0, markerCount).map((r) => r.isMarked());
-        const colors = rows!.slice(0, markerCount).map((r) => r.color().hexCode);
-        const count = countAxis.expression
-            ? rows!.slice(0, markerCount).map((r) => r.continuous(ManifestConst.CountAxis).value() as number)
-            : null;
-
-        const tooltips = rows!.slice(0, markerCount).map((r) => () => mod.controls.tooltip.show(r));
-
-        const tallSkinny = rows!.map((r, i) => r.continuous(ManifestConst.MeasureAxis).value());
-        const points = transpose<number>(arrayToMatrix(tallSkinny, markerCount));
-
-        var data: SplomDataset = {
-            measures: measures!.map((m) => m.formattedValue()),
-            points,
-            colors,
-            count,
-            marked,
-            mark: (index: number) => rows![index].mark(),
-            tooltips,
-            hideTooltips: () => mod.controls.tooltip.hide()
-        };
-
-        render(data, diagonalContent.value(), upperContent.value(), lowerContent.value(), size, () =>
-            dataView.hasExpired()
-        );
-
-
-        createSettingsButton(mod, diagonalContent, upperContent, lowerContent);
-
-        context.signalRenderComplete();
-    }
-
-    function transpose<T>(m: T[][]) {
-        return m[0].map((_, i) => m.map((x) => x[i]));
-    }
-
-    function arrayToMatrix(arr: any[], chunkSize: number) {
-        var results = [];
-        while (arr.length) {
-            results.push(arr.splice(0, chunkSize));
-        }
-
-        return results;
     }
 });
 
