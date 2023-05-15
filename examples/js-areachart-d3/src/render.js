@@ -49,8 +49,9 @@ const xLabelsContainer = modContainer.append("div").attr("class", "x-axis-label-
  * @param {Spotfire.ModProperty<string>} chartType - chartType
  * @param {Spotfire.ModProperty<boolean>} roundedCurves - roundedCurves
  * @param {Spotfire.ModProperty<boolean>} gapfill - gapfill
+ * @param {Spotfire.ModProperty<string>} xAxisLabelOrientation - the x-axis label orientation
  */
-export async function render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill) {
+export async function render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill, xAxisLabelOrientation) {
     if (state.preventRender) {
         // Early return if the state currently disallows rendering.
         return;
@@ -60,7 +61,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     const margin = { top: 20, right: 40, bottom: 100, left: 80 };
 
     // The position and size of the chart canvas.
-    const canvas = { 
+    const canvas = {
         top: margin.top,
         left: margin.left,
         width: windowSize.width - (margin.left + margin.right),
@@ -221,12 +222,10 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
      * Compute the suitable ticks to show
      */
     const scaleWidth = xScale.range()[1] - xScale.range()[0];
-    const minLabelWidth = 20;
+    const minLabelWidth = xAxisLabelOrientation.value() == "vertical"? 10 : 20;
     const maxCount = scaleWidth / minLabelWidth;
     const drawEvery = Math.ceil(xCount / maxCount);
-    
-    //drawXScaleLabel.push(xCount - 1);
-    var labelWidth = 100;
+
     /**
      * X axis group.
      */
@@ -279,7 +278,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .attr("fill", styling.scales.font.color)
         .attr("font-family", styling.scales.font.fontFamily)
         .attr("font-size", styling.scales.font.fontSize);
-    
+
     /**
      * Draws X labels as divs (not SVG)
      */
@@ -294,9 +293,9 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .style("width", windowSize.width + "px")
         .style("height", styling.scales.font.fontSize * 2 + "px")
         .style("background-color", styling.general.font.color);
-    xLabelsContainer
+    const xLabels = xLabelsContainer
         .selectAll(".x-axis-label")
-        .data(xScale.domain().filter(d=>d % drawEvery == 0))
+        .data(xScale.domain().filter(d => d % drawEvery == 0))
         .enter()
         .append("div")
         .attr("class", "x-axis-label-parent")
@@ -308,20 +307,29 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         .style("font-size", styling.scales.font.fontSize + "px")
         .attr("tooltip", (xIndex) => xLeaves[xIndex].formattedPath())
         .html((xIndex) => xLeaves[xIndex].formattedPath())
-
-        .style("transform-origin", "30% 200%")      
-        .style("transform", "rotate(-45deg) translate(-.5vh,-.5vh)")  
-
         .on("mouseover", (event, xIndex) => {
-            console.log(xIndex);
             tooltip.show(xLeaves[xIndex].formattedPath())
         })
         .on("mouseout", () => tooltip.hide());
+    
+    if (xAxisLabelOrientation.value() == "45degrees") {
+        xLabels
+            .style("text-anchor", "end")
+            .style("transform-origin", "30% 200%")
+            .style("transform", "rotate(-45deg) translate(-.5vh,-.5vh)")
+    }
+
+    if (xAxisLabelOrientation.value() == "vertical") {
+        xLabels
+        .style("text-anchor", "end")
+        //.style("transform-origin", "30% 200%")
+        .style("transform", "rotate(-90deg)"); // translate(+.5vh,+.5vh)")
+    }
 
     /**
      * Create aggregated groups, sort by sum and draw each one of them.
      */
-    colorSeries.sort((a, b) => b.sum - a.sum).forEach(splitAndDraw);    
+    colorSeries.sort((a, b) => b.sum - a.sum).forEach(splitAndDraw);
 
     /**
      * This will add rectangle selection elements to DOM.
@@ -420,12 +428,12 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
             group.points.forEach((p) => (event.ctrlKey ? p.mark("ToggleOrAdd") : p.mark()));
         });
 
-        interactiveArea.on("mouseover", function () {            
+        interactiveArea.on("mouseover", function () {
             tooltip.show(createColorSerieTooltip(group.colorIndex));
         })
-        .on("mouseout", function () {
-            tooltip.hide();
-        });
+            .on("mouseout", function () {
+                tooltip.hide();
+            });
     }
 
     /**
@@ -441,8 +449,8 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
             .attr("stroke", unmarkedColor)
             .attr("stroke-width", 1.5)
             .attr("d", line.curve(curveUnmarked)(points))
-            .on("mouseover", function () {   
-                console.log(colorIndex);         
+            .on("mouseover", function () {
+                console.log(colorIndex);
                 tooltip.show(createColorSerieTooltip(colorIndex));
             })
     }
@@ -463,7 +471,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
                 .attr("fill", markedColor)
                 .attr("fill-opacity", fillOpacity)
                 .attr("stroke", "none")
-                .attr("d", createPathStringFromSegment(segment));                
+                .attr("d", createPathStringFromSegment(segment));
         });
 
         /**
@@ -502,7 +510,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
                 .attr("stroke-linecap", "round")
                 .attr("d", createPathStringFromSegment(segment));
         })
-        
+
         function createPathStringFromSegment(segment) {
             if (roundedCurves.value()) {
                 const extendedSegment = extendSegment(segment, 0, maxIndex);
@@ -546,7 +554,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
         drawMarkedLine(g, group);
         drawMarkedCircles(g, group);
 
-        function handleMouseOver(event, colorIndex) {            
+        function handleMouseOver(event, colorIndex) {
             g.attr("visibility", "visible");
             tooltip.show(createColorSerieTooltip(colorIndex));
         }
@@ -728,6 +736,24 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
                         "Fill gaps in the X axis when the data contains empty (null) values or when there is no data point."
                 })
             ]
+        }),
+        section({
+            heading: "X-Axis Label Orientation",
+
+            children: [
+                radioButton({
+                    name: xAxisLabelOrientation.name,
+                    text: "45 degrees",
+                    value: "45degrees",
+                    checked: xAxisLabelOrientation.value() == "45degrees"
+                }),
+                radioButton({
+                    name: xAxisLabelOrientation.name,
+                    text: "Vertical",
+                    value: "vertical",
+                    checked: xAxisLabelOrientation.value() == "vertical"
+                })
+            ]
         })
     ];
 
@@ -823,6 +849,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
                     name == roundedCurves.name && roundedCurves.set(value);
                     name == chartType.name && chartType.set(value);
                     name == gapfill.name && gapfill.set(value);
+                    name == xAxisLabelOrientation.name && xAxisLabelOrientation.set(value);
                 }
             },
             popoutContent
