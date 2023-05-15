@@ -322,8 +322,7 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
     if (xAxisLabelOrientation.value() == "vertical") {
         xLabels
         .style("text-anchor", "end")
-        //.style("transform-origin", "30% 200%")
-        .style("transform", "rotate(-90deg)"); // translate(+.5vh,+.5vh)")
+        .style("transform", "rotate(-90deg)");
     }
 
     /**
