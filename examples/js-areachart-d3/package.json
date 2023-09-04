@@ -11,12 +11,11 @@
     },
     "author": "dcroitor, dhategan",
     "license": "ISC",
-    "dependencies": {},
     "devDependencies": {
         "@babel/core": "7.17.9",
         "@babel/plugin-transform-runtime": "7.17.0",
         "@babel/preset-env": "7.16.11",
-        "@tibco/spotfire-mods-dev-server": "^1.0.1",
+        "@spotfire/mods-dev-server": "^1.0.1",
         "babel-loader": "8.2.4",
         "copy-webpack-plugin": "10.2.4",
         "core-js": "3.21.1",

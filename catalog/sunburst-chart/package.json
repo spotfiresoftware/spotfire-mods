@@ -12,7 +12,7 @@
     "author": "objerke, ebrandin",
     "license": "ISC",
     "devDependencies": {
-        "@tibco/spotfire-mods-dev-server": "^1.0.1",
+        "@spotfire/mods-dev-server": "^1.0.1",
         "@types/d3": "^5.16.4",
         "copy-webpack-plugin": "10.2.4",
         "d3": "^5.14.2",

@@ -26,7 +26,7 @@ const rollup = require("rollup");
 const typescriptPlugin = require("rollup-plugin-typescript2");
 const typescript = require("typescript");
 
-const modsDevServer = require("@tibco/spotfire-mods-dev-server");
+const modsDevServer = require("@spotfire/mods-dev-server");
 const { nodeResolve }= require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs') ;
 const  replace  = require("@rollup/plugin-replace");

@@ -9,10 +9,10 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "devDependencies": {
-        "@tibco/spotfire-mods-dev-server": "^1.0.1"
-    },
     "dependencies": {
         "@types/d3": "^5.16.4"
+    },
+    "devDependencies": {
+        "@spotfire/mods-dev-server": "^1.0.1"
     }
 }
