@@ -1,8 +1,8 @@
-# Mods development server by TIBCO Spotfire®
+# Mods development server by Spotfire®
 
-With [Spotfire Mods](https://tibcosoftware.github.io/spotfire-mods/), you can include custom visualizations in your Spotfire® applications much faster by integrating JavaScript visualizations. Create your own visualizations that look and feel like the native Spotfire visualizations, and that leverage the built-in capabilities of Spotfire.
+With [Spotfire Mods](https://spotfiresoftware.github.io/spotfire-mods/), you can include custom visualizations in your Spotfire® applications much faster by integrating JavaScript visualizations. Create your own visualizations that look and feel like the native Spotfire visualizations, and that leverage the built-in capabilities of Spotfire.
 
-This package is a simple web server with the aim to speed up mod development. It mimics the behavior of the Spotfire Mods sandbox. It is the default server used by the developer examples in the [Spotfire Mods GitHub repository](https://github.com/TIBCOSoftware/spotfire-mods).
+This package is a simple web server with the aim to speed up mod development. It mimics the behavior of the Spotfire Mods sandbox. It is the default server used by the developer examples in the [Spotfire Mods GitHub repository](https://github.com/spotfiresoftware/spotfire-mods).
 
 Invoke the following command from a `package.json` script to start the server:
 
@@ -23,6 +23,6 @@ mods-dev-server <source folder name>
 Here is an example of how to use the package from Node.js:
 
 ```javascript
-const modsDevServer = require("@tibco/spotfire-mods-dev-server");
+const modsDevServer = require("@spotfire/mods-dev-server");
 modsDevServer.start({root: "./dist"});
 ```

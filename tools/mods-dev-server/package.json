@@ -1,12 +1,12 @@
 {
-    "name": "@tibco/spotfire-mods-dev-server",
+    "name": "@spotfire/mods-dev-server",
     "version": "1.0.1",
-    "description": "Development server for TIBCO Spotfire(R) Mods",
+    "description": "Development server for Spotfire® Mods",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/TIBCOSoftware/spotfire-mods.git"
+        "url": "git+https://github.com/spotfiresoftware/spotfire-mods"
     },
-    "homepage": "https://github.com/TIBCOSoftware/spotfire-mods",
+    "homepage": "https://github.com/spotfiresoftware/spotfire-mods/tree/master/tools/mods-dev-server",
     "main": "server.js",
     "bin": {
         "mods-dev-server": "./cli.js"
@@ -16,11 +16,14 @@
         "test": "mocha test --exit"
     },
     "keywords": [
-        "TIBCO",
         "Spotfire",
-        "Mods"
+        "Mods",
+        "Development",
+        "Server",
+        "Visualizations",
+        "Analytics"
     ],
-    "author": "TIBCO Spotfire",
+    "author": "Spotfire®",
     "license": "BSD-3-Clause",
     "dependencies": {
         "chokidar": "^3.5.2",
