@@ -1,4 +1,4 @@
-# Animated Bubble Chart Mod for TIBCO Spotfire®
+# Animated Bubble Chart Mod for Spotfire®
 The animated bubble chart can be used to show how 2-4 measures changes over time. This method of visualizing changes over time was popularized by Hans Rosling in [a famous TED talk from 2006](https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen) where he used it to show changes in global health and economics. Here's what that dataset looks like in Spotfire using the animated bubble chart mod.
 
 ![Animated Bubble Chart Overview Image](images/animated-bubble-chart-overview.png)
@@ -95,7 +95,7 @@ Natural dataset often contains a lot of small values and a few larger values. If
 
 ### Source code
 
-The source code for the animated bubble chart mod can be found here: https://github.com/TIBCOSoftware/spotfire-mods/tree/master/catalog/animated-bubble-chart
+The source code for the animated bubble chart mod can be found here: https://github.com/spotfiresoftware/spotfire-mods/tree/master/catalog/animated-bubble-chart
 
 ### Developing the mod
 
@@ -115,11 +115,11 @@ In a new terminal window
 The development version of bundle.js is uncompressed and not suitable for end users. Run the following command to compress the bundle.
 - `npm run build`
 
-## More information about TIBCO Spotfire® Mods
+## More information about Spotfire® Mods
 
 - [Spotfire® Mods on the TIBCO Community Exchange](https://community.tibco.com/exchange): A safe and trusted place to discover ready-to-use mods
-- [Spotfire® Mods Developer Documentation](https://tibcosoftware.github.io/spotfire-mods/docs/): Introduction and tutorials for mods developers
-- [Spotfire® Mods by TIBCO Spotfire®](https://github.com/TIBCOSoftware/spotfire-mods/releases/latest): A public repository for example projects
+- [Spotfire® Mods Developer Documentation](https://spotfiresoftware.github.io/spotfire-mods/docs/): Introduction and tutorials for mods developers
+- [Spotfire® Mods](https://github.com/spotfiresoftware/spotfire-mods/releases/latest): A public repository for example projects
 
 ## Version history
 
