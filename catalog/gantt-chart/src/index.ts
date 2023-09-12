@@ -151,8 +151,8 @@ Spotfire.initialize(async (mod) => {
                             (tot, curr) =>
                                 tot +
                                 (curr.continuous("Progress").value() as number) *
-                                    ((curr.continuous("End").value() as Date).getTime() -
-                                        (curr.continuous("Start").value() as Date).getTime() || 1),
+                                ((curr.continuous("End").value() as Date).getTime() -
+                                    (curr.continuous("Start").value() as Date).getTime() || 1),
                             0
                         ) /
                         rows.reduce(
@@ -204,13 +204,13 @@ Spotfire.initialize(async (mod) => {
                     start: startDates[0],
                     end: endDates[0],
                     isMarked: node.rows().every((r) => r.isMarked()),
-                    color: getColor(node, tasksRootNode, colorAxis.isCategorical)
+                    color: getColor(node, tasksRootNode, !!colorAxis.parts.length, colorAxis.isCategorical)
                 };
             }
         }
     }
 
-    function getColor(node: DataViewHierarchyNode, root: DataViewHierarchyNode, isCategorical: boolean) {
+    function getColor(node: DataViewHierarchyNode, root: DataViewHierarchyNode, hasColorExpression: boolean, isCategorical: boolean) {
         let color = config.defaultBarColor;
 
         const unmarkedRows = node.rows().filter((r) => !r.isMarked());
@@ -222,21 +222,23 @@ Spotfire.initialize(async (mod) => {
                 color = node.rows()[0].color().hexCode;
             }
 
-            if (isCategorical) {
-                const colorValue = node.rows()[0].categorical("Color").value()[0].key;
-                const differentElements = node.rows().filter((r) => {
-                    return r.categorical("Color").value()[0].key !== colorValue;
-                }).length;
-                if (differentElements > 0) {
-                    color = config.defaultBarColor;
-                }
-            } else {
-                const colorValue = node.rows()[0].continuous("Color").value();
-                const differentElements = node.rows().filter((r) => {
-                    return r.continuous("Color").value() !== colorValue;
-                }).length;
-                if (differentElements > 0) {
-                    color = config.defaultBarColor;
+            if (hasColorExpression) {
+                if (isCategorical) {
+                    const colorValue = node.rows()[0].categorical("Color").value()[0].key;
+                    const differentElements = node.rows().filter((r) => {
+                        return r.categorical("Color").value()[0].key !== colorValue;
+                    }).length;
+                    if (differentElements > 0) {
+                        color = config.defaultBarColor;
+                    }
+                } else {
+                    const colorValue = node.rows()[0].continuous("Color").value();
+                    const differentElements = node.rows().filter((r) => {
+                        return r.continuous("Color").value() !== colorValue;
+                    }).length;
+                    if (differentElements > 0) {
+                        color = config.defaultBarColor;
+                    }
                 }
             }
         } else {
@@ -318,8 +320,8 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
             } catch (e) {
                 mod.controls.errorOverlay.show(
                     [e.message].concat(messages.InitialConfigurationHelper) ||
-                        e ||
-                        "☹️ Something went wrong, check developer console",
+                    e ||
+                    "☹️ Something went wrong, check developer console",
                     "General"
                 );
                 if (DEBUG) {
