@@ -1,0 +1,118 @@
+{
+    "apiVersion": "1.3",
+    "version": "1.0.0",
+    "name": "Marimekko Chart",
+    "id": "sfire-mods-marimekko",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "x-axis-mode",
+            "type": "string",
+            "defaultValue": "percentage"
+        },
+        {
+            "name": "mekko",
+            "type": "string",
+            "defaultValue": "marimekko"
+        },
+        {
+            "name": "title-label",
+            "type": "boolean",
+            "defaultValue": true
+        },
+        {
+            "name": "label-bars",
+            "type": "boolean",
+            "defaultValue": true
+        },
+        {
+            "name": "label-segment",
+            "type": "boolean",
+            "defaultValue": true
+        },
+        {
+            "name": "label-mode",
+            "type": "string",
+            "defaultValue": "none"
+        },
+        {
+            "name": "sort-bars",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "sort-segment",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "reverse-bars",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "reverse-segment",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "category",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "numeric",
+            "type": "boolean",
+            "defaultValue": true
+        },
+        {
+            "name": "percentage",
+            "type": "boolean",
+            "defaultValue": true
+        }
+    ],
+    "dataViewDefinition": {
+        "tooltip": { "enabled": true },
+        "colorAxis": {
+            "mode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "Categories",
+                "mode": "categorical"
+            },
+            {
+                "name": "Y",
+                "mode": "continuous",
+                "placement": "left",
+                "allowMultipleMeasures": true,
+                "legendItem": {
+                    "defaultVisibility": "hidden"
+                }
+            },
+            {
+                "name": "X",
+                "mode": "continuous",
+                "placement": "bottom",
+                "allowMultipleMeasures": true,
+                "legendItem": {
+                    "defaultVisibility": "hidden"
+                }
+            }
+            
+        ]
+    },
+    "files": [
+        "index.html",
+        "main.css",
+        "scales.js",
+        "d3.js",
+        "rectangleSelection.js",
+        "optionsPopout.js",
+        "main.js"
+    ]
+}
