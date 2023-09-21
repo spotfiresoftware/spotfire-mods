@@ -647,13 +647,13 @@
         
         
         &lt;h2 id=&#34;developing-a-visualization-mod&#34;&gt;Developing a visualization mod&lt;/h2&gt;
-&lt;p&gt;Spotfire® Mods is a framework to create interactive visualizations in TIBCO Spotfire®. It is based on web technologies and it runs in a sandboxed iframe.&lt;/p&gt;
+&lt;p&gt;Spotfire® Mods is a framework to create interactive visualizations in Spotfire®. It is based on web technologies and it runs in a sandboxed iframe.&lt;/p&gt;
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt;&lt;br&gt;
-This is needed to develop and test a mod. Development can be done against the installed client (TIBCO Spotfire® Analyst) or the web client (TIBCO Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;
-&lt;p&gt;Spotfire version 11.0 or newer is required for mod development. See also &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods#spotfire-versions-and-their-mod-api&#34;&gt;Spotfire versions and their Mod API&lt;/a&gt;.&lt;/p&gt;
+This is needed to develop and test a mod. Development can be done against the installed client (Spotfire® Analyst) or the web client (Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;
+&lt;p&gt;Spotfire version 11.0 or newer is required for mod development. See also &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods#spotfire-versions-and-their-mod-api&#34;&gt;Spotfire versions and their Mod API&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;A code editor.&lt;/strong&gt;&lt;br&gt;
@@ -826,10 +826,12 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
         &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;API documentation&lt;/a&gt; lists all interfaces, type aliases, and functions in the API. It contains a short introduction and describes how to use them. From each interface you can also find a direct link to the &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; to get a hierarchical perspective.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;&lt;img src=&#34;api-documentation.png&#34; alt=&#34;API Documentation&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;
-&lt;p&gt;The latest API version is backwards compatible with the 1.0 release. All new functionality is marked by a &lt;code&gt;version&lt;/code&gt; tag.&lt;/p&gt;
+&lt;p&gt;The latest API version is backwards compatible with older 1.x release. All new functionality is marked by a &lt;code&gt;version&lt;/code&gt; tag.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/v1-0/&#34;&gt;API documentation version 1.0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/v1-1/&#34;&gt;API documentation version 1.1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/v1-2/&#34;&gt;API documentation version 1.2&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1338,7 +1340,7 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
 &lt;li&gt;Modifications should be done on user interaction, not directly in a &lt;code&gt;reader&lt;/code&gt; callback.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;full-examples&#34;&gt;Full examples&lt;/h2&gt;
-&lt;p&gt;All examples can bee downloaded &lt;a href=&#34;examples.js&#34;&gt;here&lt;/a&gt;. They can be tested with one of the existing examples, such as the &lt;a href=&#34;https://github.com/TIBCOSoftware/spotfire-mods/tree/master/examples/js-dev-starter&#34;&gt;js-dev-starter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;All examples can bee downloaded &lt;a href=&#34;examples.js&#34;&gt;here&lt;/a&gt;. They can be tested with one of the existing examples, such as the &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods/tree/master/examples/js-dev-starter&#34;&gt;js-dev-starter&lt;/a&gt;.&lt;/p&gt;
 
       </description>
     </item>
