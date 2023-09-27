@@ -102,8 +102,8 @@ Spotfire.initialize(async (mod) => {
                 formattedValue,
                 color: row.color().hexCode,
                 key: row.elementId(),
-                mark: () => {
-                    if (d3.event.ctrlKey) {
+                mark: (addToMarking: boolean) => {
+                    if (addToMarking) {
                         row.mark("ToggleOrAdd");
                     } else {
                         row.mark();
