@@ -29,7 +29,7 @@ export interface Settings {
 }
 
 export interface Gauge {
-    mark(): void;
+    mark(addToMarking: boolean): void;
     mouseOver?(): void;
     label: string;
     key: string;
@@ -104,9 +104,9 @@ export async function render(gauges: Gauge[], settings: Settings) {
 
     let update = gaugesPaths
         .merge(newGauge)
-        .on("click", function (d) {
-            d3.event.stopPropagation();
-            d.mark();
+        .on("click", function (event: any, row: any) {
+            event.stopPropagation();
+            row.mark();
         })
         .on("mouseleave", (d) => {
             settings.mouseLeave?.();
@@ -139,8 +139,8 @@ export async function render(gauges: Gauge[], settings: Settings) {
         classesToMark: "bg",
         ignoredClickClasses: ["gauge"],
         clearMarking: () => settings.clearMarking?.(),
-        mark(data: Gauge) {
-            data.mark();
+        mark(data: Gauge, addToMarking: boolean) {
+            data.mark(addToMarking);
         }
     });
 }
