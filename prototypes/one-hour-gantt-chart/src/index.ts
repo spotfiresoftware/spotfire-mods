@@ -1,8 +1,5 @@
-import { Data, Options, render } from "./render";
-import { createLabelPopout } from "./popout";
-import { buildColorSeries, Point } from "./series";
 import { renderGantt } from "./gantt-chart";
-import { AxisPart, DataView, DataViewHierarchyNode, Mod, ModProperty } from "spotfire-api";
+import { DataView } from "spotfire-api";
 var events = require("events");
 
 const Spotfire = window.Spotfire;
@@ -67,11 +64,11 @@ Spotfire.initialize(async (mod) => {
                     links: linksHierarchy?.isEmpty
                         ? []
                         : leaf.rows().map((r) => {
-                              return {
-                                  target: r.categorical("Link").value()[0].key,
-                                  type: "FS",
-                              };
-                          }),
+                            return {
+                                target: r.categorical("Link").value()[0].key,
+                                type: "FS",
+                            };
+                        }),
                 };
             }
 
@@ -149,87 +146,4 @@ export function generalErrorHandler<T extends (dataView: Spotfire.DataView, ...a
             }
         } as T;
     };
-}
-
-/**
- * Construct a data format suitable for consumption in d3.
- * @param mod The Mod API object
- * @param dataView The mod's DataView
- */
-async function buildData(mod: Mod, dataView: DataView): Promise<Data> {
-    const allRows = await dataView.allRows();
-
-    const allYValues: Array<number> = allRows!.map((row) => row.continuous<number>("Y").value() || 0);
-    const maxValue = Math.max(...allYValues);
-    const minValue = Math.min(0, ...allYValues);
-
-    const xHierarchy = await dataView.hierarchy("X");
-
-    const colorLeaves = (await (await dataView.hierarchy("Color"))!.root())!.leaves();
-    const xHierarchyLeaves = (await xHierarchy!.root())!.leaves();
-
-    const xAxisData = xHierarchyLeaves.map((leaf) => leaf.formattedPath());
-
-    const xAxisMeta = await mod.visualization.axis("X");
-    const yAxisMeta = await mod.visualization.axis("Y");
-    const colorAxisMeta = await mod.visualization.axis("Color");
-
-    return {
-        clearMarking: dataView.clearMarking,
-        yDomain: { min: minValue, max: maxValue },
-        xScale: xAxisData,
-        series: buildColorSeries(
-            colorLeaves,
-            xHierarchyLeaves,
-            !(xHierarchy?.isEmpty ?? true),
-            createPointTooltip,
-            minValue
-        ),
-    };
-
-    function createPointTooltip(point: Point) {
-        const separator = "\n";
-        let colorValues = getFormattedValues(colorLeaves[point.index]);
-        let xValues = getFormattedValues(xHierarchyLeaves[point.xIndex]);
-        let yDisplayName = yAxisMeta.parts[0].displayName;
-
-        if (yAxisMeta.parts.length > 1) {
-            // Find the corresponding display name for the y axis value.
-            let colorLevelForColumnNames = colorAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
-            let xLevelForColumnNames = xAxisMeta.parts.map((p) => p.expression).indexOf("[Axis.Default.Names]");
-            if (colorLevelForColumnNames >= 0) {
-                yDisplayName = colorValues[colorLevelForColumnNames];
-            }
-
-            if (xLevelForColumnNames >= 0) {
-                yDisplayName = xValues[xLevelForColumnNames];
-            }
-        }
-
-        return [
-            createAxisTooltip(xAxisMeta.parts, xValues, separator) ||
-                xAxisMeta.parts[0].displayName + ": " + xHierarchyLeaves[point.xIndex].formattedPath(),
-            yDisplayName + ": " + point.Y_Formatted,
-            colorAxisMeta.parts.length > 0
-                ? createAxisTooltip(colorAxisMeta.parts, colorValues, separator) ||
-                  colorAxisMeta.parts[0].displayName + ": " + colorLeaves[point.index].formattedPath()
-                : "",
-        ].join(separator);
-    }
-
-    function getFormattedValues(node: DataViewHierarchyNode) {
-        let values: string[] = [];
-        while (node.parent) {
-            values.push(node.formattedValue());
-            node = node.parent;
-        }
-
-        return values.reverse();
-    }
-
-    function createAxisTooltip(axisParts: AxisPart[], formattedValues: string[], separator: string) {
-        return axisParts.length == formattedValues.length
-            ? formattedValues.map((v, i) => axisParts[i].displayName + ": " + v).join(separator)
-            : null;
-    }
 }
