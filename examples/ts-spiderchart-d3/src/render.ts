@@ -177,7 +177,6 @@ export async function render(
     drawRectangularSelection();
 
     d3.selectAll(".x-axis-labels").on("click", function (e: any) {
-        //const mouse = d3.mouse(document.body);
         cfg.onLabelClick?.(e.clientX, e.clientY);
     });
 
