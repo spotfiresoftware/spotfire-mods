@@ -106,7 +106,7 @@ function start(settings = {}) {
             console.log(colors.yellow("%s is already in use. Trying another port."), serverUrl);
             setTimeout(function pickNewPort() {
                 server.close();
-                server.listen(0);
+                server.listen(0, "127.0.0.1");
             }, 500);
         } else {
             console.error(colors.red(e.toString()));
@@ -118,9 +118,9 @@ function start(settings = {}) {
     server.on("listening", function () {
         let address = server.address();
         // @ts-ignore
-        serverUrl = "http://" + "127.0.0.1" + ":" + address.port;
+        serverUrl = "http://" + address.address + ":" + address.port;
         // @ts-ignore
-        wsServerUrl = "ws://" + "127.0.0.1" + ":" + address.port;
+        wsServerUrl = "ws://" + address.address + ":" + address.port;
         console.log(colors.green('Serving "%s" at %s'), settings.root, serverUrl);
 
         // Launch the default browser
@@ -142,7 +142,7 @@ function start(settings = {}) {
         });
     });
 
-    server.listen(settings.port);
+    server.listen(settings.port, "127.0.0.1");
 
     const reloadInstances = _.debounce(() => {
         let openConnections = [...wss.clients].filter((client) => client.readyState == ws.OPEN);
