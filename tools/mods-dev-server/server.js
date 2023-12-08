@@ -258,6 +258,14 @@ function start(settings = {}) {
             let json = JSON.parse(content);
             declaredExternalResourcesInManifest = json.externalResources || [];
             manifestFiles = [...(json.files || []), json.icon];
+
+            if (json.scripts) {
+                for (const script of json.scripts) {
+                    if (script.file) {
+                        manifestFiles.push(script.file);
+                    }
+                }
+            }
         } catch (err) {}
     }
 
