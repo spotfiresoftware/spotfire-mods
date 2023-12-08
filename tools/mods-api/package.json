@@ -1,0 +1,11 @@
+{
+    "name": "@spotfire/mods-api",
+    "version": "2.0.0-preview.0",
+    "description": "Mods API.",
+    "files": [
+        "action-mods/*.d.ts",
+        "action-mods/*.json",
+        "visualization-mods/*.d.ts",
+        "visualization-mods/*.json"
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "apiVersion": "2.0",
+    "version": "1.0",
+    "type": "action",
+    "name": "$ACTION-MOD-NAME",
+    "id": "$ACTION-MOD-ID",
+    "capabilities": [],
+    "icon": "icon.svg",
+    "scripts": [
+        {
+            "name": "my-script",
+            "file": "build/my-script.js",
+            "entryPoint": "myScript",
+            "parameters": [
+                {
+                    "name": "message",
+                    "type": "String"
+                }
+            ]
+        }
+    ]
+}

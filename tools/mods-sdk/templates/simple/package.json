@@ -1,0 +1,18 @@
+{
+    "name": "my-action-mod",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "mods-sdk build",
+        "build:dev": "mods-sdk build --watch --debug",
+        "tsc:dev": "tsc --watch",
+        "server": "mods-dev-server --open false --allow-project-root true",
+        "add-script": "mods-sdk add-script"
+    },
+    "devDependencies": {
+        "@spotfire/mods-api": "2.0.0-preview.0",
+        "@spotfire/mods-dev-server": "^1.1.0",
+        "@spotfire/mods-sdk": "^MODS-SDK-VERSION",
+        "prettier": "^3.0.3",
+        "typescript": "^5.2.2"
+    }
+}
