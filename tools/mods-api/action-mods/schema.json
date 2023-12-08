@@ -1,0 +1,202 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "The Spotfire Action Mod manifest schema",
+    "type": "object",
+    "required": ["apiVersion", "version", "name", "id", "scripts", "icon", "type"],
+    "additionalProperties": false,
+    "properties": {
+        "version": {
+            "type": "string",
+            "title": "Mod version.",
+            "description": "Specifies the version of this Mod.",
+            "default": "",
+            "examples": ["1.0"],
+            "pattern": "^(.*)$"
+        },
+        "apiVersion": {
+            "type": "string",
+            "title": "Mod API version.",
+            "description": "Specifies the version of the Mod JavaScript API used by the code of this Mod. Set the lowest possible version number that the Mod requires to ensure best possible backward compatibility with older Spotfire systems. Using a newer API version than specified will result in runtime errors, even if the current Spotfire system includes that API.",
+            "default": "2.0",
+            "examples": ["2.0"],
+            "pattern": "^(.*)$"
+        },
+        "name": {
+            "type": "string",
+            "title": "Name of the mod",
+            "description": "Specifies the name of this Mod. The name will be shown to the user when this Mod is handled in Spotfire.",
+            "default": "",
+            "examples": ["Spotfire mod boilerplate"],
+            "pattern": "^(.*)$"
+        },
+        "description": {
+            "type": "string",
+            "title": "Description of the mod",
+            "description": "Specifies the description of this Mod. The description will be shown to the user of the mod.",
+            "default": "",
+            "examples": ["Contains scripts related to ..."],
+            "pattern": "^(.*)$"
+        },
+        "icon": {
+            "type": "string",
+            "title": "Specifies the name of the file containing the svg icon to be used for this Mod.",
+            "default": "icon.svg"
+        },
+        "id": {
+            "type": "string",
+            "title": "Mod ID. A unique string.",
+            "default": "",
+            "examples": ["spotfire-boilerplate-id"],
+            "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
+        },
+        "type": {
+            "type": "string",
+            "title": "The type of mod.",
+            "default": "action",
+            "enum": ["action"],
+            "pattern": "^(.*)$"
+        },
+        "capabilities": {
+            "type": "array",
+            "title": "Extended capabilities.",
+            "description": "Any extended capabilities required by the scripts in the mod. The API documentation indicates if an API requires an extended capability.",
+            "items": {
+                "type": "string",
+                "title": "The exended capability.",
+                "default": [],
+                "enum": ["LibraryRead", "LibraryWrite"],
+                "examples": ["LibraryRead"],
+                "pattern": "^(.*)$"
+            }
+        },
+        "files": {
+            "type": "array",
+            "title": "The files stored in the mod",
+            "description": "All files of a mod will be saved into Spotfire. The files array lists all files so that Spotfire can save them.",
+            "items": {
+                "type": "string",
+                "title": "The Items Schema",
+                "default": "",
+                "examples": ["index.html", "main.css", "main.js"],
+                "pattern": "^(.*)$"
+            }
+        },
+        "scripts": {
+            "type": "array",
+            "title": "The scripts stored in the mod",
+            "description": "All scripts which can be executed inside of Spotfire.",
+            "items": {
+                "allOf": [{
+                    "type": "object",
+                    "title": "Script",
+                    "required": ["id", "name", "file", "entryPoint"],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "title": "Id",
+                            "default": "script-id",
+                            "description": "The identifier of the script. This needs to be unique within the mod has must not change between versions of the mod.",
+                            "examples": ["script-id", "1"],
+                            "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
+                        },
+                        "name": {
+                            "type": "string",
+                            "title": "Name",
+                            "default": "script-name",
+                            "description": "Specifies the display name of the script.",
+                            "examples": ["script-name"],
+                            "pattern": "^(.*)$"
+                        },
+                        "file": {
+                            "type": "string",
+                            "title": "File",
+                            "default": "script.js",
+                            "description": "Specifies the path of the script file relative to the mod manifest.",
+                            "examples": ["script.js", "build/script.js"],
+                            "pattern": "^(.*)$"
+                        },
+                        "entryPoint": {
+                            "type": "string",
+                            "title": "Entry point",
+                            "default": "scriptFunction",
+                            "description": "Specifies the unique entry point of the script. The entry point has to be unique across all scripts included in the mod.",
+                            "examples": ["scriptFunction"],
+                            "pattern": "^[$A-Za-z_][0-9A-Za-z_$]*$"
+                        },
+                        "description": {
+                            "type": "string",
+                            "title": "Description",
+                            "description": "A description of what this script does.",
+                            "default": "Description of the script",
+                            "pattern": "^(.*)$"
+                        },
+                        "wrapInTransaction": {
+                            "type": "boolean",
+                            "title": "Wrap the script in a transaction",
+                            "description": "Flag indicating if the script should be wrapped in a transaction.",
+                            "default": true,
+                            "pattern": "^(true)(false)$"
+                        },
+                        "parameters": {
+                            "type": "array",
+                            "title": "Script parameters",
+                            "description": "All parameters of the entry point function.",
+                            "items": {
+                                "allOf": [{
+                                    "type": "object",
+                                    "title": "Parameter",
+                                    "required": ["name", "type"],
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "title": "Name",
+                                            "default": "myParam",
+                                            "description": "The JavaScript identifier for the parameter.",
+                                            "examples": ["myParam", "table", "visual"],
+                                            "allOf": [
+                                                {
+                                                    "not": {
+                                                        "title": "Document is a reserved parameter name",
+                                                        "pattern": "^(D|d)(O|o)(C|c)(U|u)(M|m)(E|e)(N|n)(T|t)$"
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "title": "Application is a reserved parameter name",
+                                                        "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
+                                                    }
+                                                },
+                                                {
+                                                    "title": "Parameter names can only contain letters, numbers, and underscores",
+                                                    "pattern": "^[0-9A-Za-z_]*$"
+                                                },
+                                                {
+                                                    "title": "Parameter names must start with a letter or an underscore",
+                                                    "pattern": "^[A-Za-z_]"
+                                                }
+                                            ]
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "title": "Type",
+                                            "description": "The Spotfire type of the parameter.",
+                                            "enum": ["Boolean", "Currency", "DataTable", "Date", "DateTime", "Integer", "LongInteger", "Real", "SingleReal", "String", "Time", "TimeSpan", "Page", "Visualization"],
+                                            "examples": ["String", "DataTable", "Page"]
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "title": "Description",
+                                            "description": "A description of this parameter.",
+                                            "default": "Description of the parameter",
+                                            "pattern": "^(.*)$"
+                                        }
+                                    }
+                                }]
+                            }
+                        }
+                    }
+                }]
+            }
+        }
+    }
+}

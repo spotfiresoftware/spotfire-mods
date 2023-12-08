@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "incremental": true,
+        "target": "ES2022",
+        "module": "ES2022",
+        "outDir": "dist",
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "strict": true
+    },
+    "include": ["src"],
+    "exclude": ["templates", "tests"]
+}
