@@ -13,7 +13,7 @@ export interface ServerSettings {
     /** Whether or not to open a browser. Defaults to true. */
     open?: boolean;
 
-    /** If the server should expose the modProjectRoot endpoint. */
+    /** If the server should expose the spotfire/modProjectRoot endpoint. */
     allowProjectRoot?: boolean;
 }
 

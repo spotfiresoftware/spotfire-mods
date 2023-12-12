@@ -73,7 +73,7 @@ if (require.main === module) {
             })
             .option("allow-project-root", {
                 describe:
-                    "Whether or not the server should expose an endpoint for retrieving the path to the project root.",
+                    "Whether or not the server should expose an endpoint at /spotfire/modProjectRoot for retrieving the path to the project root.",
                 boolean: true,
                 default: defaultSettings.allowProjectRoot
             })

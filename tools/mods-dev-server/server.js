@@ -96,7 +96,7 @@ function start(settings = {}) {
     if (settings.allowProjectRoot) {
         // We need to be able to retrieve the absolute path to the project root to
         // enable source maps when debugging scripts in action mods.
-        app.use("/modProjectRoot", (req, res, next) => {
+        app.use("/spotfire/modProjectRoot", (req, res, next) => {
             res.setHeader("Content-Type", "text/plain; charset=UTF-8");
             res.write(rootDirectoryAbsolutePath);
             res.end();
