@@ -52,7 +52,8 @@ const defaultSettings = {
     port: 8090,
     open: true,
     root: ".",
-    path: "/" + manifestName
+    path: "/" + manifestName,
+    allowProjectRoot: false
 };
 
 module.exports.start = start;
@@ -91,6 +92,17 @@ function start(settings = {}) {
     app.use(cacheHeaders);
     app.use(cspHeaders);
     app.use(corsHeaders);
+
+    if (settings.allowProjectRoot) {
+        // We need to be able to retrieve the absolute path to the project root to
+        // enable source maps when debugging scripts in action mods.
+        app.use("/spotfire/modProjectRoot", (req, res, next) => {
+            res.setHeader("Content-Type", "text/plain; charset=UTF-8");
+            res.write(rootDirectoryAbsolutePath);
+            res.end();
+        });
+    }
+
     app.use(checkIfPartOfManifest);
     app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(settings)));
     app.use(serveStaticFiles);
@@ -246,6 +258,14 @@ function start(settings = {}) {
             let json = JSON.parse(content);
             declaredExternalResourcesInManifest = json.externalResources || [];
             manifestFiles = [...(json.files || []), json.icon];
+
+            if (json.scripts) {
+                for (const script of json.scripts) {
+                    if (script.file) {
+                        manifestFiles.push(script.file);
+                    }
+                }
+            }
         } catch (err) {}
     }
 

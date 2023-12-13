@@ -48,7 +48,9 @@ if (require.main === module) {
                         // @ts-ignore
                         path: argv.path,
                         // @ts-ignore
-                        open: argv.open
+                        open: argv.open,
+                        // @ts-ignore
+                        allowProjectRoot: argv.allowProjectRoot
                     });
                 }
             )
@@ -68,6 +70,12 @@ if (require.main === module) {
                 describe: "Whether or not to open a browser on launch.",
                 boolean: true,
                 default: defaultSettings.open
+            })
+            .option("allow-project-root", {
+                describe:
+                    "Whether or not the server should expose an endpoint at /spotfire/modProjectRoot for retrieving the path to the project root.",
+                boolean: true,
+                default: defaultSettings.allowProjectRoot
             })
             .boolean(["open"])
             .version(packageJson.version)
