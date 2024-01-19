@@ -1,0 +1,20 @@
+{
+    "apiVersion": "2.0",
+    "version": "1.0",
+    "type": "action",
+    "name": "My Action Mod",
+    "id": "my-action-mod",
+    "scripts": [
+        {
+            "name": "my-script",
+            "file": "build/my-script.js",
+            "entryPoint": "myScript",
+            "parameters": [
+                {
+                    "name": "message",
+                    "type": "String"
+                }
+            ]
+        }
+    ]
+}
