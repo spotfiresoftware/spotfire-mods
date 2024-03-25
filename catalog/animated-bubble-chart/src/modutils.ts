@@ -28,7 +28,7 @@ export function highlight(
      * @param {Spotfire.DataViewRow} row
      * @param {Int} i
      */
-    function showTooltip(this: any, row: DataViewRow) {
+    function showTooltip(this: any, _: any, row: DataViewRow) {
         setBusy();
         d3.select(this)
             .clone()
@@ -105,11 +105,10 @@ export function markingHandler(
     // @ts-ignore
     var marking = false;
 
-    function dragstarted(this: any) {
-        let m = d3.mouse(this);
+    function dragstarted(this: any, e: any) {
         marking = false;
-        x0 = m[0];
-        y0 = m[1];
+        x0 = e.x;
+        y0 = e.y;
         x1 = x0;
         y1 = y0;
 
@@ -121,10 +120,9 @@ export function markingHandler(
             .attr("class", "activeMarking");
     }
 
-    function dragged(this: any) {
-        var m = d3.mouse(this);
-        x1 = m[0];
-        y1 = m[1];
+    function dragged(this: any, e: any) {
+        x1 = e.x;
+        y1 = e.y;
 
         // Begin marking when mouse moved a bit.
         marking = marking || Math.max(Math.abs(x0 - x1), Math.abs(y0 - y1)) > 2;
@@ -141,7 +139,7 @@ export function markingHandler(
         }
     }
 
-    function dragended() {
+    function dragended(e: any) {
         if (!marking) {
             return;
         }
@@ -168,7 +166,7 @@ export function markingHandler(
                 markRowforAllTimes(
                     d,
                     dataView,
-                    d3.event.sourceEvent.ctrlKey || d3.event.sourceEvent.metaKey
+                    e.ctrlKey || e.metaKey
                 );
             });
         }
@@ -177,8 +175,8 @@ export function markingHandler(
 
     return d3
         .drag()
-        .filter(function () {
-            return d3.event.which == 1;
+        .filter(function (e: any) {
+            return e.which == 1;
         })
         .on("start", dragstarted)
         .on("drag", dragged)

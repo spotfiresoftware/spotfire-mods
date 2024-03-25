@@ -218,10 +218,10 @@ export async function render(
 
     // Add one dimensional marking by dragging on the x-axis area
     xAxisScaleGuideArea
-        .on("contextmenu", function () {
-            onScaleClick(...d3.mouse(document.body), "X");
-            d3.event.preventDefault();
-            d3.event.stopPropagation();
+        .on("contextmenu", function (e: any) {
+            onScaleClick(e.x, e.y, "X");
+            e.preventDefault();
+            e.stopPropagation();
             return false;
         })
         .attr("x", xAxesArea.x1)
@@ -272,10 +272,10 @@ export async function render(
 
     // Add one dimensional marking by dragging on the y-axis area
     yAxisScaleGuideArea
-        .on("contextmenu", function () {
-            onScaleClick(...d3.mouse(document.body), "Y");
-            d3.event.preventDefault();
-            d3.event.stopPropagation();
+        .on("contextmenu", function (e: any) {
+            onScaleClick(e.x, e.y, "Y");
+            e.preventDefault();
+            e.stopPropagation();
             return false;
         })
         .attr("x", yAxisArea.x1)
@@ -297,8 +297,8 @@ export async function render(
         .attr("y", bubbleArea.y1)
         .attr("width", bubbleArea.width)
         .attr("height", bubbleArea.height)
-        .on("click", () => {
-            if (!d3.event.defaultPrevented) {
+        .on("click", (e: any) => {
+            if (!e.defaultPrevented) {
                 dataView.clearMarking();
             }
         })
@@ -362,6 +362,11 @@ export async function render(
         value: number,
         changedByUser: boolean
     ) {
+        if (value%1)
+        {
+            debugger;
+        }
+        
         animationIndex = value;
         try {
             if (changedByUser) {
@@ -416,6 +421,8 @@ export async function render(
     }
 
     function updateBubbleChart(transitionDuration = defaultTransitionSpeed) {
+
+        console.log("Update chart for animation index", animationIndex);
         // Add dots
         // sort the rows by size if sizeByAxis is used
         // to make small dots draw on top of larger ones
@@ -548,15 +555,15 @@ export async function render(
                 });
 
             allDots
-                .on("click", function (row: DataViewRow) {
+                .on("click", function (e: any, row: any) {
                     setIdle();
                     markRowforAllTimes(
                         row,
                         dataView,
-                        d3.event.ctrlKey || d3.event.metaKey
+                        e.ctrlKey || e.metaKey
                     );
 
-                    d3.event.preventDefault();
+                    e.preventDefault();
                 })
                 .call(hl);
 
@@ -631,11 +638,11 @@ export async function render(
                 .text(labelText);
 
             allLabels
-                .on("click", function (row: DataViewRow) {
+                .on("click", function (e: any, row: any) {
                     markRowforAllTimes(
                         row,
                         dataView,
-                        d3.event.ctrlKey || d3.event.metaKey
+                        e.ctrlKey || e.metaKey
                     );
                 })
                 .call(hl);
