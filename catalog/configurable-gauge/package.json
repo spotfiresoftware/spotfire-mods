@@ -18,7 +18,7 @@
         "@spotfire/mods-dev-server": "^1.0.1",
         "@types/d3": "^5.16.4",
         "@types/jasmine": "3.10.5",
-        "d3": "^5.14.2",
+        "d3": "^7.0.0",
         "esbuild": "0.14.34",
         "gulp": "4.0.2",
         "karma": "6.3.17",
