@@ -8,14 +8,8 @@
  */
 
 declare namespace Spotfire.Dxp {
-    /**
-     * @ignore
-     * @@Helper class with property accessors to express interface types when casting.
-     */
     abstract class Data {
-        /** @@Type reference for casting to {{@link Spotfire.Dxp.Data.IDataColumn}. */
         static get IDataColumn(): TypeRef<Data.IDataColumn>;
-        /** @@Type reference for casting to {{@link Spotfire.Dxp.Data.IDataNodeProducer}. */
         static get IDataNodeProducer(): TypeRef<Data.IDataNodeProducer>;
     }
     
@@ -73,7 +67,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             GetService<T>(typeT: TypeRefParam<T>): (JsType<T> | null);
             /**
@@ -318,7 +312,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             AddNewIfNeeded<T extends Extension.CustomNode>(typeT: TypeRefParam<T>): JsType<T>;
             /**
@@ -345,7 +339,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             Contains<T extends Extension.CustomNode>(typeT: TypeRefParam<T>): JsType<System.Boolean>;
             /**
@@ -376,7 +370,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             TryGetNode<T extends Extension.CustomNode>(typeT: TypeRefParam<T>, node: OutParam<T>): JsType<System.Boolean>;
             /**
@@ -1509,7 +1503,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             AddNew<T extends Panel>(typeT: TypeRefParam<T>): JsType<T>;
             /**
@@ -1570,7 +1564,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             Contains<T extends Panel>(typeT: TypeRefParam<T>): JsType<System.Boolean>;
             /**
@@ -1601,7 +1595,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             TryGetPanel<T extends Panel>(typeT: TypeRefParam<T>, panel: OutParam<T>): JsType<System.Boolean>;
             /**
@@ -1839,7 +1833,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             As<T>(typeT: TypeRefParam<T>): (JsType<T> | null);
             /**
@@ -1902,7 +1896,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             AddNew<T extends Visuals.VisualContent>(typeT: TypeRefParam<T>): JsType<T>;
             /**
@@ -2285,7 +2279,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeTService - @@Generic type argument
+                 * @param typeTService - Generic type argument
                  */
                 GetService<TService>(typeTService: TypeRefParam<TService>): JsType<TService>;
                 /**
@@ -2453,7 +2447,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeTCalculation - @@Generic type argument
+                 * @param typeTCalculation - Generic type argument
                  */
                 AddNew<TCalculation extends Dxp.Data.Calculation>(typeTCalculation: TypeRefParam<TCalculation>): JsType<TCalculation>;
                 /**
@@ -2505,7 +2499,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeTCalculation - @@Generic type argument
+                 * @param typeTCalculation - Generic type argument
                  */
                 FindCalculations<TCalculation extends Dxp.Data.Calculation>(typeTCalculation: TypeRefParam<TCalculation>): System.Collections.Generic.IEnumerable<TCalculation>;
                 /**
@@ -3438,17 +3432,8 @@ declare namespace Spotfire.Dxp {
                 }
             }
             
-            /**
-             * @@Type reference for casting to class {@link Spotfire.Dxp.Application.Calculations.Calculation}.
-             * @param typeTSettings - @@Generic type argument
-             * @param typeTResults - @@Generic type argument
-             */
             function Calculation<TSettings extends CalculationSettings, TResults extends CalculationResults>(typeTSettings: TypeRefParam<TSettings>, typeTResults: TypeRefParam<TResults>): TypeRef<Calculation<TSettings, TResults>>;
             
-            /**
-             * @@Type reference for casting to class {@link Spotfire.Dxp.Application.Calculations.CalculationDependencyCollection}.
-             * @param typeT - @@Generic type argument
-             */
             function CalculationDependencyCollection<T extends CalculationDependency>(typeT: TypeRefParam<T>): TypeRef<CalculationDependencyCollection<T>>;
         }
         
@@ -3981,7 +3966,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeT - @@Generic type argument
+                 * @param typeT - Generic type argument
                  */
                 As<T extends FilterBase>(typeT: TypeRefParam<T>): JsType<T>;
                 /**
@@ -8942,7 +8927,7 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
-             * Represents the legend information for a {@link Spotfire.Dxp.Application.Visuals.DendrogramLegendItem.Dendrogram} in the {@link Spotfire.Dxp.Application.Visuals.Legend}.
+             * Represents the legend information for a {@link Spotfire.Dxp.Application.Visuals.Dendrogram} in the {@link Spotfire.Dxp.Application.Visuals.Legend}.
              * 
              * @since 2.0
              * 
@@ -12883,7 +12868,7 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
-             * Base class for legend items contained in a {@link Spotfire.Dxp.Application.Visuals.LegendItem.Legend}.
+             * Base class for legend items contained in a {@link Spotfire.Dxp.Application.Visuals.Legend}.
              * 
              * @since 2.0
              * 
@@ -14828,47 +14813,6 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
                 private __type_4026801159: null;
-            }
-            
-            /**
-             * Represents the result from {@link Spotfire.Dxp.Application.Visual.RenderAsync|RenderAsync(resultSettings, visualSettings, cancellationToken)} or {@link Spotfire.Dxp.Application.Page.RenderAsync|RenderAsync(resultSettings, pageSettings, cancellationToken)}.
-             * 
-             * @since 2.0
-             * 
-             * @group Default capability
-             */
-            class RenderResult extends Object {
-                /**
-                 * Gets a value indicating whether the result contains a valid image.
-                 * If the rendering has been canceled or failed, this property will be false.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get IsValid(): JsType<System.Boolean>;
-                /**
-                 * @ignore
-                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
-                 */
-                constructor();
-                /**
-                 * Writes the PNG data to the specified outputStream.
-                 * If {@link Spotfire.Dxp.Application.Visuals.RenderResult.IsValid} is false, nothing is done.
-                 * @param outputStream The output stream.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                WriteTo(outputStream: (JsType<System.IO.Stream> | System.IO.Stream)): void;
-                /**
-                 * @ignore
-                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
-                 */
-                _interfaces: {
-                };
-                private __type_1976283722: null;
             }
             
             /**
@@ -22320,7 +22264,7 @@ declare namespace Spotfire.Dxp {
                      * @since 2.0
                      * 
                      * @group Default capability
-                     * @param typeT - @@Generic type argument
+                     * @param typeT - Generic type argument
                      */
                     AddNew<T extends FittingModel>(typeT: TypeRefParam<T>): JsType<T>;
                     /**
@@ -24688,7 +24632,7 @@ declare namespace Spotfire.Dxp {
                     get MarkingMode(): MarkingMode;
                     set MarkingMode(value: MarkingMode);
                     /**
-                     * Gets or sets the display projection for the map chart, or null if this map chart is showing non-geographical data.
+                     * Gets or sets the display projection for the map chart, or {@link Spotfire.Dxp.Application.Visuals.Maps.Projection.None} if this map chart is showing non-geographical data.
                      * 
                      * @since 2.0
                      * 
@@ -24846,7 +24790,7 @@ declare namespace Spotfire.Dxp {
                      * @since 2.0
                      * 
                      * @group Default capability
-                     * @param typeT - @@Generic type argument
+                     * @param typeT - Generic type argument
                      */
                     As<T extends LayerVisualization>(typeT: TypeRefParam<T>): (JsType<T> | null);
                     /**
@@ -27113,7 +27057,7 @@ declare namespace Spotfire.Dxp {
                      * @since 2.0
                      * 
                      * @group Default capability
-                     * @param typeT - @@Generic type argument
+                     * @param typeT - Generic type argument
                      */
                     AddNew<T extends MiniatureVisualization>(typeT: TypeRefParam<T>, miniatureVisualization: OutParam<T>): GraphicalTableColumn;
                     /**
@@ -28255,36 +28199,6 @@ declare namespace Spotfire.Dxp {
                 }
                 
                 /**
-                 * A class responsible for rendering data values in columns.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                class ValueRenderer extends Object {
-                    /**
-                     * @ignore
-                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
-                     */
-                    constructor();
-                    /**
-                     * Implements {@link System.IDisposable}.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    Dispose(): void;
-                    /**
-                     * @ignore
-                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
-                     */
-                    _interfaces: {
-                    };
-                    private __type_1190790572: null;
-                }
-                
-                /**
                  * Renderer settings used by a {@link Spotfire.Dxp.Application.Visuals.ValueRenderers.ValueRenderer} when rendering a data value.
                  * 
                  * @since 2.0
@@ -28573,10 +28487,6 @@ declare namespace Spotfire.Dxp {
                 }
             }
             
-            /**
-             * @@Type reference for casting to class {@link Spotfire.Dxp.Application.Visuals.IndexedFormatter}.
-             * @param typeT - @@Generic type argument
-             */
             function IndexedFormatter<T extends Data.Formatters.DataFormatterBase>(typeT: TypeRefParam<T>): TypeRef<IndexedFormatter<T>>;
         }
     }
@@ -29210,20 +29120,6 @@ declare namespace Spotfire.Dxp {
              */
             Execute(): JsType<System.Boolean>;
             /**
-             * Execute the calculation. If the results exists they will updated - otherwise they will be created.
-             * @param promptMode Determines if the calculation tries to prompt the user for settings. For prompting to be successful
-             * a view needs to have been registered in the {@link Spotfire.Dxp.Framework.ApplicationModel.ViewRegistry} together with the implementation of CalculationSettings.
-             * If CalculationExecutionPromptMode.Never is used the CalculationSettings needs to have been set up so that the
-             * calculation can run.
-             * @returns True if the execution was successfully performed;
-             * otherwise false.
-             * 
-             * @since 2.0
-             * 
-             * @group Default capability
-             */
-            Execute(promptMode: CalculationExecutionPromptMode): JsType<System.Boolean>;
-            /**
              * Set the unique (within the CalculationCollection) name of
              * this {@link Spotfire.Dxp.Data.Calculation} instance.
              * @param suggestedName The name suggestion
@@ -29549,12 +29445,7 @@ declare namespace Spotfire.Dxp {
             private __type_2938255160: null;
         }
         
-        /**
-         * @ignore
-         * @@Helper class with property accessors to express interface types when casting.
-         */
         abstract class Computations {
-            /** @@Type reference for casting to {{@link Spotfire.Dxp.Data.Computations.IPublicMethod}. */
             static get IPublicMethod(): TypeRef<Computations.IPublicMethod>;
         }
         
@@ -29670,7 +29561,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             As<T>(typeT: TypeRefParam<T>): JsType<T>;
             /**
@@ -30474,7 +30365,7 @@ declare namespace Spotfire.Dxp {
         class DataFlowBuilder extends Object {
             /**
              * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFlowBuilder} class.
-             * @param dataSource The {@link Spotfire.Dxp.Data.DataFlowBuilder.DataSource} that defines the starting point of the flow.
+             * @param dataSource The {@link Spotfire.Dxp.Data.DataSource} that defines the starting point of the flow.
              * @param importContext The import context.
              * 
              * @since 2.0
@@ -34023,7 +33914,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             static Create<T>(typeT: TypeRefParam<T>): DataValueGeneric<T>;
             /**
@@ -34045,7 +33936,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             static Create<T>(typeT: TypeRefParam<T>, initialValue: (JsType<T> | T)): DataValueGeneric<T>;
             /**
@@ -34059,7 +33950,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             static Create<T>(typeT: TypeRefParam<T>, initialValue: (JsType<T> | T), isValid: (JsType<System.Boolean> | System.Boolean)): DataValueGeneric<T>;
             /**
@@ -34304,7 +34195,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             static Create<T>(typeT: TypeRefParam<T>, column: IDataColumn): DataValueCursorGeneric<T>;
             /**
@@ -34316,7 +34207,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             static Create<T>(typeT: TypeRefParam<T>, column: IDataColumn, checkValidity: (JsType<System.Boolean> | System.Boolean)): DataValueCursorGeneric<T>;
             /**
@@ -34665,12 +34556,7 @@ declare namespace Spotfire.Dxp {
             private __type_3692728555: null;
         }
         
-        /**
-         * @ignore
-         * @@Helper class with property accessors to express interface types when casting.
-         */
         abstract class Formatters {
-            /** @@Type reference for casting to {{@link Spotfire.Dxp.Data.Formatters.IDataFormatter}. */
             static get IDataFormatter(): TypeRef<Formatters.IDataFormatter>;
         }
         
@@ -35634,8 +35520,8 @@ declare namespace Spotfire.Dxp {
         }
         
         /**
-         * This is a wrapper class around a {@link Spotfire.Dxp.Data.PersistentDataView.DataView} which
-         * performs the code for serializing the {@link Spotfire.Dxp.Data.PersistentDataView.DataView} since a
+         * This is a wrapper class around a {@link Spotfire.Dxp.Data.DataView} which
+         * performs the code for serializing the {@link Spotfire.Dxp.Data.DataView} since a
          * data view is not possible to persist.
          * 
          * @since 2.0
@@ -36222,7 +36108,7 @@ declare namespace Spotfire.Dxp {
              * @since 2.0
              * 
              * @group Default capability
-             * @param typeT - @@Generic type argument
+             * @param typeT - Generic type argument
              */
             GetAllOperations<T extends DataOperations.DataOperation>(typeT: TypeRefParam<T>): System.Collections.Generic.IReadOnlyList<T>;
             /**
@@ -40450,7 +40336,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeT - @@Generic type argument
+                 * @param typeT - Generic type argument
                  */
                 GetService<T>(typeT: TypeRefParam<T>): JsType<T>;
                 /**
@@ -42903,7 +42789,7 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
-             * A wrapper for a number of simple {@link Spotfire.Dxp.Data.DataTransformation}s. The wrapper uses {@link Spotfire.Dxp.Data.Transformations.ExpressionTransformationWrapper.ExpressionTransformation}
+             * A wrapper for a number of simple {@link Spotfire.Dxp.Data.DataTransformation}s. The wrapper uses {@link Spotfire.Dxp.Data.Transformations.ExpressionTransformation}
              * internally. Examples include {@link Spotfire.Dxp.Data.Transformations.AddCalculatedColumnTransformation} and {@link Spotfire.Dxp.Data.Transformations.ChangeDataTypeTransformation}.
              * 
              * @since 2.0
@@ -43499,28 +43385,14 @@ declare namespace Spotfire.Dxp {
             }
         }
         
-        /**
-         * @@Type reference for casting to class {@link Spotfire.Dxp.Data.DataValue}.
-         * @param typeT - @@Generic type argument
-         */
         function DataValue<T>(typeT: TypeRefParam<T>): TypeRef<DataValueGeneric<T>>;
         
-        /**
-         * @@Type reference for casting to class {@link Spotfire.Dxp.Data.DataValueCursor}.
-         * @param typeT - @@Generic type argument
-         */
         function DataValueCursor<T>(typeT: TypeRefParam<T>): TypeRef<DataValueCursorGeneric<T>>;
     }
     
     namespace Framework {
-        /**
-         * @ignore
-         * @@Helper class with property accessors to express interface types when casting.
-         */
         abstract class DocumentModel {
-            /** @@Type reference for casting to {{@link Spotfire.Dxp.Framework.DocumentModel.INodeContext}. */
             static get INodeContext(): TypeRef<DocumentModel.INodeContext>;
-            /** @@Type reference for casting to {{@link Spotfire.Dxp.Framework.DocumentModel.ITransactions}. */
             static get ITransactions(): TypeRef<DocumentModel.ITransactions>;
         }
         
@@ -43686,7 +43558,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeT - @@Generic type argument
+                 * @param typeT - Generic type argument
                  */
                 TryGetParameterValue<T>(typeT: TypeRefParam<T>, parameterName: (JsType<System.String> | System.String), value: OutParam<T>): JsType<System.Boolean>;
                 /**
@@ -43716,7 +43588,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeT - @@Generic type argument
+                 * @param typeT - Generic type argument
                  */
                 GetAncestor<T extends DocumentNode>(typeT: TypeRefParam<T>): (JsType<T> | null);
                 /**
@@ -43727,7 +43599,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeT - @@Generic type argument
+                 * @param typeT - Generic type argument
                  */
                 GetService<T>(typeT: TypeRefParam<T>): (JsType<T> | null);
                 /**
@@ -44185,16 +44057,8 @@ declare namespace Spotfire.Dxp {
                 private __type_3776167663: null;
             }
             
-            /**
-             * @@Type reference for casting to class {@link Spotfire.Dxp.Framework.DocumentModel.DocumentNodeList}.
-             * @param typeT - @@Generic type argument
-             */
             function DocumentNodeList<T>(typeT: TypeRefParam<T>): TypeRef<DocumentNodeList<T>>;
             
-            /**
-             * @@Type reference for casting to class {@link Spotfire.Dxp.Framework.DocumentModel.DocumentNodeListBase}.
-             * @param typeT - @@Generic type argument
-             */
             function DocumentNodeListBase<T>(typeT: TypeRefParam<T>): TypeRef<DocumentNodeListBase<T>>;
         }
         
@@ -45545,7 +45409,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeT - @@Generic type argument
+                 * @param typeT - Generic type argument
                  */
                 GetPreference<T extends PreferenceBase>(typeT: TypeRefParam<T>): JsType<T>;
                 /**
@@ -45556,7 +45420,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeT - @@Generic type argument
+                 * @param typeT - Generic type argument
                  */
                 PreferenceExists<T extends PreferenceBase>(typeT: TypeRefParam<T>): JsType<System.Boolean>;
                 /**
@@ -45741,10 +45605,6 @@ declare namespace Spotfire.Dxp {
                 private __type_573242220: null;
             }
             
-            /**
-             * @@Type reference for casting to class {@link Spotfire.Dxp.Framework.Preferences.PreferenceProperty}.
-             * @param typeT - @@Generic type argument
-             */
             function PreferenceProperty<T>(typeT: TypeRefParam<T>): TypeRef<PreferenceProperty<T>>;
         }
         
@@ -45770,7 +45630,7 @@ declare namespace Spotfire.Dxp {
                  * @since 2.0
                  * 
                  * @group Default capability
-                 * @param typeTService - @@Generic type argument
+                 * @param typeTService - Generic type argument
                  */
                 static GetService<TService>(typeTService: TypeRefParam<TService>, provider: (JsType<OrExplicit<System.IServiceProvider>> | OrExplicit<System.IServiceProvider>)): (JsType<TService> | null);
                 /**
@@ -46640,22 +46500,12 @@ declare namespace System {
         private __type_502829559: null;
     }
     
-    /**
-     * @ignore
-     * @@Helper class with property accessors to express interface types when casting.
-     */
     abstract class Collections {
-        /** @@Type reference for casting to {{@link System.Collections.ICollection}. */
         static get ICollection(): TypeRef<Collections.ICollection>;
-        /** @@Type reference for casting to {{@link System.Collections.IComparer}. */
         static get IComparer(): TypeRef<Collections.IComparer>;
-        /** @@Type reference for casting to {{@link System.Collections.IDictionary}. */
         static get IDictionary(): TypeRef<Collections.IDictionary>;
-        /** @@Type reference for casting to {{@link System.Collections.IEnumerable}. */
         static get IEnumerable(): TypeRef<Collections.IEnumerable>;
-        /** @@Type reference for casting to {{@link System.Collections.IEnumerator}. */
         static get IEnumerator(): TypeRef<Collections.IEnumerator>;
-        /** @@Type reference for casting to {{@link System.Collections.IList}. */
         static get IList(): TypeRef<Collections.IList>;
     }
     
@@ -48066,8 +47916,8 @@ declare namespace System {
                 get Values(): Dictionary.ValueCollection<TKey, TValue>;
                 /**
                  * Initializes a new instance of the {@link System.Collections.Generic.Dictionary} class that is empty, has the default initial capacity, and uses the default equality comparer for the key type.
-                 * @param typeTKey - @@Generic type argument
-                 * @param typeTValue - @@Generic type argument
+                 * @param typeTKey - Generic type argument
+                 * @param typeTValue - Generic type argument
                  */
                 constructor(typeTKey: TypeRefParam<TKey>, typeTValue: TypeRefParam<TValue>);
                 [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>>;
@@ -48133,8 +47983,8 @@ declare namespace System {
                  * Initializes a new instance of the {@link System.Collections.Generic.KeyValuePair} structure with the specified key and value.
                  * @param key The object defined in each key/value pair.
                  * @param value The definition associated with key.
-                 * @param typeTKey - @@Generic type argument
-                 * @param typeTValue - @@Generic type argument
+                 * @param typeTKey - Generic type argument
+                 * @param typeTValue - Generic type argument
                  */
                 constructor(typeTKey: TypeRefParam<TKey>, typeTValue: TypeRefParam<TValue>, key: (JsType<TKey> | TKey), value: (JsType<TValue> | TValue));
                 /**
@@ -48157,7 +48007,7 @@ declare namespace System {
                 get Count(): JsType<Int32>;
                 /**
                  * Initializes a new instance of the {@link System.Collections.Generic.List} class that is empty and has the default initial capacity.
-                 * @param typeT - @@Generic type argument
+                 * @param typeT - Generic type argument
                  */
                 constructor(typeT: TypeRefParam<T>);
                 [Symbol.iterator](): Iterator<JsType<T>>;
@@ -48290,87 +48140,30 @@ declare namespace System {
                 }
             }
             
-            /**
-             * @@Type reference for casting to class {@link System.Collections.Generic.Dictionary}.
-             * @param typeTKey - @@Generic type argument
-             * @param typeTValue - @@Generic type argument
-             */
             function Dictionary<TKey, TValue>(typeTKey: TypeRefParam<TKey>, typeTValue: TypeRefParam<TValue>): TypeRef<Dictionary<TKey, TValue>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.ICollection}.
-             * @param typeT - @@Generic type argument
-             */
             function ICollection<T>(typeT: TypeRefParam<T>): TypeRef<ICollection<T>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.IComparer}.
-             * @param typeT - @@Generic type argument
-             */
             function IComparer<T>(typeT: TypeRefParam<T>): TypeRef<IComparer<T>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.IDictionary}.
-             * @param typeTKey - @@Generic type argument
-             * @param typeTValue - @@Generic type argument
-             */
             function IDictionary<TKey, TValue>(typeTKey: TypeRefParam<TKey>, typeTValue: TypeRefParam<TValue>): TypeRef<IDictionary<TKey, TValue>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.IEnumerable}.
-             * @param typeT - @@Generic type argument
-             */
             function IEnumerable<T>(typeT: TypeRefParam<T>): TypeRef<IEnumerable<T>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.IEnumerator}.
-             * @param typeT - @@Generic type argument
-             */
             function IEnumerator<T>(typeT: TypeRefParam<T>): TypeRef<IEnumerator<T>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.IList}.
-             * @param typeT - @@Generic type argument
-             */
             function IList<T>(typeT: TypeRefParam<T>): TypeRef<IList<T>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.IReadOnlyCollection}.
-             * @param typeT - @@Generic type argument
-             */
             function IReadOnlyCollection<T>(typeT: TypeRefParam<T>): TypeRef<IReadOnlyCollection<T>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.IReadOnlyList}.
-             * @param typeT - @@Generic type argument
-             */
             function IReadOnlyList<T>(typeT: TypeRefParam<T>): TypeRef<IReadOnlyList<T>>;
             
-            /**
-             * @@Type reference for casting to class {@link System.Collections.Generic.Dictionary}.
-             * @param typeTKey - @@Generic type argument
-             * @param typeTValue - @@Generic type argument
-             */
             function KeyCollection<TKey, TValue>(typeTKey: TypeRefParam<TKey>, typeTValue: TypeRefParam<TValue>): TypeRef<Dictionary.KeyCollection<TKey, TValue>>;
             
-            /**
-             * @@Type reference for casting to interface {@link System.Collections.Generic.KeyValuePair}.
-             * @param typeTKey - @@Generic type argument
-             * @param typeTValue - @@Generic type argument
-             */
             function KeyValuePair<TKey, TValue>(typeTKey: TypeRefParam<TKey>, typeTValue: TypeRefParam<TValue>): TypeRef<KeyValuePair<TKey, TValue>>;
             
-            /**
-             * @@Type reference for casting to class {@link System.Collections.Generic.List}.
-             * @param typeT - @@Generic type argument
-             */
             function List<T>(typeT: TypeRefParam<T>): TypeRef<List<T>>;
             
-            /**
-             * @@Type reference for casting to class {@link System.Collections.Generic.Dictionary}.
-             * @param typeTKey - @@Generic type argument
-             * @param typeTValue - @@Generic type argument
-             */
             function ValueCollection<TKey, TValue>(typeTKey: TypeRefParam<TKey>, typeTValue: TypeRefParam<TValue>): TypeRef<Dictionary.ValueCollection<TKey, TValue>>;
         }
         
@@ -48489,16 +48282,8 @@ declare namespace System {
                 private __type_1904904568: null;
             }
             
-            /**
-             * @@Type reference for casting to class {@link System.Collections.ObjectModel.Collection}.
-             * @param typeT - @@Generic type argument
-             */
             function Collection<T>(typeT: TypeRefParam<T>): TypeRef<Collection<T>>;
             
-            /**
-             * @@Type reference for casting to class {@link System.Collections.ObjectModel.ReadOnlyCollection}.
-             * @param typeT - @@Generic type argument
-             */
             function ReadOnlyCollection<T>(typeT: TypeRefParam<T>): TypeRef<ReadOnlyCollection<T>>;
         }
     }
@@ -49214,12 +48999,7 @@ declare namespace System {
     }
 }
 
-/**
- * @ignore
- * @@Helper class with property accessors to express interface types when casting.
- */
 declare abstract class System {
-    /** @@Type reference for casting to {{@link System.IServiceProvider}. */
     static get IServiceProvider(): TypeRef<System.IServiceProvider>;
 }
 
