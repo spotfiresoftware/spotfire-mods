@@ -284,6 +284,20 @@ async function getTypeFromManifest(manifestPath: string) {
     const manifestJson = await fse.readFile(manifestPath, "utf-8");
     try {
         const manifest = JSON.parse(manifestJson);
+        const apiVersion = Number.parseFloat(manifest["apiVersion"]);
+
+        if (!apiVersion) {
+            console.error(`Invalid 'apiVersion' in mod manifest.`);
+            return null;
+        }
+
+        if (apiVersion < 2) {
+            console.info(
+                `'apiVersion' is less than 2.0, assuming visualization mod.`
+            );
+            return ModType.Visualization;
+        }
+
         const type = manifest["type"];
         if (type === "action") {
             return ModType.Action;
