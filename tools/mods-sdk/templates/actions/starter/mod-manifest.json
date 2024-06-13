@@ -1,0 +1,24 @@
+{
+    "apiVersion": "2.0",
+    "version": "1.0",
+    "type": "action",
+    "name": "$MOD-NAME",
+    "id": "$MOD-ID",
+    "description": "Description of what the mod does.",
+    "capabilities": [],
+    "icon": "icon.svg",
+    "scripts": [
+        {
+            "id": "script-id",
+            "name": "My script",
+            "file": "build/my-script.js",
+            "entryPoint": "myScript",
+            "parameters": [
+                {
+                    "name": "message",
+                    "type": "String"
+                }
+            ]
+        }
+    ]
+}
