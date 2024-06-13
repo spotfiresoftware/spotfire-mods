@@ -23,6 +23,8 @@ describe("new-template", () => {
 
         const manifest = path.join(projectFolder, "mod-manifest.json");
         const manifestJson = JSON.parse(readFileSync(manifest, "utf-8"));
+        expect(manifestJson["apiVersion"]).toEqual("1.3");
+        expect(manifestJson["type"]).toBeUndefined();
         expect(manifestJson["name"]).toEqual("New Visualization Mod");
         expect(manifestJson["id"]).toEqual("new-visualization-mod");
     });
