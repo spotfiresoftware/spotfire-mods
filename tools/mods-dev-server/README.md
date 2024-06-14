@@ -17,6 +17,7 @@ mods-dev-server <source folder name>
 - `--path /sub-folder/mod-manifest.json` sets the path to open. Defaults to `/mod-manifest.json`.
 - `--help` lists all available options.
 - `--version` lists the current package version.
+- `--allow-project-root` expose an endpoint at /spotfire/modProjectRoot for retrieving the path to the project root, necessary for debugging action mods.
 
 ## Node.js API
 
