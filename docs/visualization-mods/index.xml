@@ -1,0 +1,304 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spotfire® Mods – Visualization mods</title>
+    <link>/spotfire-mods/docs/visualization-mods/</link>
+    <description>Recent content in Visualization mods on Spotfire® Mods</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/spotfire-mods/docs/visualization-mods/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Developing visualization mods</title>
+      <link>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;You have read the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have created a new visualization mod template project.&lt;/li&gt;
+&lt;li&gt;You have started a local development server and connected Spotfire to it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;sub&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/exclamation.png&#34; style=&#34;width: 0.8em;vertical-align: baseline;&#34;&gt; &lt;/img&gt;Note: Spotfire versions earlier than 14.4 have a slightly different development workflow for visualization mods. See &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt; to learn more.
+&lt;/sub&gt;&lt;/p&gt;
+&lt;h2 id=&#34;develop-and-test-the-mod&#34;&gt;Develop and test the mod&lt;/h2&gt;
+&lt;h3 id=&#34;1-add-the-mod-to-the-analysis&#34;&gt;1. Add the mod to the analysis&lt;/h3&gt;
+&lt;p&gt;In the &lt;em&gt;Mods development&lt;/em&gt; tool, click the &lt;em&gt;Add to page&lt;/em&gt; button to instantiate the mod on the current analysis page.&lt;/p&gt;
+&lt;p&gt;While you are connected to the mods development server, any changes to the source code will be automatically updated. You can have any number of mod instances in development mode.&lt;/p&gt;
+&lt;h3 id=&#34;2-debug-your-mod&#34;&gt;2. Debug your mod&lt;/h3&gt;
+&lt;p&gt;A visualization mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In the installed client: &lt;em&gt;Ctrl+Alt+Shift+F12&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;In the web client: &lt;em&gt;F12&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To find the source code files, use the &lt;em&gt;Open file&lt;/em&gt; command &lt;em&gt;(Ctrl+P)&lt;/em&gt; and type the name of the file. In the opened file, it is possible to set breakpoints. It is also possible to execute code in the console. Note that a mod built for release may contain minified JavaScript code and no sourcemaps, making debugging more difficult.&lt;/p&gt;
+&lt;p&gt;More information about Chrome DevTools can be found here:
+&lt;a href=&#34;https://developers.google.com/web/tools/chrome-devtools&#34;&gt;https://developers.google.com/web/tools/chrome-devtools&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-edit-your-example&#34;&gt;3. Edit your example&lt;/h3&gt;
+&lt;p&gt;Now switch over to VS Code to start editing the mod implementation.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;src&lt;/code&gt; folder contains TypeScript source files that will be compiled into the &lt;code&gt;build&lt;/code&gt; folder.
+The root folder contains all static content, like the &lt;code&gt;index.html&lt;/code&gt;, as well as any CSS and JavaScript files. It also contains a &lt;code&gt;mod-manifest.json&lt;/code&gt; file that contains metadata about the mod. For more information about the folder structure and the project, see the README.md file.&lt;/p&gt;
+&lt;p&gt;If any file in the workspace is changed while the development server is running, the mod will be reloaded in Spotfire. As described in the general &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/&#34;&gt;getting started&lt;/a&gt; guide, changes in the manifest are not automatically reloaded, instead you must click the &lt;em&gt;Reload manifest&lt;/em&gt; button in the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/p&gt;
+&lt;p&gt;The SDK template for visualization mods contains a simple mod with a categorical X-axis, a continuous Y-axis, a dual mode color axis, and a mod property. The only source code file is located in &lt;code&gt;src/main.ts&lt;/code&gt;, but in most cases a mod should be split in multiple source code files.&lt;/p&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in the mod-manifest.json file. A list of the entries that are common to all mods can be found in the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;. The entries that are specific to visualization mods are listed below:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Entry&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;dataViewDefinition&lt;/td&gt;
+&lt;td&gt;Specifies how Spotfire computes the data consumed by the mod.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;externalResources&lt;/td&gt;
+&lt;td&gt;An array of any external resources that the mod is required to load.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;properties&lt;/td&gt;
+&lt;td&gt;An array of mod properties.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;legend&lt;/td&gt;
+&lt;td&gt;Specifies the default behavior of the legend.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For details, see the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/&#34;&gt;manifest schema&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/h2&gt;
+&lt;p&gt;When developing mods against the web client it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the &lt;em&gt;Connect to file&lt;/em&gt; button will not be available in the web client.&lt;/p&gt;
+&lt;p&gt;The development server always serves content from &lt;a href=&#34;http://127.0.0.1:8090&#34;&gt;http://127.0.0.1:8090&lt;/a&gt;, which according to the W3C specification is a &lt;a href=&#34;https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin&#34;&gt;potentially trustworthy origin&lt;/a&gt;. Some web browsers might behave incorrectly with regards to this, and if you run into a problem, try switching to Google Chrome, Microsoft Edge, or Mozilla Firefox.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Tutorials</title>
+      <link>/spotfire-mods/docs/visualization-mods/tutorials/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/tutorials/</guid>
+      <description>
+        
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Using the API</title>
+      <link>/spotfire-mods/docs/visualization-mods/using-the-api/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/</guid>
+      <description>
+        
+        
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: FAQ – Visualization mods</title>
+      <link>/spotfire-mods/docs/visualization-mods/faq/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/faq/</guid>
+      <description>
+        
+        
+        &lt;h3 id=&#34;how-do-i-use-types-in-javascript-files&#34;&gt;How do I use types in JavaScript files?&lt;/h3&gt;
+&lt;p&gt;Even though JavaScript lacks type support, it is possible to get a long way with the help of JSDoc comments. The TypeScript language service in Visual Studio Code can parse JSDoc type comments and provide IntelliSense when using the Spotfire mods API. The following snippet defines the variable &lt;code&gt;dataView&lt;/code&gt; as an instance of &lt;code&gt;Spotfire.DataView&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataView} */&lt;/span&gt;
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This can be useful in cases where the API allows generic types, such as a continuous value:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/**@type {Spotfire.DataViewContinuousValue&amp;lt;number&amp;gt;} */&lt;/span&gt;
+&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The same would have been done in TypeScript like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;why-dont-changes-to-the-mod-manifestjson-file-take-effect-in-my-analysis&#34;&gt;Why don’t changes to the mod-manifest.json file take effect in my analysis?&lt;/h3&gt;
+&lt;p&gt;The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the development server is connected, disconnected or when the &lt;em&gt;Reload manifest&lt;/em&gt; button is clicked.&lt;/p&gt;
+&lt;p&gt;When the development server is in a connected state, Spotfire points the mod iframe&amp;rsquo;s source directly against the development server. Any UI changes seen while the server is connected are not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt; Reload the manifest via the development popup.&lt;/p&gt;
+&lt;h3 id=&#34;why-cant-i-make-an-ajax-call-to-read-an-embedded-resource&#34;&gt;Why can&amp;rsquo;t I make an ajax call to read an embedded resource?&lt;/h3&gt;
+&lt;p&gt;A mod is executed inside a sandboxed iframe. A sandboxed iframe sets the origin header to &amp;lsquo;null&amp;rsquo; for any ajax request. This means that the server must be configured to handle Cross-Origin Resource Sharing (CORS). The server should allow &lt;code&gt;&#39;null&#39;&lt;/code&gt; or &lt;code&gt;*&lt;/code&gt; in order to serve a request made from a mod. The Spotfire runtime does not accept CORS requests and will therefore not serve any request made from a mod, even though it might be for an embedded resource in the mod itself.&lt;/p&gt;
+&lt;p&gt;Linked scripts, images and CSS files do not rely on CORS to function and can be linked to. Font files rely on CORS and can therefore not be linked to. To get a font working inside the mod a data uri can be used.&lt;/p&gt;
+&lt;h3 id=&#34;why-is-an-external-resource-not-loading-correctly-due-to-a-content-security-policy&#34;&gt;Why is an external resource not loading correctly due to a content security policy?&lt;/h3&gt;
+&lt;p&gt;Mods are covered by a strict content security policy by default. The mod is only allowed to load embedded resources and any external resource request is blocked. A mod can declare a set of external resources in the &lt;code&gt;mod-manifest.json&lt;/code&gt; to unblock these resources from being loaded.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; A visualization mod with external resources cannot be exported using the web client.&lt;/p&gt;
+&lt;h3 id=&#34;why-doesnt-live-reload-work&#34;&gt;Why doesn’t live reload work?&lt;/h3&gt;
+&lt;p&gt;If the live reload feature does not work when using the development server, try disabling the network cache in the Chrome Developer tools.
+Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then select the &lt;em&gt;Disable cache&lt;/em&gt; checkbox.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Getting started (before 14.4)</title>
+      <link>/spotfire-mods/docs/visualization-mods/getting-started-11/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/getting-started-11/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;developing-a-visualization-mod&#34;&gt;Developing a visualization mod&lt;/h2&gt;
+&lt;p&gt;Spotfire® Mods is a framework to create interactive visualizations in Spotfire®. It is based on web technologies and it runs in a sandboxed iframe.&lt;/p&gt;
+&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt;&lt;br&gt;
+This is needed to develop and test a mod. Development can be done against the installed client (Spotfire® Analyst) or the web client (Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;
+&lt;p&gt;Spotfire version 11.0 or newer is required for mod development. See also &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods#spotfire-versions-and-their-mod-api&#34;&gt;Spotfire versions and their Mod API&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A code editor.&lt;/strong&gt;&lt;br&gt;
+It is highly recommended to use Microsoft &lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt; (VS Code) when developing a mod. The instructions in this document assume that VS Code is used as code editor. The mod example projects that are available for developers, include predefined settings for VS Code that enable a default build task, IntelliSense in the mod manifest, and IntelliSense in the JavaScript code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Node.js installed.&lt;/strong&gt;&lt;br&gt;
+To enable live updates when developing a mod, a set of tools based on &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; is needed. The mod example specifies a set of development dependencies in its &lt;code&gt;package.json&lt;/code&gt; file. These are installed when executing &lt;code&gt;npm install&lt;/code&gt; in the same directory as the package.json file. The install script is also executed as part of the default build task in VS Code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;sub&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.
+&lt;/sub&gt;&lt;/p&gt;
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
+&lt;h4 id=&#34;1-create-an-empty-visualization-mod-in-spotfire&#34;&gt;1. Create an empty visualization mod in Spotfire&lt;/h4&gt;
+&lt;p&gt;Open Spotfire and load some data. Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create visualization mod&lt;/em&gt;. This will create an empty mod.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/empty-mod.png&#34; alt=&#34;Empty mod&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2-start-from-a-mod-example&#34;&gt;2. Start from a mod example&lt;/h4&gt;
+&lt;p&gt;Click &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;here&lt;/a&gt; to access the example mod projects to start the development from. Extract the zip archive locally. The extracted zip archive contains examples of mods, using the mod API in different ways.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-barchart&lt;/strong&gt;&lt;br&gt;
+To get familiar with mod development, start with this example containing a simple bar chart. This is the example that will be used in the following sections of this getting started guide.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-starter&lt;/strong&gt;&lt;br&gt;
+This example can be used as a starting point for any new mod.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-starter-ie11&lt;/strong&gt;&lt;br&gt;
+This example can be used as a starting point for any new mod that is also compatible with the IE11 browser.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt;&lt;br&gt;
+This example is a basic bar chart that is built using the Google Charts library. The &lt;a href=&#34;../tutorials/barchart-googlechart/&#34;&gt;tutorial&lt;/a&gt; covers the steps taken to create this bar chart from scratch.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ts-dev-gauge-googlecharts&lt;/strong&gt;&lt;br&gt;
+This is an example of a gauge visualization that is developed in TypeScript using the Google Charts library and bundled with Rollup.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-circular-treemap&lt;/strong&gt;&lt;br&gt;
+This example is a simple circular treemap built using the D3 library. It shows how hierarchies in mod data views can be mapped to D3 hierarchies. Some basic concepts such as using a color axis, and implementing marking and tooltips are covered as well.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-areachart-d3&lt;/strong&gt;&lt;br&gt;
+This is a more complex example built using the D3 library, where you can see how the API can be used to take advantage of a lot of features in Spotfire.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ts-spiderchart-d3&lt;/strong&gt;&lt;br&gt;
+This is an example of a spider chart developed in TypeScript, rendered with D3, and bundled with webpack.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each example contains a README file with detailed instructions specific to the example.&lt;/p&gt;
+&lt;h4 id=&#34;3-start-local-development-server&#34;&gt;3. Start local development server&lt;/h4&gt;
+&lt;p&gt;To use the js-dev-barchart example, open the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
+&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
+&lt;h4 id=&#34;4-connect-spotfire-to-the-development-server&#34;&gt;4. Connect Spotfire to the development server&lt;/h4&gt;
+&lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the pop-up that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/connect-to-development-server.gif&#34; alt=&#34;Connect to development server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If a visualization appears, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
+&lt;h4 id=&#34;5-start-editing-your-example&#34;&gt;5. Start editing your example&lt;/h4&gt;
+&lt;p&gt;Now switch over to VS Code to start editing the mod implementation.&lt;/p&gt;
+&lt;p&gt;The src folder includes HTML, CSS and JavaScript files that together form the mod implementation. It also contains a mod-manifest.json file that contains metadata about the mod. If any .html/css/js file in the src folder is changed while the development server is running, the mod will be reloaded in Spotfire.&lt;/p&gt;
+&lt;p&gt;As an example, open the main.css file and try to change the background property of body. As soon as the css file is saved, the change will appear in Spotfire.&lt;/p&gt;
+&lt;p&gt;For information about how the Spotfire Mod API is accessed, open the main.js file.&lt;/p&gt;
+&lt;h2 id=&#34;mod-example-folder-structure&#34;&gt;Mod example folder structure&lt;/h2&gt;
+&lt;p&gt;The following files and folders are part of the example:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;File&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;.vscode&lt;/td&gt;
+&lt;td&gt;Settings for VS Code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;spotfire&lt;/td&gt;
+&lt;td&gt;Files related to the mod API.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;src&lt;/td&gt;
+&lt;td&gt;Folder for the mod&amp;rsquo;s source code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;package.json&lt;/td&gt;
+&lt;td&gt;Lists the Node.js dependencies and necessary scripts.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;prettier.config.js&lt;/td&gt;
+&lt;td&gt;Configuration file for formatting with the tool prettier.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;README.md&lt;/td&gt;
+&lt;td&gt;Instructions on how to get started.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tsconfig.json&lt;/td&gt;
+&lt;td&gt;TypeScript project file. It links the &lt;code&gt;/spotfire/spotfire-api.dts&lt;/code&gt; file for IntelliSense in your code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;the-mod-manifestjson-file&#34;&gt;The mod-manifest.json file&lt;/h2&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in a file called mod-manifest.json. It is used to give the mod a name and an id, and to define axes and their placement. It is also used to list all files used by the mod. Only files listed in the ‘files’ property will be embedded by Spotfire.&lt;/p&gt;
+&lt;p&gt;For changes in the manifest to take effect, the manifest must be reloaded manually in Spotfire. Click the puzzle icon on the title bar of the visualization mod, and then click the &lt;em&gt;Reload manifest&lt;/em&gt; button in the popup that opens.&lt;/p&gt;
+&lt;h2 id=&#34;debugging&#34;&gt;Debugging&lt;/h2&gt;
+&lt;p&gt;The mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands.
+In Spotfire® Analyst: &lt;em&gt;Ctrl+Alt+Shift+F12&lt;/em&gt;
+In Spotfire® Business Author: &lt;em&gt;F12&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;To find the main.js file, use the Open file command (Ctrl+P) and type the file&amp;rsquo;s name. In the opened file, it is possible to set breakpoints. It is also possible to execute code in the console.
+More information about Chrome DevTools can be found here:
+&lt;a href=&#34;https://developers.google.com/web/tools/chrome-devtools&#34;&gt;https://developers.google.com/web/tools/chrome-devtools&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/h2&gt;
+&lt;p&gt;The required browser when developing mods against the web client is Google Chrome. This is due to how browsers behave with regards to loading http content from a https context. The development server is serving files from &lt;a href=&#34;http://127.0.0.1:8090&#34;&gt;http://127.0.0.1:8090&lt;/a&gt;, which according to the W3C specification is a &lt;a href=&#34;https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin&#34;&gt;potentially trustworthy origin&lt;/a&gt;. Currently only Chrome behaves correctly with regards to this. Other browser vendors are implementing support for this and might work in the future.&lt;/p&gt;
+&lt;p&gt;Note also that when developing a mod in the web client, it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the &lt;em&gt;Browse&lt;/em&gt; button will not be available in the web client.&lt;/p&gt;
+&lt;h2 id=&#34;embedding-the-mod-and-saving-to-the-library&#34;&gt;Embedding the mod and saving to the library&lt;/h2&gt;
+&lt;p&gt;When the development is done, disconnect from the server to embed the mod in the analysis.
+&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/disconnect-and-embed.gif&#34; alt=&#34;Disconnect from development server to embed mod&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;saving-the-mod-to-the-spotfire-library&#34;&gt;Saving the mod to the Spotfire library&lt;/h3&gt;
+&lt;p&gt;When your mod has been embedded in the analysis, you can share the mod with others by saving it to the library.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Click the puzzle icon in the title bar to open the development popup.&lt;/li&gt;
+&lt;li&gt;Click &lt;em&gt;Save to library&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;In the dialog that opens, navigate to the folder where you want to save the mod, and click &lt;em&gt;Save&lt;/em&gt;.
+When the mod has been saved to the library, it is possible for others, connected to the same library, to use your mod in their analyses. The mod can also be pinned to the visualization flyout.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;sharing-mods&#34;&gt;Sharing mods&lt;/h2&gt;
+&lt;p&gt;To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html&#34;&gt;Trusting custom content in the Spotfire environment&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a visualization mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from &lt;a href=&#34;https://edelivery.tibco.com/&#34;&gt;edelivery.tibco.com&lt;/a&gt;, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &amp;gt; Downloads.&lt;/p&gt;
+&lt;p&gt;An administrator can also import a certificate from one system to another to keep signed items valid. See &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html&#34;&gt;Moving certificates from one system to another&lt;/a&gt; for more information.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

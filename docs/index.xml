@@ -1,10 +1,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Spotfire® Mods – Spotfire® Mods Documentation</title>
+    <title>Spotfire® Mods – Working with Spotfire® Mods</title>
     <link>/spotfire-mods/docs/</link>
-    <description>Recent content in Spotfire® Mods Documentation on Spotfire® Mods</description>
+    <description>Recent content in Working with Spotfire® Mods on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 13 Nov 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/index.xml" rel="self" type="application/rss+xml" />
     
@@ -16,14 +16,14 @@
     
     <item>
       <title>Docs: API overview</title>
-      <link>/spotfire-mods/docs/using-the-api/api-overview/</link>
-      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
+      <link>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
       
-      <guid>/spotfire-mods/docs/using-the-api/api-overview/</guid>
+      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</guid>
       <description>
         
         
-        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; is an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; is an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The visualization is a simplified view of the API. While the Mod API relies heavily on asynchronous behavior via Promises, the visualization only displays the interfaces defined in the &lt;em&gt;spotfire-api.d.ts&lt;/em&gt; file. There are some advanced types available in the declaration file that are not displayed in the hierarchy visualization. The advanced types describe some of the more intricate functionality in the API.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;&lt;img src=&#34;api-overview.png&#34; alt=&#34;API Overview&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 
@@ -32,26 +32,24 @@
     
     <item>
       <title>Docs: Create a bar chart using Google Charts</title>
-      <link>/spotfire-mods/docs/tutorials/barchart-googlechart/</link>
-      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
+      <link>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
       
-      <guid>/spotfire-mods/docs/tutorials/barchart-googlechart/</guid>
+      <guid>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</guid>
       <description>
         
         
-        &lt;h2 id=&#34;a-step-by-step-tutorial-on-using-spotfire-mods&#34;&gt;A step-by-step tutorial on using Spotfire Mods&lt;/h2&gt;
-&lt;p&gt;We will be using &lt;strong&gt;Spotfire API&lt;/strong&gt; and &lt;a href=&#34;https://developers.google.com/chart&#34;&gt;&lt;strong&gt;Google Charts&lt;/strong&gt;&lt;/a&gt; to create a basic bar chart.&lt;/p&gt;
+        &lt;p&gt;We will be using the Spotfire API and &lt;a href=&#34;https://developers.google.com/chart&#34;&gt;Google Charts&lt;/a&gt; to create a basic bar chart.&lt;/p&gt;
 &lt;p&gt;This tutorial will cover the following:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Initial setup&lt;/li&gt;
 &lt;li&gt;Consuming and visualizing data&lt;/li&gt;
 &lt;li&gt;Selection/marking&lt;/li&gt;
 &lt;li&gt;Theme-ing&lt;/li&gt;
-&lt;li&gt;Controlling the mod using popout&lt;/li&gt;
+&lt;li&gt;Controlling the mod using a popout&lt;/li&gt;
 &lt;li&gt;Export to PDF&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;The full code of the result from this tutorial project (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;js-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;The full version of the resulting example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
+&lt;p&gt;The mod created in this tutorial (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;js-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;. The example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
 &lt;h3 id=&#34;dataset&#34;&gt;Dataset&lt;/h3&gt;
 &lt;p&gt;The dataset used in this tutorial can be found &lt;a href=&#34;heroes.txt&#34;&gt;here&lt;/a&gt;. It is a reduced version of this &lt;a href=&#34;https://www.kaggle.com/claudiodavi/superhero-set&#34;&gt;dataset&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
@@ -59,31 +57,33 @@
 &lt;hr&gt;
 &lt;h3 id=&#34;1-initial-setup&#34;&gt;1. Initial setup&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;Copy the &lt;code&gt;js-dev-starter&lt;/code&gt; project and rename it to something relevant, like &lt;code&gt;my-barchart-mod&lt;/code&gt;. The starter project includes a minimum amount of code for a working mod.&lt;/li&gt;
-&lt;li&gt;Open the &lt;em&gt;manifest.json&lt;/em&gt; file found in &lt;code&gt;src&lt;/code&gt; folder and set the id field to &lt;code&gt;my-barchart-mod&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;Open the folder in a terminal or command line.&lt;/li&gt;
-&lt;li&gt;Run &lt;code&gt;npm install&lt;/code&gt; to install dependencies.&lt;/li&gt;
-&lt;li&gt;Run &lt;code&gt;npm run server&lt;/code&gt; to start the server. The provided server setup allows you to see live updates when developing a mod.&lt;/li&gt;
-&lt;li&gt;In &lt;strong&gt;Spotfire&lt;/strong&gt;, load the &lt;a href=&#34;#dataset&#34;&gt;dataset&lt;/a&gt; to create a new analysis file.&lt;/li&gt;
-&lt;li&gt;In &lt;strong&gt;Spotfire&lt;/strong&gt; go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create visualization mod&lt;/em&gt; and &lt;strong&gt;connect to the project&lt;/strong&gt; by following the on-screen steps (&lt;em&gt;Connect to Project &amp;gt; Development server &amp;gt; Connect&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;Create a visualization mod using the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/#1-create-a-new-project&#34;&gt;SDK&lt;/a&gt;, follow the initial instructions and then open the project in Visual Studio Code.&lt;/li&gt;
+&lt;li&gt;In Visual Studio Code start the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/#2-start-the-local-development-servers&#34;&gt;local development server&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;In Spotfire, load the &lt;a href=&#34;#dataset&#34;&gt;dataset&lt;/a&gt; to create a new analysis file.&lt;/li&gt;
+&lt;li&gt;Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Mods development&lt;/em&gt; and click the button &lt;em&gt;Connect to development server&lt;/em&gt;. Make sure that the default server is the same in Spotfire and Visual Studio code (http://127.0.0.1:8090).&lt;/li&gt;
 &lt;li&gt;You should see some mod metadata on the screen, which means the mod is working.&lt;/li&gt;
+&lt;li&gt;Click &lt;em&gt;Add to page&lt;/em&gt; to add a first instance of your new visualization mod.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;./images/step1.PNG&#34; alt=&#34;Step 1&#34;&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;2-add-google-charts-library&#34;&gt;2. Add Google Charts library&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;We will be using &lt;a href=&#34;https://developers.google.com/chart/interactive/docs/gallery/barchart&#34;&gt;this&lt;/a&gt; google example&lt;/li&gt;
-&lt;li&gt;Add google chart loader script to &lt;em&gt;index.html&lt;/em&gt; (&lt;strong&gt;before main.js script&lt;/strong&gt;)&lt;/li&gt;
+&lt;li&gt;We will be using &lt;a href=&#34;https://developers.google.com/chart/interactive/docs/gallery/barchart&#34;&gt;this&lt;/a&gt; Google example.&lt;/li&gt;
+&lt;li&gt;Add the Google Chart loader script to &lt;code&gt;index.html&lt;/code&gt; (before the &lt;code&gt;build/main.jss&lt;/code&gt; script).&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     &amp;lt;body&amp;gt;
          &amp;lt;div id=&amp;#34;mod-container&amp;#34;&amp;gt;&amp;lt;/div&amp;gt;
          &amp;lt;script id=&amp;#34;spotfire-loader&amp;#34;&amp;gt;var Spotfire=function(e){&amp;#34;use strict&amp;#34;;return e.initialize=function(e){var t=&amp;#34;sfTemp&amp;#34;+1e4*Math.random()+&amp;#34;Cb&amp;#34;,a=window;a[t]=e;var r={subject:&amp;#34;GetUrl&amp;#34;,callbackId:-1,...&amp;lt;/script&amp;gt;
 &lt;span style=&#34;color:#00a000&#34;&gt;+        &amp;lt;script type=&amp;#34;text/javascript&amp;#34; src=&amp;#34;https://www.gstatic.com/charts/loader.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         &amp;lt;script src=&amp;#34;main.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         &amp;lt;script src=&amp;#34;build/main.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
      &amp;lt;/body&amp;gt;
  &amp;lt;/html&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Update the style in the &lt;em&gt;main.css&lt;/em&gt; file&lt;/li&gt;
+&lt;li&gt;Add type definitions from google.visualization by installing the corresponding npm package:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;npm install --save @types/google.visualization&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Update the style in the &lt;code&gt;main.css&lt;/code&gt; file.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-body{
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-    margin: 0;
@@ -100,7 +100,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    overflow: hidden;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+}
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Add the &lt;em&gt;gstatic&lt;/em&gt; domain name as an external resource in &lt;em&gt;mod-manifest.json&lt;/em&gt;. External resources from unknown domains will be blocked from loading for security reasons.&lt;/li&gt;
+&lt;li&gt;Add the &lt;em&gt;gstatic&lt;/em&gt; domain name as an external resource in the &lt;code&gt;mod-manifest.json&lt;/code&gt;. External resources from unknown domains will be blocked from loading for security reasons.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;    &amp;#34;files&amp;#34;: [
         &amp;#34;index.html&amp;#34;,
@@ -110,9 +110,9 @@
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    ],
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    &amp;#34;externalResources&amp;#34;: [&amp;#34;https://www.gstatic.com/&amp;#34;]
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Paste full example code into &lt;em&gt;main.js&lt;/em&gt; inside &lt;strong&gt;render&lt;/strong&gt; function&lt;/li&gt;
+&lt;li&gt;Paste the example code below into &lt;code&gt;main.ts&lt;/code&gt; inside the &lt;code&gt;render&lt;/code&gt; function&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     async function render(dataView, windowSize, prop) {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     async function render(dataView: Spotfire.DataView, windowSize: Spotfire.Size, prop: Spotfire.ModProperty&amp;lt;string&amp;gt;) {
 
         /**
          * Check the data view for errors
@@ -179,7 +179,9 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
  });
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Update the bar chart container id (in  &lt;em&gt;index.html&lt;/em&gt;  our container id is &lt;em&gt;mod-container&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;Update the bar chart container ID (in  &lt;code&gt;index.html&lt;/code&gt;, our container ID is &lt;code&gt;&amp;quot;mod-container&amp;quot;&lt;/code&gt;).
+Also note that there is a warning from TypeScript that the argument to the &lt;code&gt;BarChart&lt;/code&gt; may be null. Since we are in full control of the html code, it is safe to assert that &lt;code&gt;getElementById&lt;/code&gt; will not return null.
+This is done by adding an exclamation mark (&lt;code&gt;!&lt;/code&gt;) after the argument.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;
             var options = {
@@ -190,21 +192,31 @@
                legend: { position: &amp;#34;none&amp;#34; },
            };
 &lt;span style=&#34;color:#a40000&#34;&gt;-            var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;barchart_values&amp;#34;));
-&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;)!);
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;            chart.draw(view, options);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Also note that there is a warning about the option type. This is because the type is here deduced from usage, not from declaration. This is easily fixed by specifying the correct type for the &lt;code&gt;options&lt;/code&gt; variable.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;
+&lt;span style=&#34;color:#a40000&#34;&gt;-            var options = {
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            var options: google.visualization.BarChartOptions = {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;               title: &amp;#34;Density of Precious Metals, in g/cm^3&amp;#34;,
+               width: 600,
+               height: 400,
+               bar: { groupWidth: &amp;#34;95%&amp;#34; },
+               legend: { position: &amp;#34;none&amp;#34; },
+           };
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Save the changes. You should see the example working in Spotfire.&lt;/li&gt;
+&lt;li&gt;Save the changes. You should see the example working in Spotfire and there should be no warnings in the code editor.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;./images/step2.PNG&#34; alt=&#34;Step 2&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Make use of &lt;em&gt;async/await&lt;/em&gt; to get rid of extra code.&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;async&lt;/code&gt;/&lt;code&gt;await&lt;/code&gt; to get rid of extra code.&lt;/li&gt;
 &lt;li&gt;Make the chart fit the screen by providing a chart area with some predefined margins.&lt;/li&gt;
-&lt;li&gt;Get rid of chart title.&lt;/li&gt;
+&lt;li&gt;Get rid of the chart title.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-       google.charts.load(&amp;#34;current&amp;#34;, { packages: [&amp;#34;corechart&amp;#34;] });
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-       google.charts.setOnLoadCallback(drawChart);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#a40000&#34;&gt;-       function drawChart() {
+&lt;span style=&#34;color:#a40000&#34;&gt;-       async function drawChart() {
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+       await google.charts.load(&amp;#34;current&amp;#34;, { packages: [&amp;#34;corechart&amp;#34;] });
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;          var data = google.visualization.arrayToDataTable([
               [&amp;#34;Element&amp;#34;, &amp;#34;Density&amp;#34;, { role: &amp;#34;style&amp;#34; }],
@@ -217,7 +229,7 @@
           var view = new google.visualization.DataView(data);
           view.setColumns([0, 1, { calc: &amp;#34;stringify&amp;#34;, sourceColumn: 1, type: &amp;#34;string&amp;#34;, role: &amp;#34;annotation&amp;#34; }, 2]);
 
-          var options = {
+          var options: google.visualization.BarChartOptions = {
 &lt;span style=&#34;color:#a40000&#34;&gt;-             title: &amp;#34;Density of Precious Metals, in g/cm^3&amp;#34;,
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-             width: 600,
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-             height: 400,
@@ -232,9 +244,22 @@
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
 &lt;h3 id=&#34;3-consume-spotfire-data&#34;&gt;3. Consume Spotfire data&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;We create hierarchies for X and Color dimensions. These are defined in the manifest and should not be confused with actual color values (&lt;strong&gt;css-color&lt;/strong&gt; from now on to avoid confusion).&lt;/li&gt;
-&lt;li&gt;We then use this grouped data to extract column names, values and css-colors.&lt;/li&gt;
-&lt;li&gt;A google visualization expects data to be in the following format (and complains if it&amp;rsquo;s not):&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;mod-manifest.json&lt;/code&gt; file declares three axes; a categorical X-axis, a continuous Y-axis, and a dual mode color axis. While it is perfectly valid for a bar chart,
+we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color axis to categorical. Note that changing the &lt;code&gt;mod-manifest.json&lt;/code&gt; requires an explicit reload in the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;    &amp;#34;dataViewDefinition&amp;#34;: {
+        &amp;#34;colorAxis&amp;#34;: {
+&lt;span style=&#34;color:#a40000&#34;&gt;-            &amp;#34;mode&amp;#34;: &amp;#34;dual&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            &amp;#34;mode&amp;#34;: &amp;#34;categorical&amp;#34;,
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;            &amp;#34;dropTarget&amp;#34;: {
+                &amp;#34;icon&amp;#34;: &amp;#34;Color&amp;#34;,
+                &amp;#34;description&amp;#34;: &amp;#34;Color by {0}&amp;#34;
+            }
+        },
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;We create hierarchies for &lt;em&gt;X&lt;/em&gt; and &lt;em&gt;Color&lt;/em&gt; dimensions. These are defined in the manifest and should not be confused with actual color values (css-color from now on to avoid confusion).&lt;/li&gt;
+&lt;li&gt;We then use this grouped data to extract column names, values, and css-colors.&lt;/li&gt;
+&lt;li&gt;A Google visualization expects data to be in the following format (and complains if it&amp;rsquo;s not):&lt;/li&gt;
 &lt;/ul&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -270,9 +295,10 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;ul&gt;
-&lt;li&gt;We loop over X hierarchy to create the data table by filling a row with null values first, and then populating it with existing values at proper positions.&lt;/li&gt;
+&lt;li&gt;We loop over the X hierarchy to create the data table by filling a row with null values first, and then populating it with existing values at proper positions.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        var data = google.visualization.arrayToDataTable([
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-    function drawChart() {
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        var data = google.visualization.arrayToDataTable([
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Element&amp;#34;, &amp;#34;Density&amp;#34;, { role: &amp;#34;style&amp;#34; }],
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Copper&amp;#34;, 8.94, &amp;#34;#b87333&amp;#34;],
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-            [&amp;#34;Silver&amp;#34;, 10.49, &amp;#34;silver&amp;#34;],
@@ -283,16 +309,17 @@
 &lt;span style=&#34;color:#a40000&#34;&gt;-        var view = new google.visualization.DataView(data);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        view.setColumns([0, 1, { calc: &amp;#34;stringify&amp;#34;, sourceColumn: 1, type: &amp;#34;string&amp;#34;, role: &amp;#34;annotation&amp;#34; }, 2]);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorHierarchy = await dataView.hierarchy(&amp;#34;Color&amp;#34;);
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorLeafNodes = (await colorHierarchy.root()).leaves();
+&lt;span style=&#34;color:#00a000&#34;&gt;+    async function drawChart() {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorHierarchy = (await dataView.hierarchy(&amp;#34;Color&amp;#34;))!;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorLeafNodes = (await colorHierarchy.root())!.leaves();
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const colorDomain = colorHierarchy.isEmpty ? [&amp;#34;All Values&amp;#34;] : colorLeafNodes.map((node) =&amp;gt; node.formattedPath());
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#00a000&#34;&gt;+        const xLeafNodes = (await xHierarchy.root()).leaves();
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const xLeafNodes = (await xHierarchy.root())!.leaves();
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
-&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataColumns = [&amp;#34;Columns&amp;#34;];
+&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataColumns : any[] = [&amp;#34;Columns&amp;#34;];
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        colorDomain.forEach(value =&amp;gt; dataColumns.push(value, { role: &amp;#34;style&amp;#34; }));
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataRows = [];
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const dataRows : any[][] = [];
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        xLeafNodes.forEach(
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            (node) =&amp;gt; {
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+               let valueAndColorPairs = new Array(colorLeafNodes.length).fill([0, &amp;#34;&amp;#34;]).flat()
@@ -318,22 +345,24 @@
 &lt;span style=&#34;color:#a40000&#34;&gt;-        chart.draw(view, options);
 &lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        chart.draw(data, options);
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Not all combinations of &lt;em&gt;X&lt;/em&gt; and &lt;em&gt;Color&lt;/em&gt; domains will be renderable by google charts out of the box, without special treatment. We will guard against this with a &lt;strong&gt;try/catch&lt;/strong&gt; block.&lt;/li&gt;
-&lt;li&gt;The full code of the &lt;code&gt;js-dev-barchart-googlecharts&lt;/code&gt; example project goes a little bit more in depth than this tutorial and covers some additional cases&lt;/li&gt;
+&lt;li&gt;Notice the &lt;code&gt;possibly null&lt;/code&gt; warning regarding the usage of xHierarchy. This is a false negative due to the use of the asynchronous &lt;code&gt;setOnLoadCallback&lt;/code&gt;, and we will handle this issue later in this tutorial.&lt;/li&gt;
+&lt;li&gt;Not all combinations of &lt;em&gt;X&lt;/em&gt; and &lt;em&gt;Color&lt;/em&gt; domains will be renderable by Google Charts out of the box, without special treatment. We will guard against this with a &lt;code&gt;try&lt;/code&gt;/&lt;code&gt;catch&lt;/code&gt; block.&lt;/li&gt;
+&lt;li&gt;The full code of the &lt;code&gt;js-dev-barchart-googlecharts&lt;/code&gt; example project goes a little bit more in depth than this tutorial and covers some additional cases.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#a40000&#34;&gt;-        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
-&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        let data;
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        let data : google.visualization.DataTable;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        try {
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        } catch (e) {
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            console.log(e);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        } catch (e: any) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            mod.controls.errorOverlay.show(e);
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            return;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./images/step3.PNG&#34; alt=&#34;Step 3&#34;&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;4-selectionmarking&#34;&gt;4. Selection/marking&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;Add selection/marking logic. We listen for &amp;ldquo;&lt;em&gt;select&lt;/em&gt;&amp;rdquo; event and extract X and Color values (&lt;em&gt;not css-color!&lt;/em&gt;) by index in their respective domains. The Color index is halved because we have 2 times as many columns due to styling being applied (see table above).&lt;/li&gt;
-&lt;li&gt;The rows (in this case there will be only one row) to mark will be in the intersection of the set of rows for the marked color and the set of rows for the marked x value. An obvious optimization would be to store the rows as a hash map to eliminate redundancy.&lt;/li&gt;
+&lt;li&gt;Add selection/marking logic. We listen for the &lt;code&gt;&amp;quot;select&amp;quot;&lt;/code&gt; event and extract &lt;em&gt;X&lt;/em&gt; and &lt;em&gt;Color&lt;/em&gt; values (not css-color!) by index in their respective domains. The &lt;em&gt;Color&lt;/em&gt; index is halved because we have 2 times as many columns due to styling being applied (see table above).&lt;/li&gt;
+&lt;li&gt;The rows (in this case there will be only one row) to mark will be in the intersection of the set of rows for the marked color and the set of rows for the marked &lt;em&gt;X&lt;/em&gt; value. An obvious optimization would be to store the rows as a hash map to eliminate redundancy.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;
          var chart = new google.visualization.BarChart(document.getElementById(&amp;#34;mod-container&amp;#34;));
@@ -344,26 +373,29 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (!selection) return;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const { row, column } = selection;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (column == null || row == null) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                return;
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const xIndex = row;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            const colorIndex = (column - 1) / 2;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            intersection(xLeafNodes[xIndex].rows(), colorLeafNodes[colorIndex].rows()).forEach((r) =&amp;gt; r.mark());
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+       });
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function intersection(rows1, rows2) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function intersection(rows1: Spotfire.DataViewRow[], rows2: Spotfire.DataViewRow[]) {
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            return rows1.filter((r) =&amp;gt; rows2.indexOf(r) &amp;gt; -1);
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./images/step4.PNG&#34; alt=&#34;Step 4&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;To clear all marking on background click, as native Spotfire visualizations do, we listen for &amp;ldquo;click&amp;rdquo; event and check its target id.&lt;/li&gt;
+&lt;li&gt;To clear the marking on background click, as native Spotfire visualizations do, we listen for the &lt;code&gt;&amp;quot;click&amp;quot;&lt;/code&gt; event and check its target ID. Unfortunately, the Google API is untyped regarding events, hence the &lt;code&gt;any&lt;/code&gt; type.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;        function intersection(rows1, rows2) {
             return rows1.filter((r) =&amp;gt; rows2.indexOf(r) &amp;gt; -1);
 &lt;span style=&#34;color:#00a000&#34;&gt;+
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        google.visualization.events.addListener(chart, &amp;#34;click&amp;#34;, ({ targetID, x, y }) =&amp;gt; {
-&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (targetID == &amp;#34;chartarea&amp;#34;) {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        google.visualization.events.addListener(chart, &amp;#34;click&amp;#34;, (e: any) =&amp;gt; {
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            if (e.targetID == &amp;#34;chartarea&amp;#34;) {
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                dataView.clearMarking();
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+                return;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }
@@ -371,9 +403,9 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
  });
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
-&lt;h3 id=&#34;5-controlling-the-mod-using-the-popout&#34;&gt;5. Controlling the mod using the popout&lt;/h3&gt;
+&lt;h3 id=&#34;5-controlling-the-mod-using-a-popout&#34;&gt;5. Controlling the mod using a popout&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;We would like to control the chart&amp;rsquo;s &lt;em&gt;orientation (horizontal/vertical)&lt;/em&gt; and &lt;em&gt;stacking (side-by-side/stacked)&lt;/em&gt;. The mods api allows us to do this via a popout menu.&lt;/li&gt;
+&lt;li&gt;We would like to control the chart&amp;rsquo;s orientation (&lt;code&gt;horizontal&lt;/code&gt;/&lt;code&gt;vertical&lt;/code&gt;) and stacking (&lt;code&gt;side-by-side&lt;/code&gt;/&lt;code&gt;stacked&lt;/code&gt;). The Mods API allows us to do this via a popout menu.&lt;/li&gt;
 &lt;li&gt;First, we add them as properties to the manifest.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;     &amp;#34;icon&amp;#34;: &amp;#34;icon.svg&amp;#34;,
@@ -393,10 +425,10 @@
      ],
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;Then we add the new properties to the read loop and pass them down to the render function.&lt;/p&gt;
+&lt;p&gt;Then we add the new properties to the &lt;code&gt;read&lt;/code&gt; loop and pass them down to the &lt;code&gt;render&lt;/code&gt; function.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Since the manifest has changed, we will need to reconnect the development server to Spotfire for the changes to take effect&lt;/strong&gt; (&lt;em&gt;&amp;ldquo;Properties&amp;rdquo; icon (&lt;code&gt;puzzle piece&lt;/code&gt;) in the upper right of the mod screen &amp;gt; Disconnect&lt;/em&gt; &amp;gt; &lt;em&gt;Connect&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;Since the &lt;code&gt;mod-manifest.json&lt;/code&gt; file has changed, we will need to reload the manifest.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;    /**
@@ -461,7 +493,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;./images/step5.PNG&#34; alt=&#34;Step 5&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Add a tiny helper function to check property value.&lt;/li&gt;
-&lt;li&gt;On each render we check &lt;strong&gt;stacking&lt;/strong&gt; and &lt;strong&gt;orientation&lt;/strong&gt; properties and update the chart configuration accordingly. Stacking is a simple boolean but orientation requires different classes for horizontal and vertical types of charts.&lt;/li&gt;
+&lt;li&gt;On each render we check the stacking and orientation properties and update the chart configuration accordingly. Stacking is a simple boolean, but orientation requires different classes for &lt;code&gt;horizontal&lt;/code&gt; and &lt;code&gt;vertical&lt;/code&gt; types of charts.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        const is = property =&amp;gt; value =&amp;gt; property.value() == value;
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+
@@ -506,7 +538,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         });
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;Create popout content from the available components.&lt;/li&gt;
-&lt;li&gt;Listen for popout changes and update property values. This will trigger a re-render and add an undoable step to the native &lt;em&gt;Undo stack&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Listen for popout changes and update property values. This will trigger a re-render and add a step to the native &lt;em&gt;Undo stack&lt;/em&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;         const { section } = popout;
 &lt;span style=&#34;color:#a40000&#34;&gt;-        const { button } = popout.components;
@@ -560,7 +592,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Lastly, add a pointer cursor to &lt;code&gt;svg text&lt;/code&gt; rule in &lt;em&gt;main.css&lt;/em&gt; to signal an interactive element.&lt;/li&gt;
+&lt;li&gt;Lastly, add a pointer cursor to &lt;code&gt;svg text&lt;/code&gt; rule in &lt;code&gt;main.css&lt;/code&gt; to signal an interactive element.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;html, body, #mod-container {
      margin: 0;
@@ -575,8 +607,8 @@
 &lt;hr&gt;
 &lt;h3 id=&#34;6-use-spotfire-theme-and-styling&#34;&gt;6. Use Spotfire theme and styling&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;Extract style info from context&lt;/li&gt;
-&lt;li&gt;Update Options object&lt;/li&gt;
+&lt;li&gt;Extract style info from &lt;code&gt;context&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Update the &lt;code&gt;options&lt;/code&gt; object.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;
 &lt;span style=&#34;color:#00a000&#34;&gt;+        const context = mod.getRenderContext();
@@ -612,7 +644,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            }
 &lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         };
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;In Spotfire, change &lt;em&gt;Visualizations Theme&lt;/em&gt; to &lt;strong&gt;Dark&lt;/strong&gt; (&lt;em&gt;Visualizations &amp;gt; Canvas styling &amp;gt; Dark&lt;/em&gt;). You should see colors change according to theme.&lt;/li&gt;
+&lt;li&gt;In Spotfire, change canvas styling to &lt;em&gt;Dark&lt;/em&gt; (&lt;em&gt;Visualizations &amp;gt; Canvas styling &amp;gt; Dark&lt;/em&gt;). You should see the colors change according to the theme.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;./images/step6.PNG&#34; alt=&#34;Step 6&#34;&gt;&lt;/p&gt;
 &lt;hr&gt;
@@ -627,12 +659,172 @@
 
 &lt;span style=&#34;color:#00a000&#34;&gt;+       google.visualization.events.addListener(chart, &amp;#34;ready&amp;#34;, () =&amp;gt; context.signalRenderComplete());
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;Go to &lt;em&gt;File &amp;gt; Export &amp;gt; Visualization to PDF&lt;/em&gt; to test the export feature&lt;/li&gt;
+&lt;li&gt;Go to &lt;em&gt;File &amp;gt; Export &amp;gt; Visualization to PDF&lt;/em&gt; to test the export feature.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;./images/step7.PNG&#34; alt=&#34;Step 7&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Note that this example Mod is using external resources, hence it will not be possible to export using the web client, see the &lt;a href=&#34;https://tibcosoftware.github.io/spotfire-mods/docs/using-the-api/mod-schema/&#34;&gt;manifest schema documentation&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Note that this example mod is using external resources, hence it will not be possible to export using the web client, see the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/&#34;&gt;manifest schema documentation&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Developing action mods</title>
+      <link>/spotfire-mods/docs/action-mods/developing-action-mods/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/action-mods/developing-action-mods/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;You have read the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have created a new action mod template project.&lt;/li&gt;
+&lt;li&gt;You have started a local development server and connected Spotfire to it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;develop-and-test-the-mod&#34;&gt;Develop and test the mod&lt;/h2&gt;
+&lt;p&gt;When the action mod project template has been created, there is a single script called &lt;code&gt;my-script&lt;/code&gt; whose source code is defined in &lt;code&gt;src/scripts/my-script.ts&lt;/code&gt;.
+This script takes a single string argument and prints it to the console with an exclamation point appended.&lt;/p&gt;
+&lt;p&gt;For more information about the folder structure and the project, see the README.md file.&lt;/p&gt;
+&lt;h3 id=&#34;1-test-run-your-mod&#34;&gt;1. Test run your mod&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;In the &lt;em&gt;Mods development&lt;/em&gt; tool, open the &lt;em&gt;Test&lt;/em&gt; tab and click &lt;em&gt;Test run&lt;/em&gt;. Select the script in the flyout that opens, click &lt;em&gt;Next&lt;/em&gt;, provide a message in the text field, and click &lt;em&gt;Run&lt;/em&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the lower part of the &lt;em&gt;Mods development&lt;/em&gt; tool, click &lt;em&gt;Show script output&lt;/em&gt;. You should now see your message (followed by an exclamation point) printed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-debug-your-mod&#34;&gt;2. Debug your mod&lt;/h3&gt;
+&lt;p&gt;Action mods support interactive debugging in VS Code. This option is available in the installed client only.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;To enable debugging, click &lt;em&gt;Start debugging&lt;/em&gt; in the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In VS Code, add a breakpoint at the start of the script and press &lt;em&gt;F5&lt;/em&gt; (or run &amp;ldquo;Debug: Start Debugging&amp;rdquo; command). This opens a prompt for the debug port (default to 9222), make sure that this is the same port shown the &lt;em&gt;Mods development&lt;/em&gt; tool in Spotfire.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Run the script again. VS Code should now break at the breakpoint. You can inspect local variables and run JavaScript code using the debug tools provided by the editor.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-continue-development&#34;&gt;3. Continue development&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Change the code in &lt;code&gt;src/scripts/my-script.ts&lt;/code&gt; to print something else, save the file, and then re-run the script. Any changes made to scripts are automatically picked up by Spotfire if you have your local servers running.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Try adding a new script by running &lt;code&gt;npx @spotfire/mods-sdk add-script a-new-script&lt;/code&gt; in a terminal. This will create a new file under &lt;code&gt;src/scripts/a-new-script.ts&lt;/code&gt; and update your mod manifest. Since adding a script changes the manifest you must reload it in the the &lt;em&gt;Mods development&lt;/em&gt; tool by clicking the &lt;em&gt;Reload manifest&lt;/em&gt; button. It is also possible to add script entries in the manifest together with the script file manually, without using the &lt;code&gt;add-script&lt;/code&gt; command.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in the mod-manifest.json file. A list of the entries that are common to all mods can be found in the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;. The entries that are specific to action mods are listed below:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Entry&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;capabilities&lt;/td&gt;
+&lt;td&gt;Any extended capabilites required by the scripts. Currently supports &lt;code&gt;LibraryRead&lt;/code&gt; and &lt;code&gt;LibraryWrite&lt;/code&gt;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;scripts&lt;/td&gt;
+&lt;td&gt;An array of the scripts in the action mod.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For details, see the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/action-mods/using-the-api/mod-schema/&#34;&gt;manifest schema&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What&amp;rsquo;s next?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the &lt;a href=&#34;../tutorial&#34;&gt;tutorial&lt;/a&gt; to create a mod that loads data from the library, adds a visualization, and more.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Browse the &lt;a href=&#34;../snippets&#34;&gt;snippets&lt;/a&gt; for inspiration on what you can do with the Spotfire API.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Explore the entire &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/action-mods/&#34;&gt;API&lt;/a&gt; in the API documentation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Read the &lt;a href=&#34;../FAQ&#34;&gt;FAQ&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Developing visualization mods</title>
+      <link>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;You have read the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have created a new visualization mod template project.&lt;/li&gt;
+&lt;li&gt;You have started a local development server and connected Spotfire to it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;sub&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/exclamation.png&#34; style=&#34;width: 0.8em;vertical-align: baseline;&#34;&gt; &lt;/img&gt;Note: Spotfire versions earlier than 14.4 have a slightly different development workflow for visualization mods. See &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt; to learn more.
+&lt;/sub&gt;&lt;/p&gt;
+&lt;h2 id=&#34;develop-and-test-the-mod&#34;&gt;Develop and test the mod&lt;/h2&gt;
+&lt;h3 id=&#34;1-add-the-mod-to-the-analysis&#34;&gt;1. Add the mod to the analysis&lt;/h3&gt;
+&lt;p&gt;In the &lt;em&gt;Mods development&lt;/em&gt; tool, click the &lt;em&gt;Add to page&lt;/em&gt; button to instantiate the mod on the current analysis page.&lt;/p&gt;
+&lt;p&gt;While you are connected to the mods development server, any changes to the source code will be automatically updated. You can have any number of mod instances in development mode.&lt;/p&gt;
+&lt;h3 id=&#34;2-debug-your-mod&#34;&gt;2. Debug your mod&lt;/h3&gt;
+&lt;p&gt;A visualization mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In the installed client: &lt;em&gt;Ctrl+Alt+Shift+F12&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;In the web client: &lt;em&gt;F12&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To find the source code files, use the &lt;em&gt;Open file&lt;/em&gt; command &lt;em&gt;(Ctrl+P)&lt;/em&gt; and type the name of the file. In the opened file, it is possible to set breakpoints. It is also possible to execute code in the console. Note that a mod built for release may contain minified JavaScript code and no sourcemaps, making debugging more difficult.&lt;/p&gt;
+&lt;p&gt;More information about Chrome DevTools can be found here:
+&lt;a href=&#34;https://developers.google.com/web/tools/chrome-devtools&#34;&gt;https://developers.google.com/web/tools/chrome-devtools&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3-edit-your-example&#34;&gt;3. Edit your example&lt;/h3&gt;
+&lt;p&gt;Now switch over to VS Code to start editing the mod implementation.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;src&lt;/code&gt; folder contains TypeScript source files that will be compiled into the &lt;code&gt;build&lt;/code&gt; folder.
+The root folder contains all static content, like the &lt;code&gt;index.html&lt;/code&gt;, as well as any CSS and JavaScript files. It also contains a &lt;code&gt;mod-manifest.json&lt;/code&gt; file that contains metadata about the mod. For more information about the folder structure and the project, see the README.md file.&lt;/p&gt;
+&lt;p&gt;If any file in the workspace is changed while the development server is running, the mod will be reloaded in Spotfire. As described in the general &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/&#34;&gt;getting started&lt;/a&gt; guide, changes in the manifest are not automatically reloaded, instead you must click the &lt;em&gt;Reload manifest&lt;/em&gt; button in the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/p&gt;
+&lt;p&gt;The SDK template for visualization mods contains a simple mod with a categorical X-axis, a continuous Y-axis, a dual mode color axis, and a mod property. The only source code file is located in &lt;code&gt;src/main.ts&lt;/code&gt;, but in most cases a mod should be split in multiple source code files.&lt;/p&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in the mod-manifest.json file. A list of the entries that are common to all mods can be found in the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;. The entries that are specific to visualization mods are listed below:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Entry&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;dataViewDefinition&lt;/td&gt;
+&lt;td&gt;Specifies how Spotfire computes the data consumed by the mod.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;externalResources&lt;/td&gt;
+&lt;td&gt;An array of any external resources that the mod is required to load.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;properties&lt;/td&gt;
+&lt;td&gt;An array of mod properties.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;legend&lt;/td&gt;
+&lt;td&gt;Specifies the default behavior of the legend.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For details, see the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/&#34;&gt;manifest schema&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/h2&gt;
+&lt;p&gt;When developing mods against the web client it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the &lt;em&gt;Connect to file&lt;/em&gt; button will not be available in the web client.&lt;/p&gt;
+&lt;p&gt;The development server always serves content from &lt;a href=&#34;http://127.0.0.1:8090&#34;&gt;http://127.0.0.1:8090&lt;/a&gt;, which according to the W3C specification is a &lt;a href=&#34;https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin&#34;&gt;potentially trustworthy origin&lt;/a&gt;. Some web browsers might behave incorrectly with regards to this, and if you run into a problem, try switching to Google Chrome, Microsoft Edge, or Mozilla Firefox.&lt;/p&gt;
 
       </description>
     </item>
@@ -640,198 +832,175 @@
     <item>
       <title>Docs: Getting started</title>
       <link>/spotfire-mods/docs/getting-started/</link>
-      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/getting-started/</guid>
       <description>
         
         
-        &lt;h2 id=&#34;developing-a-visualization-mod&#34;&gt;Developing a visualization mod&lt;/h2&gt;
-&lt;p&gt;Spotfire® Mods is a framework to create interactive visualizations in Spotfire®. It is based on web technologies and it runs in a sandboxed iframe.&lt;/p&gt;
-&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
+        &lt;p&gt;The getting started guide covers the aspects that are common to both mod types. When you have created a mod project and connected to it, continue to the articles with details specific to &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/action-mods/developing-action-mods/&#34;&gt;action mods&lt;/a&gt; or &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/developing-visualization-mods/&#34;&gt;visualization mods&lt;/a&gt;. This guide describes the workflow for developing mods from Spotfire version 14.4 and later. In earlier Spotfire versions, where only visualization mods are available, the workflow is slightly different, see &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt;&lt;br&gt;
-This is needed to develop and test a mod. Development can be done against the installed client (Spotfire® Analyst) or the web client (Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;
-&lt;p&gt;Spotfire version 11.0 or newer is required for mod development. See also &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods#spotfire-versions-and-their-mod-api&#34;&gt;Spotfire versions and their Mod API&lt;/a&gt;.&lt;/p&gt;
+This is needed to develop and test a mod. Development can be done against the installed client or the web client using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;A code editor.&lt;/strong&gt;&lt;br&gt;
-It is highly recommended to use Microsoft &lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt; (VS Code) when developing a mod. The instructions in this document assume that VS Code is used as code editor. The mod example projects that are available for developers, include predefined settings for VS Code that enable a default build task, IntelliSense in the mod manifest, and IntelliSense in the JavaScript code.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Visual Studio Code.&lt;/strong&gt;&lt;br&gt;
+The development experience is designed to integrate well with Microsoft &lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt; (VS Code) by providing default build tasks, debug target, and IntelliSense.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Node.js installed.&lt;/strong&gt;&lt;br&gt;
-To enable live updates when developing a mod, a set of tools based on &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; is needed. The mod example specifies a set of development dependencies in its package.json file. These are installed when executing &lt;code&gt;npm install&lt;/code&gt; in the same directory as the package.json file. The install script is also executed as part of the default build task in VS Code.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Node.js (version 20 or later) installed.&lt;/strong&gt;&lt;br&gt;
+The development tooling requires &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; version 20 LTS or later to be installed. In particular, to create mods and work with the development tooling, it must be possible to execute the &lt;code&gt;npm&lt;/code&gt; and &lt;code&gt;npx&lt;/code&gt; commands.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;sub&gt;&lt;img src=&#34;../exclamation.png&#34; style=&#34;width: 0.8em;vertical-align: baseline;&#34;&gt; &lt;/img&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.
-&lt;/sub&gt;&lt;/p&gt;
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
-&lt;h4 id=&#34;1-create-an-empty-visualization-mod-in-spotfire&#34;&gt;1. Create an empty visualization mod in Spotfire&lt;/h4&gt;
-&lt;p&gt;Open Spotfire and load some data. Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create visualization mod&lt;/em&gt;. This will create an empty mod.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;./media/empty-mod.png&#34; alt=&#34;&#34; title=&#34;Empty mod.&#34;&gt;&lt;/p&gt;
-&lt;h4 id=&#34;2-start-from-a-mod-example&#34;&gt;2. Start from a mod example&lt;/h4&gt;
-&lt;p&gt;Click &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;here&lt;/a&gt; to access the example mod projects to start the development from. Extract the zip archive locally. The extracted zip archive contains examples of mods, using the mod API in different ways.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;developing-a-mod&#34;&gt;Developing a mod&lt;/h2&gt;
+&lt;h3 id=&#34;1-create-a-new-project&#34;&gt;1. Create a new project&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-barchart&lt;/strong&gt;&lt;br&gt;
-To get familiar with mod development, start with this example containing a simple bar chart. This is the example that will be used in the following sections of this getting started guide.&lt;/p&gt;
+&lt;p&gt;Create an empty folder for the project and open the folder in VS Code.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-starter&lt;/strong&gt;&lt;br&gt;
-This example can be used as a starting point for any new mod.&lt;/p&gt;
+&lt;p&gt;Open a terminal and run the following commands to create a mod from the default template:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;npx @spotfire/mods-sdk new &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;action&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;visualization&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt;
+npm install
+npm run build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Depending on the specified mod type (&lt;em&gt;action&lt;/em&gt; or &lt;em&gt;visualization&lt;/em&gt;) the corresponding VS Code project with some simple example code will be created.&lt;/p&gt;
+&lt;p&gt;For more info about the folder structure, see the detailed documentation for the mod type.&lt;/p&gt;
+&lt;h3 id=&#34;2-start-the-local-development-server&#34;&gt;2. Start the local development server&lt;/h3&gt;
+&lt;p&gt;Run the default build task, either by pressing &amp;ldquo;Ctrl + Shift + B&amp;rdquo; or by running the &amp;ldquo;Start watchers&amp;rdquo; task.
+This will launch three watchers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;a href=&#34;https://www.typescriptlang.org/&#34;&gt;TypeScript&lt;/a&gt; typechecker, which makes sure you are using the API in a type-safe manner.&lt;/li&gt;
+&lt;li&gt;A build watcher, which automatically transforms the TypeScript files found in the &lt;code&gt;src&lt;/code&gt; folder into JavaScript files which are output in the &lt;code&gt;build&lt;/code&gt; folder.&lt;/li&gt;
+&lt;li&gt;The mods development server, which serves your project files to Spotfire during development.
+Your mod will be rebuilt when any TypeScript file is changed or when the mod manifest changes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-connect-spotfire-to-the-development-server&#34;&gt;3. Connect Spotfire to the development server&lt;/h3&gt;
+&lt;p&gt;Open Spotfire and load some data. Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Mods development&lt;/em&gt;. This will open the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/dev-ui.png&#34; alt=&#34;Mods developer tool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click the &lt;em&gt;Connect to development server&lt;/em&gt; button. In the pop-up that opens, make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the port number shown in VS Code, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire load the mod from the local development server.&lt;/p&gt;
+&lt;p&gt;If the mod appears under &lt;em&gt;In development&lt;/em&gt; in the sidebar to the left, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/dev-ui-dev-server.png&#34; alt=&#34;Connected to development server &#34;&gt;&lt;/p&gt;
+&lt;p&gt;Alternative workflows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If the analysis already contains one or more mods, click &lt;em&gt;New mod&lt;/em&gt; in the lower left corner of the &lt;em&gt;Mods development&lt;/em&gt; tool to access the &lt;em&gt;Connect to development server&lt;/em&gt; button.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-starter-ie11&lt;/strong&gt;&lt;br&gt;
-This example can be used as a starting point for any new mod that is also compatible with the IE11 browser.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt;&lt;br&gt;
-This example is a basic bar chart that is built using the Google Charts library. The &lt;a href=&#34;../tutorials/barchart-googlechart/&#34;&gt;tutorial&lt;/a&gt; covers the steps taken to create this bar chart from scratch.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;ts-dev-gauge-googlecharts&lt;/strong&gt;&lt;br&gt;
-This is an example of a gauge visualization that is developed in TypeScript using the Google Charts library and bundled with Rollup.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-circular-treemap&lt;/strong&gt;&lt;br&gt;
-This example is a simple circular treemap built using the D3 library. It shows how hierarchies in mod data views can be mapped to D3 hierarchies. Some basic concepts such as using a color axis, and implementing marking and tooltips are covered as well.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-areachart-d3&lt;/strong&gt;&lt;br&gt;
-This is a more complex example built using the D3 library, where you can see how the API can be used to take advantage of a lot of features in Spotfire.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;ts-spiderchart-d3&lt;/strong&gt;&lt;br&gt;
-This is an example of a spider chart developed in TypeScript, rendered with D3, and bundled with webpack.&lt;/p&gt;
+&lt;p&gt;If you only have access to the source code, not a valid VS Code project, it is still possible to load this into Spotfire. Click the &lt;em&gt;Connect to file&lt;/em&gt; button and browse to the mod-manifest.json file of the project. This option is only available in the installed client, and the developer experience will be limited.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Each example contains a README file with detailed instructions specific to the example.&lt;/p&gt;
-&lt;h4 id=&#34;3-start-local-development-server&#34;&gt;3. Start local development server&lt;/h4&gt;
-&lt;p&gt;To use the js-dev-barchart example, open the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
-&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
-&lt;h4 id=&#34;4-connect-spotfire-to-the-development-server&#34;&gt;4. Connect Spotfire to the development server&lt;/h4&gt;
-&lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the pop-up that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;./media/connect-to-development-server.gif&#34; alt=&#34;&#34; title=&#34;Connect to development server&#34;&gt;&lt;/p&gt;
-&lt;p&gt;If a visualization appears, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
-&lt;h4 id=&#34;5-start-editing-your-example&#34;&gt;5. Start editing your example&lt;/h4&gt;
-&lt;p&gt;Now switch over to VS Code to start editing the mod implementation.&lt;/p&gt;
-&lt;p&gt;The src folder includes HTML, CSS and JavaScript files that together form the mod implementation. It also contains a mod-manifest.json file that contains metadata about the mod. If any .html/css/js file in the src folder is changed while the development server is running, the mod will be reloaded in Spotfire.&lt;/p&gt;
-&lt;p&gt;As an example, open the main.css file and try to change the background property of body. As soon as the css file is saved, the change will appear in Spotfire.&lt;/p&gt;
-&lt;p&gt;For information about how the Spotfire Mod API is accessed, open the main.js file.&lt;/p&gt;
-&lt;h2 id=&#34;mod-example-folder-structure&#34;&gt;Mod example folder structure&lt;/h2&gt;
-&lt;p&gt;The following files and folders are part of the example:&lt;/p&gt;
+&lt;h3 id=&#34;4-developing-the-mod&#34;&gt;4. Developing the mod&lt;/h3&gt;
+&lt;p&gt;When updating and saving the source file, the build watcher will automatically rebuild the mod. The mods development server will then, when connected, send the new mod content to Spotfire for automatic update.&lt;/p&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in the mod-manifest.json file. Below is a list of the entries that are common to all mods. Each mod type also has some specific entries that you can read more about in &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/action-mods/developing-action-mods/#3-continue-development&#34;&gt;Developing action mods&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/developing-visualization-mods/#3-edit-your-example&#34;&gt;Developing visualization mods&lt;/a&gt;.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;File&lt;/th&gt;
+&lt;th&gt;Entry&lt;/th&gt;
 &lt;th&gt;Description&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;.vscode&lt;/td&gt;
-&lt;td&gt;Settings for VS Code.&lt;/td&gt;
+&lt;td&gt;id&lt;/td&gt;
+&lt;td&gt;The id of the mod. Note that this must be unique.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;spotfire&lt;/td&gt;
-&lt;td&gt;Files related to the mod API.&lt;/td&gt;
+&lt;td&gt;type&lt;/td&gt;
+&lt;td&gt;Specifies the type of mod, &lt;em&gt;action&lt;/em&gt; or &lt;em&gt;visualization&lt;/em&gt;. This is available from apiVersion 2.0.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;src&lt;/td&gt;
-&lt;td&gt;Folder for the mod&amp;rsquo;s source code.&lt;/td&gt;
+&lt;td&gt;apiVersion&lt;/td&gt;
+&lt;td&gt;The api version requested. This will affect which Spotfire versions the mod will work on.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;package.json&lt;/td&gt;
-&lt;td&gt;Lists the Node.js dependencies and necessary scripts.&lt;/td&gt;
+&lt;td&gt;name&lt;/td&gt;
+&lt;td&gt;The name of the mod.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;prettier.config.js&lt;/td&gt;
-&lt;td&gt;Configuration file for formatting with the tool prettier.&lt;/td&gt;
+&lt;td&gt;description&lt;/td&gt;
+&lt;td&gt;A description of the mod. This is available from apiVersion 2.0.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;README.md&lt;/td&gt;
-&lt;td&gt;Instructions on how to get started.&lt;/td&gt;
+&lt;td&gt;version&lt;/td&gt;
+&lt;td&gt;The version of the mod.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;tsconfig.json&lt;/td&gt;
-&lt;td&gt;TypeScript project file. It links the &lt;code&gt;/spotfire/spotfire-api.dts&lt;/code&gt; file for IntelliSense in your code.&lt;/td&gt;
+&lt;td&gt;icon&lt;/td&gt;
+&lt;td&gt;File path to the embedded icon, which is used in various places in the Spotfire UI.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;files&lt;/td&gt;
+&lt;td&gt;An array of all files that should be bundled in the mod. Only files specified here will be embedded by Spotfire.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id=&#34;the-mod-manifestjson-file&#34;&gt;The mod-manifest.json file&lt;/h2&gt;
-&lt;p&gt;All metadata that concerns the mod is defined in a file called mod-manifest.json. It is used to give the mod a name and an id, and to define axes and their placement. It is also used to list all files used by the mod. Only files listed in the ‘files’ property will be embedded by Spotfire.&lt;/p&gt;
-&lt;p&gt;For changes in the manifest to take effect, the manifest must be reloaded manually in Spotfire. Click the puzzle icon on the title bar of the visualization mod, and then click the &lt;em&gt;Reload manifest&lt;/em&gt; button in the popup that opens.&lt;/p&gt;
-&lt;h2 id=&#34;debugging&#34;&gt;Debugging&lt;/h2&gt;
-&lt;p&gt;The mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands.
-In Spotfire® Analyst: &lt;em&gt;Ctrl+Alt+Shift+F12&lt;/em&gt;
-In Spotfire® Business Author: &lt;em&gt;F12&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;To find the main.js file, use the Open file command (Ctrl+P) and type the file&amp;rsquo;s name. In the opened file, it is possible to set breakpoints. It is also possible to execute code in the console.
-More information about Chrome DevTools can be found here:
-&lt;a href=&#34;https://developers.google.com/web/tools/chrome-devtools&#34;&gt;https://developers.google.com/web/tools/chrome-devtools&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/h2&gt;
-&lt;p&gt;The required browser when developing mods against the web client is Google Chrome. This is due to how browsers behave with regards to loading http content from a https context. The development server is serving files from &lt;a href=&#34;http://127.0.0.1:8090&#34;&gt;http://127.0.0.1:8090&lt;/a&gt;, which according to the W3C specification is a &lt;a href=&#34;https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin&#34;&gt;potentially trustworthy origin&lt;/a&gt;. Currently only Chrome behaves correctly with regards to this. Other browser vendors are implementing support for this and might work in the future.&lt;/p&gt;
-&lt;p&gt;Note also that when developing a mod in the web client, it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the &lt;em&gt;Browse&lt;/em&gt; button will not be available in the web client.&lt;/p&gt;
-&lt;h2 id=&#34;embedding-the-mod-and-saving-to-the-library&#34;&gt;Embedding the mod and saving to the library&lt;/h2&gt;
-&lt;p&gt;When the development is done, disconnect from the server to embed the mod in the analysis.
-&lt;img src=&#34;./media/disconnect-and-embed.gif&#34; alt=&#34;&#34; title=&#34;Disconnect from development server to embed mod&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;saving-the-mod-to-the-spotfire-library&#34;&gt;Saving the mod to the Spotfire library&lt;/h3&gt;
-&lt;p&gt;When your mod has been embedded in the analysis, you can share the mod with others by saving it to the library.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Click the puzzle icon in the title bar to open the development popup.&lt;/li&gt;
-&lt;li&gt;Click &lt;em&gt;Save to library&lt;/em&gt;.&lt;/li&gt;
-&lt;li&gt;In the dialog that opens, navigate to the folder where you want to save the mod, and click &lt;em&gt;Save&lt;/em&gt;.
-When the mod has been saved to the library, it is possible for others, connected to the same library, to use your mod in their analyses. The mod can also be pinned to the visualization flyout.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;Changes to the mod manifest are not automatically sent to Spotfire like the content. Whenever the manifest is updated, you must click the &lt;em&gt;Reload manifest&lt;/em&gt; button.&lt;/p&gt;
+&lt;p&gt;Depending on the type of the connected mod, the actual workflow of developing and testing the mod is different. See &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/action-mods/developing-action-mods//&#34;&gt;Developing action mods&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/developing-visualization-mods//&#34;&gt;Developing visualization mods&lt;/a&gt; for details.&lt;/p&gt;
+&lt;h3 id=&#34;5-disconnecting&#34;&gt;5. Disconnecting&lt;/h3&gt;
+&lt;p&gt;When you are done developing a mod, click &lt;em&gt;Disconnect&lt;/em&gt; to exit the development workflow. This will force a synchronization of the local files to Spotfire, and unlock save options. The mod is now embedded in the analysis.&lt;/p&gt;
+&lt;h2 id=&#34;saving-to-the-library&#34;&gt;Saving to the library&lt;/h2&gt;
+&lt;p&gt;When a mod is embedded in the analysis (disconnected), you can share it with others by saving it to the library. In the &lt;em&gt;Mods development&lt;/em&gt; tool, you can right-click a mod in the sidebar and select &lt;em&gt;Save as library item&lt;/em&gt; from the menu. It is also possible to save a visualization mod from the &lt;em&gt;Visualization types&lt;/em&gt; flyout, and an action mod from the &lt;em&gt;Actions&lt;/em&gt; flyout.&lt;/p&gt;
 &lt;h2 id=&#34;sharing-mods&#34;&gt;Sharing mods&lt;/h2&gt;
+&lt;p&gt;When sharing a final version of the mod to end users, you might want to consider the form in which the mod is shared. Code minification and obfuscation should be considered in such cases, because it will:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Minimize the footprint of the mod, as minimized code is much more compact, making the mod file smaller.&lt;/li&gt;
+&lt;li&gt;Protect the intellectual property. Minimized and obfuscated code is harder to read and understand.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To minimize and obfuscate the code, run the following commands:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;npm run build&lt;/code&gt; This will build the mod &lt;em&gt;once&lt;/em&gt; in a minimized and obfuscated form.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;npm run server&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can now connect to the mods development server just like described above.&lt;/p&gt;
 &lt;p&gt;To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html&#34;&gt;Trusting custom content in the Spotfire environment&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a visualization mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from &lt;a href=&#34;https://edelivery.tibco.com/&#34;&gt;edelivery.tibco.com&lt;/a&gt;, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &amp;gt; Downloads.&lt;/p&gt;
 &lt;p&gt;An administrator can also import a certificate from one system to another to keep signed items valid. See &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html&#34;&gt;Moving certificates from one system to another&lt;/a&gt; for more information.&lt;/p&gt;
-&lt;h2 id=&#34;faq&#34;&gt;FAQ&lt;/h2&gt;
-&lt;h3 id=&#34;how-do-i-use-types-in-javascript-files&#34;&gt;How do I use types in JavaScript files?&lt;/h3&gt;
-&lt;p&gt;Even though JavaScript lacks type support, it is possible to get a long way with the help of JSDoc comments. The TypeScript language service in Visual Studio Code can parse JSDoc type comments and provide IntelliSense when using the Spotfire mods API. The following snippet defines the variable &lt;code&gt;dataView&lt;/code&gt; as an instance of &lt;code&gt;Spotfire.DataView&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataView} */&lt;/span&gt;
-&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This can be useful in cases where the API allows generic types, such as a continuous value:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/**@type {Spotfire.DataViewContinuousValue&amp;lt;number&amp;gt;} */&lt;/span&gt;
-&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The same would have been done in TypeScript like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;why-dont-changes-to-the-mod-manifestjson-file-take-effect-in-my-analysis&#34;&gt;Why don’t changes to the mod-manifest.json file take effect in my analysis?&lt;/h3&gt;
-&lt;p&gt;The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the development server is connected, disconnected or when the &lt;em&gt;Reload manifest&lt;/em&gt; button is clicked.&lt;/p&gt;
-&lt;p&gt;When the development server is in a connected state, Spotfire points the mod iframe&amp;rsquo;s source directly against the development server. Any UI changes seen while the server is connected are not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt; Reload the manifest via the development popup.&lt;/p&gt;
-&lt;h3 id=&#34;why-cant-i-make-an-ajax-call-to-read-an-embedded-resource&#34;&gt;Why can&amp;rsquo;t I make an ajax call to read an embedded resource?&lt;/h3&gt;
-&lt;p&gt;A mod is executed inside a sandboxed iframe. A sandboxed iframe sets the origin header to &amp;lsquo;null&amp;rsquo; for any ajax request. This means that the server must be configured to handle Cross-Origin Resource Sharing (CORS). The server should allow &lt;code&gt;&#39;null&#39;&lt;/code&gt; or &lt;code&gt;*&lt;/code&gt; in order to serve a request made from a mod. The Spotfire runtime does not accept CORS requests and will therefore not serve any request made from a mod, even though it might be for an embedded resource in the mod itself.&lt;/p&gt;
-&lt;p&gt;Linked scripts, images and CSS files do not rely on CORS to function and can be linked to. Font files rely on CORS and can therefore not be linked to. To get a font working inside the mod a data uri can be used.&lt;/p&gt;
-&lt;h3 id=&#34;why-is-an-external-resource-not-loading-correctly-due-to-a-content-security-policy&#34;&gt;Why is an external resource not loading correctly due to a content security policy?&lt;/h3&gt;
-&lt;p&gt;Mods are covered by a strict content security policy by default. The mod is only allowed to load embedded resources and any external resource request is blocked. A mod can declare a set of external resources in the &lt;code&gt;mod-manifest.json&lt;/code&gt; to unblock these resources from being loaded.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; A visualization mod with external resources cannot be exported using the web client.&lt;/p&gt;
-&lt;h3 id=&#34;why-doesnt-live-reload-work&#34;&gt;Why doesn’t live reload work?&lt;/h3&gt;
-&lt;p&gt;If the live reload feature does not work when using the development server, try disabling the network cache in the Chrome Developer tools.
-Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then select the &lt;em&gt;Disable cache&lt;/em&gt; checkbox.&lt;/p&gt;
 
       </description>
     </item>
     
     <item>
-      <title>Docs: API documentation</title>
-      <link>/spotfire-mods/docs/using-the-api/api-docs/</link>
-      <pubDate>Fri, 13 Nov 2020 00:00:00 +0000</pubDate>
+      <title>Docs: Action mods API documentation</title>
+      <link>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
       
-      <guid>/spotfire-mods/docs/using-the-api/api-docs/</guid>
+      <guid>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</guid>
       <description>
         
         
-        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;API documentation&lt;/a&gt; lists all interfaces, type aliases, and functions in the API. It contains a short introduction and describes how to use them. From each interface you can also find a direct link to the &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; to get a hierarchical perspective.&lt;/p&gt;
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/action-mods/&#34;&gt;action mods API documentation&lt;/a&gt; lists all namespaces, classes, types, and methods in the API. It contains a short introduction and describes how to use them.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/api-docs-action-mods.png&#34; alt=&#34;Action mods APIs &#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;
+&lt;p&gt;The version number is the same for all mods API:s. Therefore, there are no older versions than 2.0 of this API.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Visualization mods API documentation</title>
+      <link>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods&#34;&gt;visualiztion mods API documentation&lt;/a&gt; lists all interfaces, type aliases, and functions in the visualization mods API. It contains a short introduction and describes how to use them. From each interface you can also find a direct link to the &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; to get a hierarchical perspective.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;&lt;img src=&#34;api-documentation.png&#34; alt=&#34;API Documentation&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;
 &lt;p&gt;The latest API version is backwards compatible with older 1.x release. All new functionality is marked by a &lt;code&gt;version&lt;/code&gt; tag.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/v1-0/&#34;&gt;API documentation version 1.0&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/v1-1/&#34;&gt;API documentation version 1.1&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/v1-2/&#34;&gt;API documentation version 1.2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/v1-0/&#34;&gt;API documentation version 1.0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/v1-1/&#34;&gt;API documentation version 1.1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/v1-2/&#34;&gt;API documentation version 1.2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/v1-3/&#34;&gt;API documentation version 1.3&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -839,10 +1008,10 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
     
     <item>
       <title>Docs: Mod data views</title>
-      <link>/spotfire-mods/docs/using-the-api/mod-data-views/</link>
+      <link>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</link>
       <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>/spotfire-mods/docs/using-the-api/mod-data-views/</guid>
+      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</guid>
       <description>
         
         
@@ -881,10 +1050,10 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 &lt;p&gt;&lt;img src=&#34;BarChart3.PNG&#34; alt=&#34;Bar Chart 3&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;consuming-data-from-javascript&#34;&gt;Consuming data from JavaScript&lt;/h2&gt;
 &lt;h3 id=&#34;the-data-view-object&#34;&gt;The data view object&lt;/h3&gt;
-&lt;p&gt;On the javascript side data is retrieved via a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataView.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to &lt;code&gt;await&lt;/code&gt; their result.&lt;/p&gt;
-&lt;p&gt;There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewRow.html#continuous&#34;&gt;continuous&lt;/a&gt; method for continuous axes and a  &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewRow.html#categorical&#34;&gt;categorical&lt;/a&gt; method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:&lt;/p&gt;
+&lt;p&gt;On the javascript side data is retrieved via a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to &lt;code&gt;await&lt;/code&gt; their result.&lt;/p&gt;
+&lt;p&gt;There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#continuous&#34;&gt;continuous&lt;/a&gt; method for continuous axes and a  &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#categorical&#34;&gt;categorical&lt;/a&gt; method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;yValue&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The value retrieved by these methods can be of two types depending on which one is called. Either it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewContinuousValue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewCategoricalValue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. To list all values of a data view in csv like format, you could do this:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The value retrieved by these methods can be of two types depending on which one is called. Either it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewContinuousValue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. To list all values of a data view in csv like format, you could do this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;logDataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
     &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Print axes names
@@ -908,17 +1077,17 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 Apples,16000
 Oranges,31000
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;dataviewcontinuousvalue-and-dataviewcategoricalvalue&#34;&gt;DataViewContinuousValue and DataViewCategoricalValue&lt;/h3&gt;
-&lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewContinuousValue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt; is a simple object with methods to retrieve the actual value (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewContinuousValue.html#value&#34;&gt;value&lt;/a&gt;), and to get a string representation of it (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewContinuousValue.html#formattedValue&#34;&gt;formattedValue&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewCategoricalValue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; on the other hand is a bit more complicated. Since categorical axes form hierarchies, each &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewCategoricalValue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example, the output from the logDataView function would be:&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewContinuousValue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt; is a simple object with methods to retrieve the actual value (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewContinuousValue.html#value&#34;&gt;value&lt;/a&gt;), and to get a string representation of it (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewContinuousValue.html#formattedValue&#34;&gt;formattedValue&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; on the other hand is a bit more complicated. Since categorical axes form hierarchies, each &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt; is made up from parts describing the path in the hierarchy. However, a mod developer may choose to ignore this and treat the whole path as a single value as seen in the simple code example above. For the third bar chart example, the output from the logDataView function would be:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-csv&#34; data-lang=&#34;csv&#34;&gt;X,Y
 Apples &amp;gt;&amp;gt; Spain,2500
 Apples &amp;gt;&amp;gt; USA,13500
 Oranges &amp;gt;&amp;gt; Spain,12000
 Oranges &amp;gt;&amp;gt; USA,19000
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewCategoricalValue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewCategoricalValuePathElement.html&#34;&gt;DataViewCategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewCategoricalValue.html#leafIndex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If, on the other hand, you want to access all parts of the path this can be done via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html#path&#34;&gt;path&lt;/a&gt; property that returns an array of &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValuePathElement.html&#34;&gt;DataViewCategoricalValuePathElement&lt;/a&gt; objects. There is also a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html#leafIndex&#34;&gt;leafIndex&lt;/a&gt; property, which is the index of this value among the leaves in the hierarchy generated for the axis. This leads us to the next subject.&lt;/p&gt;
 &lt;h3 id=&#34;hierarchies&#34;&gt;Hierarchies&lt;/h3&gt;
-&lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewHierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewCategoricalAxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataView.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
-&lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and a method to retrieve the root of the tree (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewHierarchy.html#root&#34;&gt;root&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaf nodes retrieved from the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewHierarchyNode.html#leaves&#34;&gt;&lt;code&gt;leaves&lt;/code&gt;&lt;/a&gt; method on the root object.&lt;/p&gt;
+&lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalAxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
+&lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and a method to retrieve the root of the tree (&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchy.html#root&#34;&gt;root&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaf nodes retrieved from the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchyNode.html#leaves&#34;&gt;&lt;code&gt;leaves&lt;/code&gt;&lt;/a&gt; method on the root object.&lt;/p&gt;
 &lt;p&gt;Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;logViaHierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
@@ -988,11 +1157,11 @@ Oranges &amp;gt;&amp;gt; USA,19000
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;Time&lt;/td&gt;
-&lt;td&gt;Custom object &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/Time.html&#34;&gt;Time&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Custom object &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/Time.html&#34;&gt;Time&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;TimeSpan&lt;/td&gt;
-&lt;td&gt;Custom objecet &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/TimeSpan.html&#34;&gt;TimeSpan&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Custom objecet &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/TimeSpan.html&#34;&gt;TimeSpan&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;Boolean&lt;/td&gt;
@@ -1025,7 +1194,7 @@ For continuous axes it is possible to specify what data types should be supporte
 &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &amp;ldquo;mode&amp;rdquo; and other properties for the color axis are specified the same way as for other axes.&lt;/p&gt;
 &lt;p&gt;On the Javascript side you access the data values for the color axis by referring to it by its name, &amp;ldquo;Color&amp;rdquo;.
-The actual color computed for each row can be retrieved via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataViewRow.html#color&#34;&gt;color&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
+The actual color computed for each row can be retrieved via the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#color&#34;&gt;color&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
 &lt;h2 id=&#34;using-multiple-measures-on-continuous-axes&#34;&gt;Using multiple measures on continuous axes&lt;/h2&gt;
 &lt;p&gt;By default you can only have a single measure on a continuous axis. However Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &amp;ldquo;allowMultipleMeasures&amp;rdquo; flag to true for the axis in the manifest.&lt;/p&gt;
 &lt;p&gt;When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &amp;ldquo;(Column Names)&amp;rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.&lt;/p&gt;
@@ -1039,11 +1208,55 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
     </item>
     
     <item>
+      <title>Docs: Action mod manifest schema</title>
+      <link>/spotfire-mods/docs/action-mods/using-the-api/mod-schema/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/action-mods/using-the-api/mod-schema/</guid>
+      <description>
+        
+        
+        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/spotfire-mods/action-mods-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+&lt;script type=&#34;application/javascript&#34;&gt;
+
+    function resizeIFrameToFitContent( ) {
+        let frame = document.getElementById(&#34;schema-frame&#34;);
+        frame.height = frame.contentWindow.document.body.scrollHeight;
+    }
+    window.addEventListener(&#34;resize&#34;,resizeIFrameToFitContent);
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Visualization mod manifest schema</title>
+      <link>/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/</guid>
+      <description>
+        
+        
+        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/spotfire-mods/visualization-mods-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+&lt;script type=&#34;application/javascript&#34;&gt;
+
+    function resizeIFrameToFitContent( ) {
+        let frame = document.getElementById(&#34;schema-frame&#34;);
+        frame.height = frame.contentWindow.document.body.scrollHeight;
+    }
+    window.addEventListener(&#34;resize&#34;,resizeIFrameToFitContent);
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Create an icon for your visualization mod</title>
-      <link>/spotfire-mods/docs/tutorials/mod-icons/</link>
+      <link>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</link>
       <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>/spotfire-mods/docs/tutorials/mod-icons/</guid>
+      <guid>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</guid>
       <description>
         
         
@@ -1082,47 +1295,25 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
     </item>
     
     <item>
-      <title>Docs: Mod schema</title>
-      <link>/spotfire-mods/docs/using-the-api/mod-schema/</link>
-      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/spotfire-mods/docs/using-the-api/mod-schema/</guid>
-      <description>
-        
-        
-        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/spotfire-mods/mod-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
-&lt;script type=&#34;application/javascript&#34;&gt;
-
-    function resizeIFrameToFitContent( ) {
-        let frame = document.getElementById(&#34;schema-frame&#34;);
-        frame.height = frame.contentWindow.document.body.scrollHeight;
-    }
-    window.addEventListener(&#34;resize&#34;,resizeIFrameToFitContent);
-&lt;/script&gt;
-
-      </description>
-    </item>
-    
-    <item>
       <title>Docs: Working with mod readers</title>
-      <link>/spotfire-mods/docs/using-the-api/working-with-readables/</link>
-      <pubDate>Fri, 13 Nov 2020 00:00:00 +0000</pubDate>
+      <link>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
       
-      <guid>/spotfire-mods/docs/using-the-api/working-with-readables/</guid>
+      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</guid>
       <description>
         
         
-        &lt;p&gt;The Spotfire Mod API exposes a set of &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview/#Readable&#34;&gt;Readables&lt;/a&gt;, such as the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataView.html&#34;&gt;&lt;code&gt;DataView&lt;/code&gt;&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/AnalysisProperty.html&#34;&gt;&lt;code&gt;properties&lt;/code&gt;&lt;/a&gt;. These can be consumed by a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/Reader.html&#34;&gt;Reader&lt;/a&gt; in order to read their values and subscribe to changes.&lt;/p&gt;
+        &lt;p&gt;The Spotfire Mod API exposes a set of &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview/#Readable&#34;&gt;Readables&lt;/a&gt;, such as the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html&#34;&gt;&lt;code&gt;DataView&lt;/code&gt;&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/AnalysisProperty.html&#34;&gt;&lt;code&gt;properties&lt;/code&gt;&lt;/a&gt;. These can be consumed by a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html&#34;&gt;Reader&lt;/a&gt; in order to read their values and subscribe to changes.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;),&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;!-- managing state, the callback will always be invoked with the latest up to date state. --&gt;
 &lt;p&gt;The aim of a &lt;code&gt;reader&lt;/code&gt; is to simplify the synchronization of reading related values. An example is a visualization that depends on the window&amp;rsquo;s &lt;code&gt;size&lt;/code&gt; and the &lt;code&gt;dataview&lt;/code&gt;. When one of the two changes, the visualization needs to be redrawn. The &lt;code&gt;reader&lt;/code&gt; fetches new values and keeps unchanged values in memory.&lt;/p&gt;
-&lt;p&gt;The API exposes readables for the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataView.html&#34;&gt;Data&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/ModProperty.html&#34;&gt;Properties&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/AnalysisProperty.html&#34;&gt;Document Properties&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/Page.html&#34;&gt;Pages&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/Size.html&#34;&gt;Window size&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/Axis.html&#34;&gt;Axes&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/DataTable.html&#34;&gt;Tables&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/Column.html&#34;&gt;Columns&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The API exposes readables for the &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html&#34;&gt;Data&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/ModProperty.html&#34;&gt;Properties&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/AnalysisProperty.html&#34;&gt;Document Properties&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/Page.html&#34;&gt;Pages&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/Size.html&#34;&gt;Window size&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/Axis.html&#34;&gt;Axes&lt;/a&gt;, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/DataTable.html&#34;&gt;Tables&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/Column.html&#34;&gt;Columns&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;methods&#34;&gt;Methods&lt;/h3&gt;
 &lt;p&gt;A &lt;code&gt;reader&lt;/code&gt; has three methods; &lt;code&gt;subscribe&lt;/code&gt;, &lt;code&gt;once&lt;/code&gt; and &lt;code&gt;hasExpired&lt;/code&gt;.&lt;/p&gt;
 &lt;h4 id=&#34;subscribecallback&#34;&gt;&lt;code&gt;subscribe(callback)&lt;/code&gt;&lt;/h4&gt;
 &lt;p&gt;Subscribe will be the most common way to work with &lt;code&gt;readables&lt;/code&gt;. It sets up a subscription to new changes of the &lt;code&gt;readables&lt;/code&gt; provided to the &lt;code&gt;reader&lt;/code&gt;. When one or more &lt;code&gt;readables&lt;/code&gt; gets updated on the server, the &lt;code&gt;reader&lt;/code&gt; fetch all new values and invoke the provided &lt;code&gt;callback&lt;/code&gt; with updated values.&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;reader&lt;/code&gt; will only allow one &lt;code&gt;subscribe&lt;/code&gt; &lt;code&gt;callback&lt;/code&gt; to be active at a time. This means that the &lt;code&gt;callback&lt;/code&gt; will finish executing before a new &lt;code&gt;callback&lt;/code&gt; is scheduled. The following example shows how the &lt;code&gt;callback&lt;/code&gt; will not be invoked again until its returning &lt;code&gt;promise&lt;/code&gt; has settled. Even if the &lt;code&gt;dataView&lt;/code&gt; is changed by marking or filtering. After the &lt;code&gt;callback&lt;/code&gt; has finished executing, the &lt;code&gt;callback&lt;/code&gt; is invoked again if there are any changed values. The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/Reader.html#hasExpired&#34;&gt;&lt;code&gt;hasExpired&lt;/code&gt;&lt;/a&gt; method can be used to check whether any &lt;code&gt;readables&lt;/code&gt; have been invalidated while the &lt;code&gt;callback&lt;/code&gt; has been executing.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;reader&lt;/code&gt; will only allow one &lt;code&gt;subscribe&lt;/code&gt; &lt;code&gt;callback&lt;/code&gt; to be active at a time. This means that the &lt;code&gt;callback&lt;/code&gt; will finish executing before a new &lt;code&gt;callback&lt;/code&gt; is scheduled. The following example shows how the &lt;code&gt;callback&lt;/code&gt; will not be invoked again until its returning &lt;code&gt;promise&lt;/code&gt; has settled. Even if the &lt;code&gt;dataView&lt;/code&gt; is changed by marking or filtering. After the &lt;code&gt;callback&lt;/code&gt; has finished executing, the &lt;code&gt;callback&lt;/code&gt; is invoked again if there are any changed values. The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html#hasExpired&#34;&gt;&lt;code&gt;hasExpired&lt;/code&gt;&lt;/a&gt; method can be used to check whether any &lt;code&gt;readables&lt;/code&gt; have been invalidated while the &lt;code&gt;callback&lt;/code&gt; has been executing.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;visualization&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
 
 &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;render&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
@@ -1234,7 +1425,7 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;separating-initial-setup-from-updates&#34;&gt;Separating initial setup from updates&lt;/h2&gt;
-&lt;p&gt;If a mod needs some initial setup before starting to listen for changes, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/Reader.html#once&#34;&gt;&lt;code&gt;reader.once&lt;/code&gt;&lt;/a&gt; can be used with a setup &lt;code&gt;callback&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If a mod needs some initial setup before starting to listen for changes, &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html#once&#34;&gt;&lt;code&gt;reader.once&lt;/code&gt;&lt;/a&gt; can be used with a setup &lt;code&gt;callback&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;A &lt;code&gt;reader&lt;/code&gt; will only trigger a new &lt;code&gt;callback&lt;/code&gt; if any of its &lt;code&gt;Readables&lt;/code&gt; has changed since it was last part of a &lt;code&gt;reader&lt;/code&gt; &lt;code&gt;callback&lt;/code&gt;. That means we can separate the setup from upcoming updates without triggering unnecessary &lt;code&gt;callbacks&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;In the following example, there are three &lt;code&gt;Readables&lt;/code&gt;. They are first read together in an initial &lt;code&gt;once&lt;/code&gt; &lt;code&gt;callback&lt;/code&gt; as a setup for the mod. They are afterwards separated into two &lt;code&gt;readers&lt;/code&gt;, one for the property and one for the rendering loop. Neither of the subscription &lt;code&gt;callbacks&lt;/code&gt; will be invoked immediately. Instead they will wait until one of the &lt;code&gt;readables&lt;/code&gt; change.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;setupReader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
@@ -1329,7 +1520,7 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;myProperty&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
 &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;myProperty&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;readableproxy&#34;&gt;ReadableProxy&lt;/h3&gt;
-&lt;p&gt;If a value has synchronous methods, e.g a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/interfaces/ModProperty.html#set&#34;&gt;mod property&lt;/a&gt;, a &lt;code&gt;ReadableProxy&lt;/code&gt; will be returned from the API instead of a &lt;code&gt;Readable&lt;/code&gt;. The &lt;code&gt;ReadableProxy&lt;/code&gt; is a &lt;code&gt;Readable&lt;/code&gt; augmented with all synchronous methods of the encapsulated value, without the need to await the encapuslated value. This means a property can be set, without knowing its value.&lt;/p&gt;
+&lt;p&gt;If a value has synchronous methods, e.g a &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods/interfaces/ModProperty.html#set&#34;&gt;mod property&lt;/a&gt;, a &lt;code&gt;ReadableProxy&lt;/code&gt; will be returned from the API instead of a &lt;code&gt;Readable&lt;/code&gt;. The &lt;code&gt;ReadableProxy&lt;/code&gt; is a &lt;code&gt;Readable&lt;/code&gt; augmented with all synchronous methods of the encapsulated value, without the need to await the encapuslated value. This means a property can be set, without knowing its value.&lt;/p&gt;
 &lt;!-- When the encapsulated value of a Readable has a set of methods, the API returns a ReadableProxy instead.  --&gt;
 &lt;p&gt;In the following example the mod property &lt;code&gt;myProperty&lt;/code&gt; is modified without awaiting its encapsulated value.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;set&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;new value&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
@@ -1341,6 +1532,160 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
 &lt;/ul&gt;
 &lt;h2 id=&#34;full-examples&#34;&gt;Full examples&lt;/h2&gt;
 &lt;p&gt;All examples can bee downloaded &lt;a href=&#34;examples.js&#34;&gt;here&lt;/a&gt;. They can be tested with one of the existing examples, such as the &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods/tree/master/examples/js-dev-starter&#34;&gt;js-dev-starter&lt;/a&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Getting started (before 14.4)</title>
+      <link>/spotfire-mods/docs/visualization-mods/getting-started-11/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/getting-started-11/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;developing-a-visualization-mod&#34;&gt;Developing a visualization mod&lt;/h2&gt;
+&lt;p&gt;Spotfire® Mods is a framework to create interactive visualizations in Spotfire®. It is based on web technologies and it runs in a sandboxed iframe.&lt;/p&gt;
+&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt;&lt;br&gt;
+This is needed to develop and test a mod. Development can be done against the installed client (Spotfire® Analyst) or the web client (Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;
+&lt;p&gt;Spotfire version 11.0 or newer is required for mod development. See also &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods#spotfire-versions-and-their-mod-api&#34;&gt;Spotfire versions and their Mod API&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A code editor.&lt;/strong&gt;&lt;br&gt;
+It is highly recommended to use Microsoft &lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt; (VS Code) when developing a mod. The instructions in this document assume that VS Code is used as code editor. The mod example projects that are available for developers, include predefined settings for VS Code that enable a default build task, IntelliSense in the mod manifest, and IntelliSense in the JavaScript code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Node.js installed.&lt;/strong&gt;&lt;br&gt;
+To enable live updates when developing a mod, a set of tools based on &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; is needed. The mod example specifies a set of development dependencies in its &lt;code&gt;package.json&lt;/code&gt; file. These are installed when executing &lt;code&gt;npm install&lt;/code&gt; in the same directory as the package.json file. The install script is also executed as part of the default build task in VS Code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;sub&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.
+&lt;/sub&gt;&lt;/p&gt;
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
+&lt;h4 id=&#34;1-create-an-empty-visualization-mod-in-spotfire&#34;&gt;1. Create an empty visualization mod in Spotfire&lt;/h4&gt;
+&lt;p&gt;Open Spotfire and load some data. Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create visualization mod&lt;/em&gt;. This will create an empty mod.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/empty-mod.png&#34; alt=&#34;Empty mod&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2-start-from-a-mod-example&#34;&gt;2. Start from a mod example&lt;/h4&gt;
+&lt;p&gt;Click &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;here&lt;/a&gt; to access the example mod projects to start the development from. Extract the zip archive locally. The extracted zip archive contains examples of mods, using the mod API in different ways.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-barchart&lt;/strong&gt;&lt;br&gt;
+To get familiar with mod development, start with this example containing a simple bar chart. This is the example that will be used in the following sections of this getting started guide.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-starter&lt;/strong&gt;&lt;br&gt;
+This example can be used as a starting point for any new mod.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-starter-ie11&lt;/strong&gt;&lt;br&gt;
+This example can be used as a starting point for any new mod that is also compatible with the IE11 browser.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt;&lt;br&gt;
+This example is a basic bar chart that is built using the Google Charts library. The &lt;a href=&#34;../tutorials/barchart-googlechart/&#34;&gt;tutorial&lt;/a&gt; covers the steps taken to create this bar chart from scratch.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ts-dev-gauge-googlecharts&lt;/strong&gt;&lt;br&gt;
+This is an example of a gauge visualization that is developed in TypeScript using the Google Charts library and bundled with Rollup.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-circular-treemap&lt;/strong&gt;&lt;br&gt;
+This example is a simple circular treemap built using the D3 library. It shows how hierarchies in mod data views can be mapped to D3 hierarchies. Some basic concepts such as using a color axis, and implementing marking and tooltips are covered as well.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;js-areachart-d3&lt;/strong&gt;&lt;br&gt;
+This is a more complex example built using the D3 library, where you can see how the API can be used to take advantage of a lot of features in Spotfire.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ts-spiderchart-d3&lt;/strong&gt;&lt;br&gt;
+This is an example of a spider chart developed in TypeScript, rendered with D3, and bundled with webpack.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each example contains a README file with detailed instructions specific to the example.&lt;/p&gt;
+&lt;h4 id=&#34;3-start-local-development-server&#34;&gt;3. Start local development server&lt;/h4&gt;
+&lt;p&gt;To use the js-dev-barchart example, open the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
+&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
+&lt;h4 id=&#34;4-connect-spotfire-to-the-development-server&#34;&gt;4. Connect Spotfire to the development server&lt;/h4&gt;
+&lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the pop-up that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/connect-to-development-server.gif&#34; alt=&#34;Connect to development server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If a visualization appears, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
+&lt;h4 id=&#34;5-start-editing-your-example&#34;&gt;5. Start editing your example&lt;/h4&gt;
+&lt;p&gt;Now switch over to VS Code to start editing the mod implementation.&lt;/p&gt;
+&lt;p&gt;The src folder includes HTML, CSS and JavaScript files that together form the mod implementation. It also contains a mod-manifest.json file that contains metadata about the mod. If any .html/css/js file in the src folder is changed while the development server is running, the mod will be reloaded in Spotfire.&lt;/p&gt;
+&lt;p&gt;As an example, open the main.css file and try to change the background property of body. As soon as the css file is saved, the change will appear in Spotfire.&lt;/p&gt;
+&lt;p&gt;For information about how the Spotfire Mod API is accessed, open the main.js file.&lt;/p&gt;
+&lt;h2 id=&#34;mod-example-folder-structure&#34;&gt;Mod example folder structure&lt;/h2&gt;
+&lt;p&gt;The following files and folders are part of the example:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;File&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;.vscode&lt;/td&gt;
+&lt;td&gt;Settings for VS Code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;spotfire&lt;/td&gt;
+&lt;td&gt;Files related to the mod API.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;src&lt;/td&gt;
+&lt;td&gt;Folder for the mod&amp;rsquo;s source code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;package.json&lt;/td&gt;
+&lt;td&gt;Lists the Node.js dependencies and necessary scripts.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;prettier.config.js&lt;/td&gt;
+&lt;td&gt;Configuration file for formatting with the tool prettier.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;README.md&lt;/td&gt;
+&lt;td&gt;Instructions on how to get started.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tsconfig.json&lt;/td&gt;
+&lt;td&gt;TypeScript project file. It links the &lt;code&gt;/spotfire/spotfire-api.dts&lt;/code&gt; file for IntelliSense in your code.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;the-mod-manifestjson-file&#34;&gt;The mod-manifest.json file&lt;/h2&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in a file called mod-manifest.json. It is used to give the mod a name and an id, and to define axes and their placement. It is also used to list all files used by the mod. Only files listed in the ‘files’ property will be embedded by Spotfire.&lt;/p&gt;
+&lt;p&gt;For changes in the manifest to take effect, the manifest must be reloaded manually in Spotfire. Click the puzzle icon on the title bar of the visualization mod, and then click the &lt;em&gt;Reload manifest&lt;/em&gt; button in the popup that opens.&lt;/p&gt;
+&lt;h2 id=&#34;debugging&#34;&gt;Debugging&lt;/h2&gt;
+&lt;p&gt;The mod can be debugged via the Developer tools in Spotfire. These tools are the same as the tools used by Chrome. To access the Developer tools, use the following keyboard commands.
+In Spotfire® Analyst: &lt;em&gt;Ctrl+Alt+Shift+F12&lt;/em&gt;
+In Spotfire® Business Author: &lt;em&gt;F12&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;To find the main.js file, use the Open file command (Ctrl+P) and type the file&amp;rsquo;s name. In the opened file, it is possible to set breakpoints. It is also possible to execute code in the console.
+More information about Chrome DevTools can be found here:
+&lt;a href=&#34;https://developers.google.com/web/tools/chrome-devtools&#34;&gt;https://developers.google.com/web/tools/chrome-devtools&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/h2&gt;
+&lt;p&gt;The required browser when developing mods against the web client is Google Chrome. This is due to how browsers behave with regards to loading http content from a https context. The development server is serving files from &lt;a href=&#34;http://127.0.0.1:8090&#34;&gt;http://127.0.0.1:8090&lt;/a&gt;, which according to the W3C specification is a &lt;a href=&#34;https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-origin&#34;&gt;potentially trustworthy origin&lt;/a&gt;. Currently only Chrome behaves correctly with regards to this. Other browser vendors are implementing support for this and might work in the future.&lt;/p&gt;
+&lt;p&gt;Note also that when developing a mod in the web client, it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the &lt;em&gt;Browse&lt;/em&gt; button will not be available in the web client.&lt;/p&gt;
+&lt;h2 id=&#34;embedding-the-mod-and-saving-to-the-library&#34;&gt;Embedding the mod and saving to the library&lt;/h2&gt;
+&lt;p&gt;When the development is done, disconnect from the server to embed the mod in the analysis.
+&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/disconnect-and-embed.gif&#34; alt=&#34;Disconnect from development server to embed mod&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;saving-the-mod-to-the-spotfire-library&#34;&gt;Saving the mod to the Spotfire library&lt;/h3&gt;
+&lt;p&gt;When your mod has been embedded in the analysis, you can share the mod with others by saving it to the library.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Click the puzzle icon in the title bar to open the development popup.&lt;/li&gt;
+&lt;li&gt;Click &lt;em&gt;Save to library&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;In the dialog that opens, navigate to the folder where you want to save the mod, and click &lt;em&gt;Save&lt;/em&gt;.
+When the mod has been saved to the library, it is possible for others, connected to the same library, to use your mod in their analyses. The mod can also be pinned to the visualization flyout.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;sharing-mods&#34;&gt;Sharing mods&lt;/h2&gt;
+&lt;p&gt;To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html&#34;&gt;Trusting custom content in the Spotfire environment&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a visualization mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from &lt;a href=&#34;https://edelivery.tibco.com/&#34;&gt;edelivery.tibco.com&lt;/a&gt;, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &amp;gt; Downloads.&lt;/p&gt;
+&lt;p&gt;An administrator can also import a certificate from one system to another to keep signed items valid. See &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html&#34;&gt;Moving certificates from one system to another&lt;/a&gt; for more information.&lt;/p&gt;
 
       </description>
     </item>

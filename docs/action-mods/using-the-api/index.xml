@@ -1,0 +1,58 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spotfire® Mods – Using the action mods API</title>
+    <link>/spotfire-mods/docs/action-mods/using-the-api/</link>
+    <description>Recent content in Using the action mods API on Spotfire® Mods</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/spotfire-mods/docs/action-mods/using-the-api/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Action mods API documentation</title>
+      <link>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/action-mods/&#34;&gt;action mods API documentation&lt;/a&gt; lists all namespaces, classes, types, and methods in the API. It contains a short introduction and describes how to use them.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/api-docs-action-mods.png&#34; alt=&#34;Action mods APIs &#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;
+&lt;p&gt;The version number is the same for all mods API:s. Therefore, there are no older versions than 2.0 of this API.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Action mod manifest schema</title>
+      <link>/spotfire-mods/docs/action-mods/using-the-api/mod-schema/</link>
+      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/action-mods/using-the-api/mod-schema/</guid>
+      <description>
+        
+        
+        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/spotfire-mods/action-mods-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+&lt;script type=&#34;application/javascript&#34;&gt;
+
+    function resizeIFrameToFitContent( ) {
+        let frame = document.getElementById(&#34;schema-frame&#34;);
+        frame.height = frame.contentWindow.document.body.scrollHeight;
+    }
+    window.addEventListener(&#34;resize&#34;,resizeIFrameToFitContent);
+&lt;/script&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

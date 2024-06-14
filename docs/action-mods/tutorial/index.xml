@@ -1,0 +1,18 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spotfire® Mods – Tutorial</title>
+    <link>/spotfire-mods/docs/action-mods/tutorial/</link>
+    <description>Recent content in Tutorial on Spotfire® Mods</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/spotfire-mods/docs/action-mods/tutorial/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+  </channel>
+</rss>

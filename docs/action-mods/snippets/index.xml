@@ -1,0 +1,18 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spotfire® Mods – Snippets</title>
+    <link>/spotfire-mods/docs/action-mods/snippets/</link>
+    <description>Recent content in Snippets on Spotfire® Mods</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/spotfire-mods/docs/action-mods/snippets/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+  </channel>
+</rss>

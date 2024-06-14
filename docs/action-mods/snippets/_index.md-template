@@ -1,0 +1,18 @@
+---
+title: "Snippets"
+linkTitle: "Snippets"
+date: 2024-06-05
+weight: 3
+description: >
+    Snippets showing what is possible to do with the API.
+---
+
+## How to use a snippet
+
+Each snippet listed below contains three code blocks. The first block shows the command to run to add the script with an ID and a name. For example `npx @spotfire/mods-sdk add-script my-snippet-id --name my-snippet-name`.
+The second block shows the expected entry in the `scripts` array of the mod manifest. The third block shows the source code of the script.
+Test the snippet by adding the entry to your mod manifest, then copy and paste the source code into the script file.
+Some snippets use APIs which require your mod to declare additional capabilities.
+
+## Snippets
+$INSERT_SNIPPETS_HERE$

@@ -30,8 +30,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.f6340a45ad80c8a13971468118488a8811618a14f60de86443e7dda472982aaa.css" as="style">
-<link href="/spotfire-mods/scss/main.min.f6340a45ad80c8a13971468118488a8811618a14f60de86443e7dda472982aaa.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.72f22e8e0ad59e83cda05666a5594340373d136102f4b18ebc46130efa7d36bc.css" as="style">
+<link href="/spotfire-mods/scss/main.min.72f22e8e0ad59e83cda05666a5594340373d136102f4b18ebc46130efa7d36bc.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -61,7 +61,13 @@
 				
 				
 				
-				<a class="nav-link" href="/spotfire-mods/about/" ><span>About</span></a>
+				
+				<a class="nav-link" 
+				href="/spotfire-mods/about/" 
+				>
+				<span>About</span></a>
+				
+				
 			</li>
 			
 			<li class="nav-item mr-4 mb-2 mb-lg-0">
@@ -71,7 +77,13 @@
 				
 				
 				
-				<a class="nav-link" href="/spotfire-mods/docs/" ><span>Documentation</span></a>
+				
+				<a class="nav-link" 
+				href="/spotfire-mods/docs/" 
+				>
+				<span>Working with mods</span></a>
+				
+				
 			</li>
 			
 			<li class="nav-item mr-4 mb-2 mb-lg-0">
@@ -80,16 +92,62 @@
 				
 				
 				
-				
-				<a class="nav-link" href="/spotfire-mods/overview/" ><span>API Overview</span></a>
-			</li>
-			
-			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				<span class="nav-link hasChildren">
+					<span >API documentation</span>
+				</span>
 				
 				
+				<ul class="navbar-subnav top">
+					
+					<li class="nav-item">
+						<span>Action mods</span>
+
+						
+						
+						<ul class="navbar-subnav">
+							
+							<li class="nav-item">
+								<a class="nav-link" 
+								href="/spotfire-mods/api-docs/action-mods/index.html" 
+								>
+								<span>API documentation</span></a>
+									</li>
+							
+						</ul>
+						
+		
+
+					</li>
+					
+					<li class="nav-item">
+						<span>Visualization mods</span>
+
+						
+						
+						<ul class="navbar-subnav">
+							
+							<li class="nav-item">
+								<a class="nav-link" 
+								href="/spotfire-mods/overview/" 
+								>
+								<span>API Overview</span></a>
+									</li>
+							
+							<li class="nav-item">
+								<a class="nav-link" 
+								href="/spotfire-mods/api-docs/visualization-mods/index.html" 
+								>
+								<span>API documentation</span></a>
+									</li>
+							
+						</ul>
+						
+		
+
+					</li>
+					
+				</ul>
 				
-				
-				<a class="nav-link" href="/spotfire-mods/api-docs/index.html" ><span>API Documentation</span></a>
 			</li>
 			
 			
@@ -184,7 +242,7 @@
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
         <small class="text-white">&copy; 2024 Cloud Software Group All Rights Reserved</small>
-        <small class="ml-1"><a href="https://www.tibco.com/company/terms-of-use" target="_blank">Privacy Policy</a></small>
+        <small class="ml-1"><a href="https://www.cloud.com/privacy-policy" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>
 	
