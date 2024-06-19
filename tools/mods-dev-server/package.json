@@ -1,6 +1,6 @@
 {
     "name": "@spotfire/mods-dev-server",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Development server for Spotfire® Mods",
     "repository": {
         "type": "git",
