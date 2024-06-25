@@ -582,6 +582,7 @@
         <li><a href="#add-a-shapefile-to-the-active-map-chart">Add a shapefile to the active map chart</a></li>
         <li><a href="#embed-all-data-tables-in-the-analysis">Embed all data tables in the analysis</a></li>
         <li><a href="#find-all-columns-that-match-a-predicate">Find all columns that match a predicate</a></li>
+        <li><a href="#insert-columns-to-an-existing-data-table-with-custom-column-match">Insert columns to an existing data table with custom column match</a></li>
         <li><a href="#read-the-values-of-a-column">Read the values of a column</a></li>
         <li><a href="#remove-all-bookmarks-from-the-document">Remove all bookmarks from the document</a></li>
         <li><a href="#remove-unreferenced-filtering-schemes">Remove unreferenced filtering schemes</a></li>
@@ -644,7 +645,7 @@
 	
 	
 	
-	<p class="-text-secondary pt-3 h6" >Reading time: 14 minutes and 45 seconds.</p>
+	<p class="-text-secondary pt-3 h6" >Reading time: 15 minutes and 45 seconds.</p>
 	<h1>Snippets</h1>
 	<div class="lead">Snippets showing what is possible to do with the API.</div>
 	
@@ -734,8 +735,8 @@ Some snippets use APIs which require your mod to declare additional capabilities
 
 <span style="color:#000">RegisterEntryPoint</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">addHorizontalBarChart</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><h3 id="add-a-shapefile-to-the-active-map-chart">Add a shapefile to the active map chart</h3>
-<p>Adds a feature layer to the active map chart visualization using a shapefile from the library. Useful when configured as an action trigger on a map chart visualization.
-<strong>Requires the following <a href="/spotfire-mods/docs/action-mods/faq/#what-are-capabilities">capabilities</a>:</strong> LibraryRead</p>
+<p>Adds a feature layer to the active map chart visualization using a shapefile from the library. Useful when configured as an action trigger on a map chart visualization.</p>
+<p><strong>Requires the following <a href="/spotfire-mods/docs/action-mods/faq/#what-are-capabilities">capabilities</a>:</strong> LibraryRead</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npx @spotfire/mods-sdk add-script add-shapefile-to-active-map-chart --name <span style="color:#4e9a06">&#34;Add a shapefile to the active map chart&#34;</span>
 </code></pre></div><p><strong>mod-manifest.json:</strong></p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#000;font-weight:bold">{</span>
@@ -837,6 +838,75 @@ Some snippets use APIs which require your mod to declare additional capabilities
 <span style="color:#000;font-weight:bold">}</span>
 
 <span style="color:#000">RegisterEntryPoint</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">findColumnsWithPredicate</span><span style="color:#000;font-weight:bold">);</span>
+</code></pre></div><h3 id="insert-columns-to-an-existing-data-table-with-custom-column-match">Insert columns to an existing data table with custom column match</h3>
+<p>Inserts columns from one table to another using a custom column match.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npx @spotfire/mods-sdk add-script insert-columns-with-column-match --name <span style="color:#4e9a06">&#34;Insert columns to an existing data table with custom column match&#34;</span>
+</code></pre></div><p><strong>mod-manifest.json:</strong></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">&#34;id&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;insert-columns-with-column-match&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Insert columns to an existing data table with custom column match&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;entryPoint&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;insertColumnsWithColumnMatch&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;file&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;build/insert-columns-with-column-match.js&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Inserts columns from one table to another using a custom column match.&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;parameters&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+        <span style="color:#000;font-weight:bold">{</span> <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;srcTable&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;type&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;DataTable&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;The table which holds the rows to be added.&#34;</span> <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span> <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;destTable&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;type&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;DataTable&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;The table to which the rows should be added.&#34;</span> <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;srcColumn&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;type&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;String&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;The name of the column in &#39;srcTable&#39; which matches &#39;destColumn&#39; in &#39;destTable&#39;.&#34;</span>
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;destColumn&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;type&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;String&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;The name of the column &#39;destTable&#39; which matches &#39;srcColumn&#39; in &#39;srcTable&#39;.&#34;</span>
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;ignoreColumns&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;type&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;String&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Comma separated list of columns in &#39;srcTable&#39; to ignore, e.g. col1,col2,col3.&#34;</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">]</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p><strong>src/scripts/insert-columns-with-column-match.ts:</strong></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">Dictionary</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">List</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">System</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Collections</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Generic</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">DataColumnSignature</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">AddColumnsSettings</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">JoinType</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Data</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">DataTableDataSource</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Data</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Import</span><span style="color:#000;font-weight:bold">;</span>
+
+<span style="color:#204a87;font-weight:bold">export</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">insertColumnsWithColumnMatch</span><span style="color:#000;font-weight:bold">({</span>
+    <span style="color:#000">srcTable</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#000">srcColumn</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#000">destTable</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#000">destColumn</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#000">ignoreColumns</span>
+<span style="color:#000;font-weight:bold">}</span><span style="color:#ce5c00;font-weight:bold">:</span> <span style="color:#000">InsertColumnsWithColumnMatchParameters</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">destCol</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">getColumnOrThrow</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">destTable</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">destColumn</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">srcCol</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">getColumnOrThrow</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">srcTable</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">srcColumn</span><span style="color:#000;font-weight:bold">);</span>
+
+    <span style="color:#8f5902;font-style:italic">// The matching column.
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">map</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">Dictionary</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">DataColumnSignature</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">DataColumnSignature</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#000">map</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">DataColumnSignature</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">destCol</span><span style="color:#000;font-weight:bold">),</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">DataColumnSignature</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">srcCol</span><span style="color:#000;font-weight:bold">));</span>
+
+    <span style="color:#8f5902;font-style:italic">// Columns to ignore.
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">ignoredColumns</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">List</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">DataColumnSignature</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">ignoreColumn</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">ignoreColumns</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">split</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;,&#34;</span><span style="color:#000;font-weight:bold">))</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000">ignoredColumns</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">DataColumnSignature</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">getColumnOrThrow</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">srcTable</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ignoreColumn</span><span style="color:#000;font-weight:bold">)));</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">settings</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">AddColumnsSettings</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">map</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">JoinType</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">InnerJoin</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">ignoredColumns</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">dataSource</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">DataTableDataSource</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">srcTable</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#000">destTable</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">AddColumns</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">dataSource</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">settings</span><span style="color:#000;font-weight:bold">);</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">getColumnOrThrow</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">table</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Dxp.Data.DataTable</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">columnName</span>: <span style="color:#204a87;font-weight:bold">string</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">col</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">table</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Columns</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Item</span><span style="color:#000;font-weight:bold">.</span><span style="color:#204a87;font-weight:bold">get</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">columnName</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">col</span> <span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#204a87;font-weight:bold">null</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#204a87">Error</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">`Cannot find column &#39;</span><span style="color:#4e9a06">${</span><span style="color:#000">columnName</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">&#39; in table &#39;</span><span style="color:#4e9a06">${</span><span style="color:#000">table</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Name</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">&#39;.`</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">col</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#000">RegisterEntryPoint</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">insertColumnsWithColumnMatch</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><h3 id="read-the-values-of-a-column">Read the values of a column</h3>
 <p>Shows how to read the values of data column.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npx @spotfire/mods-sdk add-script read-column-values --name <span style="color:#4e9a06">&#34;Read the values of a column&#34;</span>
@@ -997,8 +1067,8 @@ Some snippets use APIs which require your mod to declare additional capabilities
 
 <span style="color:#000">RegisterEntryPoint</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">removeUnreferencedMarkings</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><h3 id="replace-a-data-table-with-an-sbdf-file-from-the-library">Replace a data table with an SBDF file from the library</h3>
-<p>Replaces a table in the analysis with data from an SBDF file saved in the library.
-<strong>Requires the following <a href="/spotfire-mods/docs/action-mods/faq/#what-are-capabilities">capabilities</a>:</strong> LibraryRead</p>
+<p>Replaces a table in the analysis with data from an SBDF file saved in the library.</p>
+<p><strong>Requires the following <a href="/spotfire-mods/docs/action-mods/faq/#what-are-capabilities">capabilities</a>:</strong> LibraryRead</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npx @spotfire/mods-sdk add-script replace-table-with-library-data --name <span style="color:#4e9a06">&#34;Replace a data table with an SBDF file from the library&#34;</span>
 </code></pre></div><p><strong>mod-manifest.json:</strong></p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#000;font-weight:bold">{</span>
@@ -1052,9 +1122,9 @@ Some snippets use APIs which require your mod to declare additional capabilities
 
 <span style="color:#000">RegisterEntryPoint</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">replaceTableWithLibraryData</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><h3 id="save-the-analysis-to-the-library">Save the analysis to the library</h3>
-<p>Saves the current analysis to the library.
-<strong>Requires the following <a href="/spotfire-mods/docs/action-mods/faq/#what-are-capabilities">capabilities</a>:</strong> LibraryRead, LibraryWrite
-<strong>Requires <a href="/spotfire-mods/docs/action-mods/faq/#why-does-my-script-run-inside-a-transaction"><code>wrapInTransaction</code></a> to be <code>false</code>.</strong></p>
+<p>Saves the current analysis to the library.</p>
+<p><strong>Requires the following <a href="/spotfire-mods/docs/action-mods/faq/#what-are-capabilities">capabilities</a>:</strong> LibraryRead, LibraryWrite</p>
+<p><strong>Requires <a href="/spotfire-mods/docs/action-mods/faq/#why-does-my-script-run-inside-a-transaction"><code>wrapInTransaction</code></a> to be <code>false</code>.</strong></p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npx @spotfire/mods-sdk add-script save-analysis-to-library --name <span style="color:#4e9a06">&#34;Save the analysis to the library&#34;</span>
 </code></pre></div><p><strong>mod-manifest.json:</strong></p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#000;font-weight:bold">{</span>
