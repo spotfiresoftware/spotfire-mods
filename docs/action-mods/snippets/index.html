@@ -592,6 +592,7 @@
         <li><a href="#save-the-analysis-to-the-library">Save the analysis to the library</a></li>
         <li><a href="#set-a-custom-date-format-for-a-column">Set a custom date format for a column</a></li>
         <li><a href="#set-a-document-property">Set a document property</a></li>
+        <li><a href="#set-a-projection-for-all-layers-in-a-mapchart">Set a projection for all layers in a mapchart</a></li>
         <li><a href="#set-the-colors-of-a-bar-chart">Set the colors of a bar chart</a></li>
         <li><a href="#set-up-a-page-layout-and-rotate-the-visualizations-on-consecutive-runs">Set up a page layout and rotate the visualizations on consecutive runs</a></li>
         <li><a href="#switch-cross-table-axis">Switch cross table axis</a></li>
@@ -646,7 +647,7 @@
 	
 	
 	
-	<p class="-text-secondary pt-3 h6" >Reading time: 16 minutes and 45 seconds.</p>
+	<p class="-text-secondary pt-3 h6" >Reading time: 17 minutes and 45 seconds.</p>
 	<h1>Snippets</h1>
 	<div class="lead">Snippets showing what is possible to do with the API.</div>
 	
@@ -1341,6 +1342,57 @@ Some snippets use APIs which require your mod to declare additional capabilities
 <span style="color:#000;font-weight:bold">}</span>
 
 <span style="color:#000">RegisterEntryPoint</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">setDocumentProperty</span><span style="color:#000;font-weight:bold">);</span>
+</code></pre></div><h3 id="set-a-projection-for-all-layers-in-a-mapchart">Set a projection for all layers in a mapchart</h3>
+<p>Sets a projection for all layers in a mapchart.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npx @spotfire/mods-sdk add-script set-projection-for-mapchart-layer --name <span style="color:#4e9a06">&#34;Set a projection for all layers in a mapchart&#34;</span>
+</code></pre></div><p><strong>mod-manifest.json:</strong></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">&#34;id&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;set-projection-for-mapchart-layer&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Set a projection for all layers in a mapchart&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;entryPoint&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;setProjectionForMapchartLayer&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;file&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;build/set-projection-for-mapchart-layer.js&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Sets a projection for all layers in a mapchart.&#34;</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#204a87;font-weight:bold">&#34;parameters&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+        <span style="color:#000;font-weight:bold">{</span> <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;visual&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;type&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Visualization&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;The map chart visualization.&#34;</span> <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;useCustomProjection&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;type&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Boolean&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;If a custom projection should be used instead of an EPSG one.&#34;</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">]</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p><strong>src/scripts/set-projection-for-mapchart-layer.ts:</strong></p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">MapChart</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">Projection</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Application</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Visuals</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Maps</span><span style="color:#000;font-weight:bold">;</span>
+
+<span style="color:#204a87;font-weight:bold">export</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">setProjectionForMapchartLayer</span><span style="color:#000;font-weight:bold">({</span>
+    <span style="color:#000">visual</span><span style="color:#000;font-weight:bold">,</span>
+    <span style="color:#000">useCustomProjection</span>
+<span style="color:#000;font-weight:bold">}</span><span style="color:#ce5c00;font-weight:bold">:</span> <span style="color:#000">SetProjectionForMapchartLayerParameters</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">mapchart</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">visual</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">As</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">MapChart</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mapchart</span> <span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#204a87;font-weight:bold">null</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#204a87">Error</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">`Visualization &#39;</span><span style="color:#4e9a06">${</span><span style="color:#000">visual</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Title</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">&#39; is not a map chart.`</span><span style="color:#000;font-weight:bold">);</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#8f5902;font-style:italic">// Creating a projection using an EPSG code.
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">projection</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">Projection</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;EPSG:3857&#34;</span><span style="color:#000;font-weight:bold">);</span>
+
+    <span style="color:#8f5902;font-style:italic">// Creating a projection using an proj4 definition.
+</span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">customProjection</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">Projection</span><span style="color:#000;font-weight:bold">(</span>
+        <span style="color:#4e9a06">&#34;CustomIdentifierPrefix:1&#34;</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#4e9a06">&#34;+proj=aeqd +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +units=m +datum=WGS84 +no_defs&#34;</span><span style="color:#000;font-weight:bold">,</span>
+        <span style="color:#4e9a06">&#34;Generated CRS&#34;</span>
+    <span style="color:#000;font-weight:bold">);</span>
+
+    <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">layer</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">mapchart</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Layers</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">useCustomProjection</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#000">layer</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Projection</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">customProjection</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">else</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#000">layer</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Projection</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">projection</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+<span style="color:#000">RegisterEntryPoint</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">setProjectionForMapchartLayer</span><span style="color:#000;font-weight:bold">);</span>
 </code></pre></div><h3 id="set-the-colors-of-a-bar-chart">Set the colors of a bar chart</h3>
 <p>Updates the categorical coloring of a bar chart visualization.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">npx @spotfire/mods-sdk add-script bar-chart-coloring --name <span style="color:#4e9a06">&#34;Set the colors of a bar chart&#34;</span>
