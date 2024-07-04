@@ -1460,7 +1460,7 @@ For more info see &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/action-mods/
 &lt;li&gt;the code which actually performs the changes on the document must be encapsulated in a function passed to &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/action-mods/functions/RegisterEntryPoint.html&#34;&gt;RegisterEntryPoint&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;sub&gt;💡 See snippet &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/action-mods/snippets/#set-the-colors-of-a-bar-chart&#34;&gt;Set the colors of a bar chart&lt;/a&gt; for a parameterized version of this script including error handling.&lt;/sub&gt;&lt;/p&gt;
-&lt;div style=&#34;display: flex; gap: 10px;&#34;&gt;
+&lt;div style=&#34;display: flex; gap: 10px; overflow: hidden;&#34;&gt;
   &lt;div style=&#34;width: 50%&#34;&gt;
 &lt;h4 id=&#34;ironpython&#34;&gt;IronPython&lt;/h4&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-py&#34; data-lang=&#34;py&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Spotfire.Dxp.Application.Visuals&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;BarChart&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;CategoryKey&lt;/span&gt;

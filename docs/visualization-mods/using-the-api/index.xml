@@ -41,7 +41,7 @@
         
         
         &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods&#34;&gt;visualiztion mods API documentation&lt;/a&gt; lists all interfaces, type aliases, and functions in the visualization mods API. It contains a short introduction and describes how to use them. From each interface you can also find a direct link to the &lt;a href=&#34;/spotfire-mods/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; to get a hierarchical perspective.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs&#34;&gt;&lt;img alt=&#34;API Documentation&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/api-documentation.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/visualization-mods&#34;&gt;&lt;img alt=&#34;API Documentation&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/api-documentation.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;
 &lt;p&gt;The latest API version is backwards compatible with older 1.x release. All new functionality is marked by a &lt;code&gt;version&lt;/code&gt; tag.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;
