@@ -3,15 +3,18 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.128.1"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.128.1"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/examples/gauge/index.xml">
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
 
 
-<title>Spotfire® Mods</title>
-  <meta itemprop="name" content="Spotfire® Mods">
-  <meta itemprop="description" content="Mods is a framework to create interactive visualizations in Spotfire.">
+<title>Gauge | Spotfire® Mods</title>
+  <meta itemprop="name" content="Gauge">
+  <meta itemprop="description" content="A Gauge Example build in TypeScript with the Google Charts API">
+  <meta itemprop="datePublished" content="2020-12-08T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2020-12-08T00:00:00+00:00">
 
 
 
@@ -27,8 +30,9 @@
 
 
 
+    <title>Gauge | Spotfire® Mods</title>
   </head>
-  <body class="td-page">
+  <body class="td-section">
     <header>
       
 <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
@@ -144,12 +148,215 @@
 </nav>
 
     </header>
-    <div class="container-fluid td-default td-outer">
-      <main role="main" class="td-main">
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center d-lg-none">
+    
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Examples</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="">
+      
+      
+      
+      
         
+          
 
 
-      </main>
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/examples/area-chart/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Area Chart</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsexamplesarea-chart">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/examples/circular-tree-map/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Circular Tree Map</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsexamplescircular-tree-map">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/examples/gauge/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Gauge</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="spotfire-modsexamplesgauge">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          
+          <main class="col-12 col-md-9 col-xl-10 pl-md-5" role="main">
+             
+<div id ="examples-container" >
+    <div class="wrapper">
+      <div id="page1" class="content"></div>
+    </div>
+    <div id="overlay">
+      <div id="preloader">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgba(255, 255, 255, 0); display: block;" width="100px" height="100px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+          <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#5f58d9" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+          </circle>
+          <circle cx="50" cy="50" r="23" stroke-width="8" stroke="#0089d0" stroke-dasharray="36.12831551628262 36.12831551628262" stroke-dashoffset="36.12831551628262" fill="none" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" dur="1s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;-360 50 50"></animateTransform>
+          </circle>
+          </svg>
+      </div>
+    </div>
+    <script src="https://spotfire-next.cloud.tibco.com/spotfire/js-api/loader.js"></script>
+    <script type="text/javascript">
+      var tssUrl = "https://spotfire-next.cloud.tibco.com/";
+      // tssUrl = "http://localhost:3000/"
+      //tssUrl = "https://spotfire.tcsrel.tcie.pro/"
+      setTimeout(loadApi, 0);
+      function loadApi() {
+        var app;
+        var doc1
+        var analysis = "/Samples/Analyzing Stock Performance";
+        // analysis = "bebdd5de-ea61-4a5f-8382-def35f366b9f";
+        analysis = "Users/qxj3kaaifng2no6e3kxm3phlkg3rx3ld/Public/ModsExamples";
+
+        // analysis =
+        //   "/Users/vyqhxyg2oieh5geyccbtrfu72uoao2hr/Shared/Analyzing Stock Performance";
+        // analysis = "37c1da2f-f172-4002-bc43-33cc6451b51b";
+        var customization = {
+          showToolBar: false,
+          showStatusBar: false,
+          showPageNavigation: false,
+          showCustomizableHeader: false
+        };
+        var openParameters = "";
+        var reuseExistingInstance = true;
+        var apiVersion = "11.0"; // Enum?
+
+        // This is basically an asynchronous version of the spotfire.webPlayer.Application constructor
+        spotfire.webPlayer.createApplication(
+          tssUrl,
+          customization, // changed from instance of spotfire.webPlayer.Customization to anonymous object
+          analysis,
+          openParameters,
+          reuseExistingInstance,
+          apiVersion, // New. String specifying the api version. Should perhaps be optional with latest as default.
+          onReady, //New. Callback with signature: function(response, app)
+          getLoginElement // New. Optional function reference to create a custom login element wrapper.
+        );
+
+        function onReady(response, newApp) {
+          if (response.status === "OK") {
+            // The application is ready, meaning that the api is loaded and that the analysis path is validated for the current session (anonymous or logged in user)
+            app = newApp;
+            doc1 = app.openDocument("page1", "Gauge");
+            doc1.setActivePage("Gauge");
+            doc1.onDocumentReady(() => {
+              document.getElementById("overlay").style.display = "none";
+            }) 
+          } else {
+            console.log(response.status + ": " + response.message);
+          }
+        }
+
+        function onError(error) {
+          alert("Error:" + error);
+        }
+
+        function getLoginElement() {
+          // Optionally create and return a div to host the login iframe
+          return null;
+        }
+      }
+    </script>
+</div> 
+           
+          </main>
+        </div>
+      </div>
       
 <footer class="bg-dark py-4 row d-print-none">
   <div class="container-fluid mx-sm-5">

@@ -1,141 +1,94 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/action-mods/developing-action-mods/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/getting-started/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>/spotfire-mods/examples/area-chart/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/spotfire-mods/examples/circular-tree-map/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/spotfire-mods/examples/gauge/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>/spotfire-mods/docs/action-mods/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/action-mods/tutorial/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/tutorials/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/action-mods/snippets/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/using-the-api/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</loc>
     <lastmod>2020-11-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/spotfire-mods/docs/action-mods/using-the-api/mod-schema/</loc>
-    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>/spotfire-mods/docs/action-mods/using-the-api/mod-schema/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>/spotfire-mods/docs/action-mods/using-the-api/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</loc>
     <lastmod>2020-11-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/action-mods/faq/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/faq/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/getting-started-11/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/docs/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/</loc>
     <lastmod>2024-06-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/index.json</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/about/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/overview/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/spotfire-mods/search/</loc>
   </url>
-  
 </urlset>

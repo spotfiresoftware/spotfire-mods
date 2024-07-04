@@ -3,40 +3,23 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.76.4" /><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.128.1"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
 
 
-<title>Create a bar chart using Google Charts | Spotfire® Mods</title><meta property="og:title" content="Create a bar chart using Google Charts" />
-<meta property="og:description" content="This step-by-step tutorial describes how to create a basic bar chart using Google Charts and the Spotfire API.
-" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/" />
-<meta property="article:published_time" content="2024-06-05T00:00:00+00:00" />
-<meta property="article:modified_time" content="2024-06-05T00:00:00+00:00" /><meta property="og:site_name" content="Spotfire® Mods" />
-<meta itemprop="name" content="Create a bar chart using Google Charts">
-<meta itemprop="description" content="This step-by-step tutorial describes how to create a basic bar chart using Google Charts and the Spotfire API.
-">
-<meta itemprop="datePublished" content="2024-06-05T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2024-06-05T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2714">
+<title>Create a bar chart using Google Charts | Spotfire® Mods</title>
+  <meta itemprop="name" content="Create a bar chart using Google Charts">
+  <meta itemprop="description" content="This step-by-step tutorial describes how to create a basic bar chart using Google Charts and the Spotfire API.">
+  <meta itemprop="datePublished" content="2024-06-05T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2024-06-05T00:00:00+00:00">
+  <meta itemprop="wordCount" content="2714">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Create a bar chart using Google Charts"/>
-<meta name="twitter:description" content="This step-by-step tutorial describes how to create a basic bar chart using Google Charts and the Spotfire API.
-"/>
-
-
-
-
-
-<link rel="preload" href="/spotfire-mods/scss/main.min.72f22e8e0ad59e83cda05666a5594340373d136102f4b18ebc46130efa7d36bc.css" as="style">
-<link href="/spotfire-mods/scss/main.min.72f22e8e0ad59e83cda05666a5594340373d136102f4b18ebc46130efa7d36bc.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" as="style">
+<link href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -54,7 +37,7 @@
       
 <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
         <a class="navbar-brand" href="/spotfire-mods/">
-		<span class="navbar-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232 40"><defs><style>.cls-1{fill:#333c66}.cls-1,.cls-2{stroke-width:0}.cls-2{fill:#e94165}</style></defs><g><path class="cls-1" d="m117.2 30.2h2.7c.1.0.2-.1.2-.2V16.1c0-.1-.1-.2-.2-.2h-2.6c-.1.0-.2.1-.2.2v14c-.1.1.0.1.1.1zm8.1-12.5v-1.6c0-.1-.1-.2-.2-.2h-2.6c-.1.0-.2.1-.2.2V30c0 .1.1.2.2.2h2.6c.1.0.2-.1.2-.2v-7.3c0-1.5.3-2.5.9-3.1s1.5-.9 2.7-.9h.6c.1.0.2-.1.2-.2v-2.7c0-.1-.1-.2-.2-.2-.9.0-1.7.2-2.4.6-.7.4-1.2.9-1.7 1.5.0.1-.1.0-.1.0h0zm-37.7.8c2.8.0 5 2.5 4.5 5.3-.3 1.8-1.8 3.2-3.6 3.5-3 .6-5.5-1.6-5.5-4.3.0-2.5 2.1-4.5 4.6-4.5m0-3c-4.5.0-8.1 3.8-7.6 8.3.4 3.4 3.2 6.2 6.7 6.6 4.6.5 8.5-3 8.5-7.4.0-4.1-3.4-7.4-7.6-7.5zm27.9-3.8v-2.4c0-.1-.1-.2-.2-.2-2-.1-4.1.4-5.1 1.3-1.1 1-1.6 2.4-1.6 4.4v1.1h-2.4c-.1.0-.2.1-.2.2v2.4c0 .1.1.2.2.2h2.4V30c0 .1.1.2.2.2h2.7c.1.0.2-.1.2-.2V18.7h3.6c.1.0.2-.1.2-.2v-2.4c0-.1-.1-.2-.2-.2h-3.7v-1.1c0-2 1.5-2.9 3.6-2.8.2.0.3-.1.3-.3z"/><ellipse class="cls-1" cx="118.6" cy="10.9" rx="1.9" ry="1.8"/><path class="cls-1" d="m77.9 18.8c-.7-1.1-1.6-2-2.7-2.5s-2.3-.9-3.6-.9c-.5.0-1.1.1-1.6.2-.7.1-1.4.4-2 .7-.4.2-.7.4-1 .6l-.1-.1v-1c0-.1-.1-.2-.2-.2h-2.7c-.1.0-.2.1-.2.2v19.8c0 .1.1.2.2.2h2.6c.1.0.2-.1.2-.2V28c0-.1.1-.1.1.0.5.6 1.2 1.1 2 1.5.9.5 1.9.7 3 .7h.2c1.1-.1 2.1-.4 3-.9 1.1-.6 2-1.5 2.7-2.6s1-2.5 1-4-.2-2.8-.9-3.9h0zm-6.3 8.4c-2.4.0-4.4-2-4.4-4.5s2-4.5 4.4-4.5 4.4 2 4.4 4.5-2 4.5-4.4 4.5zm-11-6.3c-.8-.9-2-1.7-3.6-2.2l-2.1-.8c-2.1-.8-3.2-1.4-3.2-2.9s1.7-2.4 3.3-2.4c1 0 1.8.2 2.6.7.7.4 1.5.4 2.2.0l1.2-.8c.3-.2.3-.3.2-.4-1.5-1.6-3.7-2.6-6.1-2.6-1.9.0-3.6.5-4.8 1.5-1.3 1-1.9 2.5-1.9 4.2.0 2.7 1.5 4.5 4.9 5.7l2.3.8c2 .7 3 1.7 3 3.1.0 1.5-1.4 2.5-3.4 2.5-1.4.0-2.7-.5-3.7-1.3-.7-.6-1.7-.6-2.4-.1l-1 .7c-.3.2-.3.4-.2.5 1.4 2.1 4.1 3.4 7.2 3.4 2 0 3.7-.5 5-1.6 1.3-1 1.9-2.5 1.9-4.2-.1-1.6-.5-2.8-1.4-3.8zm43.9-2.2c.1.0.2-.1.2-.2v-2.4c0-.1-.1-.2-.2-.2h-3.7v-3.7c0-.1-.1-.2-.2-.2H98c-.1.0-.2.1-.2.2v3.7h-2.4c-.1.0-.2.1-.2.2v2.4c0 .1.1.2.2.2h2.4v7.5c0 1.4.4 2.5 1.1 3.1s1.8 1 3.2 1h2.5c.1.0.2-.1.2-.2v-2.1c0-.1-.1-.2-.2-.2h-1.9c-.6.0-1.1-.1-1.3-.4s-.4-.6-.4-1.2v-7.5h3.5zm33.1 8.9c-1.2.0-2.2-.3-3-.9s-1.4-1.7-1.6-2.7h11.3c.1.0.2-.1.2-.2.1-.4.1-.8.1-1.1.0-1.5-.4-2.5-1.1-3.9-.2-.4-.6-.8-.9-1.2-1.4-1.5-3.1-2.2-5.2-2.2s-4.1.7-5.5 2.1-2.1 3.2-2.1 5.3.7 3.9 2.2 5.3 3.4 2.1 5.7 2.1c2.5.0 4.4-.8 5.8-2.4.1-.1.1-.2.0-.3l-.7-.6c-.7-.6-1.7-.7-2.4-.2s-1.7.9-2.8.9zm-3.2-8.4c.8-.6 1.7-.9 2.9-.9 1 0 1.9.3 2.7.9s1.2 1.2 1.4 2.3v.1h-8.5c.2-1.1.7-1.7 1.5-2.4h0z"/></g><path class="cls-1" d="m146.4 13.4v.4h-.6v1.7h-.4v-1.7h-.6v-.4h1.6zm2 0h.4v2.1h-.4v-1.4l-.6 1-.6-1v1.4h-.4v-2.1h.4l.7 1.1.5-1.1h0z"/><path class="cls-1" d="m160.46 29.9V10.8h1.8V30h-1.8v-.1zm8.7-5.8-8.3-12.4.6-.5.7-.5 7.9 11.6-.9 1.8zm0 0-.8-1.8 7.8-11.6.7.5.6.5-8.3 12.4zm7.1 5.8V10.8h1.8V30h-1.8v-.1zm12.4.3c-1.3.0-2.5-.3-3.5-.9s-1.8-1.5-2.4-2.5c-.6-1.1-.9-2.3-.9-3.7s.3-2.6.8-3.7c.6-1.1 1.4-1.9 2.4-2.5s2.2-.9 3.5-.9 2.5.3 3.5.9 1.8 1.5 2.4 2.5c.6 1.1.8 2.3.8 3.7s-.3 2.6-.8 3.7-1.3 1.9-2.4 2.5c-.9.6-2.1.9-3.4.9h0zm0-1.5c1 0 1.9-.2 2.6-.7s1.3-1.1 1.8-2 .6-1.8.6-2.9-.2-2.1-.6-2.9c-.4-.8-1-1.5-1.8-2s-1.6-.7-2.6-.7-1.9.2-2.6.7c-.8.5-1.4 1.1-1.8 2-.4.8-.6 1.8-.6 2.9s.2 2.1.7 2.9c.4.8 1 1.5 1.8 2s1.5.7 2.5.7h0zm15.3 1.5c-1.2.0-2.3-.3-3.2-.9s-1.7-1.5-2.2-2.5c-.5-1.1-.8-2.3-.8-3.7s.3-2.6.8-3.7 1.3-1.9 2.2-2.5 2-.9 3.2-.9 2.2.3 3.1.9c.9.6 1.6 1.5 2.1 2.5.5 1.1.8 2.3.8 3.7s-.3 2.6-.8 3.7-1.2 1.9-2.1 2.5-1.9.9-3.1.9zm.3-1.4c.9.0 1.7-.2 2.3-.7.7-.5 1.2-1.2 1.6-2 .4-.9.6-1.8.6-3 0-1.1-.2-2.1-.6-3s-.9-1.5-1.6-2-1.5-.7-2.4-.7-1.8.2-2.5.7-1.3 1.2-1.7 2c-.4.9-.6 1.8-.6 3 0 1.1.2 2.1.6 3s1 1.5 1.7 2 1.7.7 2.6.7h0zm4.6 1.1-.1-2.5V10.8h1.6V30h-1.5v-.1zm10.3.3c-1 0-1.9-.2-2.7-.5-.7-.3-1.4-.7-1.8-1.2-.5-.5-.8-1-1-1.5l1.5-.5c.3.7.8 1.2 1.5 1.6s1.4.6 2.2.6c1 0 1.8-.2 2.5-.6s1-1 1-1.7-.2-1.2-.7-1.6-1.2-.8-2.2-1l-1.3-.4c-1.2-.3-2.2-.8-2.8-1.4s-1-1.3-1-2.1c0-1.3.4-2.2 1.2-2.9s2.1-1.1 3.8-1.1c.8.0 1.5.1 2.1.3s1.2.6 1.6 1 .8.9 1 1.5l-1.5.6c-.3-.7-.7-1.2-1.3-1.5s-1.3-.4-2.2-.4c-1 0-1.7.2-2.3.6s-.8 1-.8 1.7c0 .4.2.8.7 1.2s1.1.7 2 .9l1.2.3c.9.2 1.7.5 2.3.9s1.1.9 1.5 1.4.5 1.1.5 1.8c0 .8-.2 1.5-.6 2.1s-1 1-1.7 1.4c-.9.4-1.8.5-2.7.5z"/><g><path class="cls-1" d="m33.6 19.52-.02-.22-.03-.47-.06-.45c-.02-.15-.04-.3-.07-.45l-.08-.47c-.02-.08-.04-.17-.06-.26-.05-.21-.09-.42-.16-.63-.14-.52-.33-1.08-.62-1.75-.21-.49-.48-1.01-.85-1.64-.35-.57-.7-1.06-1.06-1.51-.8-.98-1.7-1.83-2.68-2.52-.17-.13-.35-.24-.53-.36-.08-.05-.16-.1-.24-.16-.08-.04-.17-.1-.26-.15-.18-.11-.35-.21-.53-.3-.48-.25-1.01-.49-1.69-.74-.52-.19-1.1-.35-1.77-.5l-.45-.08c-.16-.03-.3-.05-.45-.07l-.46-.06-.46-.03-.23-.02h-.22l-.46-.02h-.46l-.24.02-.22.02-.47.03-.45.06c-.15.02-.3.04-.45.07l-.46.08c-.66.15-1.24.31-1.76.5-.68.25-1.21.49-1.68.74-.19.09-.36.19-.54.3-.09.05-.18.11-.27.16-.07.05-.15.1-.23.15-.18.12-.36.23-.53.36-.99.69-1.89 1.54-2.69 2.52-.36.44-.71.94-1.06 1.51-.37.63-.63 1.15-.84 1.64-.28.67-.48 1.23-.61 1.74-.06.21-.11.42-.16.63-.02.09-.04.18-.06.27l-.08.45c-.03.16-.05.31-.07.45l-.06.47-.03.46-.02.23v.23l-.02.47v.46l.02.23.02.22.03.47.06.46c.02.15.04.29.07.45l.08.46c.02.08.04.17.06.25.05.22.1.43.16.63.14.52.33 1.08.62 1.75.21.49.48 1.01.85 1.64.35.57.7 1.06 1.06 1.51.8.98 1.7 1.83 2.68 2.52.17.13.34.24.52.35.08.05.17.11.25.16.08.04.17.1.26.15.18.11.35.21.53.29.48.26 1.01.49 1.69.74.37.13.72.24 1.07.34v-1.72c-.06-1.04-.58-2.01-1.43-2.66h-.01c-.15-.13-.28-.22-.39-.3-.11-.08-.21-.16-.31-.23l-.06-.05s-.03-.02-.05-.04c-.71-.49-1.37-1.12-1.97-1.85-.25-.31-.51-.68-.78-1.11-.25-.44-.45-.81-.62-1.21-.16-.39-.33-.82-.45-1.27-.04-.13-.07-.27-.1-.41-.02-.08-.03-.16-.05-.23l-.06-.34c-.02-.11-.04-.22-.05-.34l-.04-.32-.02-.35v-.16l-.02-.18v-.33-.35-.17l.02-.18.02-.33.05-.34c.01-.11.03-.23.05-.34l.06-.32c.02-.09.04-.17.06-.25.03-.14.06-.28.11-.42.11-.45.29-.89.44-1.26.18-.43.4-.83.62-1.2.28-.44.53-.79.78-1.11.6-.73 1.26-1.35 1.97-1.85.11-.09.23-.16.35-.24.07-.04.13-.09.2-.13h0v-.01c.07-.04.14-.08.21-.12.12-.07.24-.14.37-.2.42-.23.87-.41 1.22-.54.36-.13.76-.25 1.29-.37l.33-.06c.11-.02.22-.04.34-.05l.32-.04.34-.02h.16l.18-.02h.33.34.17l.18.02.33.02.34.05c.11.01.22.03.34.05l.32.06c.54.12.94.23 1.3.37.35.13.8.31 1.23.54.12.06.24.13.36.2.07.04.14.08.21.12h0v.01c.07.04.13.09.2.13.12.08.24.15.36.25.7.49 1.37 1.12 1.97 1.85.26.32.5.67.78 1.11.22.38.44.78.62 1.21.16.37.33.82.45 1.27.04.13.07.27.1.41.02.08.03.16.05.23l.06.34c.02.11.04.22.05.34l.04.32.02.34v.16l.02.18v.34.35.17l-.02.18-.02.33-.05.34c-.01.11-.03.23-.05.34l-.06.32c-.02.09-.04.17-.06.25-.03.14-.06.28-.11.42-.11.44-.28.87-.44 1.26-.17.4-.37.77-.62 1.2-.27.44-.53.8-.78 1.11-.6.73-1.26 1.35-1.97 1.85-.02.01-.03.03-.06.04l-.05.04c-.1.08-.2.15-.31.23-.11.08-.23.17-.38.29l-.02.02c-.84.65-1.36 1.62-1.43 2.66h0v1.71c.35-.09.7-.2 1.07-.34.67-.25 1.21-.48 1.68-.74.19-.09.36-.19.54-.3.09-.05.18-.11.27-.16.07-.05.15-.1.24-.15.18-.12.35-.23.52-.35.99-.7 1.89-1.54 2.69-2.52.36-.44.71-.94 1.06-1.51.37-.63.63-1.15.84-1.64.28-.67.48-1.23.61-1.74.06-.21.11-.42.16-.64.02-.09.04-.18.06-.26l.08-.45c.03-.16.05-.31.07-.45l.06-.47.03-.46.02-.24v-.22l.02-.47v-.46l-.02-.24z"/><ellipse class="cls-2" cx="20.15" cy="20" rx="5.21" ry="5.17"/><path class="cls-1" d="m20.15 3.65c4.41.0 8.56 1.7 11.68 4.8 3.11 3.09 4.82 7.19 4.82 11.55s-1.71 8.46-4.82 11.55c-3.12 3.09-7.26 4.8-11.68 4.8s-8.56-1.7-11.68-4.8c-3.11-3.09-4.82-7.19-4.82-11.55s1.71-8.46 4.82-11.55c3.12-3.09 7.26-4.8 11.68-4.8m0-3.65C9.02.0.0 8.95.0 20s9.02 20 20.15 20S40.3 31.05 40.3 20 31.28.0 20.15.0h0z"/></g></svg></span><span class="text-uppercase font-weight-bold"></span>
+		<span class="navbar-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232 40"><defs><style>.cls-1{fill:#333c66}.cls-1,.cls-2{stroke-width:0}.cls-2{fill:#e94165}</style></defs><g><path class="cls-1" d="m117.2 30.2h2.7c.1.0.2-.1.2-.2V16.1c0-.1-.1-.2-.2-.2h-2.6c-.1.0-.2.1-.2.2v14c-.1.1.0.1.1.1zm8.1-12.5v-1.6c0-.1-.1-.2-.2-.2h-2.6c-.1.0-.2.1-.2.2V30c0 .1.1.2.2.2h2.6c.1.0.2-.1.2-.2v-7.3c0-1.5.3-2.5.9-3.1s1.5-.9 2.7-.9h.6c.1.0.2-.1.2-.2v-2.7c0-.1-.1-.2-.2-.2-.9.0-1.7.2-2.4.6-.7.4-1.2.9-1.7 1.5.0.1-.1.0-.1.0h0zm-37.7.8c2.8.0 5 2.5 4.5 5.3-.3 1.8-1.8 3.2-3.6 3.5-3 .6-5.5-1.6-5.5-4.3.0-2.5 2.1-4.5 4.6-4.5m0-3c-4.5.0-8.1 3.8-7.6 8.3.4 3.4 3.2 6.2 6.7 6.6 4.6.5 8.5-3 8.5-7.4.0-4.1-3.4-7.4-7.6-7.5zm27.9-3.8V9.3c0-.1-.1-.2-.2-.2-2-.1-4.1.4-5.1 1.3-1.1 1-1.6 2.4-1.6 4.4v1.1h-2.4c-.1.0-.2.1-.2.2v2.4c0 .1.1.2.2.2h2.4V30c0 .1.1.2.2.2h2.7c.1.0.2-.1.2-.2V18.7h3.6c.1.0.2-.1.2-.2v-2.4c0-.1-.1-.2-.2-.2h-3.7v-1.1c0-2 1.5-2.9 3.6-2.8.2.0.3-.1.3-.3z"/><ellipse class="cls-1" cx="118.6" cy="10.9" rx="1.9" ry="1.8"/><path class="cls-1" d="m77.9 18.8c-.7-1.1-1.6-2-2.7-2.5s-2.3-.9-3.6-.9c-.5.0-1.1.1-1.6.2-.7.1-1.4.4-2 .7-.4.2-.7.4-1 .6q-.1.0-.1-.1v-1c0-.1-.1-.2-.2-.2H64c-.1.0-.2.1-.2.2v19.8c0 .1.1.2.2.2h2.6c.1.0.2-.1.2-.2V28c0-.1.1-.1.1.0.5.6 1.2 1.1 2 1.5.9.5 1.9.7 3 .7h.2c1.1-.1 2.1-.4 3-.9 1.1-.6 2-1.5 2.7-2.6s1-2.5 1-4-.2-2.8-.9-3.9h0zm-6.3 8.4c-2.4.0-4.4-2-4.4-4.5s2-4.5 4.4-4.5 4.4 2 4.4 4.5-2 4.5-4.4 4.5zm-11-6.3c-.8-.9-2-1.7-3.6-2.2l-2.1-.8c-2.1-.8-3.2-1.4-3.2-2.9s1.7-2.4 3.3-2.4c1 0 1.8.2 2.6.7.7.4 1.5.4 2.2.0l1.2-.8c.3-.2.3-.3.2-.4-1.5-1.6-3.7-2.6-6.1-2.6-1.9.0-3.6.5-4.8 1.5-1.3 1-1.9 2.5-1.9 4.2.0 2.7 1.5 4.5 4.9 5.7l2.3.8c2 .7 3 1.7 3 3.1.0 1.5-1.4 2.5-3.4 2.5-1.4.0-2.7-.5-3.7-1.3-.7-.6-1.7-.6-2.4-.1l-1 .7c-.3.2-.3.4-.2.5 1.4 2.1 4.1 3.4 7.2 3.4 2 0 3.7-.5 5-1.6 1.3-1 1.9-2.5 1.9-4.2-.1-1.6-.5-2.8-1.4-3.8zm43.9-2.2c.1.0.2-.1.2-.2v-2.4c0-.1-.1-.2-.2-.2h-3.7v-3.7c0-.1-.1-.2-.2-.2H98c-.1.0-.2.1-.2.2v3.7h-2.4c-.1.0-.2.1-.2.2v2.4c0 .1.1.2.2.2h2.4v7.5c0 1.4.4 2.5 1.1 3.1s1.8 1 3.2 1h2.5c.1.0.2-.1.2-.2V28c0-.1-.1-.2-.2-.2h-1.9c-.6.0-1.1-.1-1.3-.4s-.4-.6-.4-1.2v-7.5h3.5zm33.1 8.9c-1.2.0-2.2-.3-3-.9S133.2 25 133 24h11.3c.1.0.2-.1.2-.2.1-.4.1-.8.1-1.1.0-1.5-.4-2.5-1.1-3.9-.2-.4-.6-.8-.9-1.2-1.4-1.5-3.1-2.2-5.2-2.2s-4.1.7-5.5 2.1-2.1 3.2-2.1 5.3.7 3.9 2.2 5.3 3.4 2.1 5.7 2.1c2.5.0 4.4-.8 5.8-2.4.1-.1.1-.2.0-.3l-.7-.6c-.7-.6-1.7-.7-2.4-.2s-1.7.9-2.8.9zm-3.2-8.4c.8-.6 1.7-.9 2.9-.9 1 0 1.9.3 2.7.9s1.2 1.2 1.4 2.3v.1h-8.5c.2-1.1.7-1.7 1.5-2.4h0z"/></g><path class="cls-1" d="m146.4 13.4v.4h-.6v1.7h-.4v-1.7h-.6v-.4h1.6zm2 0h.4v2.1h-.4v-1.4l-.6 1-.6-1v1.4h-.4v-2.1h.4l.7 1.1.5-1.1h0z"/><path class="cls-1" d="m160.46 29.9V10.8h1.8V30h-1.8v-.1zm8.7-5.8-8.3-12.4.6-.5.7-.5 7.9 11.6-.9 1.8zm0 0-.8-1.8 7.8-11.6.7.5.6.5-8.3 12.4zm7.1 5.8V10.8h1.8V30h-1.8v-.1zm12.4.3c-1.3.0-2.5-.3-3.5-.9s-1.8-1.5-2.4-2.5c-.6-1.1-.9-2.3-.9-3.7s.3-2.6.8-3.7c.6-1.1 1.4-1.9 2.4-2.5s2.2-.9 3.5-.9 2.5.3 3.5.9 1.8 1.5 2.4 2.5c.6 1.1.8 2.3.8 3.7s-.3 2.6-.8 3.7-1.3 1.9-2.4 2.5c-.9.6-2.1.9-3.4.9h0zm0-1.5c1 0 1.9-.2 2.6-.7s1.3-1.1 1.8-2 .6-1.8.6-2.9-.2-2.1-.6-2.9c-.4-.8-1-1.5-1.8-2s-1.6-.7-2.6-.7-1.9.2-2.6.7c-.8.5-1.4 1.1-1.8 2-.4.8-.6 1.8-.6 2.9s.2 2.1.7 2.9c.4.8 1 1.5 1.8 2s1.5.7 2.5.7h0zm15.3 1.5c-1.2.0-2.3-.3-3.2-.9s-1.7-1.5-2.2-2.5c-.5-1.1-.8-2.3-.8-3.7s.3-2.6.8-3.7 1.3-1.9 2.2-2.5 2-.9 3.2-.9 2.2.3 3.1.9c.9.6 1.6 1.5 2.1 2.5.5 1.1.8 2.3.8 3.7s-.3 2.6-.8 3.7-1.2 1.9-2.1 2.5-1.9.9-3.1.9zm.3-1.4c.9.0 1.7-.2 2.3-.7.7-.5 1.2-1.2 1.6-2 .4-.9.6-1.8.6-3 0-1.1-.2-2.1-.6-3s-.9-1.5-1.6-2-1.5-.7-2.4-.7-1.8.2-2.5.7-1.3 1.2-1.7 2c-.4.9-.6 1.8-.6 3 0 1.1.2 2.1.6 3s1 1.5 1.7 2 1.7.7 2.6.7h0zm4.6 1.1-.1-2.5V10.8h1.6V30h-1.5v-.1zm10.3.3c-1 0-1.9-.2-2.7-.5-.7-.3-1.4-.7-1.8-1.2-.5-.5-.8-1-1-1.5l1.5-.5c.3.7.8 1.2 1.5 1.6s1.4.6 2.2.6c1 0 1.8-.2 2.5-.6s1-1 1-1.7-.2-1.2-.7-1.6-1.2-.8-2.2-1l-1.3-.4c-1.2-.3-2.2-.8-2.8-1.4s-1-1.3-1-2.1c0-1.3.4-2.2 1.2-2.9s2.1-1.1 3.8-1.1c.8.0 1.5.1 2.1.3s1.2.6 1.6 1 .8.9 1 1.5l-1.5.6c-.3-.7-.7-1.2-1.3-1.5s-1.3-.4-2.2-.4c-1 0-1.7.2-2.3.6s-.8 1-.8 1.7c0 .4.2.8.7 1.2s1.1.7 2 .9l1.2.3c.9.2 1.7.5 2.3.9s1.1.9 1.5 1.4.5 1.1.5 1.8c0 .8-.2 1.5-.6 2.1s-1 1-1.7 1.4c-.9.4-1.8.5-2.7.5z"/><g><path class="cls-1" d="m33.6 19.52-.02-.22-.03-.47-.06-.45c-.02-.15-.04-.3-.07-.45l-.08-.47c-.02-.08-.04-.17-.06-.26-.05-.21-.09-.42-.16-.63-.14-.52-.33-1.08-.62-1.75-.21-.49-.48-1.01-.85-1.64-.35-.57-.7-1.06-1.06-1.51-.8-.98-1.7-1.83-2.68-2.52-.17-.13-.35-.24-.53-.36-.08-.05-.16-.1-.24-.16-.08-.04-.17-.1-.26-.15-.18-.11-.35-.21-.53-.3-.48-.25-1.01-.49-1.69-.74-.52-.19-1.1-.35-1.77-.5l-.45-.08c-.16-.03-.3-.05-.45-.07l-.46-.06-.46-.03-.23-.02h-.22l-.46-.02h-.46l-.24.02-.22.02-.47.03-.45.06c-.15.02-.3.04-.45.07l-.46.08c-.66.15-1.24.31-1.76.5-.68.25-1.21.49-1.68.74-.19.09-.36.19-.54.3-.09.05-.18.11-.27.16-.07.05-.15.1-.23.15-.18.12-.36.23-.53.36-.99.69-1.89 1.54-2.69 2.52-.36.44-.71.94-1.06 1.51-.37.63-.63 1.15-.84 1.64-.28.67-.48 1.23-.61 1.74-.06.21-.11.42-.16.63-.02.09-.04.18-.06.27l-.08.45c-.03.16-.05.31-.07.45l-.06.47-.03.46-.02.23v.23l-.02.47v.46l.02.23.02.22.03.47.06.46c.02.15.04.29.07.45l.08.46c.02.08.04.17.06.25.05.22.1.43.16.63.14.52.33 1.08.62 1.75.21.49.48 1.01.85 1.64.35.57.7 1.06 1.06 1.51.8.98 1.7 1.83 2.68 2.52.17.13.34.24.52.35.08.05.17.11.25.16.08.04.17.1.26.15.18.11.35.21.53.29.48.26 1.01.49 1.69.74.37.13.72.24 1.07.34v-1.72c-.06-1.04-.58-2.01-1.43-2.66h-.01c-.15-.13-.28-.22-.39-.3-.11-.08-.21-.16-.31-.23l-.06-.05s-.03-.02-.05-.04c-.71-.49-1.37-1.12-1.97-1.85-.25-.31-.51-.68-.78-1.11-.25-.44-.45-.81-.62-1.21-.16-.39-.33-.82-.45-1.27-.04-.13-.07-.27-.1-.41-.02-.08-.03-.16-.05-.23l-.06-.34c-.02-.11-.04-.22-.05-.34l-.04-.32-.02-.35v-.16l-.02-.18v-.33-.35-.17l.02-.18.02-.33.05-.34c.01-.11.03-.23.05-.34l.06-.32c.02-.09.04-.17.06-.25.03-.14.06-.28.11-.42.11-.45.29-.89.44-1.26.18-.43.4-.83.62-1.2.28-.44.53-.79.78-1.11.6-.73 1.26-1.35 1.97-1.85.11-.09.23-.16.35-.24.07-.04.13-.09.2-.13h0v-.01c.07-.04.14-.08.21-.12.12-.07.24-.14.37-.2.42-.23.87-.41 1.22-.54.36-.13.76-.25 1.29-.37l.33-.06c.11-.02.22-.04.34-.05l.32-.04.34-.02h.16l.18-.02h.33.34.17l.18.02.33.02.34.05c.11.01.22.03.34.05l.32.06c.54.12.94.23 1.3.37.35.13.8.31 1.23.54.12.06.24.13.36.2.07.04.14.08.21.12h0v.01c.07.04.13.09.2.13.12.08.24.15.36.25.7.49 1.37 1.12 1.97 1.85.26.32.5.67.78 1.11.22.38.44.78.62 1.21.16.37.33.82.45 1.27.04.13.07.27.1.41.02.08.03.16.05.23l.06.34c.02.11.04.22.05.34l.04.32.02.34v.16l.02.18v.34.35.17l-.02.18-.02.33-.05.34c-.01.11-.03.23-.05.34l-.06.32c-.02.09-.04.17-.06.25-.03.14-.06.28-.11.42-.11.44-.28.87-.44 1.26-.17.4-.37.77-.62 1.2-.27.44-.53.8-.78 1.11-.6.73-1.26 1.35-1.97 1.85-.02.01-.03.03-.06.04l-.05.04c-.1.08-.2.15-.31.23-.11.08-.23.17-.38.29l-.02.02c-.84.65-1.36 1.62-1.43 2.66h0v1.71c.35-.09.7-.2 1.07-.34.67-.25 1.21-.48 1.68-.74.19-.09.36-.19.54-.3.09-.05.18-.11.27-.16.07-.05.15-.1.24-.15.18-.12.35-.23.52-.35.99-.7 1.89-1.54 2.69-2.52.36-.44.71-.94 1.06-1.51.37-.63.63-1.15.84-1.64.28-.67.48-1.23.61-1.74.06-.21.11-.42.16-.64.02-.09.04-.18.06-.26l.08-.45c.03-.16.05-.31.07-.45l.06-.47.03-.46.02-.24v-.22l.02-.47v-.46l-.02-.24z"/><ellipse class="cls-2" cx="20.15" cy="20" rx="5.21" ry="5.17"/><path class="cls-1" d="m20.15 3.65c4.41.0 8.56 1.7 11.68 4.8 3.11 3.09 4.82 7.19 4.82 11.55s-1.71 8.46-4.82 11.55c-3.12 3.09-7.26 4.8-11.68 4.8s-8.56-1.7-11.68-4.8C5.36 28.46 3.65 24.36 3.65 20s1.71-8.46 4.82-11.55c3.12-3.09 7.26-4.8 11.68-4.8m0-3.65C9.02.0.0 8.95.0 20s9.02 20 20.15 20S40.3 31.05 40.3 20 31.28.0 20.15.0h0z"/></g></svg></span><span class="text-uppercase font-weight-bold"></span>
 	</a>
 	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
 		<ul class="navbar-nav mt-2 mt-lg-0">
@@ -98,25 +81,25 @@
 				
 				
 				
-				<span class="nav-link hasChildren">
-					<span >API documentation</span>
+				<span class="nav-link active hasChildren">
+					<span  class="active">API documentation</span>
 				</span>
 				
 				
 				<ul class="navbar-subnav top">
 					
 					<li class="nav-item">
-						<span>Action mods</span>
+						<span class="active">Action mods</span>
 
 						
 						
 						<ul class="navbar-subnav">
 							
 							<li class="nav-item">
-								<a class="nav-link" 
+								<a class="nav-link active" 
 								href="/spotfire-mods/api-docs/action-mods/index.html" 
 								>
-								<span>API documentation</span></a>
+								<span class="active">API documentation</span></a>
 									</li>
 							
 						</ul>
@@ -126,24 +109,24 @@
 					</li>
 					
 					<li class="nav-item">
-						<span>Visualization mods</span>
+						<span class="active">Visualization mods</span>
 
 						
 						
 						<ul class="navbar-subnav">
 							
 							<li class="nav-item">
-								<a class="nav-link" 
+								<a class="nav-link active" 
 								href="/spotfire-mods/overview/" 
 								>
-								<span>API Overview</span></a>
+								<span class="active">API Overview</span></a>
 									</li>
 							
 							<li class="nav-item">
-								<a class="nav-link" 
+								<a class="nav-link active" 
 								href="/spotfire-mods/api-docs/visualization-mods/index.html" 
 								>
-								<span>API documentation</span></a>
+								<span class="active">API documentation</span></a>
 									</li>
 							
 						</ul>
@@ -195,7 +178,7 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/spotfire-mods/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Working with mods</a>
+    <a  href="/spotfire-mods/docs/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Working with mods</a>
   </li>
   <ul>
     <li class="collapse show" id="spotfire-modsdocs">
@@ -370,7 +353,7 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/spotfire-mods/docs/visualization-mods/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Visualization mods</a>
+    <a  href="/spotfire-mods/docs/visualization-mods/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Visualization mods</a>
   </li>
   <ul>
     <li class="collapse show" id="spotfire-modsdocsvisualization-mods">
@@ -670,7 +653,7 @@
 </ul>
 <p>The mod created in this tutorial (<code>'js-dev-barchart-googlecharts'</code>), as well as the starter project used in the tutorial (<code>'js-dev-starter'</code>), can be found among the <a href="http://spotfi.re/mods-examples">example projects</a>. The example project covers some additional cases that are outside the scope of this tutorial.</p>
 <h3 id="dataset">Dataset</h3>
-<p>The dataset used in this tutorial can be found <a href="heroes.txt">here</a>. It is a reduced version of this <a href="https://www.kaggle.com/claudiodavi/superhero-set">dataset</a>.</p>
+<p>The dataset used in this tutorial can be found <a href="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/heroes.txt">here</a>. It is a reduced version of this <a href="https://www.kaggle.com/claudiodavi/superhero-set">dataset</a>.</p>
 <h3 id="prerequisites">Prerequisites</h3>
 <p>All prerequisites are listed in the general <a href="/spotfire-mods/docs/getting-started/#prerequisites">getting started guide</a>.</p>
 <hr>
@@ -678,204 +661,204 @@
 <ul>
 <li>Create a visualization mod using the <a href="/spotfire-mods/docs/getting-started/#1-create-a-new-project">SDK</a>, follow the initial instructions and then open the project in Visual Studio Code.</li>
 <li>In Visual Studio Code start the <a href="/spotfire-mods/docs/getting-started/#2-start-the-local-development-servers">local development server</a>.</li>
-<li>In Spotfire, load the <a href="#dataset">dataset</a> to create a new analysis file.</li>
+<li>In Spotfire, load the <a href="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/#dataset">dataset</a> to create a new analysis file.</li>
 <li>Go to <em>Tools &gt; Development &gt; Mods development</em> and click the button <em>Connect to development server</em>. Make sure that the default server is the same in Spotfire and Visual Studio code (http://127.0.0.1:8090).</li>
 <li>You should see some mod metadata on the screen, which means the mod is working.</li>
 <li>Click <em>Add to page</em> to add a first instance of your new visualization mod.</li>
 </ul>
-<p><img src="./images/step1.PNG" alt="Step 1"></p>
+<p><img alt="Step 1" src="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step1.PNG"></p>
 <hr>
 <h3 id="2-add-google-charts-library">2. Add Google Charts library</h3>
 <ul>
 <li>We will be using <a href="https://developers.google.com/chart/interactive/docs/gallery/barchart">this</a> Google example.</li>
 <li>Add the Google Chart loader script to <code>index.html</code> (before the <code>build/main.jss</code> script).</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">     &lt;body&gt;
-         &lt;div id=&#34;mod-container&#34;&gt;&lt;/div&gt;
-         &lt;script id=&#34;spotfire-loader&#34;&gt;var Spotfire=function(e){&#34;use strict&#34;;return e.initialize=function(e){var t=&#34;sfTemp&#34;+1e4*Math.random()+&#34;Cb&#34;,a=window;a[t]=e;var r={subject:&#34;GetUrl&#34;,callbackId:-1,...&lt;/script&gt;
-<span style="color:#00a000">+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://www.gstatic.com/charts/loader.js&#34;&gt;&lt;/script&gt;
-</span><span style="color:#00a000"></span>         &lt;script src=&#34;build/main.js&#34;&gt;&lt;/script&gt;
-     &lt;/body&gt;
- &lt;/html&gt;
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>     &lt;body&gt;
+</span></span><span style="display:flex;"><span>         &lt;div id=&#34;mod-container&#34;&gt;&lt;/div&gt;
+</span></span><span style="display:flex;"><span>         &lt;script id=&#34;spotfire-loader&#34;&gt;var Spotfire=function(e){&#34;use strict&#34;;return e.initialize=function(e){var t=&#34;sfTemp&#34;+1e4*Math.random()+&#34;Cb&#34;,a=window;a[t]=e;var r={subject:&#34;GetUrl&#34;,callbackId:-1,...&lt;/script&gt;
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+        &lt;script type=&#34;text/javascript&#34; src=&#34;https://www.gstatic.com/charts/loader.js&#34;&gt;&lt;/script&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>         &lt;script src=&#34;build/main.js&#34;&gt;&lt;/script&gt;
+</span></span><span style="display:flex;"><span>     &lt;/body&gt;
+</span></span><span style="display:flex;"><span> &lt;/html&gt;
+</span></span></code></pre></div><ul>
 <li>Add type definitions from google.visualization by installing the corresponding npm package:</li>
 </ul>
 <p><code>npm install --save @types/google.visualization</code></p>
 <ul>
 <li>Update the style in the <code>main.css</code> file.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#a40000">-body{
-</span><span style="color:#a40000">-    margin: 0;
-</span><span style="color:#a40000">-    overflow: hidden;
-</span><span style="color:#a40000">-}
-</span><span style="color:#a40000"></span>
-<span style="color:#a40000">-#mod-container {
-</span><span style="color:#a40000">-    white-space: pre;
-</span><span style="color:#a40000">-}
-</span><span style="color:#a40000"></span>
-<span style="color:#00a000">+html, body, #mod-container {
-</span><span style="color:#00a000">+    margin: 0;
-</span><span style="color:#00a000">+    height: 100%;
-</span><span style="color:#00a000">+    overflow: hidden;
-</span><span style="color:#00a000">+}
-</span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span><span style="color:#a40000">-body{
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-    margin: 0;
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-    overflow: hidden;
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-}
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-#mod-container {
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-    white-space: pre;
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-}
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+html, body, #mod-container {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+    margin: 0;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+    height: 100%;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+    overflow: hidden;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+}
+</span></span></span></code></pre></div><ul>
 <li>Add the <em>gstatic</em> domain name as an external resource in the <code>mod-manifest.json</code>. External resources from unknown domains will be blocked from loading for security reasons.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">    &#34;files&#34;: [
-        &#34;index.html&#34;,
-        &#34;main.css&#34;,
-        &#34;main.js&#34;
-<span style="color:#a40000">-    ]
-</span><span style="color:#a40000"></span><span style="color:#00a000">+    ],
-</span><span style="color:#00a000">+    &#34;externalResources&#34;: [&#34;https://www.gstatic.com/&#34;]
-</span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>    &#34;files&#34;: [
+</span></span><span style="display:flex;"><span>        &#34;index.html&#34;,
+</span></span><span style="display:flex;"><span>        &#34;main.css&#34;,
+</span></span><span style="display:flex;"><span>        &#34;main.js&#34;
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-    ]
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+    ],
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+    &#34;externalResources&#34;: [&#34;https://www.gstatic.com/&#34;]
+</span></span></span></code></pre></div><ul>
 <li>Paste the example code below into <code>main.ts</code> inside the <code>render</code> function</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">     async function render(dataView: Spotfire.DataView, windowSize: Spotfire.Size, prop: Spotfire.ModProperty&lt;string&gt;) {
-
-        /**
-         * Check the data view for errors
-         */
-        let errors = await dataView.getErrors();
-        if (errors.length &gt; 0) {
-            // Showing an error overlay will hide the mod iframe.
-            // Clear the mod content here to avoid flickering effect of
-            // an old configuration when next valid data view is received.
-            mod.controls.errorOverlay.show(errors);
-            return;
-        }
-        mod.controls.errorOverlay.hide();
-
-        /**
-         * Get the hierarchy of the categorical X-axis.
-         */
-        const xHierarchy = await dataView.hierarchy(&#34;X&#34;);
-        const xRoot = await xHierarchy.root();
-
-        if (xRoot == null) {
-            // User interaction caused the data view to expire.
-            // Don&#39;t clear the mod content here to avoid flickering.
-            return;
-        }
-
-<span style="color:#a40000">-        /**
-</span><span style="color:#a40000">-         * Print out to document
-</span><span style="color:#a40000">-         */
-</span><span style="color:#a40000">-        const container = document.querySelector(&#34;#mod-container&#34;);
-</span><span style="color:#a40000">-        container.textContent = `windowSize: ${windowSize.width}x${windowSize.height}\r\n`;
-</span><span style="color:#a40000">-        container.textContent += `should render: ${rows.length} rows\r\n`;
-</span><span style="color:#a40000">-        container.textContent += `${prop.name}: ${prop.value()}`;
-</span><span style="color:#a40000">-
-</span><span style="color:#a40000">-        /**
-</span><span style="color:#a40000">-         * Signal that the mod is ready for export.
-</span><span style="color:#a40000">-         */
-</span><span style="color:#a40000">-        context.signalRenderComplete();
-</span><span style="color:#a40000"></span>
-<span style="color:#00a000">+        google.charts.load(&#34;current&#34;, { packages: [&#34;corechart&#34;] });
-</span><span style="color:#00a000">+        google.charts.setOnLoadCallback(drawChart);
-</span><span style="color:#00a000">+        function drawChart() {
-</span><span style="color:#00a000">+            var data = google.visualization.arrayToDataTable([
-</span><span style="color:#00a000">+                [&#34;Element&#34;, &#34;Density&#34;, { role: &#34;style&#34; }],
-</span><span style="color:#00a000">+                [&#34;Copper&#34;, 8.94, &#34;#b87333&#34;],
-</span><span style="color:#00a000">+                [&#34;Silver&#34;, 10.49, &#34;silver&#34;],
-</span><span style="color:#00a000">+                [&#34;Gold&#34;, 19.3, &#34;gold&#34;],
-</span><span style="color:#00a000">+                [&#34;Platinum&#34;, 21.45, &#34;color: #e5e4e2&#34;]
-</span><span style="color:#00a000">+            ]);
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+            var view = new google.visualization.DataView(data);
-</span><span style="color:#00a000">+            view.setColumns([0, 1, { calc: &#34;stringify&#34;, sourceColumn: 1, type: &#34;string&#34;, role: &#34;annotation&#34; }, 2]);
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+            var options = {
-</span><span style="color:#00a000">+                title: &#34;Density of Precious Metals, in g/cm^3&#34;,
-</span><span style="color:#00a000">+                width: 600,
-</span><span style="color:#00a000">+                height: 400,
-</span><span style="color:#00a000">+                bar: { groupWidth: &#34;95%&#34; },
-</span><span style="color:#00a000">+                legend: { position: &#34;none&#34; },
-</span><span style="color:#00a000">+            };
-</span><span style="color:#00a000">+            var chart = new google.visualization.BarChart(document.getElementById(&#34;barchart_values&#34;));
-</span><span style="color:#00a000">+            chart.draw(view, options);
-</span><span style="color:#00a000">+        }
-</span><span style="color:#00a000"></span>     }
- });
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>     async function render(dataView: Spotfire.DataView, windowSize: Spotfire.Size, prop: Spotfire.ModProperty&lt;string&gt;) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        /**
+</span></span><span style="display:flex;"><span>         * Check the data view for errors
+</span></span><span style="display:flex;"><span>         */
+</span></span><span style="display:flex;"><span>        let errors = await dataView.getErrors();
+</span></span><span style="display:flex;"><span>        if (errors.length &gt; 0) {
+</span></span><span style="display:flex;"><span>            // Showing an error overlay will hide the mod iframe.
+</span></span><span style="display:flex;"><span>            // Clear the mod content here to avoid flickering effect of
+</span></span><span style="display:flex;"><span>            // an old configuration when next valid data view is received.
+</span></span><span style="display:flex;"><span>            mod.controls.errorOverlay.show(errors);
+</span></span><span style="display:flex;"><span>            return;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        mod.controls.errorOverlay.hide();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        /**
+</span></span><span style="display:flex;"><span>         * Get the hierarchy of the categorical X-axis.
+</span></span><span style="display:flex;"><span>         */
+</span></span><span style="display:flex;"><span>        const xHierarchy = await dataView.hierarchy(&#34;X&#34;);
+</span></span><span style="display:flex;"><span>        const xRoot = await xHierarchy.root();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        if (xRoot == null) {
+</span></span><span style="display:flex;"><span>            // User interaction caused the data view to expire.
+</span></span><span style="display:flex;"><span>            // Don&#39;t clear the mod content here to avoid flickering.
+</span></span><span style="display:flex;"><span>            return;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-        /**
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-         * Print out to document
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-         */
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        const container = document.querySelector(&#34;#mod-container&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        container.textContent = `windowSize: ${windowSize.width}x${windowSize.height}\r\n`;
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        container.textContent += `should render: ${rows.length} rows\r\n`;
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        container.textContent += `${prop.name}: ${prop.value()}`;
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        /**
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-         * Signal that the mod is ready for export.
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-         */
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        context.signalRenderComplete();
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+        google.charts.load(&#34;current&#34;, { packages: [&#34;corechart&#34;] });
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        google.charts.setOnLoadCallback(drawChart);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        function drawChart() {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            var data = google.visualization.arrayToDataTable([
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                [&#34;Element&#34;, &#34;Density&#34;, { role: &#34;style&#34; }],
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                [&#34;Copper&#34;, 8.94, &#34;#b87333&#34;],
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                [&#34;Silver&#34;, 10.49, &#34;silver&#34;],
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                [&#34;Gold&#34;, 19.3, &#34;gold&#34;],
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                [&#34;Platinum&#34;, 21.45, &#34;color: #e5e4e2&#34;]
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            ]);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            var view = new google.visualization.DataView(data);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            view.setColumns([0, 1, { calc: &#34;stringify&#34;, sourceColumn: 1, type: &#34;string&#34;, role: &#34;annotation&#34; }, 2]);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            var options = {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                title: &#34;Density of Precious Metals, in g/cm^3&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                width: 600,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                height: 400,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                bar: { groupWidth: &#34;95%&#34; },
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                legend: { position: &#34;none&#34; },
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            };
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            var chart = new google.visualization.BarChart(document.getElementById(&#34;barchart_values&#34;));
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            chart.draw(view, options);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>     }
+</span></span><span style="display:flex;"><span> });
+</span></span></code></pre></div><ul>
 <li>Update the bar chart container ID (in  <code>index.html</code>, our container ID is <code>&quot;mod-container&quot;</code>).
 Also note that there is a warning from TypeScript that the argument to the <code>BarChart</code> may be null. Since we are in full control of the html code, it is safe to assert that <code>getElementById</code> will not return null.
 This is done by adding an exclamation mark (<code>!</code>) after the argument.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">
-            var options = {
-               title: &#34;Density of Precious Metals, in g/cm^3&#34;,
-               width: 600,
-               height: 400,
-               bar: { groupWidth: &#34;95%&#34; },
-               legend: { position: &#34;none&#34; },
-           };
-<span style="color:#a40000">-            var chart = new google.visualization.BarChart(document.getElementById(&#34;barchart_values&#34;));
-</span><span style="color:#a40000"></span><span style="color:#00a000">+            var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;)!);
-</span><span style="color:#00a000"></span>            chart.draw(view, options);
-</code></pre></div><p>Also note that there is a warning about the option type. This is because the type is here deduced from usage, not from declaration. This is easily fixed by specifying the correct type for the <code>options</code> variable.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">
-<span style="color:#a40000">-            var options = {
-</span><span style="color:#a40000"></span><span style="color:#00a000">+            var options: google.visualization.BarChartOptions = {
-</span><span style="color:#00a000"></span>               title: &#34;Density of Precious Metals, in g/cm^3&#34;,
-               width: 600,
-               height: 400,
-               bar: { groupWidth: &#34;95%&#34; },
-               legend: { position: &#34;none&#34; },
-           };
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            var options = {
+</span></span><span style="display:flex;"><span>               title: &#34;Density of Precious Metals, in g/cm^3&#34;,
+</span></span><span style="display:flex;"><span>               width: 600,
+</span></span><span style="display:flex;"><span>               height: 400,
+</span></span><span style="display:flex;"><span>               bar: { groupWidth: &#34;95%&#34; },
+</span></span><span style="display:flex;"><span>               legend: { position: &#34;none&#34; },
+</span></span><span style="display:flex;"><span>           };
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-            var chart = new google.visualization.BarChart(document.getElementById(&#34;barchart_values&#34;));
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+            var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;)!);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>            chart.draw(view, options);
+</span></span></code></pre></div><p>Also note that there is a warning about the option type. This is because the type is here deduced from usage, not from declaration. This is easily fixed by specifying the correct type for the <code>options</code> variable.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-            var options = {
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+            var options: google.visualization.BarChartOptions = {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>               title: &#34;Density of Precious Metals, in g/cm^3&#34;,
+</span></span><span style="display:flex;"><span>               width: 600,
+</span></span><span style="display:flex;"><span>               height: 400,
+</span></span><span style="display:flex;"><span>               bar: { groupWidth: &#34;95%&#34; },
+</span></span><span style="display:flex;"><span>               legend: { position: &#34;none&#34; },
+</span></span><span style="display:flex;"><span>           };
+</span></span></code></pre></div><ul>
 <li>Save the changes. You should see the example working in Spotfire and there should be no warnings in the code editor.</li>
 </ul>
-<p><img src="./images/step2.PNG" alt="Step 2"></p>
+<p><img alt="Step 2" src="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step2.PNG"></p>
 <ul>
 <li>Use <code>async</code>/<code>await</code> to get rid of extra code.</li>
 <li>Make the chart fit the screen by providing a chart area with some predefined margins.</li>
 <li>Get rid of the chart title.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#a40000">-       google.charts.load(&#34;current&#34;, { packages: [&#34;corechart&#34;] });
-</span><span style="color:#a40000">-       google.charts.setOnLoadCallback(drawChart);
-</span><span style="color:#a40000"></span>
-<span style="color:#a40000">-       async function drawChart() {
-</span><span style="color:#a40000"></span><span style="color:#00a000">+       await google.charts.load(&#34;current&#34;, { packages: [&#34;corechart&#34;] });
-</span><span style="color:#00a000"></span>          var data = google.visualization.arrayToDataTable([
-              [&#34;Element&#34;, &#34;Density&#34;, { role: &#34;style&#34; }],
-              [&#34;Copper&#34;, 8.94, &#34;#b87333&#34;],
-              [&#34;Silver&#34;, 10.49, &#34;silver&#34;],
-              [&#34;Gold&#34;, 19.3, &#34;gold&#34;],
-              [&#34;Platinum&#34;, 21.45, &#34;color: #e5e4e2&#34;]
-          ]);
-
-          var view = new google.visualization.DataView(data);
-          view.setColumns([0, 1, { calc: &#34;stringify&#34;, sourceColumn: 1, type: &#34;string&#34;, role: &#34;annotation&#34; }, 2]);
-
-          var options: google.visualization.BarChartOptions = {
-<span style="color:#a40000">-             title: &#34;Density of Precious Metals, in g/cm^3&#34;,
-</span><span style="color:#a40000">-             width: 600,
-</span><span style="color:#a40000">-             height: 400,
-</span><span style="color:#a40000"></span>              bar: { groupWidth: &#34;95%&#34; },
-              legend: { position: &#34;none&#34; },
-<span style="color:#00a000">+             chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
-</span><span style="color:#00a000"></span>          };
-          var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
-          chart.draw(view, options);
-        }
-<span style="color:#a40000">-     }
-</span></code></pre></div><hr>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span><span style="color:#a40000">-       google.charts.load(&#34;current&#34;, { packages: [&#34;corechart&#34;] });
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-       google.charts.setOnLoadCallback(drawChart);
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-       async function drawChart() {
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+       await google.charts.load(&#34;current&#34;, { packages: [&#34;corechart&#34;] });
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>          var data = google.visualization.arrayToDataTable([
+</span></span><span style="display:flex;"><span>              [&#34;Element&#34;, &#34;Density&#34;, { role: &#34;style&#34; }],
+</span></span><span style="display:flex;"><span>              [&#34;Copper&#34;, 8.94, &#34;#b87333&#34;],
+</span></span><span style="display:flex;"><span>              [&#34;Silver&#34;, 10.49, &#34;silver&#34;],
+</span></span><span style="display:flex;"><span>              [&#34;Gold&#34;, 19.3, &#34;gold&#34;],
+</span></span><span style="display:flex;"><span>              [&#34;Platinum&#34;, 21.45, &#34;color: #e5e4e2&#34;]
+</span></span><span style="display:flex;"><span>          ]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>          var view = new google.visualization.DataView(data);
+</span></span><span style="display:flex;"><span>          view.setColumns([0, 1, { calc: &#34;stringify&#34;, sourceColumn: 1, type: &#34;string&#34;, role: &#34;annotation&#34; }, 2]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>          var options: google.visualization.BarChartOptions = {
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-             title: &#34;Density of Precious Metals, in g/cm^3&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-             width: 600,
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-             height: 400,
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>              bar: { groupWidth: &#34;95%&#34; },
+</span></span><span style="display:flex;"><span>              legend: { position: &#34;none&#34; },
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+             chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>          };
+</span></span><span style="display:flex;"><span>          var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
+</span></span><span style="display:flex;"><span>          chart.draw(view, options);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-     }
+</span></span></span></code></pre></div><hr>
 <h3 id="3-consume-spotfire-data">3. Consume Spotfire data</h3>
 <ul>
 <li>The <code>mod-manifest.json</code> file declares three axes; a categorical X-axis, a continuous Y-axis, and a dual mode color axis. While it is perfectly valid for a bar chart,
 we&rsquo;ll make this tutorial slightly simpliflied by changing the color axis to categorical. Note that changing the <code>mod-manifest.json</code> requires an explicit reload in the <em>Mods development</em> tool.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">    &#34;dataViewDefinition&#34;: {
-        &#34;colorAxis&#34;: {
-<span style="color:#a40000">-            &#34;mode&#34;: &#34;dual&#34;,
-</span><span style="color:#a40000"></span><span style="color:#00a000">+            &#34;mode&#34;: &#34;categorical&#34;,
-</span><span style="color:#00a000"></span>            &#34;dropTarget&#34;: {
-                &#34;icon&#34;: &#34;Color&#34;,
-                &#34;description&#34;: &#34;Color by {0}&#34;
-            }
-        },
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>    &#34;dataViewDefinition&#34;: {
+</span></span><span style="display:flex;"><span>        &#34;colorAxis&#34;: {
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-            &#34;mode&#34;: &#34;dual&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+            &#34;mode&#34;: &#34;categorical&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>            &#34;dropTarget&#34;: {
+</span></span><span style="display:flex;"><span>                &#34;icon&#34;: &#34;Color&#34;,
+</span></span><span style="display:flex;"><span>                &#34;description&#34;: &#34;Color by {0}&#34;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        },
+</span></span></code></pre></div><ul>
 <li>We create hierarchies for <em>X</em> and <em>Color</em> dimensions. These are defined in the manifest and should not be confused with actual color values (css-color from now on to avoid confusion).</li>
 <li>We then use this grouped data to extract column names, values, and css-colors.</li>
 <li>A Google visualization expects data to be in the following format (and complains if it&rsquo;s not):</li>
@@ -916,133 +899,132 @@ we&rsquo;ll make this tutorial slightly simpliflied by changing the color axis t
 <ul>
 <li>We loop over the X hierarchy to create the data table by filling a row with null values first, and then populating it with existing values at proper positions.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#a40000">-    function drawChart() {
-</span><span style="color:#a40000">-        var data = google.visualization.arrayToDataTable([
-</span><span style="color:#a40000">-            [&#34;Element&#34;, &#34;Density&#34;, { role: &#34;style&#34; }],
-</span><span style="color:#a40000">-            [&#34;Copper&#34;, 8.94, &#34;#b87333&#34;],
-</span><span style="color:#a40000">-            [&#34;Silver&#34;, 10.49, &#34;silver&#34;],
-</span><span style="color:#a40000">-            [&#34;Gold&#34;, 19.3, &#34;gold&#34;],
-</span><span style="color:#a40000">-            [&#34;Platinum&#34;, 21.45, &#34;color: #e5e4e2&#34;]
-</span><span style="color:#a40000">-        ]);
-</span><span style="color:#a40000"></span>
-<span style="color:#a40000">-        var view = new google.visualization.DataView(data);
-</span><span style="color:#a40000">-        view.setColumns([0, 1, { calc: &#34;stringify&#34;, sourceColumn: 1, type: &#34;string&#34;, role: &#34;annotation&#34; }, 2]);
-</span><span style="color:#a40000"></span>
-<span style="color:#00a000">+    async function drawChart() {
-</span><span style="color:#00a000">+        const colorHierarchy = (await dataView.hierarchy(&#34;Color&#34;))!;
-</span><span style="color:#00a000">+        const colorLeafNodes = (await colorHierarchy.root())!.leaves();
-</span><span style="color:#00a000">+        const colorDomain = colorHierarchy.isEmpty ? [&#34;All Values&#34;] : colorLeafNodes.map((node) =&gt; node.formattedPath());
-</span><span style="color:#00a000"></span>
-<span style="color:#00a000">+        const xLeafNodes = (await xHierarchy.root())!.leaves();
-</span><span style="color:#00a000"></span>
-<span style="color:#00a000">+        const dataColumns : any[] = [&#34;Columns&#34;];
-</span><span style="color:#00a000">+        colorDomain.forEach(value =&gt; dataColumns.push(value, { role: &#34;style&#34; }));
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+        const dataRows : any[][] = [];
-</span><span style="color:#00a000">+        xLeafNodes.forEach(
-</span><span style="color:#00a000">+            (node) =&gt; {
-</span><span style="color:#00a000">+               let valueAndColorPairs = new Array(colorLeafNodes.length).fill([0, &#34;&#34;]).flat()
-</span><span style="color:#00a000">+               node.rows().forEach((r) =&gt; {
-</span><span style="color:#00a000">+                   let colorIndex = !colorHierarchy.isEmpty ? r.categorical(&#34;Color&#34;).leafIndex : 0;
-</span><span style="color:#00a000">+                   let yValue = r.continuous(&#34;Y&#34;).value();
-</span><span style="color:#00a000">+                   valueAndColorPairs[colorIndex * 2] = yValue;
-</span><span style="color:#00a000">+                   valueAndColorPairs[colorIndex * 2 + 1] = r.color().hexCode;
-</span><span style="color:#00a000">+               });
-</span><span style="color:#00a000">+               const dataRow = [node.formattedPath(), valueAndColorPairs].flat();
-</span><span style="color:#00a000">+               dataRows.push(dataRow)
-</span><span style="color:#00a000">+            }
-</span><span style="color:#00a000">+        );
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
-</span><span style="color:#00a000"></span>
-         var options = {
-             bar: { groupWidth: &#34;95%&#34; },
-             legend: { position: &#34;none&#34; },
-             chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
-         };
-         var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
-<span style="color:#a40000">-        chart.draw(view, options);
-</span><span style="color:#a40000"></span><span style="color:#00a000">+        chart.draw(data, options);
-</span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span><span style="color:#a40000">-    function drawChart() {
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        var data = google.visualization.arrayToDataTable([
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-            [&#34;Element&#34;, &#34;Density&#34;, { role: &#34;style&#34; }],
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-            [&#34;Copper&#34;, 8.94, &#34;#b87333&#34;],
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-            [&#34;Silver&#34;, 10.49, &#34;silver&#34;],
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-            [&#34;Gold&#34;, 19.3, &#34;gold&#34;],
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-            [&#34;Platinum&#34;, 21.45, &#34;color: #e5e4e2&#34;]
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        ]);
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-        var view = new google.visualization.DataView(data);
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        view.setColumns([0, 1, { calc: &#34;stringify&#34;, sourceColumn: 1, type: &#34;string&#34;, role: &#34;annotation&#34; }, 2]);
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+    async function drawChart() {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const colorHierarchy = (await dataView.hierarchy(&#34;Color&#34;))!;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const colorLeafNodes = (await colorHierarchy.root())!.leaves();
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const colorDomain = colorHierarchy.isEmpty ? [&#34;All Values&#34;] : colorLeafNodes.map((node) =&gt; node.formattedPath());
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+        const xLeafNodes = (await xHierarchy.root())!.leaves();
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+        const dataColumns : any[] = [&#34;Columns&#34;];
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        colorDomain.forEach(value =&gt; dataColumns.push(value, { role: &#34;style&#34; }));
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const dataRows : any[][] = [];
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        xLeafNodes.forEach(
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            (node) =&gt; {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+               let valueAndColorPairs = new Array(colorLeafNodes.length).fill([0, &#34;&#34;]).flat()
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+               node.rows().forEach((r) =&gt; {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                   let colorIndex = !colorHierarchy.isEmpty ? r.categorical(&#34;Color&#34;).leafIndex : 0;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                   let yValue = r.continuous(&#34;Y&#34;).value();
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                   valueAndColorPairs[colorIndex * 2] = yValue;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                   valueAndColorPairs[colorIndex * 2 + 1] = r.color().hexCode;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+               });
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+               const dataRow = [node.formattedPath(), valueAndColorPairs].flat();
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+               dataRows.push(dataRow)
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        );
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>
+</span></span><span style="display:flex;"><span>         var options = {
+</span></span><span style="display:flex;"><span>             bar: { groupWidth: &#34;95%&#34; },
+</span></span><span style="display:flex;"><span>             legend: { position: &#34;none&#34; },
+</span></span><span style="display:flex;"><span>             chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
+</span></span><span style="display:flex;"><span>         };
+</span></span><span style="display:flex;"><span>         var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-        chart.draw(view, options);
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+        chart.draw(data, options);
+</span></span></span></code></pre></div><ul>
 <li>Notice the <code>possibly null</code> warning regarding the usage of xHierarchy. This is a false negative due to the use of the asynchronous <code>setOnLoadCallback</code>, and we will handle this issue later in this tutorial.</li>
 <li>Not all combinations of <em>X</em> and <em>Color</em> domains will be renderable by Google Charts out of the box, without special treatment. We will guard against this with a <code>try</code>/<code>catch</code> block.</li>
 <li>The full code of the <code>js-dev-barchart-googlecharts</code> example project goes a little bit more in depth than this tutorial and covers some additional cases.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#a40000">-        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
-</span><span style="color:#a40000"></span><span style="color:#00a000">+        let data : google.visualization.DataTable;
-</span><span style="color:#00a000">+        try {
-</span><span style="color:#00a000">+            data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
-</span><span style="color:#00a000">+        } catch (e: any) {
-</span><span style="color:#00a000">+            mod.controls.errorOverlay.show(e);
-</span><span style="color:#00a000">+            return;
-</span><span style="color:#00a000">+        }
-</span></code></pre></div><p><img src="./images/step3.PNG" alt="Step 3"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span><span style="color:#a40000">-        var data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+        let data : google.visualization.DataTable;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        try {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            data = google.visualization.arrayToDataTable([dataColumns, ...dataRows]);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        } catch (e: any) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            mod.controls.errorOverlay.show(e);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            return;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        }
+</span></span></span></code></pre></div><p><img alt="Step 3" src="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step3.PNG"></p>
 <hr>
 <h3 id="4-selectionmarking">4. Selection/marking</h3>
 <ul>
 <li>Add selection/marking logic. We listen for the <code>&quot;select&quot;</code> event and extract <em>X</em> and <em>Color</em> values (not css-color!) by index in their respective domains. The <em>Color</em> index is halved because we have 2 times as many columns due to styling being applied (see table above).</li>
 <li>The rows (in this case there will be only one row) to mark will be in the intersection of the set of rows for the marked color and the set of rows for the marked <em>X</em> value. An obvious optimization would be to store the rows as a hash map to eliminate redundancy.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">
-         var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
-         chart.draw(data, options);
-
-<span style="color:#00a000">+        google.visualization.events.addListener(chart, &#34;select&#34;, () =&gt; {
-</span><span style="color:#00a000">+            const selection = chart.getSelection()[0];
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+            if (!selection) return;
-</span><span style="color:#00a000">+            const { row, column } = selection;
-</span><span style="color:#00a000">+            if (column == null || row == null) {
-</span><span style="color:#00a000">+                return;
-</span><span style="color:#00a000">+            }
-</span><span style="color:#00a000">+            const xIndex = row;
-</span><span style="color:#00a000">+            const colorIndex = (column - 1) / 2;
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+            intersection(xLeafNodes[xIndex].rows(), colorLeafNodes[colorIndex].rows()).forEach((r) =&gt; r.mark());
-</span><span style="color:#00a000">+       });
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+        function intersection(rows1: Spotfire.DataViewRow[], rows2: Spotfire.DataViewRow[]) {
-</span><span style="color:#00a000">+            return rows1.filter((r) =&gt; rows2.indexOf(r) &gt; -1);
-</span><span style="color:#00a000">+        }
-</span><span style="color:#00a000"></span>     }
-
-</code></pre></div><p><img src="./images/step4.PNG" alt="Step 4"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>         var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
+</span></span><span style="display:flex;"><span>         chart.draw(data, options);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+        google.visualization.events.addListener(chart, &#34;select&#34;, () =&gt; {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            const selection = chart.getSelection()[0];
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            if (!selection) return;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            const { row, column } = selection;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            if (column == null || row == null) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                return;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            const xIndex = row;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            const colorIndex = (column - 1) / 2;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            intersection(xLeafNodes[xIndex].rows(), colorLeafNodes[colorIndex].rows()).forEach((r) =&gt; r.mark());
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+       });
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        function intersection(rows1: Spotfire.DataViewRow[], rows2: Spotfire.DataViewRow[]) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            return rows1.filter((r) =&gt; rows2.indexOf(r) &gt; -1);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>     }
+</span></span></code></pre></div><p><img alt="Step 4" src="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step4.PNG"></p>
 <ul>
 <li>To clear the marking on background click, as native Spotfire visualizations do, we listen for the <code>&quot;click&quot;</code> event and check its target ID. Unfortunately, the Google API is untyped regarding events, hence the <code>any</code> type.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">        function intersection(rows1, rows2) {
-            return rows1.filter((r) =&gt; rows2.indexOf(r) &gt; -1);
-<span style="color:#00a000">+
-</span><span style="color:#00a000">+        google.visualization.events.addListener(chart, &#34;click&#34;, (e: any) =&gt; {
-</span><span style="color:#00a000">+            if (e.targetID == &#34;chartarea&#34;) {
-</span><span style="color:#00a000">+                dataView.clearMarking();
-</span><span style="color:#00a000">+                return;
-</span><span style="color:#00a000">+            }
-</span><span style="color:#00a000">+        });
-</span><span style="color:#00a000"></span>     }
- });
-</code></pre></div><hr>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>        function intersection(rows1, rows2) {
+</span></span><span style="display:flex;"><span>            return rows1.filter((r) =&gt; rows2.indexOf(r) &gt; -1);
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        google.visualization.events.addListener(chart, &#34;click&#34;, (e: any) =&gt; {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            if (e.targetID == &#34;chartarea&#34;) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                dataView.clearMarking();
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                return;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        });
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>     }
+</span></span><span style="display:flex;"><span> });
+</span></span></code></pre></div><hr>
 <h3 id="5-controlling-the-mod-using-a-popout">5. Controlling the mod using a popout</h3>
 <ul>
 <li>We would like to control the chart&rsquo;s orientation (<code>horizontal</code>/<code>vertical</code>) and stacking (<code>side-by-side</code>/<code>stacked</code>). The Mods API allows us to do this via a popout menu.</li>
 <li>First, we add them as properties to the manifest.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">     &#34;icon&#34;: &#34;icon.svg&#34;,
-     &#34;properties&#34;: [
-         {
-<span style="color:#a40000">-            &#34;name&#34;: &#34;myProperty&#34;,
-</span><span style="color:#a40000"></span><span style="color:#00a000">+            &#34;name&#34;: &#34;orientation&#34;,
-</span><span style="color:#00a000"></span>             &#34;type&#34;: &#34;string&#34;,
-<span style="color:#a40000">-            &#34;defaultValue&#34;: &#34;myValue&#34;
-</span><span style="color:#a40000"></span><span style="color:#00a000">+            &#34;defaultValue&#34;: &#34;vertical&#34;
-</span><span style="color:#00a000">+        },
-</span><span style="color:#00a000">+        {
-</span><span style="color:#00a000">+            &#34;name&#34;: &#34;stacking&#34;,
-</span><span style="color:#00a000">+            &#34;type&#34;: &#34;string&#34;,
-</span><span style="color:#00a000">+            &#34;defaultValue&#34;: &#34;side-by-side&#34;
-</span><span style="color:#00a000"></span>         }
-     ],
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>     &#34;icon&#34;: &#34;icon.svg&#34;,
+</span></span><span style="display:flex;"><span>     &#34;properties&#34;: [
+</span></span><span style="display:flex;"><span>         {
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-            &#34;name&#34;: &#34;myProperty&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+            &#34;name&#34;: &#34;orientation&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>             &#34;type&#34;: &#34;string&#34;,
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-            &#34;defaultValue&#34;: &#34;myValue&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+            &#34;defaultValue&#34;: &#34;vertical&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        },
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            &#34;name&#34;: &#34;stacking&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            &#34;type&#34;: &#34;string&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            &#34;defaultValue&#34;: &#34;side-by-side&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>         }
+</span></span><span style="display:flex;"><span>     ],
+</span></span></code></pre></div><ul>
 <li>
 <p>Then we add the new properties to the <code>read</code> loop and pass them down to the <code>render</code> function.</p>
 </li>
@@ -1050,237 +1032,236 @@ we&rsquo;ll make this tutorial slightly simpliflied by changing the color axis t
 <p>Since the <code>mod-manifest.json</code> file has changed, we will need to reload the manifest.</p>
 </li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">    /**
-     * Create the read function.
-     */
-<span style="color:#a40000">-    const reader = mod.createReader(mod.visualization.data(), mod.windowSize(), mod.property(&#34;myProperty&#34;));
-</span><span style="color:#a40000"></span><span style="color:#00a000">+    const reader = mod.createReader(
-</span><span style="color:#00a000">+        mod.visualization.data(),
-</span><span style="color:#00a000">+        mod.windowSize(),
-</span><span style="color:#00a000">+        mod.property(&#34;orientation&#34;),
-</span><span style="color:#00a000">+        mod.property(&#34;stacking&#34;)
-</span><span style="color:#00a000">+    );
-</span><span style="color:#00a000"></span>
-    /**
-     * Initiate the read loop
-     */
-    reader.subscribe(render);
-
-     /**
-      * @param {Spotfire.DataView} dataView
-      * @param {Spotfire.Size} windowSize
-<span style="color:#a40000">-     * @param {Spotfire.ModProperty&lt;string&gt;} prop
-</span><span style="color:#a40000"></span><span style="color:#00a000">+     * @param {Spotfire.ModProperty&lt;string&gt;} orientation
-</span><span style="color:#00a000">+     * @param {Spotfire.ModProperty&lt;string&gt;} stacking
-</span><span style="color:#00a000"></span>      */
-<span style="color:#a40000">-    async function render(dataView, windowSize, prop) {
-</span><span style="color:#a40000"></span><span style="color:#00a000">+    async function render(dataView, windowSize, orientation, stacking) {
-</span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>    /**
+</span></span><span style="display:flex;"><span>     * Create the read function.
+</span></span><span style="display:flex;"><span>     */
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-    const reader = mod.createReader(mod.visualization.data(), mod.windowSize(), mod.property(&#34;myProperty&#34;));
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+    const reader = mod.createReader(
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        mod.visualization.data(),
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        mod.windowSize(),
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        mod.property(&#34;orientation&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        mod.property(&#34;stacking&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+    );
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>
+</span></span><span style="display:flex;"><span>    /**
+</span></span><span style="display:flex;"><span>     * Initiate the read loop
+</span></span><span style="display:flex;"><span>     */
+</span></span><span style="display:flex;"><span>    reader.subscribe(render);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     /**
+</span></span><span style="display:flex;"><span>      * @param {Spotfire.DataView} dataView
+</span></span><span style="display:flex;"><span>      * @param {Spotfire.Size} windowSize
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-     * @param {Spotfire.ModProperty&lt;string&gt;} prop
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+     * @param {Spotfire.ModProperty&lt;string&gt;} orientation
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+     * @param {Spotfire.ModProperty&lt;string&gt;} stacking
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>      */
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-    async function render(dataView, windowSize, prop) {
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+    async function render(dataView, windowSize, orientation, stacking) {
+</span></span></span></code></pre></div><ul>
 <li>Update the background click callback to show a test popout.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">         google.visualization.events.addListener(chart, &#34;click&#34;, ({ targetID, x, y }) =&gt; {
-             if (targetID == &#34;chartarea&#34;) {
-                 dataView.clearMarking();
-<span style="color:#00a000">+                showPopout({ x, y });
-</span><span style="color:#00a000"></span>                 return;
-             }
-         });
-
-<span style="color:#00a000">+        const { popout } = mod.controls;
-</span><span style="color:#00a000">+        function showPopout(e) {
-</span><span style="color:#00a000">+            popout.show(
-</span><span style="color:#00a000">+                {
-</span><span style="color:#00a000">+                    x: e.x,
-</span><span style="color:#00a000">+                    y: e.y,
-</span><span style="color:#00a000">+                    autoClose: true,
-</span><span style="color:#00a000">+                    alignment: &#34;Bottom&#34;,
-</span><span style="color:#00a000">+                    onChange: popoutChangeHandler
-</span><span style="color:#00a000">+                },
-</span><span style="color:#00a000">+                popoutContent
-</span><span style="color:#00a000">+            );
-</span><span style="color:#00a000">+        }
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+        const { section } = popout;
-</span><span style="color:#00a000">+        const { button } = popout.components;
-</span><span style="color:#00a000">+        const popoutContent = () =&gt; [
-</span><span style="color:#00a000">+           section({ heading: &#34;I&#39;m a popout!&#34;, children: [button({ text: &#34;I&#39;m a button&#34;, name: &#34;button&#34; })] })
-</span><span style="color:#00a000">+        ];
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+        function popoutChangeHandler() {}
-</span><span style="color:#00a000"></span>     }
- });
-</code></pre></div><p><img src="./images/step5.PNG" alt="Step 5"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>         google.visualization.events.addListener(chart, &#34;click&#34;, ({ targetID, x, y }) =&gt; {
+</span></span><span style="display:flex;"><span>             if (targetID == &#34;chartarea&#34;) {
+</span></span><span style="display:flex;"><span>                 dataView.clearMarking();
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+                showPopout({ x, y });
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>                 return;
+</span></span><span style="display:flex;"><span>             }
+</span></span><span style="display:flex;"><span>         });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+        const { popout } = mod.controls;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        function showPopout(e) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            popout.show(
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    x: e.x,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    y: e.y,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    autoClose: true,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    alignment: &#34;Bottom&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    onChange: popoutChangeHandler
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                },
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                popoutContent
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            );
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const { section } = popout;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const { button } = popout.components;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const popoutContent = () =&gt; [
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+           section({ heading: &#34;I&#39;m a popout!&#34;, children: [button({ text: &#34;I&#39;m a button&#34;, name: &#34;button&#34; })] })
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        ];
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        function popoutChangeHandler() {}
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>     }
+</span></span><span style="display:flex;"><span> });
+</span></span></code></pre></div><p><img alt="Step 5" src="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step5.PNG"></p>
 <ul>
 <li>Add a tiny helper function to check property value.</li>
 <li>On each render we check the stacking and orientation properties and update the chart configuration accordingly. Stacking is a simple boolean, but orientation requires different classes for <code>horizontal</code> and <code>vertical</code> types of charts.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff"><span style="color:#00a000">+        const is = property =&gt; value =&gt; property.value() == value;
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000"></span>         var options = {
-             bar: { groupWidth: &#34;95%&#34; },
-             legend: { position: &#34;none&#34; },
-<span style="color:#a40000">-            chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
-</span><span style="color:#a40000"></span><span style="color:#00a000">+            chartArea: { left: 85, top: 20, right: 10, bottom: 40 },
-</span><span style="color:#00a000">+            isStacked: is(stacking)(&#34;stacked&#34;)
-</span><span style="color:#00a000"></span>         };
-
-<span style="color:#a40000">-        var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
-</span><span style="color:#a40000"></span><span style="color:#00a000">+
-</span><span style="color:#00a000">+        const container = document.querySelector(&#34;#mod-container&#34;);
-</span><span style="color:#00a000">+        let chart;
-</span><span style="color:#00a000">+        if (is(orientation)(&#34;horizontal&#34;)) {
-</span><span style="color:#00a000">+            chart = new google.visualization.BarChart(container);
-</span><span style="color:#00a000">+        } else {
-</span><span style="color:#00a000">+            chart = new google.visualization.ColumnChart(container);
-</span><span style="color:#00a000">+        }
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000"></span>         chart.draw(data, options);
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span><span style="color:#00a000">+        const is = property =&gt; value =&gt; property.value() == value;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>         var options = {
+</span></span><span style="display:flex;"><span>             bar: { groupWidth: &#34;95%&#34; },
+</span></span><span style="display:flex;"><span>             legend: { position: &#34;none&#34; },
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-            chartArea: { left: 85, top: 20, right: 10, bottom: 40 }
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+            chartArea: { left: 85, top: 20, right: 10, bottom: 40 },
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            isStacked: is(stacking)(&#34;stacked&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>         };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-        var chart = new google.visualization.BarChart(document.getElementById(&#34;mod-container&#34;));
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const container = document.querySelector(&#34;#mod-container&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        let chart;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        if (is(orientation)(&#34;horizontal&#34;)) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            chart = new google.visualization.BarChart(container);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        } else {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            chart = new google.visualization.ColumnChart(container);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>         chart.draw(data, options);
+</span></span></code></pre></div><ul>
 <li>To mimic native Spotfire bar chart behavior, we show a popout on X-axis click (Y-axis for horizontal orientation).</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">         google.visualization.events.addListener(chart, &#34;click&#34;, ({ targetID, x, y }) =&gt; {
-             if (targetID == &#34;chartarea&#34;) {
-                 dataView.clearMarking();
-<span style="color:#a40000">-                showPopout({ x, y });
-</span><span style="color:#a40000"></span>                 return;
-             }
-<span style="color:#00a000">+
-</span><span style="color:#00a000">+            if (is(orientation)(&#34;vertical&#34;) &amp;&amp; targetID.indexOf(&#34;hAxis&#34;) != -1) {
-</span><span style="color:#00a000">+                showPopout({ x, y });
-</span><span style="color:#00a000">+                return;
-</span><span style="color:#00a000">+            }
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+            if (is(orientation)(&#34;horizontal&#34;) &amp;&amp; targetID.indexOf(&#34;vAxis&#34;) != -1) {
-</span><span style="color:#00a000">+                showPopout({ x, y });
-</span><span style="color:#00a000">+                return;
-</span><span style="color:#00a000">+            }
-</span><span style="color:#00a000"></span>         });
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>         google.visualization.events.addListener(chart, &#34;click&#34;, ({ targetID, x, y }) =&gt; {
+</span></span><span style="display:flex;"><span>             if (targetID == &#34;chartarea&#34;) {
+</span></span><span style="display:flex;"><span>                 dataView.clearMarking();
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-                showPopout({ x, y });
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>                 return;
+</span></span><span style="display:flex;"><span>             }
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            if (is(orientation)(&#34;vertical&#34;) &amp;&amp; targetID.indexOf(&#34;hAxis&#34;) != -1) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                showPopout({ x, y });
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                return;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            if (is(orientation)(&#34;horizontal&#34;) &amp;&amp; targetID.indexOf(&#34;vAxis&#34;) != -1) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                showPopout({ x, y });
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                return;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>         });
+</span></span></code></pre></div><ul>
 <li>Create popout content from the available components.</li>
 <li>Listen for popout changes and update property values. This will trigger a re-render and add a step to the native <em>Undo stack</em>.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">         const { section } = popout;
-<span style="color:#a40000">-        const { button } = popout.components;
-</span><span style="color:#a40000">-        const popoutContent = () =&gt; [
-</span><span style="color:#a40000">-           section({ heading: &#34;I&#39;m a popout!&#34;, children: [button({ text: &#34;I&#39;m a button&#34;, name: &#34;button&#34; })] })
-</span><span style="color:#a40000">-        ];
-</span><span style="color:#a40000"></span>
-<span style="color:#00a000">+        const { radioButton } = popout.components;
-</span><span style="color:#00a000">+        const popoutContent = () =&gt; [
-</span><span style="color:#00a000">+            section({
-</span><span style="color:#00a000">+                heading: &#34;Chart Type&#34;,
-</span><span style="color:#00a000">+                children: [
-</span><span style="color:#00a000">+                    radioButton({
-</span><span style="color:#00a000">+                        name: stacking.name,
-</span><span style="color:#00a000">+                        text: &#34;Stacked bars&#34;,
-</span><span style="color:#00a000">+                        value: &#34;stacked&#34;,
-</span><span style="color:#00a000">+                        checked: is(stacking)(&#34;stacked&#34;)
-</span><span style="color:#00a000">+                    }),
-</span><span style="color:#00a000">+                    radioButton({
-</span><span style="color:#00a000">+                        name: stacking.name,
-</span><span style="color:#00a000">+                        text: &#34;Side-by-side bars&#34;,
-</span><span style="color:#00a000">+                        value: &#34;side-by-side&#34;,
-</span><span style="color:#00a000">+                        checked: is(stacking)(&#34;side-by-side&#34;)
-</span><span style="color:#00a000">+                    })
-</span><span style="color:#00a000">+                ]
-</span><span style="color:#00a000">+            }),
-</span><span style="color:#00a000">+            section({
-</span><span style="color:#00a000">+                heading: &#34;Orientation&#34;,
-</span><span style="color:#00a000">+                children: [
-</span><span style="color:#00a000">+                    radioButton({
-</span><span style="color:#00a000">+                        name: orientation.name,
-</span><span style="color:#00a000">+                        text: &#34;Vertical&#34;,
-</span><span style="color:#00a000">+                        value: &#34;vertical&#34;,
-</span><span style="color:#00a000">+                        checked: is(orientation)(&#34;vertical&#34;)
-</span><span style="color:#00a000">+                    }),
-</span><span style="color:#00a000">+                    radioButton({
-</span><span style="color:#00a000">+                        name: orientation.name,
-</span><span style="color:#00a000">+                        text: &#34;Horizontal&#34;,
-</span><span style="color:#00a000">+                        value: &#34;horizontal&#34;,
-</span><span style="color:#00a000">+                        checked: is(orientation)(&#34;horizontal&#34;)
-</span><span style="color:#00a000">+                    })
-</span><span style="color:#00a000">+                ]
-</span><span style="color:#00a000">+            })
-</span><span style="color:#00a000">+        ];
-</span><span style="color:#00a000"></span>
-
-<span style="color:#a40000">-        function popoutChangeHandler() {}
-</span><span style="color:#a40000"></span><span style="color:#00a000">+        function popoutChangeHandler({ name, value }) {
-</span><span style="color:#00a000">+            name == orientation.name &amp;&amp; orientation.set(value);
-</span><span style="color:#00a000">+            name == stacking.name &amp;&amp; stacking.set(value);
-</span><span style="color:#00a000">+        }
-</span><span style="color:#00a000"></span>
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>         const { section } = popout;
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-        const { button } = popout.components;
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        const popoutContent = () =&gt; [
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-           section({ heading: &#34;I&#39;m a popout!&#34;, children: [button({ text: &#34;I&#39;m a button&#34;, name: &#34;button&#34; })] })
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-        ];
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+        const { radioButton } = popout.components;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const popoutContent = () =&gt; [
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            section({
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                heading: &#34;Chart Type&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                children: [
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    radioButton({
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        name: stacking.name,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        text: &#34;Stacked bars&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        value: &#34;stacked&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        checked: is(stacking)(&#34;stacked&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    }),
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    radioButton({
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        name: stacking.name,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        text: &#34;Side-by-side bars&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        value: &#34;side-by-side&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        checked: is(stacking)(&#34;side-by-side&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    })
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                ]
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            }),
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            section({
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                heading: &#34;Orientation&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                children: [
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    radioButton({
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        name: orientation.name,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        text: &#34;Vertical&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        value: &#34;vertical&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        checked: is(orientation)(&#34;vertical&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    }),
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    radioButton({
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        name: orientation.name,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        text: &#34;Horizontal&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        value: &#34;horizontal&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                        checked: is(orientation)(&#34;horizontal&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                    })
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                ]
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            })
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        ];
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-        function popoutChangeHandler() {}
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+        function popoutChangeHandler({ name, value }) {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            name == orientation.name &amp;&amp; orientation.set(value);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            name == stacking.name &amp;&amp; stacking.set(value);
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        }
+</span></span></span></code></pre></div><ul>
 <li>Lastly, add a pointer cursor to <code>svg text</code> rule in <code>main.css</code> to signal an interactive element.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">html, body, #mod-container {
-     margin: 0;
-     height: 100%;
-     overflow: hidden;
-}
-<span style="color:#00a000">+
-</span><span style="color:#00a000">+svg text {
-</span><span style="color:#00a000">+    cursor: pointer;
-</span><span style="color:#00a000">+}
-</span></code></pre></div><p><img src="./images/step5-1.PNG" alt="Step 5-1"></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>html, body, #mod-container {
+</span></span><span style="display:flex;"><span>     margin: 0;
+</span></span><span style="display:flex;"><span>     height: 100%;
+</span></span><span style="display:flex;"><span>     overflow: hidden;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+svg text {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+    cursor: pointer;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+}
+</span></span></span></code></pre></div><p><img alt="Step 5-1" src="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step5-1.PNG"></p>
 <hr>
 <h3 id="6-use-spotfire-theme-and-styling">6. Use Spotfire theme and styling</h3>
 <ul>
 <li>Extract style info from <code>context</code>.</li>
 <li>Update the <code>options</code> object.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">
-<span style="color:#00a000">+        const context = mod.getRenderContext();
-</span><span style="color:#00a000">+        const styling = context.styling;
-</span><span style="color:#00a000">+        const textStyle = {
-</span><span style="color:#00a000">+            fontSize: styling.scales.font.fontSize,
-</span><span style="color:#00a000">+            fontName: styling.scales.font.fontFamily,
-</span><span style="color:#00a000">+            color: styling.scales.font.color
-</span><span style="color:#00a000">+        };
-</span><span style="color:#00a000">+
-</span><span style="color:#00a000">+        const baselineColor = styling.scales.line.stroke;
-</span><span style="color:#00a000">+        const gridlines = { color: &#34;transparent&#34; };
-</span><span style="color:#00a000"></span>
-<span style="color:#a40000">-        var options = {
-</span><span style="color:#a40000">-            bar: { groupWidth: &#34;95%&#34; },
-</span><span style="color:#a40000"></span><span style="color:#00a000">+        const options = {
-</span><span style="color:#00a000">+            bar: { groupWidth: &#34;80%&#34; },
-</span><span style="color:#00a000">+            backgroundColor: { fill: &#34;transparent&#34; },
-</span><span style="color:#00a000"></span>             legend: { position: &#34;none&#34; },
-             chartArea: { left: 85, top: 20, right: 10, bottom: 40 },
-<span style="color:#a40000">-            isStacked: is(stacking)(&#34;stacked&#34;)
-</span><span style="color:#a40000"></span><span style="color:#00a000">+            isStacked: is(stacking)(&#34;stacked&#34;),
-</span><span style="color:#00a000">+            hAxis: {
-</span><span style="color:#00a000">+                textStyle,
-</span><span style="color:#00a000">+                baselineColor,
-</span><span style="color:#00a000">+                gridlines
-</span><span style="color:#00a000">+            },
-</span><span style="color:#00a000">+            vAxis: {
-</span><span style="color:#00a000">+                textStyle,
-</span><span style="color:#00a000">+                baselineColor,
-</span><span style="color:#00a000">+                gridlines,
-</span><span style="color:#00a000">+                minValue: 0
-</span><span style="color:#00a000">+            }
-</span><span style="color:#00a000"></span>         };
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+        const context = mod.getRenderContext();
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const styling = context.styling;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const textStyle = {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            fontSize: styling.scales.font.fontSize,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            fontName: styling.scales.font.fontFamily,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            color: styling.scales.font.color
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        };
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const baselineColor = styling.scales.line.stroke;
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+        const gridlines = { color: &#34;transparent&#34; };
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-        var options = {
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000">-            bar: { groupWidth: &#34;95%&#34; },
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+        const options = {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            bar: { groupWidth: &#34;80%&#34; },
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            backgroundColor: { fill: &#34;transparent&#34; },
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>             legend: { position: &#34;none&#34; },
+</span></span><span style="display:flex;"><span>             chartArea: { left: 85, top: 20, right: 10, bottom: 40 },
+</span></span><span style="display:flex;"><span><span style="color:#a40000">-            isStacked: is(stacking)(&#34;stacked&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#a40000"></span><span style="color:#00a000">+            isStacked: is(stacking)(&#34;stacked&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            hAxis: {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                textStyle,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                baselineColor,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                gridlines
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            },
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            vAxis: {
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                textStyle,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                baselineColor,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                gridlines,
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+                minValue: 0
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000">+            }
+</span></span></span><span style="display:flex;"><span><span style="color:#00a000"></span>         };
+</span></span></code></pre></div><ul>
 <li>In Spotfire, change canvas styling to <em>Dark</em> (<em>Visualizations &gt; Canvas styling &gt; Dark</em>). You should see the colors change according to the theme.</li>
 </ul>
-<p><img src="./images/step6.PNG" alt="Step 6"></p>
+<p><img alt="Step 6" src="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step6.PNG"></p>
 <hr>
 <h3 id="7-prepare-for-export">7. Prepare for export</h3>
 <ul>
 <li>For export to work, we need to let Spotfire know when rendering is complete.</li>
 </ul>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">        function popoutChangeHandler({ name, value }) {
-            name == orientation.name &amp;&amp; orientation.set(value);
-            name == stacking.name &amp;&amp; stacking.set(value);
-        }
-
-<span style="color:#00a000">+       google.visualization.events.addListener(chart, &#34;ready&#34;, () =&gt; context.signalRenderComplete());
-</span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>        function popoutChangeHandler({ name, value }) {
+</span></span><span style="display:flex;"><span>            name == orientation.name &amp;&amp; orientation.set(value);
+</span></span><span style="display:flex;"><span>            name == stacking.name &amp;&amp; stacking.set(value);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#00a000">+       google.visualization.events.addListener(chart, &#34;ready&#34;, () =&gt; context.signalRenderComplete());
+</span></span></span></code></pre></div><ul>
 <li>Go to <em>File &gt; Export &gt; Visualization to PDF</em> to test the export feature.</li>
 </ul>
-<p><img src="./images/step7.PNG" alt="Step 7"></p>
+<p><img alt="Step 7" src="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step7.PNG"></p>
 <ul>
 <li>Note that this example mod is using external resources, hence it will not be possible to export using the web client, see the <a href="/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/">manifest schema documentation</a>.</li>
 </ul>
@@ -1397,7 +1378,7 @@ we&rsquo;ll make this tutorial slightly simpliflied by changing the color axis t
 
 
 
-<script src="/spotfire-mods/js/main.min.fc448b19813d4fadb2cca28987d991692426ee27f66ce87690830854284c14ec.js" data-integrity="sha256-/ESLGYE9T62yzKKJh9mRaSQm7if2bOh2kIMIVChMFOw=" crossorigin="anonymous"></script>
+<script src="/spotfire-mods/js/main.min.2e372965989862d7e055760988f44f8141d8237a114d3737f4f38d503db9494b.js" data-integrity="sha256-LjcpZZiYYtfgVXYJiPRPgUHYI3oRTTc39PONUD25SUs=" crossorigin="anonymous"></script>
 
 
 

@@ -4,6 +4,7 @@
     <link>/spotfire-mods/docs/action-mods/using-the-api/</link>
     <description>Recent content in Using the action mods API on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/action-mods/using-the-api/index.xml" rel="self" type="application/rss+xml" />
@@ -24,7 +25,7 @@
         
         
         &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/action-mods/&#34;&gt;action mods API documentation&lt;/a&gt; lists all namespaces, classes, types, and methods in the API. It contains a short introduction and describes how to use them.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/api-docs-action-mods.png&#34; alt=&#34;Action mods APIs &#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Action mods APIs &#34; src=&#34;/spotfire-mods/spotfire-mods/images/api-docs-action-mods.png&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;
 &lt;p&gt;The version number is the same for all mods API:s. Therefore, there are no older versions than 2.0 of this API.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;

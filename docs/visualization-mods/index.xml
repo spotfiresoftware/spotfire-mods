@@ -4,6 +4,7 @@
     <link>/spotfire-mods/docs/visualization-mods/</link>
     <description>Recent content in Visualization mods on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/visualization-mods/index.xml" rel="self" type="application/rss+xml" />
@@ -122,19 +123,19 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
         
         &lt;h3 id=&#34;how-do-i-use-types-in-javascript-files&#34;&gt;How do I use types in JavaScript files?&lt;/h3&gt;
 &lt;p&gt;Even though JavaScript lacks type support, it is possible to get a long way with the help of JSDoc comments. The TypeScript language service in Visual Studio Code can parse JSDoc type comments and provide IntelliSense when using the Spotfire mods API. The following snippet defines the variable &lt;code&gt;dataView&lt;/code&gt; as an instance of &lt;code&gt;Spotfire.DataView&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataView} */&lt;/span&gt;
-&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This can be useful in cases where the API allows generic types, such as a continuous value:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/**@type {Spotfire.DataViewContinuousValue&amp;lt;number&amp;gt;} */&lt;/span&gt;
-&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The same would have been done in TypeScript like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;why-dont-changes-to-the-mod-manifestjson-file-take-effect-in-my-analysis&#34;&gt;Why don’t changes to the mod-manifest.json file take effect in my analysis?&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/** @type {Spotfire.DataView} */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This can be useful in cases where the API allows generic types, such as a continuous value:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;/**@type {Spotfire.DataViewContinuousValue&amp;lt;number&amp;gt;} */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The same would have been done in TypeScript like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;y&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;why-dont-changes-to-the-mod-manifestjson-file-take-effect-in-my-analysis&#34;&gt;Why don’t changes to the mod-manifest.json file take effect in my analysis?&lt;/h3&gt;
 &lt;p&gt;The manifest is used by Spotfire to generate the underlying model for the mod. The model is generated each time the manifest is read by Spotfire. Spotfire only reads the mod manifest when the development server is connected, disconnected or when the &lt;em&gt;Reload manifest&lt;/em&gt; button is clicked.&lt;/p&gt;
 &lt;p&gt;When the development server is in a connected state, Spotfire points the mod iframe&amp;rsquo;s source directly against the development server. Any UI changes seen while the server is connected are not stored in the Spotfire document. To save the current state of the mod in the document, reload the mod manifest manually.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt; Reload the manifest via the development popup.&lt;/p&gt;
 &lt;h3 id=&#34;why-cant-i-make-an-ajax-call-to-read-an-embedded-resource&#34;&gt;Why can&amp;rsquo;t I make an ajax call to read an embedded resource?&lt;/h3&gt;
-&lt;p&gt;A mod is executed inside a sandboxed iframe. A sandboxed iframe sets the origin header to &amp;lsquo;null&amp;rsquo; for any ajax request. This means that the server must be configured to handle Cross-Origin Resource Sharing (CORS). The server should allow &lt;code&gt;&#39;null&#39;&lt;/code&gt; or &lt;code&gt;*&lt;/code&gt; in order to serve a request made from a mod. The Spotfire runtime does not accept CORS requests and will therefore not serve any request made from a mod, even though it might be for an embedded resource in the mod itself.&lt;/p&gt;
+&lt;p&gt;A mod is executed inside a sandboxed iframe. A sandboxed iframe sets the origin header to &amp;rsquo;null&amp;rsquo; for any ajax request. This means that the server must be configured to handle Cross-Origin Resource Sharing (CORS). The server should allow &lt;code&gt;&#39;null&#39;&lt;/code&gt; or &lt;code&gt;*&lt;/code&gt; in order to serve a request made from a mod. The Spotfire runtime does not accept CORS requests and will therefore not serve any request made from a mod, even though it might be for an embedded resource in the mod itself.&lt;/p&gt;
 &lt;p&gt;Linked scripts, images and CSS files do not rely on CORS to function and can be linked to. Font files rely on CORS and can therefore not be linked to. To get a font working inside the mod a data uri can be used.&lt;/p&gt;
 &lt;h3 id=&#34;why-is-an-external-resource-not-loading-correctly-due-to-a-content-security-policy&#34;&gt;Why is an external resource not loading correctly due to a content security policy?&lt;/h3&gt;
 &lt;p&gt;Mods are covered by a strict content security policy by default. The mod is only allowed to load embedded resources and any external resource request is blocked. A mod can declare a set of external resources in the &lt;code&gt;mod-manifest.json&lt;/code&gt; to unblock these resources from being loaded.&lt;/p&gt;
@@ -160,8 +161,8 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt;&lt;br&gt;
-This is needed to develop and test a mod. Development can be done against the installed client (Spotfire® Analyst) or the web client (Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt; &lt;br&gt;
+This is needed to develop and test a mod. Development can be done against the installed client (Spotfire® Analyst) or the web client (Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/getting-started-11/#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;
 &lt;p&gt;Spotfire version 11.0 or newer is required for mod development. See also &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods#spotfire-versions-and-their-mod-api&#34;&gt;Spotfire versions and their Mod API&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -178,40 +179,40 @@ To enable live updates when developing a mod, a set of tools based on &lt;a href
 &lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
 &lt;h4 id=&#34;1-create-an-empty-visualization-mod-in-spotfire&#34;&gt;1. Create an empty visualization mod in Spotfire&lt;/h4&gt;
 &lt;p&gt;Open Spotfire and load some data. Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Create visualization mod&lt;/em&gt;. This will create an empty mod.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/empty-mod.png&#34; alt=&#34;Empty mod&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Empty mod&#34; src=&#34;/spotfire-mods/spotfire-mods/images/empty-mod.png&#34;&gt;&lt;/p&gt;
 &lt;h4 id=&#34;2-start-from-a-mod-example&#34;&gt;2. Start from a mod example&lt;/h4&gt;
 &lt;p&gt;Click &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;here&lt;/a&gt; to access the example mod projects to start the development from. Extract the zip archive locally. The extracted zip archive contains examples of mods, using the mod API in different ways.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-barchart&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-barchart&lt;/strong&gt; &lt;br&gt;
 To get familiar with mod development, start with this example containing a simple bar chart. This is the example that will be used in the following sections of this getting started guide.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-starter&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-starter&lt;/strong&gt; &lt;br&gt;
 This example can be used as a starting point for any new mod.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-starter-ie11&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-starter-ie11&lt;/strong&gt; &lt;br&gt;
 This example can be used as a starting point for any new mod that is also compatible with the IE11 browser.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt; &lt;br&gt;
 This example is a basic bar chart that is built using the Google Charts library. The &lt;a href=&#34;../tutorials/barchart-googlechart/&#34;&gt;tutorial&lt;/a&gt; covers the steps taken to create this bar chart from scratch.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;ts-dev-gauge-googlecharts&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;ts-dev-gauge-googlecharts&lt;/strong&gt; &lt;br&gt;
 This is an example of a gauge visualization that is developed in TypeScript using the Google Charts library and bundled with Rollup.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-circular-treemap&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;js-dev-circular-treemap&lt;/strong&gt; &lt;br&gt;
 This example is a simple circular treemap built using the D3 library. It shows how hierarchies in mod data views can be mapped to D3 hierarchies. Some basic concepts such as using a color axis, and implementing marking and tooltips are covered as well.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-areachart-d3&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;js-areachart-d3&lt;/strong&gt; &lt;br&gt;
 This is a more complex example built using the D3 library, where you can see how the API can be used to take advantage of a lot of features in Spotfire.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;ts-spiderchart-d3&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;ts-spiderchart-d3&lt;/strong&gt; &lt;br&gt;
 This is an example of a spider chart developed in TypeScript, rendered with D3, and bundled with webpack.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -221,7 +222,7 @@ This is an example of a spider chart developed in TypeScript, rendered with D3, 
 &lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
 &lt;h4 id=&#34;4-connect-spotfire-to-the-development-server&#34;&gt;4. Connect Spotfire to the development server&lt;/h4&gt;
 &lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the pop-up that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/connect-to-development-server.gif&#34; alt=&#34;Connect to development server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Connect to development server&#34; src=&#34;/spotfire-mods/spotfire-mods/images/connect-to-development-server.gif&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If a visualization appears, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
 &lt;h4 id=&#34;5-start-editing-your-example&#34;&gt;5. Start editing your example&lt;/h4&gt;
 &lt;p&gt;Now switch over to VS Code to start editing the mod implementation.&lt;/p&gt;
@@ -283,7 +284,7 @@ More information about Chrome DevTools can be found here:
 &lt;p&gt;Note also that when developing a mod in the web client, it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the &lt;em&gt;Browse&lt;/em&gt; button will not be available in the web client.&lt;/p&gt;
 &lt;h2 id=&#34;embedding-the-mod-and-saving-to-the-library&#34;&gt;Embedding the mod and saving to the library&lt;/h2&gt;
 &lt;p&gt;When the development is done, disconnect from the server to embed the mod in the analysis.
-&lt;img src=&#34;/spotfire-mods/spotfire-mods/images/disconnect-and-embed.gif&#34; alt=&#34;Disconnect from development server to embed mod&#34;&gt;&lt;/p&gt;
+&lt;img alt=&#34;Disconnect from development server to embed mod&#34; src=&#34;/spotfire-mods/spotfire-mods/images/disconnect-and-embed.gif&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;saving-the-mod-to-the-spotfire-library&#34;&gt;Saving the mod to the Spotfire library&lt;/h3&gt;
 &lt;p&gt;When your mod has been embedded in the analysis, you can share the mod with others by saving it to the library.&lt;/p&gt;
 &lt;ol&gt;
