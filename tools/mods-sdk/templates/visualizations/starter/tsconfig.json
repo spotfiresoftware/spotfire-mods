@@ -7,6 +7,7 @@
         "skipLibCheck": true,
         "strict": true,
         "noEmit": true,
-        "allowUmdGlobalAccess": true
+        "allowUmdGlobalAccess": true,
+        "moduleResolution": "Bundler"
     }
 }
