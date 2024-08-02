@@ -1,6 +1,6 @@
 {
     "name": "@spotfire/mods-sdk",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
