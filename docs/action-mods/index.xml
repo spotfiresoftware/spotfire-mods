@@ -116,7 +116,7 @@ This script takes a single string argument and prints it to the console with an 
         &lt;h3 id=&#34;1-initial-setup&#34;&gt;1. Initial setup&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Create a folder called &lt;code&gt;setup-analysis&lt;/code&gt; and open it in Visual Studio Code (VS Code).&lt;/li&gt;
-&lt;li&gt;Launch a terminal in VS Code and run &lt;code&gt;npx @spotfire/mods-sdk new action&lt;/code&gt; followed by &lt;code&gt;npm install&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Launch a terminal in VS Code and run &lt;code&gt;npx @spotfire/mods-sdk@latest new action&lt;/code&gt; followed by &lt;code&gt;npm install&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;Launch the default build task (Ctrl+Shift+B).&lt;/li&gt;
 &lt;li&gt;Connect to the mod in Spotfire and click &lt;em&gt;Start debugging&lt;/em&gt;.&lt;/li&gt;
 &lt;/ul&gt;
