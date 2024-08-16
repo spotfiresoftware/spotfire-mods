@@ -49304,3 +49304,5 @@ type Page = Spotfire.Dxp.Application.Page;
 type Visualization = Spotfire.Dxp.Application.Visual;
 /** @ignore */
 type DataTable = Spotfire.Dxp.Data.DataTable;
+/** @ignore */
+type DataColumn = Spotfire.Dxp.Data.DataColumn;
