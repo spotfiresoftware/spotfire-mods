@@ -1,6 +1,6 @@
 import colors from "colors/safe.js";
-import fse from "fs-extra";
-import { mkdir } from "fs/promises";
+import { existsSync } from "fs";
+import { mkdir, readdir, cp, readFile, writeFile } from "fs/promises";
 import path from "path";
 import readline from "readline/promises";
 import {
@@ -39,12 +39,12 @@ export async function createTemplate(
         const starterTemplate = path.resolve(templatesFolder, "starter");
         const cwd = path.resolve(".");
 
-        const targetFolderExists = await fse.exists(targetFolder);
+        const targetFolderExists = existsSync(targetFolder);
         if (!targetFolderExists) {
             await mkdir(targetFolder);
         }
 
-        const files = fse.readdirSync(targetFolder);
+        const files = await readdir(targetFolder);
         if (files.length > 0) {
             let answer = "";
 
@@ -62,7 +62,7 @@ export async function createTemplate(
         stdout(`🚧 Creating ${modType} Mods project in ${targetFolder}...`);
 
         try {
-            await fse.copy(starterTemplate, targetFolder);
+            await cp(starterTemplate, targetFolder, { recursive: true });
         } catch (e) {
             throw new Error(
                 `Could not copy templates folder to '${targetFolder}'.\nError: ${JSON.stringify(
@@ -73,10 +73,10 @@ export async function createTemplate(
 
         const version = await getVersion();
         const packageJsonpath = path.resolve(targetFolder, "package.json");
-        const packageJson = await fse.readFile(packageJsonpath, {
+        const packageJson = await readFile(packageJsonpath, {
             encoding: "utf8",
         });
-        fse.writeFile(
+        await writeFile(
             packageJsonpath,
             packageJson.replace("MODS-SDK-VERSION", version),
             { encoding: "utf-8" }
@@ -113,8 +113,8 @@ export async function createTemplate(
         filePath: string,
         replaceFunction: (fileContents: string) => string
     ) {
-        const fileContents = await fse.readFile(filePath, "utf-8");
-        await fse.writeFile(filePath, replaceFunction(fileContents), "utf-8");
+        const fileContents = await readFile(filePath, "utf-8");
+        await writeFile(filePath, replaceFunction(fileContents), "utf-8");
     }
 }
 

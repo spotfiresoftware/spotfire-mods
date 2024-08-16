@@ -1,8 +1,7 @@
 import * as chokidar from "chokidar";
 import esbuild from "esbuild";
 import { existsSync } from "fs";
-import fse from "fs-extra";
-import { readFile, writeFile } from "fs/promises";
+import { readdir, readFile, writeFile } from "fs/promises";
 import path from "path";
 import {
     Manifest,
@@ -244,11 +243,11 @@ export async function build({
     /** Absolute path to the output directory. */
     const absOutDir = path.resolve(outDir);
 
-    if (!fse.existsSync(absSrcDir)) {
+    if (!existsSync(absSrcDir)) {
         throw new Error(`Cannot find source folder: '${absSrcDir}'`);
     }
 
-    const manifestExists = await fse.exists(manifestPath);
+    const manifestExists = existsSync(manifestPath);
 
     if (!manifestExists) {
         throw new Error(`Cannot find manifest at: '${manifestPath}'`);
@@ -281,7 +280,7 @@ export async function build({
 }
 
 async function getTypeFromManifest(manifestPath: string) {
-    const manifestJson = await fse.readFile(manifestPath, "utf-8");
+    const manifestJson = await readFile(manifestPath, "utf-8");
     try {
         const manifest = JSON.parse(manifestJson);
         const apiVersion = Number.parseFloat(manifest["apiVersion"]);
@@ -401,7 +400,7 @@ async function buildActionMod({
 } & QuietOtions) {
     const stdout = mkStdout(quiet);
     const scriptsDir = path.join(srcDir, "scripts");
-    if (!fse.existsSync(scriptsDir)) {
+    if (!existsSync(scriptsDir)) {
         throw new Error(
             `Cannot find 'scripts' folder in source directory, looked at '${scriptsDir}'.`
         );
@@ -480,7 +479,7 @@ async function buildActionMod({
     } else {
         stdout(`Looking for script files in '${scriptsDir}'`);
 
-        const scripts = await fse.readdir(scriptsDir);
+        const scripts = await readdir(scriptsDir);
         const scriptEntryPoints = scripts
             .filter((fileName) => {
                 if (isAllowedEndpointPath(fileName)) {
@@ -550,7 +549,7 @@ async function buildVisualizationMod({
     const stdout = mkStdout(quiet);
     const entryPoint = path.join(srcDir, "main.ts");
 
-    if (!fse.existsSync(entryPoint)) {
+    if (!existsSync(entryPoint)) {
         throw new Error(
             `Could not find entry point for visualization mod at '${entryPoint}'.`
         );

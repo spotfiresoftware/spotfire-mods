@@ -1,8 +1,6 @@
 import { existsSync } from "fs";
-import fse from "fs-extra";
 import { mkdir, stat, writeFile } from "fs/promises";
 import path from "path";
-import readline from "readline/promises";
 import {
     QuietOtions,
     mkStdout,
@@ -51,40 +49,16 @@ export async function addScript(
     const manifest = await readManifest(manifestPath);
     const file = path.basename(id);
     const entryPoint = toAlphaNumWithSeparators(file);
+    const filePath = path.join(scriptsFolder, `${file}.ts`);
 
     if (manifest.scripts?.find((s) => s.id === id)) {
         throw new Error(`The mod already contains a script with id '${id}'.`);
     }
 
-    const filePath = path.join(scriptsFolder, `${file}.ts`);
-
-    if (fse.existsSync(filePath)) {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-        let answer = "";
-
-        while (answer !== "yes" && answer !== "no") {
-            answer = await rl.question(
-                `The mod already contains a script file at '${filePath}'.\nDo you want to keep this file? [yes/no]\n`
-            );
-        }
-
-        if (answer === "yes") {
-            let i = 2;
-            let newName: string | undefined;
-            while (!newName || fse.existsSync(newName)) {
-                newName = `${filePath.substring(
-                    0,
-                    filePath.length - 3
-                )}(${i++}).ts`;
-            }
-
-            fse.renameSync(filePath, newName);
-        }
-
-        rl.close();
+    if (existsSync(filePath)) {
+        throw new Error(
+            `The mod already contains a script file at '${filePath}'.`
+        );
     }
 
     manifest.scripts = [
