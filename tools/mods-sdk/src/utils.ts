@@ -12,6 +12,7 @@ export const parameterTypes = [
     "Boolean",
     "Currency",
     "DataTable",
+    "DataColumn",
     "Date",
     "DateTime",
     "Integer",

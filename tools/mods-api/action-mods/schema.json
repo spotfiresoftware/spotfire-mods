@@ -204,6 +204,7 @@
                                                         "Boolean",
                                                         "Currency",
                                                         "DataTable",
+                                                        "DataColumn",
                                                         "Date",
                                                         "DateTime",
                                                         "Integer",
