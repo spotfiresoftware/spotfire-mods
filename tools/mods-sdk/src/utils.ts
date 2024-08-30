@@ -3,6 +3,16 @@ import { readFile, writeFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
+export type Success<TSuccess> = { status: "success"; result: TSuccess };
+type Error<TErr> = { status: "error"; error: TErr };
+export type Result<TSuccess, TErr> = Success<TSuccess> | Error<TErr>;
+
+export function isSuccess<TSuccess, TErr>(
+    result: Result<TSuccess, TErr>
+): result is Success<TSuccess> {
+    return result.status === "success";
+}
+
 export enum ModType {
     Visualization = "Visualization",
     Action = "Action",
@@ -64,6 +74,31 @@ export interface Manifest {
         }[];
     }[];
     files?: string[];
+}
+
+export function readApiVersion(manifest: Manifest) {
+    if (manifest.apiVersion == null) {
+        throw new Error("No apiVersion specified in the manifest");
+    }
+
+    if (typeof manifest.apiVersion !== "string") {
+        throw new Error(
+            `Expected apiVersion to be of type string, was: ${typeof manifest.apiVersion}`
+        );
+    }
+
+    const apiVersionSplit = manifest.apiVersion?.split(".");
+
+    if (apiVersionSplit.length !== 2) {
+        throw new Error(
+            `Incorrectly formatted apiVersion in manifest, expected MAJOR.MINOR format, found: ${manifest.apiVersion}`
+        );
+    }
+
+    return {
+        major: Number.parseInt(apiVersionSplit[0]),
+        minor: Number.parseInt(apiVersionSplit[1]),
+    };
 }
 
 export function debounce<F extends Function>(f: F, waitMs: number): F {

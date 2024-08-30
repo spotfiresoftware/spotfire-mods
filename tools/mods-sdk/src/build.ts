@@ -8,11 +8,13 @@ import {
     ModType,
     ParameterType,
     QuietOtions,
+    Result,
     debounce,
     formatIfPossible,
     getDirname,
     isParameterType,
     mkStdout,
+    readApiVersion,
     toTypeName,
 } from "./utils.js";
 
@@ -49,37 +51,33 @@ function toCsType(type: ParameterType) {
     }
 }
 
-/**
- * Generates an environment file from the specified action mods manifest at the specified location.
- * The environment file references the action mods API and makes these types available globally.
- * The file also contains the input parameters for each script as defined in the manifest.
- */
-async function createEnvFile({
-    manifestPath,
+export type GenerateEnvFileResult = Result<string, string[]>;
+
+export async function generateEnvFile({
+    manifest,
     envPath,
     ...quiet
-}: CreateEnvOptions & QuietOtions) {
+}: {
+    manifest: Manifest;
+    envPath?: string;
+} & QuietOtions): Promise<GenerateEnvFileResult> {
     const stdout = mkStdout(quiet);
-    let hasFailed = false;
-    const errors: string[] = [];
-
-    if (!existsSync(manifestPath)) {
-        throw `Cannot find ${manifestPath}`;
-    }
-
-    const manifestJson = await readFile(manifestPath, { encoding: "utf8" });
-    const manifest: Manifest = JSON.parse(manifestJson);
-
-    if (!manifest.scripts) {
-        throw "No scripts defined in manifest file.";
-    }
 
     let envFileContent = "";
-
     envFileContent +=
         "// This file is auto-generated and will be overwritten on build.\n";
     envFileContent +=
         '/// <reference types="@spotfire/mods-api/action-mods/api.d.ts" />\n';
+
+    if (!manifest.scripts) {
+        return {
+            status: "success",
+            result: envFileContent,
+        };
+    }
+
+    let hasFailed = false;
+    const errors: string[] = [];
 
     for (const script of manifest.scripts!) {
         if (!script.name) {
@@ -108,6 +106,32 @@ async function createEnvFile({
 
 `;
 
+        try {
+            const apiVersion = readApiVersion(manifest);
+            if (apiVersion.major >= 2 && apiVersion.minor >= 1) {
+                const resourcesType =
+                    manifest.files != null
+                        ? `<${manifest.files.map((f) => `"${f}"`).join(" | ")}>`
+                        : "";
+                tsType += `
+    /** The resources (specified in the 'files' field in the mod manifest) available to this mod. */
+    resources: Spotfire.Dxp.Application.Mods.ActionModResource${resourcesType};
+
+`;
+            } else if (manifest.files) {
+                stdout(
+                    "Warning: The mod manifest contains resource files (specified under 'files' in the manifest) but targets an apiVersion below 2.1. These files will not be reachable from within the scripts in this action mod unless you increase your apiVersion."
+                );
+            }
+        } catch (e) {
+            error(
+                `Failed to read apiVersion from manifest, ${envPath} may be incomplete.`
+            );
+            if (e instanceof Error) {
+                error(e.message);
+            }
+        }
+
         for (const param of script.parameters ?? []) {
             if (!param.name) {
                 error("Parameter has no name.");
@@ -134,16 +158,24 @@ async function createEnvFile({
     }
 
     if (!hasFailed) {
-        const formattedEnvFileContent = await formatIfPossible(
-            envPath,
-            envFileContent,
-            true
-        );
-        await writeFile(envPath, formattedEnvFileContent, "utf-8");
-        stdout(`Environment file finished writing to '${envPath}'`);
-    } else {
-        throw errors.join("\n");
+        if (envPath) {
+            envFileContent = await formatIfPossible(
+                envPath,
+                envFileContent,
+                true
+            );
+        }
+
+        return {
+            status: "success",
+            result: envFileContent,
+        };
     }
+
+    return {
+        status: "error",
+        error: errors,
+    };
 
     /**
      * Reports an error without exiting the function.
@@ -151,6 +183,38 @@ async function createEnvFile({
     function error(msg: string) {
         errors.push(msg);
         hasFailed = true;
+    }
+}
+
+/**
+ * Generates an environment file from the specified action mods manifest at the specified location.
+ * The environment file references the action mods API and makes these types available globally.
+ * The file also contains the input parameters for each script as defined in the manifest.
+ */
+async function createEnvFile({
+    manifestPath,
+    envPath,
+    ...quiet
+}: CreateEnvOptions & QuietOtions) {
+    const stdout = mkStdout(quiet);
+
+    if (!existsSync(manifestPath)) {
+        throw `Cannot find ${manifestPath}`;
+    }
+
+    const manifestJson = await readFile(manifestPath, { encoding: "utf8" });
+    const manifest: Manifest = JSON.parse(manifestJson);
+    const envFileContent = await generateEnvFile({
+        manifest,
+        envPath,
+        ...quiet,
+    });
+
+    if (envFileContent.status === "success") {
+        await writeFile(envPath, envFileContent.result, "utf-8");
+        stdout(`Environment file finished writing to '${envPath}'`);
+    } else {
+        throw new Error(envFileContent.error.join("\n"));
     }
 }
 
