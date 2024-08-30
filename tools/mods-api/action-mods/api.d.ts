@@ -4,7 +4,7 @@
  * in the license file that is distributed with this file.
  * 
  * Spotfire Action Mods API declaration.
- * Version: 2.0
+ * Version: 2.1
  */
 
 declare namespace Spotfire.Dxp {
@@ -552,6 +552,14 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             get FilteringSchemes(): Filters.FilteringSchemeCollection;
+            /**
+             * Gets an object that can be used to embed custom shapes in the document.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            get MarkerShapeDefinitions(): Visuals.MarkerShapeDefinitions;
             /**
              * Gets the pages of this document.
              * 
@@ -13793,6 +13801,17 @@ declare namespace Spotfire.Dxp {
              */
             class MarkerShape extends Object {
                 /**
+                 * Gets the anchor point override. Valid coordinates are in the range [-0.5, 0.5].
+                 * (-0.5, -0.5) is the top left corner of the image, and (0, 0) is at the center.
+                 * By default, this property is null, which implies the anchor point is derived from
+                 * the marker type. For the built-in markers, this is (0, 0).
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get AnchorPointOverride(): (JsType<System.Drawing.PointF> | null);
+                /**
                  * Gets the type of the marker.
                  * 
                  * @since 2.0
@@ -13819,12 +13838,93 @@ declare namespace Spotfire.Dxp {
                  */
                 Clone(): MarkerShape;
                 /**
+                 * Creates a new {@link Spotfire.Dxp.Application.Visuals.MarkerShape} instance with an updated value for
+                 * the {@link Spotfire.Dxp.Application.Visuals.MarkerShape.AnchorPointOverride} property.
+                 * @param anchorPoint The new value. The x and y values of the point will
+                 * be clamped to the range [-0.5, 0.5]. Passing null to this method will reset the
+                 * override and the default anchor point for the marker will be used.
+                 * @returns A new {@link Spotfire.Dxp.Application.Visuals.MarkerShape} instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                WithAnchorPointOverride(anchorPoint: ((JsType<System.Drawing.PointF> | System.Drawing.PointF) | null)): MarkerShape;
+                /**
                  * @ignore
                  * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
                  */
                 _interfaces: {
                 };
                 private __type_3619610642: null;
+            }
+            
+            /**
+             * Class is responsible for embedding custom markers in the document.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class MarkerShapeDefinitions extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Embeds a custom shape in the document, and returns a {@link Spotfire.Dxp.Application.Visuals.MarkerShape} object that can be used
+                 * to configure visualizations. If the specified shape is already embedded, a corresponding marker shape object is returned.
+                 * @param shape The shape to embed.
+                 * @returns A marker shape object that can be used when configuring visualizations.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Embed(shape: Shapes.CustomShape): MarkerShape;
+                /**
+                 * Replaces the usage of a custom shape in the document with the specified marker shape.
+                 * @param shape The custom shape to replace usages for.
+                 * @param markerShape The marker shape to use in its place.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                ReplaceUsagesInDocument(shape: Shapes.CustomShape, markerShape: MarkerShape): void;
+                /**
+                 * Tries to get a marker shape that can be used to configure visualization from a see {@link Spotfire.Dxp.Application.Visuals.Shapes.CustomShape} object.
+                 * If the specified custom shape has not already been embedded, this method will return false.
+                 * @param shape The custom shape to get a {@link Spotfire.Dxp.Application.Visuals.MarkerShape} for.
+                 * @param markerShape The resulting marker shape if the shape has already been embedded, otherwise null.
+                 * @returns True if the given marker shape has already been embedded in the document.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                TryGetMarkerShape(shape: Shapes.CustomShape, markerShape: OutParam<MarkerShape>): JsType<System.Boolean>;
+                /**
+                 * Updates any embedded shapes that uses a collection with the same id to use shapes from the supplied collection.
+                 * @param shapeCollection The shape collection to update from.
+                 * @returns True if an update was made.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                UpdateEmbeddedShapes(shapeCollection: Shapes.CustomShapeCollection): JsType<System.Boolean>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_1126792864: null;
             }
             
             /**
@@ -24953,6 +25053,16 @@ declare namespace Spotfire.Dxp {
                      */
                     AddNewFeatureLayer(featureTable: Data.DataTable, featureLayerVisualization: OutParam<FeatureLayerVisualization>): MapChartDataLayer;
                     /**
+                     * Adds a new image layer to this collection, using the specified stream.
+                     * @param stream The stream to use for creating the image layer.
+                     * @returns The newly created image layer.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    AddNewImageLayer(stream: (JsType<System.IO.Stream> | System.IO.Stream)): ImageLayer;
+                    /**
                      * Adds a new {@link Spotfire.Dxp.Application.Visuals.Maps.MapChartDataLayer} to this collection.
                      * @param dataTable The data table to be used for the layer.
                      * @param markerLayerVisualization The newly created marker layer visualization.
@@ -25543,7 +25653,9 @@ declare namespace Spotfire.Dxp {
                     get Identifier(): JsType<System.String>;
                     /**
                      * Initializes a new instance of the {@link Spotfire.Dxp.Application.Visuals.Maps.Projection} class.
-                     * @param identifier The projection identifier, EPSG code on the form "EPSG:1234". Any whitespace is removed from both ends of the string.
+                     * @param identifier The projection identifier, either an EPSG code on the form "EPSG:1234" or "CustomIdentifierPrefix:ID"
+                     * when referring to an imported coordinate reference system with id 'ID'.
+                     * Any whitespace is removed from both ends of the string.
                      * 
                      * @since 2.0
                      * 
@@ -25553,7 +25665,9 @@ declare namespace Spotfire.Dxp {
                     /**
                      * Initializes a new instance of the {@link Spotfire.Dxp.Application.Visuals.Maps.Projection} class as a custom defined projection.
                      * This type of projection can be generated from imported GeoTIFF image files or from imported Shape files or they can be added by users.
-                     * @param identifier The projection identifier, EPSG code on the form "EPSG:1234". Any whitespace is removed from both ends of the string.
+                     * @param identifier The projection identifier, either an EPSG code on the form "EPSG:1234" or "CustomIdentifierPrefix:ID"
+                     * when referring to an imported coordinate reference system with id 'ID'.
+                     * Any whitespace is removed from both ends of the string.
                      * @param proj4Definition The projection PROJ4 definition.
                      * @param displayName The projection display name.
                      * 
@@ -28052,6 +28166,155 @@ declare namespace Spotfire.Dxp {
                         Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                     };
                     private __type_3268289031: null;
+                }
+            }
+            
+            namespace Shapes {
+                /**
+                 * Class representing a custom marker shape belonging to a {@link Spotfire.Dxp.Application.Visuals.Shapes.CustomShapeCollection}
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                class CustomShape extends Object {
+                    /**
+                     * Gets the id.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Id(): JsType<System.String>;
+                    /**
+                     * Gets the list of keywords.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Keywords(): System.Collections.Generic.IReadOnlyList<JsType<System.String>>;
+                    /**
+                     * Gets the name.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Name(): JsType<System.String>;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                    };
+                    private __type_1107324243: null;
+                }
+                
+                /**
+                 * Represents a collection of marker shapes.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                class CustomShapeCollection extends Object {
+                    /**
+                     * Gets the description of the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Description(): JsType<System.String>;
+                    /**
+                     * Gets the id of the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Id(): JsType<System.String>;
+                    /**
+                     * Gets the name of the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Name(): JsType<System.String>;
+                    /**
+                     * Gets the list of shapes in the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Shapes(): System.Collections.Generic.IReadOnlyList<CustomShape>;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                    };
+                    private __type_2646700929: null;
+                }
+                
+                /**
+                 * Service used to manage collections of custom marker shapes.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                class CustomShapeCollections extends Object implements Explicit<System.Collections.Generic.IEnumerable<CustomShapeCollection>>, Explicit<System.Collections.IEnumerable> {
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    [Symbol.iterator](): Iterator<CustomShapeCollection>;
+                    /**
+                     * Returns an enumerator that iterates through the collection.
+                     * @returns An {@link System.Collections.Generic.IEnumerator} object that
+                     * can be used to iterate through the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    GetEnumerator(): System.Collections.Generic.IEnumerator<CustomShapeCollection>;
+                    /**
+                     * Loads a shape collection from the library.
+                     * @param libraryItem The library item to load.
+                     * @param customShapeCollection The shape collection that was loaded. Will be null on failure.
+                     * @param exception Any exception shown during the loading process.
+                     * @returns True if the shape collection was successfully loaded, otherwise false.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Extended capability 'LibraryRead'
+                     */
+                    TryLoadFromLibrary(libraryItem: Framework.Library.LibraryItem, customShapeCollection: OutParam<CustomShapeCollection>, exception: OutParam<System.Exception>): JsType<System.Boolean>;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                        System_Collections_Generic_IEnumerable: Implementation<System.Collections.Generic.IEnumerable<CustomShapeCollection>>,
+                        System_Collections_IEnumerable: Implementation<System.Collections.IEnumerable>,
+                    };
+                    private __type_3274882784: null;
                 }
             }
             
@@ -43715,6 +43978,17 @@ declare namespace Spotfire.Dxp {
                  */
                 constructor();
                 /**
+                 * Applies the specified action to all nodes of the specified type in the subtree spanned
+                 * from this node, including this node.
+                 * @param action The action to apply.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 * @param typeTNode - Generic type argument
+                 */
+                ForEachNodeInSubTree<TNode>(typeTNode: TypeRefParam<TNode>, action: System.Action<TNode>): void;
+                /**
                  * @ignore
                  * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
                  */
@@ -44796,6 +45070,14 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 static get SbdfDataFile(): LibraryItemType;
+                /**
+                 * Gets the library type for a shape collection.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static get Shapes(): LibraryItemType;
                 /**
                  * Gets the library type for a visualization mod.
                  * 
@@ -47893,6 +48175,12 @@ declare namespace System {
                     System_Collections_Generic_IEnumerable: Implementation<IEnumerable<T>>,
                     System_Collections_IEnumerable: Implementation<Collections.IEnumerable>,
                 };
+                /**
+                 * Gets the element at the specified index in the read-only list.
+                 * @param index The zero-based index of the element to get.
+                 * @returns The element at the specified index in the read-only list.
+                 */
+                readonly Item: PropertyGet<(JsType<Int32> | Int32), JsType<T>>;
             }
             
             /**
@@ -49010,7 +49298,7 @@ declare abstract class System {
 declare abstract class NetClass {
     /**
      * @ignore
-     * @deprecated For internal use only 
+     * @deprecated For internal use only
      */
     _class: never;
 
@@ -49036,7 +49324,7 @@ declare abstract class NetClass {
  * Base interface for all .NET interfaces.
  */
 interface IInterfaceBase {
-    /** 
+    /**
      * @ignore
      * @deprecated For internal use only
      */
@@ -49109,7 +49397,7 @@ declare abstract class RefParam<T> {
     };
 }
 
-/** 
+/**
  * A strongly typed C# array.
  * @typeParam T The type of the array.
  */
@@ -49193,19 +49481,35 @@ declare namespace Spotfire {
      * @deprecated For internal use only. This type is used only for the TypeScript type system and has no implementation.
     */
     class Object extends System.Object {
-        private __type_spotfire_object: null
+        private __type_spotfire_object: null;
+    }
+
+    namespace Dxp.Application.Mods {
+        class ActionModResource<TResources extends string = never> extends System.Object {
+            private __type_spotfire_resource: null;
+
+            /**
+             * Loads a resource bundled with the mod via the 'files' field in the manifest.
+             * @param path The path to the resouce.
+             */
+            LoadResource(path: TResources): System.IO.Stream;
+        }
     }
 }
 declare namespace System {
 
-    class Action {
-        private __type_action: null;
+    /**
+     * Encapsulates a method that has zero or one parameter and does not return a value.
+     */
+    class Action<T = undefined> {
+        private __type_action: T;
 
         /**
-         * Construct an action.
+         * Constructor for actions.
          *  @param callback The callback function.
          **/
         constructor(callback: () => void);
+        constructor(argType: TypeRef<CsType<T>>, callback: (arg: JsType<T>) => void);
     }
 
     /**
@@ -49257,7 +49561,7 @@ type TypeRefParam<T> = ClassRef<T>;
  * @typeParam TValue The type of the property value.
  */
 interface PropertyGet<TKey, TValue> {
-    /** 
+    /**
      * Gets an indexed property.
      * @param key The key of the property.
      */
@@ -49270,7 +49574,7 @@ interface PropertyGet<TKey, TValue> {
  * @typeParam TValue The type of the property value.
  */
 interface PropertySet<TKey, TValue> {
-    /** 
+    /**
      * Sets an indexed property.
      * @param key The key of the property.
      * @param value The value of the property.
