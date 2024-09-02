@@ -1,29 +1,36 @@
 import { existsSync } from "fs";
 import path from "path";
 import {
+    deepCopy,
+    Manifest,
+    mkStdout,
     parameterTypes,
     parseSpotfireType,
+    QuietOtions,
+    readApiVersion,
     readManifest,
     writeManifest,
 } from "./utils.js";
 
 interface AddParameterOptions {
     manifestPath: string;
-    quiet: boolean;
 }
 
-export async function addParameter(
-    scriptId: string,
-    name: string,
-    type: string,
-    { manifestPath, quiet }: AddParameterOptions
-) {
-    const absManifestPath = path.resolve(manifestPath);
+export function addParameterToManifest({
+    manifest: _manifest,
+    scriptId,
+    name,
+    type,
+    ...quiet
+}: {
+    manifest: Manifest;
+    scriptId: string;
+    name: string;
+    type: string;
+} & QuietOtions) {
+    const stdout = mkStdout(quiet);
 
-    if (!existsSync(absManifestPath)) {
-        throw new Error(`Cannot find ${absManifestPath}.`);
-    }
-
+    const manifest = deepCopy(_manifest);
     const spotfireType = parseSpotfireType(type);
     if (!spotfireType) {
         throw new Error(
@@ -33,7 +40,23 @@ export async function addParameter(
         );
     }
 
-    const manifest = await readManifest(absManifestPath);
+    if (spotfireType === "DataColumn") {
+        const apiVersion = readApiVersion(manifest);
+        if (
+            apiVersion.status === "success" &&
+            !apiVersion.result.supportsFeature("DataColumnParameter")
+        ) {
+            throw new Error(
+                `Parameter with type 'DataColumn' requires apiVerison above 2.1`
+            );
+        } else if (apiVersion.status === "error") {
+            stdout(
+                `Failed to read apiVerison, cannot verify if parameter type 'DataColumn' is allowed.`
+            );
+            stdout(`Error: ${apiVersion.error}`);
+        }
+    }
+
     const script = manifest.scripts?.find((s) => s.id === scriptId);
     if (!script) {
         const foundScripts = (manifest.scripts ?? [])
@@ -50,5 +73,29 @@ export async function addParameter(
 
     script.parameters.push({ name: name, type: spotfireType });
 
-    await writeManifest(absManifestPath, manifest, quiet);
+    return manifest;
+}
+
+export async function addParameter(
+    scriptId: string,
+    name: string,
+    type: string,
+    { manifestPath, ...quiet }: AddParameterOptions & QuietOtions
+) {
+    const absManifestPath = path.resolve(manifestPath);
+
+    if (!existsSync(absManifestPath)) {
+        throw new Error(`Cannot find ${absManifestPath}.`);
+    }
+
+    const manifest = await readManifest(absManifestPath);
+    const manifestWithParameter = addParameterToManifest({
+        manifest,
+        scriptId,
+        name,
+        type,
+        ...quiet,
+    });
+
+    await writeManifest(absManifestPath, manifestWithParameter, quiet.quiet);
 }

@@ -106,9 +106,10 @@ export async function generateEnvFile({
 
 `;
 
-        try {
-            const apiVersion = readApiVersion(manifest);
-            if (apiVersion.major >= 2 && apiVersion.minor >= 1) {
+        const apiVersionResult = readApiVersion(manifest);
+        if (apiVersionResult.status === "success") {
+            const apiVersion = apiVersionResult.result;
+            if (apiVersion.supportsFeature("Resources")) {
                 const resourcesType =
                     manifest.files != null
                         ? `<${manifest.files.map((f) => `"${f}"`).join(" | ")}>`
@@ -123,13 +124,11 @@ export async function generateEnvFile({
                     "Warning: The mod manifest contains resource files (specified under 'files' in the manifest) but targets an apiVersion below 2.1. These files will not be reachable from within the scripts in this action mod unless you increase your apiVersion."
                 );
             }
-        } catch (e) {
+        } else {
             error(
                 `Failed to read apiVersion from manifest, ${envPath} may be incomplete.`
             );
-            if (e instanceof Error) {
-                error(e.message);
-            }
+            error(apiVersionResult.error);
         }
 
         for (const param of script.parameters ?? []) {

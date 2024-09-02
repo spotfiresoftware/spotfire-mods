@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import path from "path";
 import { ModType, readManifest } from "../src/utils";
-import { addParameter } from "../src/add-parameter";
+import { addParameter, addParameterToManifest } from "../src/add-parameter";
 import { setupProject } from "./test-utils";
 
 describe("add-parameter.test.ts", () => {
@@ -24,5 +24,50 @@ describe("add-parameter.test.ts", () => {
         const param1 = parameters.find((p) => p.name === "param1");
         expect(param1).toBeDefined();
         expect(param1?.type).toEqual("DateTime");
+    });
+
+    test("can add data column parameter if apiVersion is 2.1 or above", () => {
+        const manifest = addParameterToManifest({
+            manifest: {
+                apiVersion: "2.1",
+                scripts: [
+                    {
+                        name: "My Script",
+                        id: "my-script",
+                        entryPoint: "myScript",
+                    },
+                ],
+            },
+            scriptId: "my-script",
+            name: "column",
+            type: "DataColumn",
+            quiet: true,
+        });
+
+        const scripts = manifest.scripts!;
+        const parameters = scripts[0].parameters!;
+        expect(parameters[0].name).toEqual("column");
+        expect(parameters[0].type).toEqual("DataColumn");
+    });
+
+    test("cannot add data column parameter if apiVersion is below 2.1", () => {
+        expect(() =>
+            addParameterToManifest({
+                manifest: {
+                    apiVersion: "2.0",
+                    scripts: [
+                        {
+                            name: "My Script",
+                            id: "my-script",
+                            entryPoint: "myScript",
+                        },
+                    ],
+                },
+                scriptId: "my-script",
+                name: "column",
+                type: "DataColumn",
+                quiet: true,
+            })
+        ).toThrow();
     });
 });

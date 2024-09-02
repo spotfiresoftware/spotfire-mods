@@ -76,28 +76,60 @@ export interface Manifest {
     files?: string[];
 }
 
-export function readApiVersion(manifest: Manifest) {
+export function deepCopy<T>(t: T) {
+    return JSON.parse(JSON.stringify(t)) as T;
+}
+
+class ApiVersion {
+    constructor(private major: number, private minor: number) {}
+
+    supportsFeature(feature: Feature) {
+        const required = features[feature];
+
+        if (this.major === required.major) {
+            return this.minor >= required.minor;
+        }
+
+        return this.major > required.major;
+    }
+}
+
+const features = {
+    DataColumnParameter: { major: 2, minor: 1 },
+    Resources: { major: 2, minor: 1 },
+};
+type Feature = keyof typeof features;
+
+export function readApiVersion(manifest: Manifest): Result<ApiVersion, string> {
     if (manifest.apiVersion == null) {
-        throw new Error("No apiVersion specified in the manifest");
+        return {
+            status: "error",
+            error: "No apiVersion specified in the manifest",
+        };
     }
 
     if (typeof manifest.apiVersion !== "string") {
-        throw new Error(
-            `Expected apiVersion to be of type string, was: ${typeof manifest.apiVersion}`
-        );
+        return {
+            status: "error",
+            error: `Expected apiVersion to be of type string, was: ${typeof manifest.apiVersion}`,
+        };
     }
 
     const apiVersionSplit = manifest.apiVersion?.split(".");
 
     if (apiVersionSplit.length !== 2) {
-        throw new Error(
-            `Incorrectly formatted apiVersion in manifest, expected MAJOR.MINOR format, found: ${manifest.apiVersion}`
-        );
+        return {
+            status: "error",
+            error: `Incorrectly formatted apiVersion in manifest, expected MAJOR.MINOR format, found: ${manifest.apiVersion}`,
+        };
     }
 
     return {
-        major: Number.parseInt(apiVersionSplit[0]),
-        minor: Number.parseInt(apiVersionSplit[1]),
+        status: "success",
+        result: new ApiVersion(
+            Number.parseInt(apiVersionSplit[0]),
+            Number.parseInt(apiVersionSplit[1])
+        ),
     };
 }
 
