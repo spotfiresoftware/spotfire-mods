@@ -2,8 +2,10 @@ import { existsSync } from "fs";
 import { mkdir, stat, writeFile } from "fs/promises";
 import path from "path";
 import {
+    Manifest,
     QuietOtions,
     mkStdout,
+    readApiVersion,
     readManifest,
     toAlphaNumWithSeparators,
     toTypeName,
@@ -14,6 +16,35 @@ interface AddScriptOptions {
     manifestPath: string;
     scripts: string;
     name?: string;
+}
+
+export function createScriptSkeleton({
+    manifest,
+    scriptId,
+    entryPoint,
+}: {
+    manifest: Manifest;
+    scriptId: string;
+    entryPoint: string;
+}) {
+    const params = toTypeName(scriptId) + "Parameters";
+
+    const paramObjectFields = ["document", "application"];
+    const apiVersion = readApiVersion(manifest);
+    if (
+        apiVersion.status === "success" &&
+        apiVersion.result.supportsFeature("Resources")
+    ) {
+        paramObjectFields.push("resources");
+    }
+
+    return `
+export function ${entryPoint}({ ${paramObjectFields.join(", ")} }: ${params}) {
+    // Start writing here!
+}
+
+RegisterEntryPoint(${entryPoint});
+`;
 }
 
 export async function addScript(
@@ -47,9 +78,8 @@ export async function addScript(
     }
 
     const manifest = await readManifest(manifestPath);
-    const file = path.basename(id);
-    const entryPoint = toAlphaNumWithSeparators(file);
-    const filePath = path.join(scriptsFolder, `${file}.ts`);
+    const entryPoint = toAlphaNumWithSeparators(id);
+    const filePath = path.join(scriptsFolder, `${id}.ts`);
 
     if (manifest.scripts?.find((s) => s.id === id)) {
         throw new Error(`The mod already contains a script with id '${id}'.`);
@@ -67,21 +97,17 @@ export async function addScript(
             id: id,
             name: name ?? id,
             entryPoint: entryPoint,
-            file: `build/${file}.js`,
+            file: `build/${id}.js`,
         },
     ];
 
     await writeManifest(manifestPath, manifest, false);
 
-    const params = toTypeName(file) + "Parameters";
-    const scriptSrc = `
-export function ${entryPoint}({ document, application }: ${params}) {
-    // Start writing here!
-}
-
-RegisterEntryPoint(${entryPoint});
-`;
-
+    const scriptSrc = createScriptSkeleton({
+        manifest,
+        scriptId: id,
+        entryPoint,
+    });
     await writeFile(filePath, scriptSrc.trimStart(), { encoding: "utf8" });
     stdout(`A script file has been created at: ${filePath}`);
 }
