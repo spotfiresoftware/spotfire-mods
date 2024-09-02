@@ -223,6 +223,12 @@ function start(settings = {}) {
      */
     function checkIfPartOfManifest(req, res, next) {
         let url = cleanUrl(req.url).slice(1);
+
+        // Do not report ugly error.
+        if (!settings.allowProjectRoot && url === "modProjectRoot") {
+            next();
+        }
+
         if (manifestFiles.length && url != manifestName && !manifestFiles.includes(url)) {
             console.log(colors.yellow(`Mod manifest warning: '${url}' is not listed in the files list.`));
         }
@@ -263,6 +269,10 @@ function start(settings = {}) {
                 for (const script of json.scripts) {
                     if (script.file) {
                         manifestFiles.push(script.file);
+                    }
+
+                    if (script.icon) {
+                        manifestFiles.push(script.icon);
                     }
                 }
             }
