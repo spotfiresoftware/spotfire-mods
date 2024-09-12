@@ -44,6 +44,8 @@ const colors = require("colors/safe");
  */
 const _ = require("lodash");
 
+const package = require("./package.json");
+
 const applicationJson = "application/json; charset=utf-8";
 
 const injectHtml = fs.readFileSync(path.join(__dirname, "websocket.html"), { encoding: "utf8" });
@@ -105,7 +107,10 @@ function start(settings = {}) {
         });
     }
 
+    // API endpoints for Spotfire
     app.use("/@spotfire/api/snapshot", snapshot);
+    app.use("/@spotfire/api/info", info);
+
     app.use(checkIfPartOfManifest);
     app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(settings)));
     app.use(serveStaticFiles);
@@ -362,6 +367,23 @@ function start(settings = {}) {
                 res.end();
             }
         });
+    }
+    /**
+     * Middleware for querying info about the dev server.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function info(req, res, next) {
+        res.setHeader("Content-Type", applicationJson);
+        res.write(
+            JSON.stringify({
+                version: package.version,
+                allowProjectRoot: settings.allowProjectRoot
+            })
+        );
+        res.end();
     }
 }
 
