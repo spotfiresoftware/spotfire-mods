@@ -96,6 +96,7 @@ function start(settings = {}) {
     app.use(cacheHeaders);
     app.use(cspHeaders);
     app.use(corsHeaders);
+    app.use(preflight);
 
     if (settings.allowProjectRoot) {
         // We need to be able to retrieve the absolute path to the project root to
@@ -307,6 +308,22 @@ function start(settings = {}) {
         }
 
         next();
+    }
+
+    /**
+     * Middleware for handling preflight requests.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function preflight(req, res, next) {
+        if (req.method === "OPTIONS") {
+            res.statusCode = 204;
+            res.end();
+        } else {
+            next();
+        }
     }
 
     /**
