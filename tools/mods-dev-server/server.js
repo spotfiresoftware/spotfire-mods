@@ -44,6 +44,8 @@ const colors = require("colors/safe");
  */
 const _ = require("lodash");
 
+const applicationJson = "application/json; charset=utf-8";
+
 const injectHtml = fs.readFileSync(path.join(__dirname, "websocket.html"), { encoding: "utf8" });
 
 const manifestName = "mod-manifest.json";
@@ -103,6 +105,7 @@ function start(settings = {}) {
         });
     }
 
+    app.use("/@spotfire/api/snapshot", snapshot);
     app.use(checkIfPartOfManifest);
     app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(settings)));
     app.use(serveStaticFiles);
@@ -172,7 +175,7 @@ function start(settings = {}) {
     }, 500);
 
     chokidar
-        .watch(settings.root, {})
+        .watch(settings.root, { ignored: "node_modules" })
         .on("add", reloadInstances)
         .on("change", reloadInstances)
         .on("unlink", reloadInstances)
@@ -300,6 +303,66 @@ function start(settings = {}) {
 
         next();
     }
+
+    /**
+     * Middleware for taking a snapshot of the mod files.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function snapshot(req, res, next) {
+        if (
+            !req.method ||
+            req.method !== "POST" ||
+            (req.headers["content-type"] ?? "").toLowerCase() !== applicationJson
+        ) {
+            res.statusCode = 400;
+            res.setHeader("Content-Type", applicationJson);
+            res.write(
+                JSON.stringify({
+                    title: "Invalid request",
+                    message: "Expected request with method 'POST' and Content-Type 'application/json; charset=UTF-8'."
+                })
+            );
+            res.end();
+            return;
+        }
+
+        let body = "";
+        req.setEncoding("utf-8");
+        req.on("data", (chunk) => {
+            if (typeof chunk === "string") {
+                body += chunk;
+            }
+        });
+        req.on("end", () => {
+            res.setHeader("Content-Type", applicationJson);
+
+            try {
+                /**
+                 * @type {{filePaths?: string[]}}
+                 */
+                const manifestFiles = JSON.parse(body);
+                if (!manifestFiles.filePaths) {
+                    throw new Error("Missing property 'filePaths'");
+                }
+
+                res.write(JSON.stringify(takeSnapshot(manifestFiles.filePaths)));
+            } catch (e) {
+                res.statusCode = 400;
+                res.write(
+                    JSON.stringify({
+                        title: "Invalid JSON payload",
+                        message: "The JSON payload does not follow expected schema '{ filePaths: string[] }'.",
+                        error: `${e}`
+                    })
+                );
+            } finally {
+                res.end();
+            }
+        });
+    }
 }
 
 /**
@@ -384,4 +447,24 @@ function cleanUrl(url = "") {
 function cacheHeaders(req, res, next) {
     res.setHeader("Cache-Control", "no-store");
     next();
+}
+
+/**
+ * Records the modified time (ms since UNIX epoch) of the requested files.
+ * @param {string[]} filePaths
+ */
+function takeSnapshot(filePaths) {
+    /**
+     * @type {[string, number][]}
+     */
+    const snapshot = [];
+    for (const filePath of filePaths) {
+        try {
+            const stats = fs.statSync(filePath);
+            snapshot.push([filePath, stats.mtimeMs]);
+        } catch (e) {
+            snapshot.push([filePath, 0]);
+        }
+    }
+    return { snapshot: snapshot };
 }
