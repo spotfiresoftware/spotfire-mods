@@ -161,31 +161,27 @@ export function animationControl(animationSpeedProperty: {
             )
             .attr("height", 8)
             .attr("class", "animation-tray")
-            .on("click", sliderclick)
+            .on("click", (e: any) => sliderclick(e))
             .call(
                 d3
                     .drag<SVGRectElement, any>()
-                    .on("start", function () {
+                    .on("start", function (e: any) {
                         dispatch.call(
                             "sliderChange",
-                            this,
+                            this, 
                             Math.round(
-                                animationScale.invert(
-                                    d3.mouse(animationSlider.node()!)[0]
-                                )
+                                animationScale.invert(e.x)
                             )
                         );
 
-                        d3.event.sourceEvent.preventDefault();
+                        e.sourceEvent.preventDefault();
                     })
-                    .on("drag", function () {
+                    .on("drag", function (e: MouseEvent) {
                         dispatch.call(
                             "sliderChange",
                             this,
                             Math.round(
-                                animationScale.invert(
-                                    d3.mouse(animationSlider.node()!)[0]
-                                )
+                                animationScale.invert(e.x)
                             )
                         );
                     })
@@ -234,11 +230,9 @@ export function animationControl(animationSpeedProperty: {
             .attr("r", 6)
             .attr("class", "animation-handle");
 
-        function sliderclick() {
+        function sliderclick(e: MouseEvent) {
             setPlaying(false);
-            animationIndex = Math.round(
-                animationScale.invert(d3.mouse(animationSlider.node()!)[0])
-            );
+            animationIndex =Math.round(animationScale.invert(e.x));
             setSliderValue(animationIndex);
             valueChanged(animationIndex, true);
         }
