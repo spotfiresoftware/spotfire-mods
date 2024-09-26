@@ -430,8 +430,8 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
             .attr("fill", unmarkedColor)
             .attr("fill-opacity", opacity)
             .attr("d", area.curve(curveUnmarked)(points));
-        interactiveArea.on("click", function () {
-            group.points.forEach((p) => (d3.event.ctrlKey ? p.mark("ToggleOrAdd") : p.mark()));
+        interactiveArea.on("click", function (e) {
+            group.points.forEach((p) => (e.ctrlKey ? p.mark("ToggleOrAdd") : p.mark()));
         });
     }
 
@@ -563,8 +563,8 @@ export async function render(state, mod, dataView, windowSize, chartType, rounde
             tooltip.hide();
         }
 
-        function handleClick() {
-            group.points.forEach((p) => (d3.event.ctrlKey ? p.mark("ToggleOrAdd") : p.mark()));
+        function handleClick(e) {
+            group.points.forEach((p) => (e.ctrlKey ? p.mark("ToggleOrAdd") : p.mark()));
         }
     }
 

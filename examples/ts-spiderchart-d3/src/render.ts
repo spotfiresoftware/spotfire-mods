@@ -176,9 +176,8 @@ export async function render(
      */
     drawRectangularSelection();
 
-    d3.selectAll(".x-axis-labels").on("click", function () {
-        const mouse = d3.mouse(document.body);
-        cfg.onLabelClick?.(mouse[0], mouse[1]);
+    d3.selectAll(".x-axis-labels").on("click", function (e: any) {
+        cfg.onLabelClick?.(e.clientX, e.clientY);
     });
 
     /**
@@ -310,7 +309,7 @@ export async function render(
                     ? (d * 100) / cfg.levels + "%"
                     : Math.floor(yScale.invert((d * radius) / cfg.levels) * 100) / 100;
             })
-            .on("mouseover", (d) => {
+            .on("mouseover", (_, d) => {
                 colorSeries.length === 0
                     ? tooltip.hide()
                     : cfg.yAxisNormalization
@@ -418,7 +417,7 @@ export async function render(
             .style("font-family", styling.scales.fontFamily)
             .style("font-size", styling.scales.fontSize + "px")
 
-            .on("mouseover", (d) => {
+            .on("mouseover", (_: any, d: any) => {
                 tooltip.show(d);
             })
             .on("mouseout", () => tooltip.hide());
@@ -543,10 +542,10 @@ export async function render(
             })
             .style("fill", colorForSerie)
             .style("fill-opacity", cfg.opacityArea)
-            .on("click", function (this: SVGPathElement, d) {
-                mark(d);
+            .on("click", function (this, e: any, d: any) {
+                mark(d, e.ctrlKey);
                 d3.select(this).attr("mod-Color");
-                d3.event.stopPropagation();
+                e.stopPropagation();
             });
     }
 
@@ -567,10 +566,10 @@ export async function render(
             .style("stroke-width", cfg.strokeWidth + "px")
             .style("stroke", colorForSerie)
             .style("fill", "none")
-            .on("click", function (d) {
-                mark(d);
+            .on("click", function (e: any, element: any) {
+                mark(element, e.ctrlKey);
                 d3.select(this).attr("mod-Color");
-                d3.event.stopPropagation();
+                e.stopPropagation();
             });
     }
 
@@ -596,13 +595,13 @@ export async function render(
             .style("fill", function (d) {
                 return d.color;
             })
-            .on("mouseover", function (d) {
+            .on("mouseover", function (_: any, d: any) {
                 tooltip.show(d.tooltip());
             })
             .on("mouseout", function () {
                 tooltip.hide();
             })
-            .on("click", mark);
+            .on("click", (e: any, element: any) => mark(element, e.ctrlKey));
     }
 
     function calculatePointYPosition(d: Point) {
@@ -628,7 +627,7 @@ export async function render(
             .attr("d", hoverLinePath)
             .on("mouseover", handleMouseOver)
             .on("mouseout", handleMouseOut)
-            .on("click", mark);
+            .on("click", (e: any, element: any) => mark(element, e.ctrlKey));
 
         const g = parent.append("g").attr("visibility", "hidden").attr("class", "line-hover-container");
         g.append("path").attr("class", "line-hover line-hover-casing").attr("d", hoverLinePath);
@@ -653,6 +652,9 @@ export async function render(
      * Draws rectangular selection
      */
     function drawRectangularSelection() {
+        let toggleOrAdd: boolean;
+        let target: any;
+
         function drawRectangle(x: number, y: number, w: number, h: number) {
             return "M" + [x, y] + " l" + [w, 0] + " l" + [0, h] + " l" + [-w, 0] + "z";
         }
@@ -673,10 +675,10 @@ export async function render(
             // Ignore rectangular markings that were just a click.
             if (Math.abs(start[0] - end[0]) < 2 || Math.abs(start[1] - end[1]) < 2) {
                 if (
-                    d3.select(d3.event.target.parentNode).classed("radar-blobs") ||
-                    d3.select(d3.event.target).classed("line-hover line-hover-bg") ||
-                    d3.select(d3.event.target.parentNode).classed("x-axis-labels") ||
-                    d3.select(d3.event.target).classed("x-axis-labels") ||
+                    d3.select(target.parentNode).classed("radar-blobs") ||
+                    d3.select(target).classed("line-hover line-hover-bg") ||
+                    d3.select(target.parentNode).classed("x-axis-labels") ||
+                    d3.select(target).classed("x-axis-labels") ||
                     popoutClosed
                 ) {
                     popoutClosed = false;
@@ -700,27 +702,31 @@ export async function render(
                 return data.clearMarking();
             }
 
-            svgRadarMarkedCircles.each(mark);
+            svgRadarMarkedCircles.each(c => mark(c, toggleOrAdd));
         };
 
-        svg.on("mousedown", function (this) {
+        svg.on("mousedown", function (e: any, element: any) {
             onSelection(true);
-            if (d3.event.which === 3) {
+            if (e.which === 3) {
                 return;
             }
             let subject = d3.select(window),
-                start = d3.mouse(this);
+                start: [number, number] = [e.x, e.y];
+
+            toggleOrAdd = e.ctrlKey;
+            target = e.target;
+
             startSelection(start);
             subject
-                .on("mousemove.rectangle", function () {
-                    moveSelection(start, d3.mouse(svg.node()!));
+                .on("mousemove.rectangle", function (e: any) {
+                    moveSelection(start, [e.x, e.y]);
                 })
                 .on("mouseup.rectangle", function () {
-                    endSelection(start, d3.mouse(svg.node()!));
+                    endSelection(start, [e.x, e.y]);
                     subject.on("mousemove.rectangle", null).on("mouseup.rectangle", null);
                 });
         });
-        svg.on("mouseup", function (this) {
+        svg.on("mouseup", function () {
             onSelection(false);
         });
     }
@@ -730,8 +736,8 @@ export async function render(
     }
 }
 
-function mark(d: Serie | Point) {
-    d3.event.ctrlKey ? d.mark("ToggleOrAdd") : d.mark();
+function mark(d: Serie | Point, toggleOrAdd: boolean) {
+    toggleOrAdd ? d.mark("ToggleOrAdd") : d.mark();
 }
 
 /**
