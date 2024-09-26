@@ -305,6 +305,7 @@ function start(settings = {}) {
 
             res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Private-Network", "true");
         }
 
         next();
