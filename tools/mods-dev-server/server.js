@@ -181,7 +181,7 @@ function start(settings = {}) {
     }, 500);
 
     chokidar
-        .watch(settings.root, { ignored: "node_modules" })
+        .watch(settings.root, { ignored: ["node_modules", "*.d.ts"] })
         .on("add", reloadInstances)
         .on("change", reloadInstances)
         .on("unlink", reloadInstances)
