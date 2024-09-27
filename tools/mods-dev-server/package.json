@@ -8,6 +8,11 @@
     },
     "homepage": "https://github.com/spotfiresoftware/spotfire-mods/tree/master/tools/mods-dev-server",
     "main": "server.js",
+    "files": [
+        "cli.js",
+        "server.js",
+        "websocket.html"
+    ],
     "bin": {
         "mods-dev-server": "./cli.js"
     },
