@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import path from "path";
-import { modIdToName, toModId } from "../src/new-template";
+import { createGitIgnore, modIdToName, toModId } from "../src/new-template";
 import { ModType } from "../src/utils";
 import { setupProject } from "./test-utils";
 
@@ -15,6 +15,12 @@ describe("new-template", () => {
         expect(manifestJson["type"]).toEqual("action");
         expect(manifestJson["name"]).toEqual("New Action Mod");
         expect(manifestJson["id"]).toEqual("new-action-mod");
+
+        await createGitIgnore({
+            targetFolder: path.resolve(projectFolder),
+            quiet: true,
+        });
+        expect(existsSync(path.join(projectFolder, ".gitignore"))).toBeTruthy();
     });
 
     test("visualization mod starter can be created", async () => {
@@ -27,6 +33,12 @@ describe("new-template", () => {
         expect(manifestJson["type"]).toBeUndefined();
         expect(manifestJson["name"]).toEqual("New Visualization Mod");
         expect(manifestJson["id"]).toEqual("new-visualization-mod");
+
+        await createGitIgnore({
+            targetFolder: path.resolve(projectFolder),
+            quiet: true,
+        });
+        expect(existsSync(path.join(projectFolder, ".gitignore"))).toBeTruthy();
     });
 });
 

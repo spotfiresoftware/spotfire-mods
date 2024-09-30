@@ -10,6 +10,7 @@ import {
     capitalizeBeforeSeparators,
     getDirname,
     getVersion,
+    isModType,
     mkStdout,
 } from "./utils.js";
 
@@ -17,44 +18,91 @@ interface CreateTemplateOptions {
     outDir: string;
 }
 
+export type TemplateType = ModType | "gitignore";
+async function getTemplateFolder(type: TemplateType) {
+    const dirname = await getDirname();
+    let typeFolder;
+    switch (type) {
+        case ModType.Action:
+            typeFolder = "actions";
+            break;
+        case ModType.Visualization:
+            typeFolder = "visualizations";
+            break;
+        case "gitignore":
+            typeFolder = "gitignore";
+            break;
+    }
+
+    return path.resolve(dirname, "..", "templates", typeFolder);
+}
+
 export async function createTemplate(
-    modType: ModType,
+    type: TemplateType,
     { outDir, ...quiet }: CreateTemplateOptions & QuietOtions
 ) {
+    const targetFolder = path.resolve(outDir);
+
+    const targetFolderExists = existsSync(targetFolder);
+    if (!targetFolderExists) {
+        await mkdir(targetFolder);
+    }
+
+    if (isModType(type)) {
+        const template = "starter";
+        await createModTemplate({
+            modType: type,
+            template,
+            targetFolder,
+            ...quiet,
+        });
+    } else {
+        await createGitIgnore({ targetFolder, ...quiet });
+    }
+}
+
+export async function createGitIgnore({
+    targetFolder,
+    ...quiet
+}: {
+    targetFolder: string;
+} & QuietOtions) {
+    const stdout = mkStdout(quiet);
+    const templatesFolder = await getTemplateFolder("gitignore");
+    const source = path.join(templatesFolder, "ignorefile");
+    const destination = path.join(targetFolder, ".gitignore");
+    await cp(source, destination);
+    stdout(`🎉 .gitignore file created at ${destination}`);
+}
+
+async function createModTemplate({
+    modType,
+    template,
+    targetFolder,
+    ...quiet
+}: {
+    modType: ModType;
+    template: string;
+    targetFolder: string;
+} & QuietOtions) {
     const stdout = mkStdout(quiet);
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
     });
+    const templatesFolder = await getTemplateFolder(modType);
 
     try {
-        const dirname = await getDirname();
-        const targetFolder = path.resolve(outDir);
-        const templatesFolder = path.resolve(
-            dirname,
-            "..",
-            "templates",
-            modType === ModType.Action ? "actions" : "visualizations"
-        );
-        const starterTemplate = path.resolve(templatesFolder, "starter");
+        const starterTemplate = path.resolve(templatesFolder, template);
         const cwd = path.resolve(".");
 
-        const targetFolderExists = existsSync(targetFolder);
-        if (!targetFolderExists) {
-            await mkdir(targetFolder);
-        }
-
         const files = await readdir(targetFolder);
-        if (files.length > 0) {
-            let answer = "";
-
-            while (answer !== "yes" && answer !== "no") {
-                answer = await rl.question(
-                    "The target folder is not empty. Are you sure you want to continue? [yes/no]\n"
-                );
-            }
-
-            if (answer === "no") {
+        if (files.length > 0 && !quiet.quiet) {
+            const wantToContinue = await ask(
+                rl,
+                "❓ The target folder is not empty. Are you sure you want to continue?"
+            );
+            if (!wantToContinue) {
                 return;
             }
         }
@@ -92,6 +140,16 @@ export async function createTemplate(
                 .replace("$MOD-ID", modId);
         });
 
+        if (!quiet.quiet) {
+            const wantGitIgnore = await ask(
+                rl,
+                "❓ Want to create a .gitignore file?"
+            );
+            if (wantGitIgnore) {
+                await createGitIgnore({ targetFolder, ...quiet });
+            }
+        }
+
         stdout("🎉 Template has been successfully created!");
         stdout(
             colors.bold(
@@ -116,6 +174,22 @@ export async function createTemplate(
         const fileContents = await readFile(filePath, "utf-8");
         await writeFile(filePath, replaceFunction(fileContents), "utf-8");
     }
+}
+
+async function ask(rl: readline.Interface, question: string) {
+    let answer = "";
+
+    while (answer !== "yes" && answer !== "no") {
+        answer = await rl.question(`${question} [yes/no]\n`);
+
+        if (answer !== "yes" && answer !== "no") {
+            console.error(
+                `Invalid answer '${answer}', please answer 'yes' or 'no'.`
+            );
+        }
+    }
+
+    return answer === "yes";
 }
 
 export function toModId(str: string) {

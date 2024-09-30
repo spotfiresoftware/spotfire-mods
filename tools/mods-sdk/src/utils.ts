@@ -18,6 +18,16 @@ export enum ModType {
     Action = "Action",
 }
 
+export function isModType(str: string): str is ModType {
+    if (str === ModType.Action) {
+        return true;
+    } else if (str === ModType.Visualization) {
+        return true;
+    }
+
+    return false;
+}
+
 export const parameterTypes = [
     "Boolean",
     "Currency",

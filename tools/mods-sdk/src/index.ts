@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { Command } from "commander";
-import { createTemplate } from "./new-template.js";
+import { createTemplate, TemplateType } from "./new-template.js";
 import { build } from "./build.js";
 import { ModType, getVersion } from "./utils.js";
 import { addScript } from "./add-script.js";
@@ -28,8 +28,8 @@ Command.prototype.quiet = function () {
         .command("new")
         .argument(
             "<mod-type>",
-            "the type of Mod you want to create, action or visualization",
-            (arg) => assertModType(arg)
+            "what you want to create: action, visualization, or gitignore",
+            (arg) => assertTemplateType(arg)
         )
         .description("Create a new Mods project based on a template")
         .option(
@@ -111,14 +111,16 @@ Command.prototype.quiet = function () {
         };
     }
 
-    function assertModType(arg: string) {
+    function assertTemplateType(arg: TemplateType | string) {
         if (arg === "action") {
             return ModType.Action;
         } else if (arg === "visualization") {
             return ModType.Visualization;
+        } else if (arg === "gitignore") {
+            return "gitignore";
         } else {
             program.error(
-                `Invalid mod type '${arg}'. Possible values are: action or visualization.`
+                `Invalid template type '${arg}'. Possible values are: action, visualization, or gitignore.`
             );
         }
     }
