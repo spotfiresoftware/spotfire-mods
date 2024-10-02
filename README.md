@@ -20,7 +20,7 @@ Creating a new Spotfire mod template is easily done user our [mods SDK](https://
 
 ## Updating an existing mod project to a newer, or older, API version
 
-The SDK always creates a mod project using the latest API version. When distributing a mod you may however want to consider downgrading to the lowest API version that supports the features needed in order to be backward compatible to older Spotfire versions. Up or downgrading API cersion easily done by just changing the API version in the mod manifest file. It is however wise to also fetch the corresponding version of the [mods API](https://www.npmjs.com/package/@spotfire/mods-api), for example `npm add --save-dev @spotfire/mods-api@1.2` in order to get accurate type checking.
+The SDK always creates a mod project using the latest API version. When distributing a mod you may however want to consider downgrading to the lowest API version that supports the features needed in order to be backward compatible to older Spotfire versions. Up or downgrading API version is easily done by just changing the API version in the mod manifest file. It is however wise to also fetch the corresponding version of the [mods API](https://www.npmjs.com/package/@spotfire/mods-api), for example `npm add --save-dev @spotfire/mods-api@1.2` in order to get accurate type checking.
 
 For projects created without the SDK, follow the instructions [here](https://www.npmjs.com/package/@spotfire/mods-api?activeTab=readme) to adapt your project to using the [API npm package](https://www.npmjs.com/package/@spotfire/mods-api).
 
