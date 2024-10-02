@@ -14,7 +14,7 @@ Creating a new Spotfire mod template is easily done user our [mods SDK](https://
 
 [Spotfire mods SDK](https://www.npmjs.com/package/@spotfire/mods-sdk)
 
-[Working with Spotfire® Mods](/spotfire-mods/docs/)
+[Working with Spotfire® Mods](https://spotfiresoftware.github.io/spotfire-mods/docs/)
 
 [Latest version of example projects](https://github.com/spotfiresoftware/spotfire-mods/releases/latest)
 
