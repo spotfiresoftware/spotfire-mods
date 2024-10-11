@@ -22627,8 +22627,8 @@ declare namespace Spotfire.Dxp {
                      * 
                      * @group Default capability
                      */
-                    get SortColumnReference(): Data.DataColumn;
-                    set SortColumnReference(value: Data.DataColumn);
+                    get SortColumnReference(): (Data.DataColumn | null);
+                    set SortColumnReference(value: (Data.DataColumn | null));
                     /**
                      * Gets or sets the column containing the x-values.
                      * 
@@ -26606,7 +26606,7 @@ declare namespace Spotfire.Dxp {
                     get TiledRendering(): JsType<System.Boolean>;
                     set TiledRendering(value: JsType<System.Boolean>);
                     /**
-                     * Gets or sets a value indicating whether credentials are used for WMS layer.
+                     * Gets or sets a value indicating whether credentials are used for WMS layer. When false it might be because the authentication method currently used is OAuth.
                      * 
                      * @since 2.0
                      * 
@@ -37830,6 +37830,53 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for creating a {@link Spotfire.Dxp.Data.DataFunctions.ColumnsOutput} for a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
+             * Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ColumnsOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets a value indicating whether the columns produced the first time should be replaced
+                 * when executing a second time. If false the old columns will become embedded and the new rows
+                 * added.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get AddNewColumnsWhenUpdating(): JsType<System.Boolean>;
+                set AddNewColumnsWhenUpdating(value: JsType<System.Boolean>);
+                /**
+                 * Gets or sets the table to add columns to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                set DataTable(value: DataTable);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.ColumnsOutputBuilder} class.
+                 * @param dataTable The data table to add columns to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(dataTable: DataTable);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_3206032276: null;
+            }
+            
+            /**
              * Represents an execution of a data function defined from a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction.DataFunctionDefinition}.
              * @remark This class describes how inputs and outputs should be handled from the function.
              * 
@@ -38145,6 +38192,17 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 [Symbol.iterator](): Iterator<DataFunction>;
                 /**
+                 * Adds a new {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} from a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionDefinition}.
+                 * @param suggestedName The suggested name of the function.
+                 * @param dataFunctionDefinition The function definition.
+                 * @returns The newly added {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddNew(suggestedName: (JsType<System.String> | System.String), dataFunctionDefinition: DataFunctionDefinition): DataFunction;
+                /**
                  * Determines whether the specified value is in this collection.
                  * @param value The object to locate in this collection.
                  * The value can be null.
@@ -38157,6 +38215,17 @@ declare namespace Spotfire.Dxp {
                  */
                 Contains(value: DataFunction): JsType<System.Boolean>;
                 /**
+                 * Create a new unique function name from a suggestion. The
+                 * suggested name is used if possible.
+                 * @param functionName The suggested function name.
+                 * @returns A function functionName which is unique in the collection.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                CreateUniqueName(functionName: (JsType<System.String> | System.String)): JsType<System.String>;
+                /**
                  * Returns an enumerator that iterates through this collection.
                  * @returns An {@link System.Collections.Generic.IEnumerator} for this collection.
                  * 
@@ -38165,6 +38234,35 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 GetEnumerator(): System.Collections.Generic.IEnumerator<DataFunction>;
+                /**
+                 * Check if the suggested name is a valid name.
+                 * @param suggestedName The suggested name.
+                 * @returns True if the name is valid and not already used; false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                IsValidName(suggestedName: (JsType<System.String> | System.String)): JsType<System.Boolean>;
+                /**
+                 * Remove a function.
+                 * @param _function The function to remove.
+                 * @returns True if the function was part of the collection and could be removed, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Remove(_function: DataFunction): JsType<System.Boolean>;
+                /**
+                 * Remove all functions matching the predicate.
+                 * @param predicate The predicate.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                RemoveAll(predicate: System.Predicate<DataFunction>): void;
                 /**
                  * @ignore
                  * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
@@ -38598,6 +38696,63 @@ declare namespace Spotfire.Dxp {
                  */
                 GetEnumerator(): System.Collections.Generic.IEnumerator<DataFunctionInput>;
                 /**
+                 * Removes the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for the given {@link Spotfire.Dxp.Data.DataFunctions.InputParameter}.
+                 * @param inputParameter The input parameter to remove the input for.
+                 * @returns True if the inputParameter was present and could be removed, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Remove(inputParameter: InputParameter): JsType<System.Boolean>;
+                /**
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
+                 * representing a list of column expressions. The value is calculated on all rows in the input.
+                 * @param inputParameter The input parameter.
+                 * @param expression The expression that defines the input. This is comma separated list of column expressions with qualified table names that
+                 * may only refer to one single table.
+                 * @returns The newly created input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetInput(inputParameter: InputParameter, expression: (JsType<System.String> | System.String)): DataFunctionInput;
+                /**
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
+                 * representing a list of column expressions. The value is calculated on the intersection of all the input selections.
+                 * @param inputParameter The input parameter.
+                 * @param expression The expression that defines the input. This is comma separated list of column expressions with qualified table names that
+                 * may only refer to one single table.
+                 * @param selections The selections that define which rows to use to calculate the expression result.
+                 * If multiple selections are sent as input then the resulting rows will be the rows that are included in all the
+                 * selections.
+                 * @returns The newly created input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetInput(inputParameter: InputParameter, expression: (JsType<System.String> | System.String), ...selections: DataSelection[]): DataFunctionInput;
+                /**
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
+                 * representing a list of column expressions. The value is calculated on the intersection of all the input selections.
+                 * @param inputParameter The input parameter.
+                 * @param expression The expression that defines the input. This is comma separated list of column expressions with qualified table names that
+                 * may only refer to one single table.
+                 * @param includeActiveFiltering A value indicating whether the active filtering be included in the
+                 * selections or not.
+                 * @param selections The selections that define which rows to use to calculate the expression result.
+                 * If multiple selections are sent as input then the resulting rows will be the rows that are included in all the
+                 * selections.
+                 * @returns The newly created input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetInput(inputParameter: InputParameter, expression: (JsType<System.String> | System.String), includeActiveFiltering: (JsType<System.Boolean> | System.Boolean), ...selections: DataSelection[]): DataFunctionInput;
+                /**
                  * Tries to get a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for the given {@link Spotfire.Dxp.Data.DataFunctions.InputParameter}.
                  * @param inputParameter The input parameter.
                  * @param dataFunctionInput The input definition.
@@ -38665,6 +38820,45 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder for output mappings.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class DataFunctionOutputBuilder extends Object {
+                /**
+                 * Gets or sets an input where this output can find selections to remap the output data with.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get InputToAdaptSelectionsFrom(): InputParameter;
+                set InputToAdaptSelectionsFrom(value: InputParameter);
+                /**
+                 * Gets the transformations that should be applied to the result.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Transformations(): System.Collections.Generic.IList<DataTransformation>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_444349353: null;
+            }
+            
+            /**
              * Represents the declarations on how to handle the results for
              * {@link Spotfire.Dxp.Data.DataFunctions.OutputParameter}s in a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
              * 
@@ -38698,6 +38892,182 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 GetEnumerator(): System.Collections.Generic.IEnumerator<DataFunctionOutput>;
+                /**
+                 * Removes the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutput} for the outputParameter.
+                 * @param outputParameter The output parameter to remove the output for.
+                 * @returns True if the outputParameter was present and could be removed, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Remove(outputParameter: OutputParameter): JsType<System.Boolean>;
+                /**
+                 * Sets the output to add columns to a {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @remark This does not perform a join, instead it assumes the output has a suitable row count for being
+                 * added to the table.
+                 * @param outputParameter The output parameter.
+                 * @param addColumnsOutputBuilder The builder that will produce the appropriate configuration.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.ColumnsOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetColumnsOutput(outputParameter: OutputParameter, addColumnsOutputBuilder: ColumnsOutputBuilder): ColumnsOutput;
+                /**
+                 * Sets the output to add columns to a {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @remark This does not perform a join, instead it assumes the output has a suitable row count for being
+                 * added to the table.
+                 * @param outputParameter The output parameter.
+                 * @param dataTable The table to add columns to.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.ColumnsOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetColumnsOutput(outputParameter: OutputParameter, dataTable: DataTable): ColumnsOutput;
+                /**
+                 * Sets the output to a update a {@link Spotfire.Dxp.Data.DataColumn}{@link Spotfire.Dxp.Data.DataProperty} for the outputParameter.
+                 * If the property is not present it will be created.
+                 * @param outputParameter The output parameter.
+                 * @param propertyName The property name.
+                 * @param dataColumn The data column.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDataColumnPropertyOutput(outputParameter: OutputParameter, propertyName: (JsType<System.String> | System.String), dataColumn: DataColumn): PropertyOutput;
+                /**
+                 * Sets the output to a update a {@link Spotfire.Dxp.Data.DataTable}{@link Spotfire.Dxp.Data.DataProperty} for the outputParameter.
+                 * If the property is not present it will be created.
+                 * @param outputParameter The output parameter.
+                 * @param propertyName The property name.
+                 * @param dataTable The data table.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDataTablePropertyOutput(outputParameter: OutputParameter, propertyName: (JsType<System.String> | System.String), dataTable: DataTable): PropertyOutput;
+                /**
+                 * Sets the output to a update a document {@link Spotfire.Dxp.Data.DataProperty} for the outputParameter.
+                 * If the property is not present it will be created.
+                 * @param outputParameter The output parameter.
+                 * @param propertyName The property name.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDocumentPropertyOutput(outputParameter: OutputParameter, propertyName: (JsType<System.String> | System.String)): PropertyOutput;
+                /**
+                 * Sets the output to join columns to a {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param joinColumnsOutputBuilder The builder that contains the settings for the operation.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.JoinOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetJoinOutput(outputParameter: OutputParameter, joinColumnsOutputBuilder: JoinOutputBuilder): JoinOutput;
+                /**
+                 * Sets the output to join columns to a {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @remark Automatic match will be performed.
+                 * @param outputParameter The output parameter.
+                 * @param dataTable The table to add columns to.
+                 * @param joinType The type of join to perform.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.JoinOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetJoinOutput(outputParameter: OutputParameter, dataTable: DataTable, joinType: JoinType): JoinOutput;
+                /**
+                 * Sets the output to a update a {@link Spotfire.Dxp.Data.DataProperty} for the outputParameter.
+                 * If the property is not present it will be created.
+                 * @param outputParameter The output parameter.
+                 * @param propertyOutputBuilder The builder that will produce the appropriate output.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetPropertyOutput(outputParameter: OutputParameter, propertyOutputBuilder: PropertyOutputBuilder): PropertyOutput;
+                /**
+                 * Sets the output to replace data in a new {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param dataTable The table to replace data in.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.ReplaceDataOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetReplaceDataOutput(outputParameter: OutputParameter, dataTable: DataTable): ReplaceDataOutput;
+                /**
+                 * Sets the output to replace data in a new {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param mappingBuilder The builder that will produce the appropriate configuration.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.ReplaceDataOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetReplaceDataOutput(outputParameter: OutputParameter, mappingBuilder: ReplaceDataOutputBuilder): ReplaceDataOutput;
+                /**
+                 * Sets the output to adding rows for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param addRowsOutputBuilder The builder that contains the settings used to create the output.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.RowsOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetRowsOutput(outputParameter: OutputParameter, addRowsOutputBuilder: RowsOutputBuilder): RowsOutput;
+                /**
+                 * Sets the output to adding rows for the outputParameter. Matching will occur automatically.
+                 * @param outputParameter The output parameter.
+                 * @param table The table to add rows to.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.RowsOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetRowsOutput(outputParameter: OutputParameter, table: DataTable): RowsOutput;
+                /**
+                 * Sets the output to create a new {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param newTableOutputBuilder The builder that will produce the appropriate configuration.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.TableOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetTableOutput(outputParameter: OutputParameter, newTableOutputBuilder: TableOutputBuilder): TableOutput;
+                /**
+                 * Sets the output to create a new {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param suggestedName The suggested name of the new table. If a table with this already exists another unique name will be used.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.TableOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetTableOutput(outputParameter: OutputParameter, suggestedName: (JsType<System.String> | System.String)): TableOutput;
                 /**
                  * Tries to get a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutput} for the outputParameter.
                  * @param outputParameter The output parameter.
@@ -38891,6 +39261,69 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for outputmappings that add columns to a table. Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class JoinOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the table to add rows to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                set DataTable(value: DataTable);
+                /**
+                 * Gets the columns not included in the mapping or
+                 * the additional columns from the output that should be ignored.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IgnoredColumns(): System.Collections.Generic.IList<DataColumnSignature>;
+                /**
+                 * Gets or sets the type of join that should occur.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get JoinType(): JoinType;
+                set JoinType(value: JoinType);
+                /**
+                 * Gets a map matching columns from the original table to columns
+                 * in the output.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Map(): System.Collections.Generic.IDictionary<DataColumnSignature, DataColumnSignature>;
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.JoinOutputBuilder} class.
+                 * @param dataTable The table to add rows to.
+                 * @param joinType The type of join to perform.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(dataTable: DataTable, joinType: JoinType);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_3869334937: null;
+            }
+            
+            /**
              * An output parameter from an data function.
              * 
              * @since 2.0
@@ -39034,6 +39467,100 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for outputmappings that create a new table. Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class PropertyOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets the name of property to set. If there is no property with that name it will become auto created
+                 * when the data function is run.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get PropertyName(): JsType<System.String>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Create a {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder} where a data column property is used as output.
+                 * @param propertyName The name of the property to use as output.
+                 * @param dataColumn The data column where the property should be set.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder}
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static CreateDataColumnPropertyOutput(propertyName: (JsType<System.String> | System.String), dataColumn: DataColumn): PropertyOutputBuilder;
+                /**
+                 * Create a {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder} where a datatable property is used as output.
+                 * @param propertyName The name of the property to use as output.
+                 * @param dataTable The data table where the property should be set.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder}
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static CreateDataTablePropertyOutput(propertyName: (JsType<System.String> | System.String), dataTable: DataTable): PropertyOutputBuilder;
+                /**
+                 * Create a {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder} where a document property is used as output.
+                 * @param propertyName The name of the property to use as output.
+                 * @param dataManager The data manager.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder}
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static CreateDocumentPropertyOutput(propertyName: (JsType<System.String> | System.String), dataManager: DataManager): PropertyOutputBuilder;
+                /**
+                 * Create a mapping to a column property.
+                 * @param propertyName The property name.
+                 * @param column The data column.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDataColumnProperty(propertyName: (JsType<System.String> | System.String), column: DataColumn): void;
+                /**
+                 * Create a mapping to a table property.
+                 * @param propertyName The property name.
+                 * @param dataTable The data table.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDataTableProperty(propertyName: (JsType<System.String> | System.String), dataTable: DataTable): void;
+                /**
+                 * Create a mapping to a document property.
+                 * @param propertyName The property name.
+                 * @param dataManager The data manager.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDocumentProperty(propertyName: (JsType<System.String> | System.String), dataManager: DataManager): void;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_1472217892: null;
+            }
+            
+            /**
              * Output mapping class for replacing data.
              * 
              * @since 2.0
@@ -39064,6 +39591,41 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
                 private __type_710907214: null;
+            }
+            
+            /**
+             * Represents a builder class for outputmappings that replace a datatable. Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ReplaceDataOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the table to add rows to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                set DataTable(value: DataTable);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.ReplaceDataOutputBuilder} class.
+                 * @param dataTable The datatable to replace.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(dataTable: DataTable);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_3671925059: null;
             }
             
             /**
@@ -39158,6 +39720,101 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for creating a {@link Spotfire.Dxp.Data.DataFunctions.RowsOutput} for a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
+             * Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class RowsOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the table to add rows to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                set DataTable(value: DataTable);
+                /**
+                 * Gets the columns not included in the mapping or
+                 * the additional columns from the output that should be ignored.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IgnoredColumns(): System.Collections.Generic.IList<DataColumnSignature>;
+                /**
+                 * Gets a map matching columns from the original table to columns
+                 * in the output.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Map(): System.Collections.Generic.IDictionary<DataColumnSignature, DataColumnSignature>;
+                /**
+                 * Gets or sets the value that new elements in the
+                 * row source column should get.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get NewRowSourceValue(): JsType<System.String>;
+                set NewRowSourceValue(value: JsType<System.String>);
+                /**
+                 * Gets or sets the value that the existing elements
+                 * in the row source column should get.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get OriginalRowSourceValue(): JsType<System.String>;
+                set OriginalRowSourceValue(value: JsType<System.String>);
+                /**
+                 * Gets or sets a value indicating whether the rows produced the first time should be replaced
+                 * when executing a second time. If false the old rows will become embedded and the new rows
+                 * added.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ReplaceRowsWhenUpdating(): JsType<System.Boolean>;
+                set ReplaceRowsWhenUpdating(value: JsType<System.Boolean>);
+                /**
+                 * Gets or sets the column in the table that
+                 * will be created to indicate the source of the rows.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get RowSourceColumn(): JsType<System.String>;
+                set RowSourceColumn(value: JsType<System.String>);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.RowsOutputBuilder} class.
+                 * @param dataTable The table to add rows to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(dataTable: DataTable);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_1388119872: null;
+            }
+            
+            /**
              * Output mapping class for adding a new table.
              * @remark The name is only suggested since the table is not created until after the asynchronous jobs is completed.
              * 
@@ -39189,6 +39846,42 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
                 private __type_3874316814: null;
+            }
+            
+            /**
+             * Represents a builder class for outputmappings that create a new table. Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class TableOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the suggested name of the new table. If there is a table with that name already
+                 * it will be uniquefied.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get SuggestedName(): JsType<System.String>;
+                set SuggestedName(value: JsType<System.String>);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.TableOutputBuilder} class.
+                 * @param suggestedName The suggested name for the new table.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(suggestedName: (JsType<System.String> | System.String));
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_1913823033: null;
             }
         }
         
