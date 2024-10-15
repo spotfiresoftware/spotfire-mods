@@ -166,13 +166,31 @@ export async function generateEnvFile({
                 tsType += `?`;
             }
 
-            tsType += `:`;
+            tsType += `: `;
 
             if (!param.type) {
                 error(`Parameter '${param.name}' has no type`);
             } else if (isParameterType(param.type)) {
-                const type = toCsType(param.type);
-                tsType += ` ${type}`;
+                if (param.enum) {
+                    if (
+                        apiVersionResult.status === "success" &&
+                        !apiVersionResult.result.supportsFeature(
+                            "EnumParameter"
+                        )
+                    ) {
+                        error(
+                            `Parameter '${
+                                param.name
+                            }' declares an enum but the mod targets an apiVersion earlier than ${formatVersion(
+                                features.EnumParameter
+                            )}. Consider targeting a later version to enable this feature.`
+                        );
+                    }
+
+                    tsType += param.enum.map((x) => `"${x}"`).join(" | ");
+                } else {
+                    tsType += toCsType(param.type);
+                }
             } else {
                 error(
                     `Parameter '${param.name}' has an invalid type: '${param.type}'`

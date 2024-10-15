@@ -4,13 +4,19 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
 export type Success<TSuccess> = { status: "success"; result: TSuccess };
-type Error<TErr> = { status: "error"; error: TErr };
+export type Error<TErr> = { status: "error"; error: TErr };
 export type Result<TSuccess, TErr> = Success<TSuccess> | Error<TErr>;
 
 export function isSuccess<TSuccess, TErr>(
     result: Result<TSuccess, TErr>
 ): result is Success<TSuccess> {
     return result.status === "success";
+}
+
+export function isError<TSuccess, TErr>(
+    result: Result<TSuccess, TErr>
+): result is Error<TErr> {
+    return result.status === "error";
 }
 
 export enum ModType {
@@ -71,6 +77,7 @@ export interface ManifestParameter {
     type?: ParameterType;
     description?: string;
     optional?: boolean;
+    enum?: string[];
 }
 
 export interface Manifest {
@@ -111,6 +118,7 @@ export const features = {
     DataColumnParameter: { major: 2, minor: 1 },
     Resources: { major: 2, minor: 1 },
     OptionalParameter: { major: 2, minor: 1 },
+    EnumParameter: { major: 2, minor: 1 },
 };
 type Feature = keyof typeof features;
 

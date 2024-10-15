@@ -3,7 +3,7 @@ import { build, buildFlatEntryPointsMap, generateEnvFile } from "../src/build";
 import path from "path";
 import { existsSync } from "fs";
 import { Manifest, ModType } from "../src/utils";
-import { assertSuccess, setupProject } from "./test-utils";
+import { assertError, assertSuccess, setupProject } from "./test-utils";
 import { addParameter } from "../src/add-parameter";
 import { readFile } from "fs/promises";
 
@@ -168,6 +168,54 @@ describe("build.ts", () => {
             assertSuccess(envFile);
 
             expect(envFile.result).toContain("foobar?: string");
+        });
+
+        test("enum parameters are typed correctly", async () => {
+            const manifest: Manifest = {
+                apiVersion: "2.1",
+                scripts: [
+                    {
+                        name: "My Script",
+                        id: "my-script",
+                        entryPoint: "myScript",
+                        parameters: [
+                            {
+                                name: "foobar",
+                                type: "String",
+                                enum: ["foo", "bar"],
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const envFile = await generateEnvFile({ manifest, quiet: true });
+            assertSuccess(envFile);
+
+            expect(envFile.result).toContain(`foobar: "foo" | "bar"`);
+        });
+
+        test("enum parameters cannot be added if apiVersion is too low", async () => {
+            const manifest: Manifest = {
+                apiVersion: "2.0",
+                scripts: [
+                    {
+                        name: "My Script",
+                        id: "my-script",
+                        entryPoint: "myScript",
+                        parameters: [
+                            {
+                                name: "foobar",
+                                type: "String",
+                                enum: ["foo", "bar"],
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const envFile = await generateEnvFile({ manifest, quiet: true });
+            assertError(envFile);
         });
     });
 });
