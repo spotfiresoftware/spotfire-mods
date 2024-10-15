@@ -2,7 +2,10 @@ import { existsSync } from "fs";
 import path from "path";
 import {
     deepCopy,
+    features,
+    formatVersion,
     Manifest,
+    ManifestParameter,
     mkStdout,
     parameterTypes,
     parseSpotfireType,
@@ -14,6 +17,7 @@ import {
 
 interface AddParameterOptions {
     manifestPath: string;
+    optional: boolean;
 }
 
 export function addParameterToManifest({
@@ -21,12 +25,14 @@ export function addParameterToManifest({
     scriptId,
     name,
     type,
+    optional,
     ...quiet
 }: {
     manifest: Manifest;
     scriptId: string;
     name: string;
     type: string;
+    optional: boolean;
 } & QuietOtions) {
     const stdout = mkStdout(quiet);
 
@@ -40,20 +46,40 @@ export function addParameterToManifest({
         );
     }
 
-    if (spotfireType === "DataColumn") {
+    if (spotfireType === "DataColumn" || optional) {
         const apiVersion = readApiVersion(manifest);
-        if (
-            apiVersion.status === "success" &&
-            !apiVersion.result.supportsFeature("DataColumnParameter")
-        ) {
-            throw new Error(
-                `Parameter with type 'DataColumn' requires apiVerison above 2.1`
-            );
-        } else if (apiVersion.status === "error") {
+        if (apiVersion.status !== "success") {
             stdout(
-                `Failed to read apiVerison, cannot verify if parameter type 'DataColumn' is allowed.`
+                `Failed to read apiVersion, cannot verify if parameter type 'DataColumn' is allowed.`
             );
             stdout(`Error: ${apiVersion.error}`);
+        } else {
+            const errs: string[] = [];
+            if (
+                spotfireType === "DataColumn" &&
+                !apiVersion.result.supportsFeature("DataColumnParameter")
+            ) {
+                errs.push(
+                    `Parameter with type 'DataColumn' requires apiVersion at least ${formatVersion(
+                        features.DataColumnParameter
+                    )}.`
+                );
+            }
+
+            if (
+                optional &&
+                !apiVersion.result.supportsFeature("OptionalParameter")
+            ) {
+                errs.push(
+                    `Optional parameters require apiVersion at least ${formatVersion(
+                        features.OptionalParameter
+                    )}.`
+                );
+            }
+
+            if (errs.length > 0) {
+                throw new Error(errs.join("\n"));
+            }
         }
     }
 
@@ -71,7 +97,12 @@ export function addParameterToManifest({
         script.parameters = [];
     }
 
-    script.parameters.push({ name: name, type: spotfireType });
+    const parameter: ManifestParameter = { name: name, type: spotfireType };
+    if (optional) {
+        parameter.optional = true;
+    }
+
+    script.parameters.push(parameter);
 
     return manifest;
 }

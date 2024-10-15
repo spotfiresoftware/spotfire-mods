@@ -96,6 +96,7 @@ Command.prototype.quiet = function () {
             "path to the mod-manifest.json file",
             "mod-manifest.json"
         )
+        .option("--optional", "if the parameter is optional", false)
         .quiet()
         .action(exec(addParameter));
 

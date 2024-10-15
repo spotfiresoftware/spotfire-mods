@@ -10,7 +10,9 @@ import {
     QuietOtions,
     Result,
     debounce,
+    features,
     formatIfPossible,
+    formatVersion,
     getDirname,
     isParameterType,
     mkStdout,
@@ -79,6 +81,14 @@ export async function generateEnvFile({
     let hasFailed = false;
     const errors: string[] = [];
 
+    const apiVersionResult = readApiVersion(manifest);
+    if (apiVersionResult.status === "error") {
+        error(
+            `Failed to read apiVersion from manifest, ${envPath} could not be generated.`
+        );
+        error(apiVersionResult.error);
+    }
+
     for (const script of manifest.scripts!) {
         if (!script.name) {
             error("Script has no name.");
@@ -106,7 +116,6 @@ export async function generateEnvFile({
 
 `;
 
-        const apiVersionResult = readApiVersion(manifest);
         if (apiVersionResult.status === "success") {
             const apiVersion = apiVersionResult.result;
             if (apiVersion.supportsFeature("Resources")) {
@@ -117,38 +126,60 @@ export async function generateEnvFile({
                 tsType += `
     /** The resources (specified in the 'files' field in the mod manifest) available to this mod. */
     resources: Spotfire.Dxp.Application.Mods.ActionModResource${resourcesType};
-
 `;
             } else if (manifest.files) {
                 stdout(
-                    "Warning: The mod manifest contains resource files (specified under 'files' in the manifest) but targets an apiVersion below 2.1. These files will not be reachable from within the scripts in this action mod unless you increase your apiVersion."
+                    `Warning: The mod manifest contains resource files (specified under 'files' in the manifest) but targets an apiVersion earlier than ${formatVersion(
+                        features.Resources
+                    )}. These files will not be reachable from within the scripts in this action mod unless you increase your apiVersion.`
                 );
             }
-        } else {
-            error(
-                `Failed to read apiVersion from manifest, ${envPath} may be incomplete.`
-            );
-            error(apiVersionResult.error);
         }
 
         for (const param of script.parameters ?? []) {
             if (!param.name) {
                 error("Parameter has no name.");
             }
+
+            if (param.description) {
+                tsType += `\n    /** ${param.description} */\n`;
+            }
+
+            tsType += `    ${param.name}`;
+
+            if (param.optional) {
+                if (
+                    apiVersionResult.status === "success" &&
+                    !apiVersionResult.result.supportsFeature(
+                        "OptionalParameter"
+                    )
+                ) {
+                    error(
+                        `Parameter '${
+                            param.name
+                        }' is declared optional but the mod targets an apiVersion earlier than ${formatVersion(
+                            features.Resources
+                        )}. Consider targeting a later version to enable this feature.`
+                    );
+                }
+
+                tsType += `?`;
+            }
+
+            tsType += `:`;
+
             if (!param.type) {
                 error(`Parameter '${param.name}' has no type`);
             } else if (isParameterType(param.type)) {
                 const type = toCsType(param.type);
-                if (param.description) {
-                    tsType += `\n    /** ${param.description} */\n`;
-                }
-
-                tsType += `    ${param.name}: ${type};\n`;
+                tsType += ` ${type}`;
             } else {
                 error(
                     `Parameter '${param.name}' has an invalid type: '${param.type}'`
                 );
             }
+
+            tsType += `;\n`;
         }
 
         tsType = tsType.trimEnd();

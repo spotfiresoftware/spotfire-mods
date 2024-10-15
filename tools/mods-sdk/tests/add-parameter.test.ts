@@ -14,6 +14,7 @@ describe("add-parameter.test.ts", () => {
         await addParameter(scriptId, "param1", "DateTime", {
             manifestPath,
             quiet: true,
+            optional: false,
         });
 
         const manifest = await readManifest(manifestPath);
@@ -42,6 +43,7 @@ describe("add-parameter.test.ts", () => {
             name: "column",
             type: "DataColumn",
             quiet: true,
+            optional: false,
         });
 
         const scripts = manifest.scripts!;
@@ -67,6 +69,54 @@ describe("add-parameter.test.ts", () => {
                 name: "column",
                 type: "DataColumn",
                 quiet: true,
+                optional: false,
+            })
+        ).toThrow();
+    });
+
+    test("can add optional parameter", () => {
+        const manifest = addParameterToManifest({
+            manifest: {
+                apiVersion: "2.1",
+                scripts: [
+                    {
+                        name: "My Script",
+                        id: "my-script",
+                        entryPoint: "myScript",
+                    },
+                ],
+            },
+            scriptId: "my-script",
+            name: "foobar",
+            type: "String",
+            quiet: true,
+            optional: true,
+        });
+
+        const scripts = manifest.scripts!;
+        const parameters = scripts[0].parameters!;
+        expect(parameters[0].name).toEqual("foobar");
+        expect(parameters[0].optional).toBeTruthy();
+    });
+
+    test("cannot add optional parameter if apiVersion is below 2.1", () => {
+        expect(() =>
+            addParameterToManifest({
+                manifest: {
+                    apiVersion: "2.0",
+                    scripts: [
+                        {
+                            name: "My Script",
+                            id: "my-script",
+                            entryPoint: "myScript",
+                        },
+                    ],
+                },
+                scriptId: "my-script",
+                name: "column",
+                type: "String",
+                quiet: true,
+                optional: true,
             })
         ).toThrow();
     });

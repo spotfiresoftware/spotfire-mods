@@ -66,6 +66,13 @@ export function parseSpotfireType(str: string) {
     return null;
 }
 
+export interface ManifestParameter {
+    name?: string;
+    type?: ParameterType;
+    description?: string;
+    optional?: boolean;
+}
+
 export interface Manifest {
     apiVersion?: string;
     version?: string;
@@ -77,11 +84,7 @@ export interface Manifest {
         name?: string;
         file?: string;
         entryPoint?: string;
-        parameters?: {
-            name?: string;
-            type?: ParameterType;
-            description?: string;
-        }[];
+        parameters?: ManifestParameter[];
     }[];
     files?: string[];
 }
@@ -104,11 +107,22 @@ class ApiVersion {
     }
 }
 
-const features = {
+export const features = {
     DataColumnParameter: { major: 2, minor: 1 },
     Resources: { major: 2, minor: 1 },
+    OptionalParameter: { major: 2, minor: 1 },
 };
 type Feature = keyof typeof features;
+
+export function formatVersion({
+    major,
+    minor,
+}: {
+    major: number;
+    minor: number;
+}) {
+    return `${major}.${minor}`;
+}
 
 export function readApiVersion(manifest: Manifest): Result<ApiVersion, string> {
     if (manifest.apiVersion == null) {

@@ -39,10 +39,12 @@ describe("build.ts", () => {
             await addParameter("script-id", "dateParam", "Date", {
                 manifestPath,
                 quiet: true,
+                optional: false,
             });
             await addParameter("script-id", "boolParam", "Boolean", {
                 manifestPath,
                 quiet: true,
+                optional: false,
             });
 
             await build({
@@ -145,6 +147,27 @@ describe("build.ts", () => {
             assertSuccess(envFile);
 
             expect(envFile.result).not.toContain("resources");
+        });
+
+        test("optional parameters are typed correctly", async () => {
+            const manifest: Manifest = {
+                apiVersion: "2.1",
+                scripts: [
+                    {
+                        name: "My Script",
+                        id: "my-script",
+                        entryPoint: "myScript",
+                        parameters: [
+                            { name: "foobar", type: "String", optional: true },
+                        ],
+                    },
+                ],
+            };
+
+            const envFile = await generateEnvFile({ manifest, quiet: true });
+            assertSuccess(envFile);
+
+            expect(envFile.result).toContain("foobar?: string");
         });
     });
 });
