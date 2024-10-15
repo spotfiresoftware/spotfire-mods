@@ -242,6 +242,12 @@
                                                     "description": "A description of this parameter.",
                                                     "default": "Description of the parameter",
                                                     "pattern": "^(.*)$"
+                                                },
+                                                "optional": {
+                                                    "type": "boolean",
+                                                    "title": "Optional parameter",
+                                                    "description": "If the parameter is optional.",
+                                                    "default": true
                                                 }
                                             }
                                         }
