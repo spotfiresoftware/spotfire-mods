@@ -176,13 +176,19 @@
                                                     "allOf": [
                                                         {
                                                             "not": {
-                                                                "title": "Document is a reserved parameter name",
+                                                                "title": "'document' is a reserved parameter name",
                                                                 "pattern": "^(D|d)(O|o)(C|c)(U|u)(M|m)(E|e)(N|n)(T|t)$"
                                                             }
                                                         },
                                                         {
                                                             "not": {
-                                                                "title": "Application is a reserved parameter name",
+                                                                "title": "'application' is a reserved parameter name",
+                                                                "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
+                                                            }
+                                                        },
+                                                        {
+                                                            "not": {
+                                                                "title": "'resources' is a reserved parameter name",
                                                                 "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
                                                             }
                                                         },
