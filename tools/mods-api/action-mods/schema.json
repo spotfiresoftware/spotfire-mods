@@ -248,6 +248,16 @@
                                                     "title": "Optional parameter",
                                                     "description": "If the parameter is optional.",
                                                     "default": true
+                                                },
+                                                "enum": {
+                                                    "type": "array",
+                                                    "title": "Enumerated values",
+                                                    "description": "Array of allowed values for this parameter.",
+                                                    "minItems": 1,
+                                                    "items": {
+                                                        "type": "string",
+                                                        "minLength": 0
+                                                    }
                                                 }
                                             }
                                         }
