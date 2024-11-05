@@ -24,7 +24,11 @@ export function assertError<TSuccess, TErr>(
     expect(isError(result)).toBeTruthy();
 }
 
-export async function setupProject(projectFolder: string, type: ModType) {
+export async function setupProject(
+    projectFolder: string,
+    type: ModType,
+    apiVersion?: string
+) {
     if (existsSync(projectFolder)) {
         await rm(projectFolder, { force: true, recursive: true });
     }
@@ -34,6 +38,7 @@ export async function setupProject(projectFolder: string, type: ModType) {
 
     await createTemplate(type, {
         outDir: projectFolder,
+        apiVersion,
         quiet: true,
     });
 

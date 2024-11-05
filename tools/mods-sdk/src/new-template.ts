@@ -12,10 +12,12 @@ import {
     getVersion,
     isModType,
     mkStdout,
+    parseApiVersion,
 } from "./utils.js";
 
 interface CreateTemplateOptions {
     outDir: string;
+    apiVersion?: string;
 }
 
 export type TemplateType = ModType | "gitignore";
@@ -39,7 +41,7 @@ async function getTemplateFolder(type: TemplateType) {
 
 export async function createTemplate(
     type: TemplateType,
-    { outDir, ...quiet }: CreateTemplateOptions & QuietOtions
+    { outDir, apiVersion, ...quiet }: CreateTemplateOptions & QuietOtions
 ) {
     const targetFolder = path.resolve(outDir);
 
@@ -54,6 +56,7 @@ export async function createTemplate(
             modType: type,
             template,
             targetFolder,
+            apiVersion,
             ...quiet,
         });
     } else {
@@ -76,11 +79,13 @@ export async function createGitIgnore({
 }
 
 async function createModTemplate({
+    apiVersion: _apiVersion,
     modType,
     template,
     targetFolder,
     ...quiet
 }: {
+    apiVersion?: string;
     modType: ModType;
     template: string;
     targetFolder: string;
@@ -119,6 +124,15 @@ async function createModTemplate({
             );
         }
 
+        const apiVersion = parseApiVersion(
+            _apiVersion ?? (modType === ModType.Action ? "2.0" : "1.3")
+        );
+        if (apiVersion.status === "error") {
+            throw new Error(
+                `Unregonized API version, error: ${apiVersion.error}`
+            );
+        }
+
         const version = await getVersion();
         const packageJsonpath = path.resolve(targetFolder, "package.json");
         const packageJson = await readFile(packageJsonpath, {
@@ -126,7 +140,9 @@ async function createModTemplate({
         });
         await writeFile(
             packageJsonpath,
-            packageJson.replace("MODS-SDK-VERSION", version),
+            packageJson
+                .replace("MODS-SDK-VERSION", version)
+                .replace("MODS-API-VERSION", apiVersion.result.toPackage()),
             { encoding: "utf-8" }
         );
 
@@ -137,7 +153,8 @@ async function createModTemplate({
         await replaceInFile(manifestPath, (manifestJson) => {
             return manifestJson
                 .replace("$MOD-NAME", modName)
-                .replace("$MOD-ID", modId);
+                .replace("$MOD-ID", modId)
+                .replace("$MOD-API-VERSION", apiVersion.result.toManifest());
         });
 
         if (!quiet.quiet) {

@@ -40,6 +40,21 @@ describe("new-template", () => {
         });
         expect(existsSync(path.join(projectFolder, ".gitignore"))).toBeTruthy();
     });
+
+    test("can create project with different api version", async () => {
+        const projectFolder = "tests/testprojects/action-mod-2.1";
+        await setupProject(projectFolder, ModType.Action, "2.1");
+
+        const manifest = path.join(projectFolder, "mod-manifest.json");
+        const manifestJson = JSON.parse(readFileSync(manifest, "utf-8"));
+        expect(manifestJson["apiVersion"]).toEqual("2.1");
+
+        const packageJsonPath = path.join(projectFolder, "package.json");
+        const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+        expect(packageJson["devDependencies"]["@spotfire/mods-api"]).toEqual(
+            "~2.1.0-preview.0"
+        );
+    });
 });
 
 describe("toModId", () => {

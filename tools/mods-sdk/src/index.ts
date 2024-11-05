@@ -3,7 +3,7 @@
 import { Command } from "commander";
 import { createTemplate, TemplateType } from "./new-template.js";
 import { build } from "./build.js";
-import { ModType, getVersion } from "./utils.js";
+import { ModType, getVersion, parseApiVersion } from "./utils.js";
 import { addScript } from "./add-script.js";
 import { addParameter } from "./add-parameter.js";
 
@@ -36,6 +36,11 @@ Command.prototype.quiet = function () {
             "-o --out-dir <path>",
             "the folder in which the project should be created",
             "."
+        )
+        .option(
+            "--api-version <api-version>",
+            "the Mods API version to use",
+            (arg) => assertValidVersion(arg)
         )
         .quiet()
         .action(exec(createTemplate));
@@ -123,6 +128,21 @@ Command.prototype.quiet = function () {
             program.error(
                 `Invalid template type '${arg}'. Possible values are: action, visualization, or gitignore.`
             );
+        }
+    }
+
+    function assertValidVersion(arg: string | undefined) {
+        if (arg == null) {
+            return undefined;
+        }
+
+        const result = parseApiVersion(arg);
+        if (result.status === "error") {
+            program.error(
+                `Invalid api version argument, error: ${result.error}`
+            );
+        } else {
+            return arg;
         }
     }
 })();

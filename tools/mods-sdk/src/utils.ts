@@ -112,6 +112,21 @@ class ApiVersion {
 
         return this.major > required.major;
     }
+
+    toManifest() {
+        return `${this.major}.${this.minor}`;
+    }
+
+    toPackage() {
+        let patch = "0";
+
+        // TODO - Remove before release.
+        if (this.major === 2 && this.minor === 1) {
+            patch = "0-preview.0";
+        }
+
+        return `${this.major}.${this.minor}.${patch}`;
+    }
 }
 
 export const features = {
@@ -132,6 +147,34 @@ export function formatVersion({
     return `${major}.${minor}`;
 }
 
+function isNatural(str: string) {
+    const n = Number.parseFloat(str);
+    return Number.isInteger(n) && n >= 0;
+}
+
+export function parseApiVersion(str: string): Result<ApiVersion, string> {
+    const apiVersionSplit = str.split(".");
+
+    if (
+        apiVersionSplit.length !== 2 ||
+        !isNatural(apiVersionSplit[0]) ||
+        !isNatural(apiVersionSplit[1])
+    ) {
+        return {
+            status: "error",
+            error: `Incorrectly formatted apiVersion, expected 'MAJOR.MINOR' format, was '${str}'`,
+        };
+    }
+
+    return {
+        status: "success",
+        result: new ApiVersion(
+            Number.parseInt(apiVersionSplit[0]),
+            Number.parseInt(apiVersionSplit[1])
+        ),
+    };
+}
+
 export function readApiVersion(manifest: Manifest): Result<ApiVersion, string> {
     if (manifest.apiVersion == null) {
         return {
@@ -147,22 +190,7 @@ export function readApiVersion(manifest: Manifest): Result<ApiVersion, string> {
         };
     }
 
-    const apiVersionSplit = manifest.apiVersion?.split(".");
-
-    if (apiVersionSplit.length !== 2) {
-        return {
-            status: "error",
-            error: `Incorrectly formatted apiVersion in manifest, expected MAJOR.MINOR format, found: ${manifest.apiVersion}`,
-        };
-    }
-
-    return {
-        status: "success",
-        result: new ApiVersion(
-            Number.parseInt(apiVersionSplit[0]),
-            Number.parseInt(apiVersionSplit[1])
-        ),
-    };
+    return parseApiVersion(manifest.apiVersion);
 }
 
 export function debounce<F extends Function>(f: F, waitMs: number): F {
