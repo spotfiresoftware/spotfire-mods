@@ -6992,6 +6992,16 @@ declare namespace Spotfire.Dxp {
                 get ShowShadowBars(): JsType<System.Boolean>;
                 set ShowShadowBars(value: JsType<System.Boolean>);
                 /**
+                 * Gets or sets a {@link Spotfire.Dxp.Application.Visuals.CategoryKey} that identifies the expression part to sort the X axis by.
+                 * @remark The default value of this property is an empty category key, which means no sorting will occur.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get SortBy(): CategoryKey;
+                set SortBy(value: CategoryKey);
+                /**
                  * Gets or sets a value indicating whether or not the bars
                  * in this plot are sorted.
                  * @remark This property applies only when the x axis is categorical. A continuous axis cannot be sorted.
