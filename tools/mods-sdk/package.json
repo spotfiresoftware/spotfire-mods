@@ -1,6 +1,6 @@
 {
     "name": "@spotfire/mods-sdk",
-    "version": "1.1.0-preview4",
+    "version": "1.1.0-preview.0",
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
@@ -31,7 +31,7 @@
         "commander": "^12.1.0"
     },
     "peerDependencies": {
-        "@spotfire/mods-api": ">=1.0.0",
+        "@spotfire/mods-api": "*",
         "esbuild": "^0.21.4"
     },
     "engines": {
