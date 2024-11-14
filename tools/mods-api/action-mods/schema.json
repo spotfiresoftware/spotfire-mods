@@ -161,7 +161,19 @@
                                         {
                                             "type": "object",
                                             "title": "Parameter",
-                                            "required": ["name", "type"],
+                                            "if": {
+                                                "properties": {
+                                                    "type": {
+                                                        "enum": ["DataView"]
+                                                    }
+                                                }
+                                            },
+                                            "then" : {
+                                                "required": ["name", "type", "allowedDataTypes"]
+                                            },
+                                            "else": {
+                                                "required": ["name", "type"]
+                                            },
                                             "properties": {
                                                 "name": {
                                                     "type": "string",
@@ -221,7 +233,8 @@
                                                         "Time",
                                                         "TimeSpan",
                                                         "Page",
-                                                        "Visualization"
+                                                        "Visualization",
+                                                        "DataView"
                                                     ],
                                                     "examples": [
                                                         "String",
