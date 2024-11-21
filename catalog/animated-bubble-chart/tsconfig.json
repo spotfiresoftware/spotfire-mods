@@ -6,7 +6,6 @@
         "allowUnreachableCode": false,
         "noImplicitAny": true,
         "strict": true,
-        "charset": "utf8",
         "sourceMap": true,
         "module": "es2015",
         "outDir": "./build/",
