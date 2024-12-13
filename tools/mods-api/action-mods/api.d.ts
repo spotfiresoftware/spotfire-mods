@@ -574,6 +574,14 @@ declare namespace Spotfire.Dxp {
              */
             get MarkerShapeDefinitions(): Visuals.MarkerShapeDefinitions;
             /**
+             * Gets the mod manger.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            get ModManager(): Mods.ModManager;
+            /**
              * Gets the pages of this document.
              * 
              * @since 2.0
@@ -1980,6 +1988,16 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             AddDuplicate(visual: Visual): Visual;
+            /**
+             * Adds a new visual with a {@link Spotfire.Dxp.Application.Mods.ModVisualization} content as specified by the modIdentifier.
+             * @param modIdentifier Specifies which mod to add.
+             * @returns The newly created {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            AddNew(modIdentifier: Mods.ModIdentifier): Mods.ModVisualization;
             /**
              * Adds a new visual of the specified type.
              * @returns The newly created content.
@@ -6206,6 +6224,344 @@ declare namespace Spotfire.Dxp {
                 };
                 private __type_3771384762: null;
             }
+        }
+        
+        namespace Mods {
+            /**
+             * Represents an axis in a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModAxis extends Visuals.Axis implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the legend item.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get LegendItem(): ModLegendAxisItem;
+                /**
+                 * Gets or sets a value indicating whether an axis selector should be shown for this axis.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ShowAxisSelector(): JsType<System.Boolean>;
+                set ShowAxisSelector(value: JsType<System.Boolean>);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_380656612: null;
+            }
+            
+            /**
+             * Identifies a Mod that can be used in the Document.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModIdentifier extends Object {
+                /**
+                 * Gets the id of the Mod that this instance represents, as declared in the mod-manifest.json of the Mod.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Id(): JsType<System.String>;
+                /**
+                 * Gets the name of the Mod that this instance represents, as declared in the mod-manifest.json of the Mod.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Name(): JsType<System.String>;
+                /**
+                 * Gets the version of the Mod that this instance represents, as declared in the mod-manifest.json of the Mod.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Version(): JsType<System.Version>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_307779478: null;
+            }
+            
+            /**
+             * Represents a legend item for a {@link Spotfire.Dxp.Application.Mods.ModAxis}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModLegendAxisItem extends Visuals.LegendAxisItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /** Gets the title of this legend item. */
+                get Title(): JsType<System.String>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_2917640002: null;
+            }
+            
+            /**
+             * Manages the Mods in a document. There is one instance of the ModManager in each document and
+             * it is owned by the Document.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModManager extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Enumerates all visualization mods embedded in the document as well as all visualization mods that have been pinned by the current user.
+                 * @returns The visualization mods available to the current user.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                GetVisualizationModsIncludingPinned(): System.Collections.Generic.IEnumerable<ModIdentifier>;
+                /**
+                 * Tries to load a Visualization Mod from the specified libraryItem in the library.
+                 * @param libraryItem The item in the library representing a Visualization Mod.
+                 * @param modIdentifier The {@link Spotfire.Dxp.Application.Mods.ModIdentifier} for the Visualization Mod that has been loaded, or null.
+                 * @param exception The exception that occured during load, or null.
+                 * @returns true if the Visualization Mod was successfully loaded, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Extended capability 'LibraryRead'
+                 */
+                TryLoadVisualizationModFromLibrary(libraryItem: Framework.Library.LibraryItem, modIdentifier: OutParam<ModIdentifier>, exception: OutParam<System.Exception>): JsType<System.Boolean>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_1474382124: null;
+            }
+            
+            /**
+             * Represents the base class for custom properties owned by a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModProperty extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the name of the property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Name(): JsType<System.String>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_4017307848: null;
+            }
+            
+            /**
+             * Represents a property owned by a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModPropertyGeneric<T> extends ModProperty implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets or sets the value.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Value(): JsType<T>;
+                set Value(value: JsType<T>);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_4058750729: null;
+            }
+            
+            /**
+             * Represents a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModVisualization extends Visuals.Visualization implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the axes declared by this Mod Visualization, as defined in the mod-manifest.json,
+                 * excluding the color axis. To access the color axis, use the ColorAxis property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Axes(): TypedArray<ModAxis>;
+                /**
+                 * Gets the names of the axes declared by this instance, including the Color axis, if declared.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get AxesNames(): TypedArray<JsType<System.String>>;
+                /**
+                 * Gets the color axis, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ColorAxis(): (Visuals.ColorAxis | null);
+                /**
+                 * Gets the details.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Details(): Visuals.Details;
+                /**
+                 * Gets a value indicating whether this instance has a color axis in the mod manifest.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get HasColorAxis(): JsType<System.Boolean>;
+                /**
+                 * Gets a value indicating whether this instance has tooltips enabled.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get HasTooltips(): JsType<System.Boolean>;
+                /**
+                 * Gets the properties of this Mod Visualization, as defined in the mod-manifest.json.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Properties(): TypedArray<ModProperty>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Gets the axes declared by this Mod Visualization, as defined in the mod-manifest.json,
+                 * excluding the color axis. To access the color axis, use the ColorAxis property.
+                 * @param name The name of the parameter to get.
+                 * @returns An object representing the Mod Axis, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Axis(name: (JsType<System.String> | System.String)): (ModAxis | null);
+                /**
+                 * Gets the Mod Property with the specified name, or null if no such property
+                 * of the specified type TValue exists.
+                 * @param name The name of the Mod Property, as defined in the mod-manifest.json.
+                 * @returns An object representing the Mod Property, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 * @param typeTValue - Generic type argument
+                 */
+                Property<TValue>(typeTValue: TypeRefParam<TValue>, name: (JsType<System.String> | System.String)): (ModPropertyGeneric<TValue> | null);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_2600286319: null;
+            }
+            
+            function ModProperty<T>(typeT: TypeRefParam<T>): TypeRef<ModPropertyGeneric<T>>;
         }
         
         namespace Tools {
@@ -26581,16 +26937,6 @@ declare namespace Spotfire.Dxp {
                     get ShowWarnings(): JsType<System.Boolean>;
                     set ShowWarnings(value: JsType<System.Boolean>);
                     /**
-                     * Gets or sets a value indicating whether credentials for the layer are stored in the dxp file
-                     * @deprecated This property is not used.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get StoreCredentials(): JsType<System.Boolean>;
-                    set StoreCredentials(value: JsType<System.Boolean>);
-                    /**
                      * Gets the sublayers.
                      * 
                      * @since 2.0
@@ -32498,7 +32844,10 @@ declare namespace Spotfire.Dxp {
              * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
              */
             constructor();
-            /** The property is shared in the entire analysis. */
+            /**
+             * The property is shared in the entire analysis.
+             * @deprecated Use Document instead.
+             */
             static readonly Analysis: DataPropertyClass;
             /** The property is for a specific {@link Spotfire.Dxp.Data.DataColumn}. */
             static readonly Column: DataPropertyClass;
@@ -50815,6 +51164,117 @@ declare namespace System {
         _interfaces: {
         };
         private __type_1362886457: null;
+    }
+    
+    /**
+     * Represents the version number of an assembly, operating system, or the common language runtime. This class cannot be inherited.
+     */
+    class Version extends Object {
+        /**
+         * Gets the value of the build component of the version number for the current {@link System.Version} object.
+         * @returns The build number, or -1 if the build number is undefined.
+         */
+        get Build(): JsType<Int32>;
+        /**
+         * Gets the value of the major component of the version number for the current {@link System.Version} object.
+         * @returns The major version number.
+         */
+        get Major(): JsType<Int32>;
+        /**
+         * Gets the high 16 bits of the revision number.
+         * @returns A 16-bit signed integer.
+         */
+        get MajorRevision(): JsType<Int16>;
+        /**
+         * Gets the value of the minor component of the version number for the current {@link System.Version} object.
+         * @returns The minor version number.
+         */
+        get Minor(): JsType<Int32>;
+        /**
+         * Gets the low 16 bits of the revision number.
+         * @returns A 16-bit signed integer.
+         */
+        get MinorRevision(): JsType<Int16>;
+        /**
+         * Gets the value of the revision component of the version number for the current {@link System.Version} object.
+         * @returns The revision number, or -1 if the revision number is undefined.
+         */
+        get Revision(): JsType<Int32>;
+        /**
+         * Initializes a new instance of the {@link System.Version} class.
+         */
+        constructor();
+        /**
+         * Initializes a new instance of the {@link System.Version} class using the specified string.
+         * @param version A string containing the major, minor, build, and revision numbers, where each number is delimited with a period character ('.').
+         */
+        constructor(version: (JsType<String> | String));
+        /**
+         * Initializes a new instance of the {@link System.Version} class using the specified major and minor values.
+         * @param major The major version number.
+         * @param minor The minor version number.
+         */
+        constructor(major: (JsType<Int32> | Int32), minor: (JsType<Int32> | Int32));
+        /**
+         * Initializes a new instance of the {@link System.Version} class using the specified major, minor, and build values.
+         * @param major The major version number.
+         * @param minor The minor version number.
+         * @param build The build number.
+         */
+        constructor(major: (JsType<Int32> | Int32), minor: (JsType<Int32> | Int32), build: (JsType<Int32> | Int32));
+        /**
+         * Initializes a new instance of the {@link System.Version} class with the specified major, minor, build, and revision numbers.
+         * @param major The major version number.
+         * @param minor The minor version number.
+         * @param build The build number.
+         * @param revision The revision number.
+         */
+        constructor(major: (JsType<Int32> | Int32), minor: (JsType<Int32> | Int32), build: (JsType<Int32> | Int32), revision: (JsType<Int32> | Int32));
+        /**
+         * Converts the string representation of a version number to an equivalent {@link System.Version} object.
+         * @param input A string that contains a version number to convert.
+         * @returns An object that is equivalent to the version number specified in the input parameter.
+         */
+        static Parse(input: (JsType<String> | String)): JsType<Version>;
+        /**
+         * Tries to convert the string representation of a version number to an equivalent {@link System.Version} object, and returns a value that indicates whether the conversion succeeded.
+         * @param input A string that contains a version number to convert.
+         * @param result When this method returns, contains the {@link System.Version} equivalent of the number that is contained in input, if the conversion succeeded. If input is null, {@link System.String.Empty}, or if the conversion fails, result is null when the method returns.
+         * @returns true if the input parameter was converted successfully; otherwise, false.
+         */
+        static TryParse(input: (JsType<String> | String), result: OutParam<Version>): JsType<Boolean>;
+        /**
+         * Compares the current {@link System.Version} object to a specified {@link System.Version} object and returns an indication of their relative values.
+         * @param value A {@link System.Version} object to compare to the current {@link System.Version} object, or null.
+         * @returns A signed integer that indicates the relative values of the two objects, as shown in the following table.
+         *   Return value
+         * 
+         *   Meaning
+         * 
+         *   Less than zero
+         * 
+         *   The current {@link System.Version} object is a version before value.
+         * 
+         *   Zero
+         * 
+         *   The current {@link System.Version} object is the same version as value.
+         * 
+         *   Greater than zero
+         * 
+         *   The current {@link System.Version} object is a version subsequent to value.
+         * 
+         *  -or-
+         * 
+         *  value is null.
+         */
+        CompareTo(value: (JsType<Version> | Version)): JsType<Int32>;
+        /**
+         * @ignore
+         * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+         */
+        _interfaces: {
+        };
+        private __type_3099190229: null;
     }
     
     namespace Collections {

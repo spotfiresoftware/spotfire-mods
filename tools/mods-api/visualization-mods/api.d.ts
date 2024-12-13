@@ -1,14 +1,9 @@
-/**
- * Copyright © 2024 Cloud Software Group, Inc.
- * This file is subject to the license terms contained
- * in the license file that is distributed with this file.
- * 
- * Spotfire Visualization Mods API declaration.
- * Version: 2.0
- */
-
+/*
+* Copyright © 2023. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
 export as namespace Spotfire;
-
 /**
  * Predicate to determine if a current read operation for {@link DataView.allRows} should be aborted when there is new, non-streaming, data available. If this predicate returns true the {@link DataView.allRows} promise will be rejected and no rows will be returned.
  * @public
@@ -20,8 +15,7 @@ export declare type AbortPredicate = (currentRowCount: number) => boolean;
  * These can be either document properties, data table properties or data column properties.
  * @public
  */
-export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>
-    extends AnalysisPropertyValue<T> {
+export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType> extends AnalysisPropertyValue<T> {
     /**
      * Set the value of this instance.
      * @param value - The value to set.
@@ -261,19 +255,7 @@ export declare interface DataType {
     /**
      * Gets the name of this DataType.
      */
-    name:
-        | "String"
-        | "Integer"
-        | "LongInteger"
-        | "Real"
-        | "SingleReal"
-        | "Currency"
-        | "Boolean"
-        | "Date"
-        | "DateTime"
-        | "Time"
-        | "TimeSpan"
-        | "Binary";
+    name: "String" | "Integer" | "LongInteger" | "Real" | "SingleReal" | "Currency" | "Boolean" | "Date" | "DateTime" | "Time" | "TimeSpan" | "Binary";
     /**
      * Gets a value indicating whether the data type is numeric or not, that is,
      * Integer, Currency, Real, LongInteger, or SingleReal.
@@ -301,7 +283,7 @@ export declare interface DataType {
  * on the Axes and other relevant settings.
  * @public
  */
-export declare interface DataView {
+declare interface DataView_2 {
     /**
      * Mark a set of rows.
      * The full set will be the union of all mark operations performed within one transaction (see {@link Mod.transaction}).
@@ -309,7 +291,7 @@ export declare interface DataView {
      * @param rows - The rows to be selected.
      * @param operation - Optional {@link MarkingOperation}. Default value is `Replace`.
      */
-    mark(rows: DataViewRow[], markingOperation?: MarkingOperation): void;
+    mark(rows: DataViewRow[], operation?: MarkingOperation): void;
     /**
      * Clears the current marking
      */
@@ -325,6 +307,11 @@ export declare interface DataView {
      * When true, there will be a new dataview available on the next read.
      */
     hasExpired(): Promise<boolean>;
+    /**
+     * Gets a value indicating whether the data view is the result of a streaming update.
+     * @version 2.1
+     */
+    isStreamingUpdate: boolean;
     /**
      * Gets any errors generated while creating the dataview.
      * Returns empty array if none occurred.
@@ -376,6 +363,7 @@ export declare interface DataView {
      */
     allRows(abortPredicate?: AbortPredicate): Promise<DataViewRow[] | null>;
 }
+export { DataView_2 as DataView }
 
 /**
  * Contains metadata computed for an {@link Axis}.
@@ -623,7 +611,7 @@ export declare interface DataViewHierarchyNode {
  * Represents an object that provides access to a {@link DataView}.
  * @public
  */
-export declare type DataViewProxy = DataViewProxyMethods & Readable<DataView>;
+export declare type DataViewProxy = DataViewProxyMethods & Readable<DataView_2>;
 
 /**
  * Represents the methods available on a {@link DataViewProxy}.
@@ -717,7 +705,7 @@ export declare interface ErrorOverlay {
     show(messages: string[], category?: string): void;
     /**
      * Show error message. Showing any error message will hide the Mods UI.
-     * @param messages - The error message.
+     * @param message - The error message.
      * @param category - Optional error categorization. Useful if multiple error message are to be shown. Error messages will be sorted based on the category.
      */
     show(message: string, category?: string): void;
@@ -733,9 +721,7 @@ export declare interface ErrorOverlay {
  * @public
  */
 export declare type ExtractValueType<readableArray extends ReadonlyArray<Readable<any>>> = {
-    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType>
-        ? readableNameType
-        : never;
+    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType> ? readableNameType : never;
 };
 
 /**
@@ -1326,8 +1312,7 @@ export declare interface Readable<T = any> extends Promise<T> {
  * A full node will be created by using a {@link Reader}.
  * @public
  */
-export declare type ReadableProxy<Node> = Readable<Node> &
-    Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
+export declare type ReadableProxy<Node> = Readable<Node> & Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
 
 /**
  * The reader is responsible for combining multiple {@link Readable}s and scheduling a callback to be invoked
@@ -1339,7 +1324,8 @@ export declare type ReadableProxy<Node> = Readable<Node> &
 export declare interface Reader<T extends ReadonlyArray<any>> {
     /**
      * Subscribe to changes in the content for the specified readables when the reader was created.
-     * @example Subscribe to changes in the {@link DataView}.
+     * @example
+     * Subscribe to changes in the {@link DataView}.
      *
      * ```
      * let reader = mod.createReader(mod.visualization.data());
@@ -1356,7 +1342,8 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
     /**
      * Read the content once for the readables specified when the reader was created.
      * Any current subscription for this reader will be cancelled.
-     * @example Read content of a mod property once.
+     * @example
+     * Read content of a mod property once.
      *
      * ```
      * let reader = mod.createReader(mod.property("CreatedBy"));
@@ -1380,7 +1367,8 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
     /**
      * Check whether one or more passed arguments are new since the last time the subscribe loop was called.
      *
-     * @example Check if the data view has changed in the subscribe loop.
+     * @example
+     * Check if the data view has changed in the subscribe loop.
      *
      * ```
      * let reader = mod.createReader(mod.visualization.data(), mod.windowSize());
@@ -1504,9 +1492,7 @@ export declare interface SpotfireDocument {
     /**
      * Provides access to the `Document Property` with the specified `name` in the Spotfire Document.
      */
-    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(
-        name: string
-    ): ReadableProxy<AnalysisProperty<T>>;
+    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(name: string): ReadableProxy<AnalysisProperty<T>>;
     /**
      * Provides access to the {@link Page}s in the Spotfire document.
      */

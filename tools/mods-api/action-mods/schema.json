@@ -161,19 +161,7 @@
                                         {
                                             "type": "object",
                                             "title": "Parameter",
-                                            "if": {
-                                                "properties": {
-                                                    "type": {
-                                                        "enum": ["DataView"]
-                                                    }
-                                                }
-                                            },
-                                            "then" : {
-                                                "required": ["name", "type", "allowedDataTypes"]
-                                            },
-                                            "else": {
-                                                "required": ["name", "type"]
-                                            },
+                                            "required": ["name", "type"],
                                             "properties": {
                                                 "name": {
                                                     "type": "string",
@@ -188,19 +176,13 @@
                                                     "allOf": [
                                                         {
                                                             "not": {
-                                                                "title": "'document' is a reserved parameter name",
+                                                                "title": "Document is a reserved parameter name",
                                                                 "pattern": "^(D|d)(O|o)(C|c)(U|u)(M|m)(E|e)(N|n)(T|t)$"
                                                             }
                                                         },
                                                         {
                                                             "not": {
-                                                                "title": "'application' is a reserved parameter name",
-                                                                "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
-                                                            }
-                                                        },
-                                                        {
-                                                            "not": {
-                                                                "title": "'resources' is a reserved parameter name",
+                                                                "title": "Application is a reserved parameter name",
                                                                 "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
                                                             }
                                                         },
@@ -222,7 +204,6 @@
                                                         "Boolean",
                                                         "Currency",
                                                         "DataTable",
-                                                        "DataColumn",
                                                         "Date",
                                                         "DateTime",
                                                         "Integer",
@@ -233,8 +214,7 @@
                                                         "Time",
                                                         "TimeSpan",
                                                         "Page",
-                                                        "Visualization",
-                                                        "DataView"
+                                                        "Visualization"
                                                     ],
                                                     "examples": [
                                                         "String",
@@ -255,22 +235,6 @@
                                                     "description": "A description of this parameter.",
                                                     "default": "Description of the parameter",
                                                     "pattern": "^(.*)$"
-                                                },
-                                                "optional": {
-                                                    "type": "boolean",
-                                                    "title": "Optional parameter",
-                                                    "description": "If the parameter is optional.",
-                                                    "default": true
-                                                },
-                                                "enum": {
-                                                    "type": "array",
-                                                    "title": "Enumerated values",
-                                                    "description": "Array of allowed values for this parameter.",
-                                                    "minItems": 1,
-                                                    "items": {
-                                                        "type": "string",
-                                                        "minLength": 0
-                                                    }
                                                 }
                                             }
                                         }
