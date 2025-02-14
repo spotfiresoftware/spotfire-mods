@@ -217,7 +217,9 @@
                             "Time",
                             "TimeSpan",
                             "Page",
-                            "Visualization"
+                            "Visualization",
+                            "DataView",
+                            "DataViewColumn"
                           ],
                           "examples": ["String", "DataTable", "Page"]
                         },
@@ -250,8 +252,112 @@
                             "type": "string",
                             "minLength": 0
                           }
+                        },
+                        "allowedDataTypes": {
+                          "type": "array",
+                          "title": "Enumerated values",
+                          "description": "Array of allowed values for this parameter.",
+                          "minItems": 1,
+                          "items": {
+                            "type": "string",
+                            "enum": ["All", "AllNumeric", "Integer"]
+                          }
+                        },
+                        "array": {
+                          "type": "boolean",
+                          "title": "Array parameter",
+                          "description": "If the parameter is an array.",
+                          "default": true
                         }
-                      }
+                      },
+                      "allOf": [
+                        {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "enum": ["String"]
+                              }
+                            },
+                            "required": ["type", "enum"]
+                          },
+                          "then": {
+                            "not": {
+                              "properties": {
+                                "optional": {
+                                  "enum": [true]
+                                }
+                              },
+                              "required": ["optional"]
+                            }
+                          },
+                          "else": {
+                            "not": {
+                              "required": ["enum"]
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "title": "Booleans can't be optional.",
+                            "properties": {
+                              "type": {
+                                "enum": ["Boolean"]
+                              },
+                              "optional": {
+                                "enum": [true]
+                              }
+                            },
+                            "required": ["type", "optional"]
+                          }
+                        },
+                        {
+                          "if": {
+                            "oneOf": [
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["DataView", "DataViewColumn"]
+                                  }
+                                },
+                                "required": ["type"]
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["DataColumn"]
+                                  },
+                                  "array": {
+                                    "enum": [true]
+                                  }
+                                },
+                                "required": ["type", "array"]
+                              }
+                            ]
+                          },
+                          "then": {
+                            "required": ["allowedDataTypes"]
+                          },
+                          "else": {
+                            "allOf": [
+                              {
+                                "not": {
+                                  "required": ["allowedDataTypes"]
+                                }
+                              },
+                              {
+                                "not": {
+                                  "properties": {
+                                    "array": {
+                                      "enum": [true]
+                                    }
+                                  },
+                                  "required": ["array"]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
