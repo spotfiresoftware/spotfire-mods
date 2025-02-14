@@ -78,6 +78,7 @@ export interface ManifestParameter {
     description?: string;
     optional?: boolean;
     enum?: string[];
+    array?: boolean;
 }
 
 export interface Manifest {
@@ -134,6 +135,7 @@ export const features = {
     Resources: { major: 2, minor: 1 },
     OptionalParameter: { major: 2, minor: 1 },
     EnumParameter: { major: 2, minor: 1 },
+    DataColumnArray: { major: 2, minor: 1 },
 };
 type Feature = keyof typeof features;
 

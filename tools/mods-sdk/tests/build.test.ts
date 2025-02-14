@@ -217,5 +217,53 @@ describe("build.ts", () => {
             const envFile = await generateEnvFile({ manifest, quiet: true });
             assertError(envFile);
         });
+
+        test("data column array is typed correctly", async () => {
+            const manifest: Manifest = {
+                apiVersion: "2.1",
+                scripts: [
+                    {
+                        name: "My Script",
+                        id: "my-script",
+                        entryPoint: "myScript",
+                        parameters: [
+                            {
+                                name: "foobar",
+                                type: "DataColumn",
+                                array: true,
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const envFile = await generateEnvFile({ manifest, quiet: true });
+            assertSuccess(envFile);
+
+            expect(envFile.result).toContain(`foobar: Iterable<DataColumn>`);
+        });
+
+        test("data column arrays cannot be added if api version is too low", async () => {
+            const manifest: Manifest = {
+                apiVersion: "2.0",
+                scripts: [
+                    {
+                        name: "My Script",
+                        id: "my-script",
+                        entryPoint: "myScript",
+                        parameters: [
+                            {
+                                name: "foobar",
+                                type: "DataColumn",
+                                array: true,
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const envFile = await generateEnvFile({ manifest, quiet: true });
+            assertError(envFile);
+        });
     });
 });

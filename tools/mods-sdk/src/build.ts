@@ -188,6 +188,23 @@ export async function generateEnvFile({
                     }
 
                     tsType += param.enum.map((x) => `"${x}"`).join(" | ");
+                } else if (param.array) {
+                    if (
+                        apiVersionResult.status === "success" &&
+                        !apiVersionResult.result.supportsFeature(
+                            "DataColumnArray"
+                        )
+                    ) {
+                        error(
+                            `Parameter '${
+                                param.name
+                            }' declares array but the mod targets an apiVersion earlier than ${formatVersion(
+                                features.EnumParameter
+                            )}. Consider targeting a later version to enable this feature.`
+                        );
+                    }
+
+                    tsType += `Iterable<${toCsType(param.type)}>`;
                 } else {
                     tsType += toCsType(param.type);
                 }
