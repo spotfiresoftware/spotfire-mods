@@ -52,7 +52,7 @@ describe("new-template", () => {
         const packageJsonPath = path.join(projectFolder, "package.json");
         const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
         expect(packageJson["devDependencies"]["@spotfire/mods-api"]).toEqual(
-            "~2.1.0-preview.0"
+            "~2.1.0-preview.2"
         );
     });
 });
