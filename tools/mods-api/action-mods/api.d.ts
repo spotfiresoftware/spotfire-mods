@@ -38647,6 +38647,60 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Read-only representation of a configured data view that can be piped from action mod input to a data function input.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class DataFunctionDataView extends Object {
+                /**
+                 * Gets the data columns that defines the data view. Returns no columns if a custom expression was used to define the data view.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataColumns(): System.Collections.Generic.IEnumerable<DataColumn>;
+                /**
+                 * Gets the base data table that defines the data view.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                /**
+                 * Gets the expression that defines the data view.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Expression(): JsType<System.String>;
+                /**
+                 * Gets a value indicating whether the data view is limited by marking and/or filtering.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Limitations(): System.Collections.Generic.IEnumerable<DataSelection>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_2908415384: null;
+            }
+            
+            /**
              * Represents a definition of an data function.
              * 
              * The definition describes the information needed
@@ -39064,6 +39118,17 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 Remove(inputParameter: InputParameter): JsType<System.Boolean>;
+                /**
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionDataView} instance.
+                 * @param inputParameter The input parameter.
+                 * @param dataView The data view.
+                 * @returns The newly created input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetInput(inputParameter: InputParameter, dataView: DataFunctionDataView): DataFunctionInput;
                 /**
                  * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
                  * representing a list of column expressions. The value is calculated on all rows in the input.
@@ -53315,3 +53380,5 @@ type Visualization = Spotfire.Dxp.Application.Visual;
 type DataTable = Spotfire.Dxp.Data.DataTable;
 /** @ignore */
 type DataColumn = Spotfire.Dxp.Data.DataColumn;
+/** @ignore */
+type DataFunctionDataView = Spotfire.Dxp.Data.DataFunctions.DataFunctionDataView;

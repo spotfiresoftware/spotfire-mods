@@ -260,7 +260,21 @@
                           "minItems": 1,
                           "items": {
                             "type": "string",
-                            "enum": ["All", "AllNumeric", "Integer"]
+                            "enum": [
+                              "All",
+                              "AllNumeric",
+                              "Integer",
+                              "Real",
+                              "SingleReal",
+                              "Currency",
+                              "String",
+                              "Date",
+                              "Time",
+                              "DateTime",
+                              "Boolean",
+                              "Binary",
+                              "LongInteger"
+                            ]
                           }
                         },
                         "array": {
