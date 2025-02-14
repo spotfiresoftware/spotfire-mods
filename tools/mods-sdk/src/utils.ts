@@ -50,8 +50,22 @@ export const parameterTypes = [
     "TimeSpan",
     "Page",
     "Visualization",
+    "DataView",
+    "DataViewColumn",
 ] as const;
 export type ParameterType = (typeof parameterTypes)[number];
+
+export function typeFeature(parameterType: ParameterType): Feature | null {
+    switch (parameterType) {
+        case "DataColumn":
+            return "DataColumnParameter";
+        case "DataView":
+        case "DataViewColumn":
+            return "DataViews";
+        default:
+            return null;
+    }
+}
 
 export function isParameterType(str: string): str is ParameterType {
     if (!str) {
@@ -101,8 +115,16 @@ export function deepCopy<T>(t: T) {
     return JSON.parse(JSON.stringify(t)) as T;
 }
 
-class ApiVersion {
+export class ApiVersion {
     constructor(private major: number, private minor: number) {}
+
+    previous() {
+        if (this.minor === 0) {
+            return new ApiVersion(this.major - 1, 0);
+        } else {
+            return new ApiVersion(this.major, this.minor - 1);
+        }
+    }
 
     supportsFeature(feature: Feature) {
         const required = features[feature];
@@ -135,7 +157,7 @@ export const features = {
     Resources: { major: 2, minor: 1 },
     OptionalParameter: { major: 2, minor: 1 },
     EnumParameter: { major: 2, minor: 1 },
-    DataColumnArray: { major: 2, minor: 1 },
+    DataViews: { major: 2, minor: 1 },
 };
 type Feature = keyof typeof features;
 

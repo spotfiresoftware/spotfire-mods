@@ -18,6 +18,7 @@ import {
     mkStdout,
     readApiVersion,
     toTypeName,
+    typeFeature,
 } from "./utils.js";
 
 function isValidEntryPoint(entryPoint: string) {
@@ -48,6 +49,9 @@ function toCsType(type: ParameterType) {
             return "string";
         case "Date":
             return "System.DateTime";
+        case "DataView":
+        case "DataViewColumn":
+            return "DataFunctionDataView";
         default:
             return type;
     }
@@ -158,7 +162,7 @@ export async function generateEnvFile({
                         `Parameter '${
                             param.name
                         }' is declared optional but the mod targets an apiVersion earlier than ${formatVersion(
-                            features.Resources
+                            features.OptionalParameter
                         )}. Consider targeting a later version to enable this feature.`
                     );
                 }
@@ -171,6 +175,21 @@ export async function generateEnvFile({
             if (!param.type) {
                 error(`Parameter '${param.name}' has no type`);
             } else if (isParameterType(param.type)) {
+                const feature = typeFeature(param.type);
+                if (
+                    feature != null &&
+                    apiVersionResult.status === "success" &&
+                    !apiVersionResult.result.supportsFeature(feature)
+                ) {
+                    error(
+                        `Parameter '${param.name}' is type '${
+                            param.type
+                        }' but the mod targets an apiVersion earlier than ${formatVersion(
+                            features[feature]
+                        )}. Consider targeting a later version to use this type.`
+                    );
+                }
+
                 if (param.enum) {
                     if (
                         apiVersionResult.status === "success" &&
@@ -191,15 +210,13 @@ export async function generateEnvFile({
                 } else if (param.array) {
                     if (
                         apiVersionResult.status === "success" &&
-                        !apiVersionResult.result.supportsFeature(
-                            "DataColumnArray"
-                        )
+                        !apiVersionResult.result.supportsFeature("DataViews")
                     ) {
                         error(
                             `Parameter '${
                                 param.name
                             }' declares array but the mod targets an apiVersion earlier than ${formatVersion(
-                                features.EnumParameter
+                                features.DataViews
                             )}. Consider targeting a later version to enable this feature.`
                         );
                     }

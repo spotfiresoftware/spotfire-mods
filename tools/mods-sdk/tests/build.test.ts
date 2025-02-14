@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import { build, buildFlatEntryPointsMap, generateEnvFile } from "../src/build";
 import path from "path";
 import { existsSync } from "fs";
-import { Manifest, ModType } from "../src/utils";
+import { ApiVersion, Manifest, ManifestParameter, ModType } from "../src/utils";
 import { assertError, assertSuccess, setupProject } from "./test-utils";
 import { addParameter } from "../src/add-parameter";
 import { readFile } from "fs/promises";
@@ -149,121 +149,119 @@ describe("build.ts", () => {
             expect(envFile.result).not.toContain("resources");
         });
 
-        test("optional parameters are typed correctly", async () => {
-            const manifest: Manifest = {
-                apiVersion: "2.1",
-                scripts: [
-                    {
-                        name: "My Script",
-                        id: "my-script",
-                        entryPoint: "myScript",
-                        parameters: [
-                            { name: "foobar", type: "String", optional: true },
-                        ],
+        describe("input type", () => {
+            const testCases: {
+                testName: string;
+                parameter: ManifestParameter;
+                tsType: string;
+                apiVersion: ApiVersion;
+            }[] = [
+                {
+                    testName: "data column",
+                    parameter: {
+                        name: "foobar",
+                        type: "DataColumn",
                     },
-                ],
-            };
-
-            const envFile = await generateEnvFile({ manifest, quiet: true });
-            assertSuccess(envFile);
-
-            expect(envFile.result).toContain("foobar?: string");
-        });
-
-        test("enum parameters are typed correctly", async () => {
-            const manifest: Manifest = {
-                apiVersion: "2.1",
-                scripts: [
-                    {
-                        name: "My Script",
-                        id: "my-script",
-                        entryPoint: "myScript",
-                        parameters: [
-                            {
-                                name: "foobar",
-                                type: "String",
-                                enum: ["foo", "bar"],
-                            },
-                        ],
+                    tsType: "foobar: DataColumn",
+                    apiVersion: new ApiVersion(2, 1),
+                },
+                {
+                    testName: "optional",
+                    parameter: {
+                        name: "foobar",
+                        type: "String",
+                        optional: true,
                     },
-                ],
-            };
-
-            const envFile = await generateEnvFile({ manifest, quiet: true });
-            assertSuccess(envFile);
-
-            expect(envFile.result).toContain(`foobar: "foo" | "bar"`);
-        });
-
-        test("enum parameters cannot be added if apiVersion is too low", async () => {
-            const manifest: Manifest = {
-                apiVersion: "2.0",
-                scripts: [
-                    {
-                        name: "My Script",
-                        id: "my-script",
-                        entryPoint: "myScript",
-                        parameters: [
-                            {
-                                name: "foobar",
-                                type: "String",
-                                enum: ["foo", "bar"],
-                            },
-                        ],
+                    tsType: "foobar?: string",
+                    apiVersion: new ApiVersion(2, 1),
+                },
+                {
+                    testName: "enums",
+                    parameter: {
+                        name: "foobar",
+                        type: "String",
+                        enum: ["foo", "bar"],
                     },
-                ],
-            };
-
-            const envFile = await generateEnvFile({ manifest, quiet: true });
-            assertError(envFile);
-        });
-
-        test("data column array is typed correctly", async () => {
-            const manifest: Manifest = {
-                apiVersion: "2.1",
-                scripts: [
-                    {
-                        name: "My Script",
-                        id: "my-script",
-                        entryPoint: "myScript",
-                        parameters: [
-                            {
-                                name: "foobar",
-                                type: "DataColumn",
-                                array: true,
-                            },
-                        ],
+                    tsType: `foobar: "foo" | "bar"`,
+                    apiVersion: new ApiVersion(2, 1),
+                },
+                {
+                    testName: "data column array",
+                    parameter: {
+                        name: "foobar",
+                        type: "DataColumn",
+                        array: true,
                     },
-                ],
-            };
-
-            const envFile = await generateEnvFile({ manifest, quiet: true });
-            assertSuccess(envFile);
-
-            expect(envFile.result).toContain(`foobar: Iterable<DataColumn>`);
-        });
-
-        test("data column arrays cannot be added if api version is too low", async () => {
-            const manifest: Manifest = {
-                apiVersion: "2.0",
-                scripts: [
-                    {
-                        name: "My Script",
-                        id: "my-script",
-                        entryPoint: "myScript",
-                        parameters: [
-                            {
-                                name: "foobar",
-                                type: "DataColumn",
-                                array: true,
-                            },
-                        ],
+                    tsType: "foobar: Iterable<DataColumn>",
+                    apiVersion: new ApiVersion(2, 1),
+                },
+                {
+                    testName: "data view",
+                    parameter: {
+                        name: "foobar",
+                        type: "DataView",
                     },
-                ],
-            };
+                    tsType: "foobar: DataFunctionDataView",
+                    apiVersion: new ApiVersion(2, 1),
+                },
+                {
+                    testName: "data view column",
+                    parameter: {
+                        name: "foobar",
+                        type: "DataViewColumn",
+                    },
+                    tsType: "foobar: DataFunctionDataView",
+                    apiVersion: new ApiVersion(2, 1),
+                },
+            ];
 
-            const envFile = await generateEnvFile({ manifest, quiet: true });
-            assertError(envFile);
+            for (const testCase of testCases) {
+                describe(testCase.testName, () => {
+                    test("is typed correctly", async () => {
+                        const manifest: Manifest = {
+                            apiVersion: testCase.apiVersion.toManifest(),
+                            scripts: [
+                                {
+                                    name: "My Script",
+                                    id: "my-script",
+                                    entryPoint: "myScript",
+                                    parameters: [testCase.parameter],
+                                },
+                            ],
+                        };
+
+                        const envFile = await generateEnvFile({
+                            manifest,
+                            quiet: true,
+                        });
+                        assertSuccess(envFile);
+
+                        expect(envFile.result).toContain(testCase.tsType);
+                    });
+
+                    test("cannot be added if apiVersion is too low", async () => {
+                        const manifest: Manifest = {
+                            apiVersion: testCase.apiVersion
+                                .previous()
+                                .toManifest(),
+                            scripts: [
+                                {
+                                    name: "My Script",
+                                    id: "my-script",
+                                    entryPoint: "myScript",
+                                    parameters: [testCase.parameter],
+                                },
+                            ],
+                        };
+
+                        const envFile = await generateEnvFile({
+                            manifest,
+                            quiet: true,
+                        });
+                        assertError(envFile);
+                    });
+                });
+            }
         });
     });
 });
