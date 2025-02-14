@@ -42,6 +42,7 @@ Command.prototype.quiet = function () {
             "the Mods API version to use",
             (arg) => assertValidVersion(arg)
         )
+        .option("--no-gitignore", "if no .gitignore file should be created")
         .quiet()
         .action(exec(createTemplate));
 

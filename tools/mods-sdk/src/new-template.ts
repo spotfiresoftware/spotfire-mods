@@ -18,6 +18,7 @@ import {
 interface CreateTemplateOptions {
     outDir: string;
     apiVersion?: string;
+    gitignore?: boolean;
 }
 
 export type TemplateType = ModType | "gitignore";
@@ -41,7 +42,12 @@ async function getTemplateFolder(type: TemplateType) {
 
 export async function createTemplate(
     type: TemplateType,
-    { outDir, apiVersion, ...quiet }: CreateTemplateOptions & QuietOtions
+    {
+        outDir,
+        apiVersion,
+        gitignore,
+        ...quiet
+    }: CreateTemplateOptions & QuietOtions
 ) {
     const targetFolder = path.resolve(outDir);
 
@@ -57,6 +63,7 @@ export async function createTemplate(
             template,
             targetFolder,
             apiVersion,
+            gitignore,
             ...quiet,
         });
     } else {
@@ -83,9 +90,11 @@ async function createModTemplate({
     modType,
     template,
     targetFolder,
+    gitignore,
     ...quiet
 }: {
     apiVersion?: string;
+    gitignore?: boolean;
     modType: ModType;
     template: string;
     targetFolder: string;
@@ -157,14 +166,8 @@ async function createModTemplate({
                 .replace("$MOD-API-VERSION", apiVersion.result.toManifest());
         });
 
-        if (!quiet.quiet) {
-            const wantGitIgnore = await ask(
-                rl,
-                "❓ Want to create a .gitignore file?"
-            );
-            if (wantGitIgnore) {
-                await createGitIgnore({ targetFolder, ...quiet });
-            }
+        if (gitignore) {
+            await createGitIgnore({ targetFolder, ...quiet });
         }
 
         stdout("🎉 Template has been successfully created!");
