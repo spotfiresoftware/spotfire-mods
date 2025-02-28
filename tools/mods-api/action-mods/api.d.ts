@@ -7348,8 +7348,10 @@ declare namespace Spotfire.Dxp {
                 get ShowShadowBars(): JsType<System.Boolean>;
                 set ShowShadowBars(value: JsType<System.Boolean>);
                 /**
-                 * Gets or sets a {@link Spotfire.Dxp.Application.Visuals.CategoryKey} that identifies the expression part to sort the X axis by.
-                 * @remark The default value of this property is an empty category key, which means no sorting will occur.
+                 * Gets or sets a {@link Spotfire.Dxp.Application.Visuals.CategoryKey} that identifies the segment of the bars to sort the X axis by.
+                 * @remark The default value of this property is an empty category key, which means sorting will be based on the
+                 * entire bars and not just one of the bar segments.
+                 * This property applies only when {@link Spotfire.Dxp.Application.Visuals.BarChart.SortedBars} is set to true.
                  * 
                  * @since 2.1
                  * 
@@ -7358,9 +7360,9 @@ declare namespace Spotfire.Dxp {
                 get SortBy(): CategoryKey;
                 set SortBy(value: CategoryKey);
                 /**
-                 * Gets or sets a value indicating whether or not the bars
-                 * in this plot are sorted.
-                 * @remark This property applies only when the x axis is categorical. A continuous axis cannot be sorted.
+                 * Gets or sets a value indicating whether the bars in this plot are sorted.
+                 * @remark This property applies only when the X axis is categorical. A continuous axis cannot be sorted.
+                 * The sorting can be further controlled by the {@link Spotfire.Dxp.Application.Visuals.BarChart.SortBy} property.
                  * 
                  * @since 2.0
                  * 
@@ -38133,6 +38135,60 @@ declare namespace Spotfire.Dxp {
         
         namespace DataFunctions {
             /**
+             * Read-only representation of a configured data view for use in action mod scripts.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ActionDataView extends Object {
+                /**
+                 * Gets the data columns that defines the data view. Returns no columns if a custom expression was used to define the data view.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataColumns(): System.Collections.Generic.IEnumerable<DataColumn>;
+                /**
+                 * Gets the base data table that defines the data view.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                /**
+                 * Gets the expression that defines the data view.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Expression(): JsType<System.String>;
+                /**
+                 * Gets a value indicating whether the data view is limited by marking and/or filtering.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Limitations(): System.Collections.Generic.IEnumerable<DataSelection>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_885515430: null;
+            }
+            
+            /**
              * Represents the settings for the handling of a {@link Spotfire.Dxp.Data.DataFunctions.OutputParameter} of
              * a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}. This class will add columns to an existing table when first executed and
              * when updated it will either update those column or add new columns depending on the settings.
@@ -38197,17 +38253,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class ColumnsOutputBuilder extends DataFunctionOutputBuilder {
-                /**
-                 * Gets or sets a value indicating whether the columns produced the first time should be replaced
-                 * when executing a second time. If false the old columns will become embedded and the new rows
-                 * added.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get AddNewColumnsWhenUpdating(): JsType<System.Boolean>;
-                set AddNewColumnsWhenUpdating(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the table to add columns to.
                  * 
@@ -38647,60 +38692,6 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
-             * Read-only representation of a configured data view that can be piped from action mod input to a data function input.
-             * 
-             * @since 2.1
-             * 
-             * @group Default capability
-             */
-            class DataFunctionDataView extends Object {
-                /**
-                 * Gets the data columns that defines the data view. Returns no columns if a custom expression was used to define the data view.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get DataColumns(): System.Collections.Generic.IEnumerable<DataColumn>;
-                /**
-                 * Gets the base data table that defines the data view.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get DataTable(): DataTable;
-                /**
-                 * Gets the expression that defines the data view.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get Expression(): JsType<System.String>;
-                /**
-                 * Gets a value indicating whether the data view is limited by marking and/or filtering.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get Limitations(): System.Collections.Generic.IEnumerable<DataSelection>;
-                /**
-                 * @ignore
-                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
-                 */
-                constructor();
-                /**
-                 * @ignore
-                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
-                 */
-                _interfaces: {
-                };
-                private __type_2908415384: null;
-            }
-            
-            /**
              * Represents a definition of an data function.
              * 
              * The definition describes the information needed
@@ -39119,16 +39110,16 @@ declare namespace Spotfire.Dxp {
                  */
                 Remove(inputParameter: InputParameter): JsType<System.Boolean>;
                 /**
-                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionDataView} instance.
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using a {@link Spotfire.Dxp.Data.DataFunctions.ActionDataView} instance.
                  * @param inputParameter The input parameter.
-                 * @param dataView The data view.
+                 * @param actionDataView The data view.
                  * @returns The newly created input.
                  * 
                  * @since 2.1
                  * 
                  * @group Default capability
                  */
-                SetInput(inputParameter: InputParameter, dataView: DataFunctionDataView): DataFunctionInput;
+                SetInput(inputParameter: InputParameter, actionDataView: ActionDataView): DataFunctionInput;
                 /**
                  * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
                  * representing a list of column expressions. The value is calculated on all rows in the input.
@@ -40199,17 +40190,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get OriginalRowSourceValue(): JsType<System.String>;
                 set OriginalRowSourceValue(value: JsType<System.String>);
-                /**
-                 * Gets or sets a value indicating whether the rows produced the first time should be replaced
-                 * when executing a second time. If false the old rows will become embedded and the new rows
-                 * added.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get ReplaceRowsWhenUpdating(): JsType<System.Boolean>;
-                set ReplaceRowsWhenUpdating(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the column in the table that
                  * will be created to indicate the source of the rows.
@@ -53381,4 +53361,4 @@ type DataTable = Spotfire.Dxp.Data.DataTable;
 /** @ignore */
 type DataColumn = Spotfire.Dxp.Data.DataColumn;
 /** @ignore */
-type DataFunctionDataView = Spotfire.Dxp.Data.DataFunctions.DataFunctionDataView;
+type ActionDataView = Spotfire.Dxp.Data.DataFunctions.ActionDataView;

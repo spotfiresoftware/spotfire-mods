@@ -218,8 +218,7 @@
                             "TimeSpan",
                             "Page",
                             "Visualization",
-                            "DataView",
-                            "DataViewColumn"
+                            "DataView"
                           ],
                           "examples": ["String", "DataTable", "Page"]
                         },
@@ -277,6 +276,18 @@
                             ]
                           }
                         },
+                        "singleColumn": {
+                          "type": "boolean",
+                          "title": "Single column data view",
+                          "description": "If the data view should only allow single columns.",
+                          "default": true
+                        },
+                        "disableLimitations": {
+                          "type": "boolean",
+                          "title": "Disable limitations",
+                          "description": "If the data view should not allow limitations to be configured.",
+                          "default": true
+                        },
                         "array": {
                           "type": "boolean",
                           "title": "Array parameter",
@@ -296,6 +307,7 @@
                           },
                           "then": {
                             "not": {
+                              "title": "Enums can't be optional.",
                               "properties": {
                                 "optional": {
                                   "enum": [true]
@@ -330,7 +342,7 @@
                               {
                                 "properties": {
                                   "type": {
-                                    "enum": ["DataView", "DataViewColumn"]
+                                    "enum": ["DataView"]
                                   }
                                 },
                                 "required": ["type"]
@@ -349,6 +361,7 @@
                             ]
                           },
                           "then": {
+                            "title": "Data views and data column array require allowedDataTypes.",
                             "required": ["allowedDataTypes"]
                           },
                           "else": {
@@ -360,12 +373,46 @@
                               },
                               {
                                 "not": {
+                                  "title": "Only data column can be array.",
                                   "properties": {
                                     "array": {
                                       "enum": [true]
                                     }
                                   },
                                   "required": ["array"]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "enum": ["DataView"]
+                              }
+                            },
+                            "required": ["type"]
+                          },
+                          "then": {},
+                          "else": {
+                            "allOf": [
+                              {
+                                "not": {
+                                  "title": "Only data views can be single column.",
+                                  "properties": {
+                                    "singleColumn": { "enum": [true] }
+                                  },
+                                  "required": ["singleColumn"]
+                                }
+                              },
+                              {
+                                "not": {
+                                  "title": "Only data views can disable limitations.",
+                                  "properties": {
+                                    "disableLimitations": { "enum": [true] }
+                                  },
+                                  "required": ["disableLimitations"]
                                 }
                               }
                             ]
