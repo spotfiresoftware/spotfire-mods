@@ -51,7 +51,7 @@ function toCsType(type: ParameterType) {
             return "System.DateTime";
         case "DataView":
         case "DataViewColumn":
-            return "DataFunctionDataView";
+            return "ActionDataView";
         default:
             return type;
     }

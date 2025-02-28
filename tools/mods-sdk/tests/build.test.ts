@@ -201,7 +201,7 @@ describe("build.ts", () => {
                         name: "foobar",
                         type: "DataView",
                     },
-                    tsType: "foobar: DataFunctionDataView",
+                    tsType: "foobar: ActionDataView",
                     apiVersion: new ApiVersion(2, 1),
                 },
                 {
@@ -210,7 +210,7 @@ describe("build.ts", () => {
                         name: "foobar",
                         type: "DataViewColumn",
                     },
-                    tsType: "foobar: DataFunctionDataView",
+                    tsType: "foobar: ActionDataView",
                     apiVersion: new ApiVersion(2, 1),
                 },
             ];

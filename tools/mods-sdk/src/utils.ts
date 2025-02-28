@@ -145,7 +145,7 @@ export class ApiVersion {
 
         // TODO - Remove before release.
         if (this.major === 2 && this.minor === 1) {
-            patch = "0-preview.2";
+            patch = "0-preview.3";
         }
 
         return `${this.major}.${this.minor}.${patch}`;
