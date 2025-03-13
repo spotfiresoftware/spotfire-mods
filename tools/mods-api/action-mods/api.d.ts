@@ -574,7 +574,7 @@ declare namespace Spotfire.Dxp {
              */
             get MarkerShapeDefinitions(): Visuals.MarkerShapeDefinitions;
             /**
-             * Gets the mod manger.
+             * Gets the mod manager.
              * 
              * @since 2.1
              * 
@@ -6527,9 +6527,10 @@ declare namespace Spotfire.Dxp {
                  */
                 constructor();
                 /**
-                 * Gets the axes declared by this Mod Visualization, as defined in the mod-manifest.json,
-                 * excluding the color axis. To access the color axis, use the ColorAxis property.
-                 * @param name The name of the parameter to get.
+                 * Gets the axis with the specified name declared by this Mod Visualization, as
+                 * defined in the mod-manifest.json, excluding the color axis.
+                 * To access the color axis, use the ColorAxis property.
+                 * @param name The name of the axis to get.
                  * @returns An object representing the Mod Axis, or null.
                  * 
                  * @since 2.1
@@ -14640,7 +14641,7 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Updates any embedded shapes that uses a collection with the same id to use shapes from the supplied collection.
                  * @param shapeCollection The shape collection to update from.
-                 * @returns True if an update was made.
+                 * @returns true if an update was made.
                  * 
                  * @since 2.1
                  * 
@@ -38141,15 +38142,7 @@ declare namespace Spotfire.Dxp {
              * 
              * @group Default capability
              */
-            class ActionDataView extends Object {
-                /**
-                 * Gets the data columns that defines the data view. Returns no columns if a custom expression was used to define the data view.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get DataColumns(): System.Collections.Generic.IEnumerable<DataColumn>;
+            class ActionDataViewDefinition extends Object {
                 /**
                  * Gets the base data table that defines the data view.
                  * 
@@ -38185,7 +38178,65 @@ declare namespace Spotfire.Dxp {
                  */
                 _interfaces: {
                 };
-                private __type_885515430: null;
+                private __type_377016299: null;
+            }
+            
+            /**
+             * Available built-in data functions that can be used to add new {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}s
+             * to the document using {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionCollection.AddNew|AddNew(suggestedName, builtInDataFunction)}
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class BuiltInDataFunction extends Object {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Represents a  ... DataFunction that does x and y.
+                 * It expects x and y as inputs and x and y as outputs....
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly AreaOfPolygon: BuiltInDataFunction;
+                /**
+                 * TODO: Describe Geographic Distance Matrix
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly GeographicDistanceMatrix: BuiltInDataFunction;
+                /**
+                 * Represents a  ... DataFunction that does x and y.
+                 * It expects x and y as inputs and x and y as outputs....
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly MissingDataSummary: BuiltInDataFunction;
+                /**
+                 * Represents a  ... DataFunction that does x and y.
+                 * It expects x and y as inputs and x and y as outputs....
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly TimeSeriesSmoothing: BuiltInDataFunction;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_355140284: null;
             }
             
             /**
@@ -38556,6 +38607,14 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly Text: DataFunctionCategory;
                 /**
+                 * The Time series category, used e.g. for processing and analyzing time series data.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly TimeSeries: DataFunctionCategory;
+                /**
                  * The Vision category, used e.g. for processing, analyzing and outputting images and data from image recognition.
                  * 
                  * @since 2.0
@@ -38595,6 +38654,17 @@ declare namespace Spotfire.Dxp {
                  */
                 constructor();
                 [Symbol.iterator](): Iterator<DataFunction>;
+                /**
+                 * Adds a new {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} from a {@link Spotfire.Dxp.Data.DataFunctions.BuiltInDataFunction}.
+                 * @param suggestedName The suggested name.
+                 * @param builtInDataFunction The built-in data function.
+                 * @returns The newly added {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddNew(suggestedName: (JsType<System.String> | System.String), builtInDataFunction: BuiltInDataFunction): DataFunction;
                 /**
                  * Adds a new {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} from a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionDefinition}.
                  * @param suggestedName The suggested name of the function.
@@ -39110,16 +39180,16 @@ declare namespace Spotfire.Dxp {
                  */
                 Remove(inputParameter: InputParameter): JsType<System.Boolean>;
                 /**
-                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using a {@link Spotfire.Dxp.Data.DataFunctions.ActionDataView} instance.
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using a {@link Spotfire.Dxp.Data.DataFunctions.ActionDataViewDefinition} instance.
                  * @param inputParameter The input parameter.
-                 * @param actionDataView The data view.
+                 * @param actionDataViewDefinition The data view.
                  * @returns The newly created input.
                  * 
                  * @since 2.1
                  * 
                  * @group Default capability
                  */
-                SetInput(inputParameter: InputParameter, actionDataView: ActionDataView): DataFunctionInput;
+                SetInput(inputParameter: InputParameter, actionDataViewDefinition: ActionDataViewDefinition): DataFunctionInput;
                 /**
                  * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
                  * representing a list of column expressions. The value is calculated on all rows in the input.
@@ -53361,4 +53431,4 @@ type DataTable = Spotfire.Dxp.Data.DataTable;
 /** @ignore */
 type DataColumn = Spotfire.Dxp.Data.DataColumn;
 /** @ignore */
-type ActionDataView = Spotfire.Dxp.Data.DataFunctions.ActionDataView;
+type ActionDataViewDefinition = Spotfire.Dxp.Data.DataFunctions.ActionDataViewDefinition;

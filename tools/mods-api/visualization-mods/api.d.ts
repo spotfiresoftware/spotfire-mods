@@ -1,5 +1,5 @@
 /*
-* Copyright © 2023. Cloud Software Group, Inc.
+* Copyright © 2025. Cloud Software Group, Inc.
 * This file is subject to the license terms contained
 * in the license file that is distributed with this file.
 */
@@ -204,6 +204,47 @@ export declare interface Controls {
 }
 
 /**
+ * Represents the styling information that applies to a control of some kind in the Mod Visualization.
+ * For example, the controls for search, layers, navigation, etc., in a Spotfire Map Chart follows this styling.
+ * @public
+ * @version 2.1
+ */
+export declare interface ControlStylingInfo {
+    /**
+     * Gets the value to use for the `background-color` CSS property.
+     * @version 2.1
+     */
+    backgroundColor: string;
+    /**
+     * Gets the values to use for the color CSS properties in different states.
+     * @version 2.1
+     */
+    color: StateDependentValue<string>;
+}
+
+/**
+ * Represents the basic settings of a custom theme used in Spotfire.
+ * @public
+ * @version 2.1
+ */
+export declare interface CustomThemeStylingInfo {
+    /**
+     * Gets a value describing the theme that this custom theme is based on.
+     */
+    baseTheme: KnownTheme;
+    /**
+     * Gets the base color of the theme.
+     * @version 2.1
+     */
+    baseColor: string;
+    /**
+     * Gets the primary color of the theme.
+     * @version 2.1
+     */
+    primaryColor: string;
+}
+
+/**
  * Represents a data table in the Spotfire document.
  * @public
  */
@@ -297,7 +338,7 @@ declare interface DataView_2 {
      */
     clearMarking(): void;
     /**
-     * Gets the marking information, or null if marking is not enabled.
+     * Gets the marking information, or `null` if marking is not enabled.
      */
     marking(): Promise<MarkingInfo | null>;
     /**
@@ -321,7 +362,7 @@ declare interface DataView_2 {
      * Gets metadata for a specific categorical axis in the {@link DataView}.
      * Categorical axes are defined in the manifest file as categorical or dual.
      * When this method fails to return a valid axis getting the corresponding call to {@link DataViewRow.categorical} will throw an error.
-     * Returns null for axes with empty expressions or for dual mode axes that currently are in continuous mode.
+     * Returns `null` for axes with empty expressions or for dual mode axes that currently are in continuous mode.
      * Throws if the axis does not exist or the axes mode is continuous.
      * @param name - The axis name.
      */
@@ -330,7 +371,7 @@ declare interface DataView_2 {
      * Gets metadata for a specific continuous axis in the {@link DataView}.
      * Continuous axes are defined in the manifest file as continuous or dual.
      * When this method fails to return a valid axis getting the corresponding call to {@link DataViewRow.continuous} will throw an error.
-     * Returns null for axes with empty expressions or for dual mode axes that currently are in categorical mode.
+     * Returns `null` for axes with empty expressions or for dual mode axes that currently are in categorical mode.
      * Throws if the axis does not exist or the axes mode is categorical.
      * @param name - The axis name.
      */
@@ -344,7 +385,7 @@ declare interface DataView_2 {
      * Gets a hierarchy for a categorical axis.
      *
      * If the axis has an empty expression the hierarchy will contain one single root node.
-     * Returns null for dual mode axes that currently are in continuous mode.
+     * Returns `null` for dual mode axes that currently are in continuous mode.
      * Throws if the axis does not exist or the axes mode is continuous.
      * @param name - The name of the axis to get the hierarchy for.
      */
@@ -359,7 +400,7 @@ declare interface DataView_2 {
      * The allRows function has a built in cache and can be called multiple times with the same dataView and it will return the same list of rows.
      * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns true the promise will be rejected.
      * The default behavior is that reading will be aborted when new non-streaming update is available.
-     * @returns null if reading data was aborted, otherwise a {@link DataViewRow}[].
+     * @returns `null` if reading data was aborted, otherwise a {@link DataViewRow}[].
      */
     allRows(abortPredicate?: AbortPredicate): Promise<DataViewRow[] | null>;
 }
@@ -433,11 +474,11 @@ export declare interface DataViewCategoricalValuePathElement {
      *
      * They key is suitable to be used for identifying objects when implementing rendering transitions.
      *
-     * The key can be null when the corresponding {@link DataViewCategoricalValuePathElement.value} is null.
+     * The key can be `null` when the corresponding {@link DataViewCategoricalValuePathElement.value} is null.
      */
     key: string | null;
     /**
-     * Gets the value of this element, or null if this element represents a missing or invalid data point.
+     * Gets the value of this element, or `null` if this element represents a missing or invalid data point.
      *
      * The type of the returned value can be determined from the {@link DataViewHierarchy.levels} in the {@link DataViewHierarchy} of
      * the associated {@link DataViewCategoricalAxis}.
@@ -508,9 +549,9 @@ export declare interface DataViewHierarchy {
     leafCount: number;
     /**
      *  Gets the virtual root node of the hierarchy. The level of the root node is -1. Spotfire does not usually render the root node in visualization.
-     * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns true the promise will be rejected.
+     * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns `true` the promise will be rejected.
      * The default behavior is that reading will be aborted when new non-streaming update is available.
-     * @returns null if reading data was aborted, otherwise a {@link DataViewHierarchyNode}.
+     * @returns `null` if reading data was aborted, otherwise a {@link DataViewHierarchyNode}.
      */
     root(abortPredicate?: AbortPredicate): Promise<DataViewHierarchyNode | null>;
 }
@@ -554,11 +595,11 @@ export declare interface DataViewHierarchyNode {
      *
      * They key is suitable to be used for identifying objects when implementing rendering transitions.
      *
-     * The key can be null when the corresponding {@link DataViewHierarchyNode.value} is null.
+     * The key can be `null` when the corresponding {@link DataViewHierarchyNode.value} is null.
      */
     key: string | null;
     /**
-     * Gets the value of this node, or null if this node represents a missing or invalid data point.
+     * Gets the value of this node, or `null` if this node represents a missing or invalid data point.
      *
      * The type of the returned value can be determined from the {@link DataViewHierarchy.levels} in the associated {@link DataViewHierarchy}.
      */
@@ -649,7 +690,7 @@ export declare interface DataViewRow {
     continuous<T extends DataViewValueType>(axisName: string): DataViewContinuousValue<T>;
     /**
      * Gets the leaf {@link DataViewHierarchyNode} for the specified axis,
-     * or null for dual mode axes with continuous axis expression.
+     * or `null` for dual mode axes with continuous axis expression.
      * This method will throw an error for continuous mode axes
      * or if there is no axis by that name.
      * @param axisName - The name of the axis
@@ -691,6 +732,34 @@ export declare interface DataViewRow {
  * @public
  */
 export declare type DataViewValueType = number | string | boolean | Date | Time | TimeSpan;
+
+/**
+ * Represents a group of values used for the top, bottom, left and right edges of a CSS property of an associated DOM element.
+ * @public
+ * @version 2.1
+ */
+export declare interface EdgeValues<T> {
+    /**
+     * Gets the value to use for the `-top-` CSS property. For instance `border-top-color`.
+     * @version 2.1
+     */
+    top: T;
+    /**
+     * Gets the value to use for the `-bottom-` CSS property. For instance `border-bottom-color`.
+     * @version 2.1
+     */
+    bottom: T;
+    /**
+     * Gets the value to use for the `-left-` CSS property. For instance `border-left-color`.
+     * @version 2.1
+     */
+    left: T;
+    /**
+     * Gets the value to use for the `-right-` CSS property. For instance `border-right-color`.
+     * @version 2.1
+     */
+    right: T;
+}
 
 /**
  * Provides access to show an error overlay covering the entire Mod shown by Spotfire.
@@ -764,6 +833,10 @@ export declare interface GeneralStylingInfo {
      * Gets the value to use for the `background-color` CSS property of the Mod Visualization.
      */
     backgroundColor: string;
+    /**
+     * Gets a value describing the theme that is used in the Spotfire UI.
+     */
+    activeTheme: KnownTheme | CustomThemeStylingInfo;
 }
 
 /**
@@ -781,6 +854,13 @@ export declare interface GeneralStylingInfo {
  * @param onLoaded - Callback that is called when the mod API is initialized and ready to be interacted with.
  */
 export declare function initialize(onLoaded: OnLoadCallback): void;
+
+/**
+ * Describes the theme that is used in the Spotfire UI.
+ * @public
+ * @version 2.1
+ */
+export declare type KnownTheme = "Light" | "Dark";
 
 /**
  * Represents the styling information that applies to scale lines in the Mod Visualization.
@@ -1288,6 +1368,24 @@ export declare interface Progress {
 }
 
 /**
+ * Represents the styling information that applies to a range, for instance in a zoom slider, in the Mod Visualization.
+ * @public
+ * @version 2.1
+ */
+export declare interface RangeStylingInfo {
+    /**
+     * Gets the value to use for the `background-color` CSS property.
+     * @version 2.1
+     */
+    backgroundColor: string;
+    /**
+     * Gets the values to use for the border color CSS properties.
+     * @version 2.1
+     */
+    borderColors: EdgeValues<string>;
+}
+
+/**
  * Represents a value in the Mod API that can be accessed and/or modified. These values can
  * be used when creating an instance of a {@link Reader} via the {@link Mod.createReader} method.
  * @public
@@ -1519,6 +1617,34 @@ export declare interface SpotfireDocument {
 }
 
 /**
+ * Represents a group of values used in different states of an associated DOM element.
+ * @version 2.1
+ * @public
+ */
+export declare interface StateDependentValue<T> {
+    /**
+     * Gets the value to use in the default state. That is, when no pseudo-class is active.
+     * @version 2.1
+     */
+    default: T;
+    /**
+     * Gets the value to use in the `hover` state. If this property is undefined, the `default` value should be used.
+     * @version 2.1
+     */
+    hover?: T;
+    /**
+     * Gets the value to use in the `active` state. If this property is undefined, the `default` value should be used.
+     * @version 2.1
+     */
+    active?: T;
+    /**
+     * Gets the value to use in the `disabled` state. If this property is undefined, the `default` value should be used.
+     * @version 2.1
+     */
+    disabled?: T;
+}
+
+/**
  * Represents the styling (theme) that affects the look and feel of a Mod Visualization.
  * @public
  */
@@ -1532,6 +1658,39 @@ export declare interface StylingInfo {
      * Gets an object describing the styling of the scales in the Mod Visualization.
      */
     scales: ScaleStylingInfo;
+    /**
+     * Gets an object describing the styling of the trellis panel headers in the Mod Visualization.
+     * @version 2.1
+     */
+    trellisPanelHeaders: TrellisPanelHeaderStylingInfo;
+    /**
+     * Gets an object describing the styling of the zoom sliders in the Mod Visualization.
+     * @version 2.1
+     */
+    zoomSliders: ZoomSliderStylingInfo;
+    /**
+     * Gets an object describing the styling of controls in the Mod Visualization.
+     * @version 2.1
+     */
+    controls: ControlStylingInfo;
+}
+
+/**
+ * Represents the styling information that applies to a thumb, for instance in a zoom slider, in the Mod Visualization.
+ * @public
+ * @version 2.1
+ */
+export declare interface ThumbStylingInfo {
+    /**
+     * Gets the value to use for the `background-image` CSS property.
+     * @version 2.1
+     */
+    backgroundImage: StateDependentValue<string>;
+    /**
+     * Gets the values to use for the border color CSS properties.
+     * @version 2.1
+     */
+    borderColors: EdgeValues<string>;
 }
 
 /**
@@ -1627,9 +1786,57 @@ export declare interface Tooltip {
 }
 
 /**
+ * Represents the styling information that applies to trellis panel headers in the Mod Visualization.
+ * @public
+ * @version 2.1
+ */
+export declare interface TrellisPanelHeaderStylingInfo {
+    /**
+     * Gets the color to use for the `background-color` CSS property. This value is valid a CSS color or the value `"none"`.
+     * @version 2.1
+     */
+    backgroundColor: string;
+    /**
+     * Gets the values to use for the border color CSS properties.
+     * @version 2.1
+     */
+    borderColors: EdgeValues<string>;
+    /**
+     * Gets and object describing the font that shall be used in the trellis headers of the Mod Visualization.
+     * @version 2.1
+     */
+    font: FontInfo;
+}
+
+/**
  * Extract all possible types in a Tuple type.
  * @public
  */
 export declare type UnionFromTupleTypes<T extends readonly any[], U = never> = T[number] | U;
+
+/**
+ * Represents the styling information that applies to zoom sliders in the Mod Visualization.
+ * @public
+ * @version 2.1
+ */
+export declare interface ZoomSliderStylingInfo {
+    /**
+     * Gets the styling information to use for the inner range of a zoom slider in the Mod Visualization.
+     * The inner range is the area between the thumbs of the zoom slider.
+     * @version 2.1
+     */
+    innerRange: RangeStylingInfo;
+    /**
+     * Gets the styling information to use for the outer range of a zoom slider in the Mod Visualization.
+     * The outer range is the area between the ends of the zoom slider, visible when the thumbs have been moved inwards.
+     * @version 2.1
+     */
+    outerRange: RangeStylingInfo;
+    /**
+     * Gets the styling information to use for the thumbs of a zoom slider in the Mod Visualization.
+     * @version 2.1
+     */
+    thumb: ThumbStylingInfo;
+}
 
 export { }

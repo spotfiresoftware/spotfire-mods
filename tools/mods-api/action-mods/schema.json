@@ -218,7 +218,7 @@
                             "TimeSpan",
                             "Page",
                             "Visualization",
-                            "DataView"
+                            "DataViewDefinition"
                           ],
                           "examples": ["String", "DataTable", "Page"]
                         },
@@ -298,6 +298,7 @@
                       "allOf": [
                         {
                           "if": {
+                            "title": "Strings can be enums.",
                             "properties": {
                               "type": {
                                 "enum": ["String"]
@@ -318,6 +319,7 @@
                           },
                           "else": {
                             "not": {
+                              "title": "Only strings can be enums.",
                               "required": ["enum"]
                             }
                           }
@@ -338,63 +340,51 @@
                         },
                         {
                           "if": {
-                            "oneOf": [
-                              {
-                                "properties": {
-                                  "type": {
-                                    "enum": ["DataView"]
-                                  }
-                                },
-                                "required": ["type"]
-                              },
-                              {
-                                "properties": {
-                                  "type": {
-                                    "enum": ["DataColumn"]
-                                  },
-                                  "array": {
-                                    "enum": [true]
-                                  }
-                                },
-                                "required": ["type", "array"]
-                              }
-                            ]
-                          },
-                          "then": {
-                            "title": "Data views and data column array require allowedDataTypes.",
                             "required": ["allowedDataTypes"]
                           },
-                          "else": {
-                            "allOf": [
-                              {
-                                "not": {
-                                  "required": ["allowedDataTypes"]
-                                }
-                              },
-                              {
-                                "not": {
-                                  "title": "Only data column can be array.",
-                                  "properties": {
-                                    "array": {
-                                      "enum": [true]
-                                    }
-                                  },
-                                  "required": ["array"]
-                                }
+                          "then": {
+                            "title": "Only DataViewDefinition and DataColumn can have allowedDataTypes",
+                            "properties": {
+                              "type": {
+                                "enum": ["DataViewDefinition", "DataColumn"]
                               }
-                            ]
+                            },
+                            "required": ["type"]
                           }
                         },
                         {
                           "if": {
                             "properties": {
                               "type": {
-                                "enum": ["DataView"]
+                                "enum": ["DataColumn"]
                               }
                             },
                             "required": ["type"]
                           },
                           "then": {},
+                          "else": {
+                            "not": {
+                              "title": "Only data columns can be arrays.",
+                              "properties": {
+                                "array": { "enum": [true] }
+                              },
+                              "required": ["array"]
+                            }
+                          }
+                        },
+                        {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "enum": ["DataViewDefinition"]
+                              }
+                            },
+                            "required": ["type"]
+                          },
+                          "then": {
+                            "title": "Data views have to define allowed data types.",
+                            "required": ["allowedDataTypes"]
+                          },
                           "else": {
                             "allOf": [
                               {
