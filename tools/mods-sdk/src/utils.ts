@@ -50,8 +50,7 @@ export const parameterTypes = [
     "TimeSpan",
     "Page",
     "Visualization",
-    "DataView",
-    "DataViewColumn",
+    "DataViewDefinition",
 ] as const;
 export type ParameterType = (typeof parameterTypes)[number];
 
@@ -59,8 +58,7 @@ export function typeFeature(parameterType: ParameterType): Feature | null {
     switch (parameterType) {
         case "DataColumn":
             return "DataColumnParameter";
-        case "DataView":
-        case "DataViewColumn":
+        case "DataViewDefinition":
             return "DataViews";
         default:
             return null;
@@ -93,6 +91,7 @@ export interface ManifestParameter {
     optional?: boolean;
     enum?: string[];
     array?: boolean;
+    singleColumn?: boolean;
 }
 
 export interface Manifest {

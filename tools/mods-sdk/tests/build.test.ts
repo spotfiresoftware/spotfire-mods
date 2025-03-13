@@ -196,21 +196,22 @@ describe("build.ts", () => {
                     apiVersion: new ApiVersion(2, 1),
                 },
                 {
-                    testName: "data view",
+                    testName: "data view definition",
                     parameter: {
                         name: "foobar",
-                        type: "DataView",
+                        type: "DataViewDefinition",
                     },
-                    tsType: "foobar: ActionDataView",
+                    tsType: "foobar: ActionDataViewDefinition",
                     apiVersion: new ApiVersion(2, 1),
                 },
                 {
                     testName: "data view column",
                     parameter: {
                         name: "foobar",
-                        type: "DataViewColumn",
+                        type: "DataViewDefinition",
+                        singleColumn: true,
                     },
-                    tsType: "foobar: ActionDataView",
+                    tsType: "foobar: ActionDataViewDefinition",
                     apiVersion: new ApiVersion(2, 1),
                 },
             ];
