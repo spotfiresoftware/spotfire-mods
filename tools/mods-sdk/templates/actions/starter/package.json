@@ -12,9 +12,9 @@
         "@spotfire/mods-api": "~MODS-API-VERSION",
         "@spotfire/mods-dev-server": "^1.2.0-preview.0",
         "@spotfire/mods-sdk": "^MODS-SDK-VERSION",
-        "esbuild": "^0.21.4",
+        "esbuild": "^0.25.1",
         "prettier": "^3.3.0",
-        "typescript": "^5.4.5"
+        "typescript": "^5.8.2"
     },
     "engines": {
         "node": ">=20.0.0"
