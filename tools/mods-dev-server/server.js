@@ -148,7 +148,7 @@ function start(settings = {}) {
         if (settings.open) {
             let { path: serverPath = "/" } = settings;
             serverPath = serverPath.startsWith("/") ? serverPath : "/" + serverPath;
-            open(serverUrl + serverPath);
+            open.openApp(serverUrl + serverPath);
         }
     });
 
@@ -181,7 +181,7 @@ function start(settings = {}) {
     }, 500);
 
     chokidar
-        .watch(settings.root, { ignored: ["node_modules", "*.d.ts"] })
+        .watch(settings.root, { ignored: /node_modules.*\.d\.ts/, persistent: true })
         .on("add", reloadInstances)
         .on("change", reloadInstances)
         .on("unlink", reloadInstances)
@@ -285,7 +285,7 @@ function start(settings = {}) {
                     }
                 }
             }
-        } catch (err) {}
+        } catch (err) { }
     }
 
     /**
