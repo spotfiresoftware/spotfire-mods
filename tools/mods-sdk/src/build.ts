@@ -556,6 +556,11 @@ async function buildActionMod({
         format: "iife",
         minify: !debug,
         sourcemap: debug,
+        entryNames: "[name]",
+        entryPoints: [".js", ".ts"].map((extension) =>
+            path.join(scriptsDir, `*${extension}`)
+        ),
+        logOverride: { "empty-glob": "silent" },
 
         /**
          * Action mods have no access to Web APIs.
@@ -574,6 +579,14 @@ async function buildActionMod({
         manifestWatcher.on("change", async (path) => onChange());
         manifestWatcher.on("ready", onChange);
 
+        restartEsbuildImpl({
+            defaultConfig,
+            esbuildConfigPath,
+            outdir: absOutDir,
+            debug,
+            ...quiet,
+        });
+
         async function onChange() {
             console.clear();
             stdout("Manifest change detected, generating new env file.");
@@ -587,58 +600,8 @@ async function buildActionMod({
             }
             stdout("Watching for file changes.");
         }
-
-        const scriptFiles: string[] = [];
-        const restartEsbuild = debounce(
-            () =>
-                restartEsbuildImpl({
-                    defaultConfig: {
-                        entryPoints: buildFlatEntryPointsMap(scriptFiles),
-                        ...defaultConfig,
-                    },
-                    esbuildConfigPath,
-                    outdir: absOutDir,
-                    debug,
-                    ...quiet,
-                }),
-            500
-        );
-
-        const chokidarPattern = path
-            .join(scriptsDir, "*.ts")
-            .replace(/\\/g, "/");
-        const buildWatcher = chokidar.watch([chokidarPattern], {
-            persistent: true,
-            awaitWriteFinish: true,
-        });
-        buildWatcher.on("add", (fileName) => {
-            scriptFiles.push(fileName);
-            restartEsbuild();
-        });
-        buildWatcher.on("unlink", (fileName) => {
-            const ix = scriptFiles.indexOf(fileName);
-            if (ix >= 0) {
-                scriptFiles.splice(ix, 1);
-            }
-        });
     } else {
         stdout(`Looking for script files in '${scriptsDir}'`);
-
-        const scripts = await readdir(scriptsDir);
-        const scriptEntryPoints = scripts
-            .filter((fileName) => {
-                if (isAllowedEndpointPath(fileName)) {
-                    stdout(`  Found script: ${fileName}`);
-                    return true;
-                } else {
-                    stdout(`  Ignoring non-script: ${fileName}`);
-                    return false;
-                }
-            })
-            .map((fileName) => {
-                return path.resolve(scriptsDir, fileName);
-            });
-
         const esbuildOptions = await getEsbuildOptions({
             esbuildConfigPath,
             defaultConfig,
@@ -648,7 +611,6 @@ async function buildActionMod({
         });
         const ctx = await esbuild.context({
             ...esbuildOptions,
-            entryPoints: buildFlatEntryPointsMap(scriptEntryPoints),
         });
         stdout("Building Action Mod");
         await ctx.rebuild();
@@ -661,20 +623,6 @@ async function buildActionMod({
         }
         await ctx.dispose();
     }
-}
-
-/**
- * Flattens the entry points so that they lose their directory structure in the output folder.
- * @param entryPointPaths The paths to the entry point for each bundle.
- * @returns The map where the key is the file name and the value is the path to the entry point.
- */
-export function buildFlatEntryPointsMap(entryPointPaths: string[]) {
-    const flatEntryPoints: { [fileName: string]: string } = {};
-    for (const filePath of entryPointPaths) {
-        const fileName = path.parse(filePath).name;
-        flatEntryPoints[fileName] = filePath;
-    }
-    return flatEntryPoints;
 }
 
 async function buildVisualizationMod({

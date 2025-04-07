@@ -1,5 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
-import { build, buildFlatEntryPointsMap, generateEnvFile } from "../src/build";
+import { build, generateEnvFile } from "../src/build";
+import { addScript } from "../src/add-script";
 import path from "path";
 import { existsSync } from "fs";
 import { ApiVersion, Manifest, ManifestParameter, ModType } from "../src/utils";
@@ -11,7 +12,8 @@ describe("build.ts", () => {
     describe("actions", () => {
         const project = "tests/testprojects/starter-action-mod";
         const buildDir = path.join(project, "build");
-        const scriptsDir = path.join(project, "src");
+        const srcDir = path.join(project, "src");
+        const scriptsDir = path.join(srcDir, "scripts");
         const manifestPath = path.join(project, "mod-manifest.json");
         const envPath = path.join(project, "env.d.ts");
         const esbuildConfig = path.join(project, "esbuild.config.js");
@@ -21,7 +23,7 @@ describe("build.ts", () => {
 
             await build({
                 outdir: buildDir,
-                src: scriptsDir,
+                src: srcDir,
                 watch: false,
                 debug: true,
                 manifestPath: manifestPath,
@@ -49,7 +51,7 @@ describe("build.ts", () => {
 
             await build({
                 outdir: buildDir,
-                src: scriptsDir,
+                src: srcDir,
                 watch: false,
                 debug: true,
                 manifestPath: manifestPath,
@@ -61,6 +63,47 @@ describe("build.ts", () => {
             const envContent = await readFile(envPath, "utf-8");
             expect(envContent).toContain("dateParam: System.DateTime;");
             expect(envContent).toContain("boolParam: boolean;");
+        });
+
+        test("flattens entry points", async () => {
+            await setupProject(project, ModType.Action);
+
+            await build({
+                outdir: buildDir,
+                src: srcDir,
+                watch: false,
+                debug: true,
+                manifestPath: manifestPath,
+                envPath,
+                esbuildConfig,
+                quiet: true,
+            });
+
+            expect(
+                existsSync(path.join(buildDir, "my-script.js"))
+            ).toBeTruthy();
+
+            await addScript("new-script", {
+                manifestPath,
+                scripts: scriptsDir,
+                name: "New script",
+                quiet: true,
+            });
+
+            await build({
+                outdir: buildDir,
+                src: srcDir,
+                watch: false,
+                debug: true,
+                manifestPath: manifestPath,
+                envPath,
+                esbuildConfig,
+                quiet: true,
+            });
+
+            expect(
+                existsSync(path.join(buildDir, "new-script.js"))
+            ).toBeTruthy();
         });
     });
 
@@ -88,23 +131,6 @@ describe("build.ts", () => {
 
             const sourceMapPath = path.join(buildDir, "main.js.map");
             expect(existsSync(sourceMapPath)).toBeTruthy();
-        });
-    });
-
-    describe("buildFlatEntryPointsMap", () => {
-        test("flattens entry points", () => {
-            const result = buildFlatEntryPointsMap([
-                "script/index.ts",
-                "script/other.ts",
-                "atRoot.ts",
-                "script/deep/deep.ts",
-            ]);
-            expect(result).toEqual({
-                index: "script/index.ts",
-                other: "script/other.ts",
-                atRoot: "atRoot.ts",
-                deep: "script/deep/deep.ts",
-            });
         });
     });
 
