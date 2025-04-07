@@ -26,7 +26,7 @@
         "typescript": "^5.8.2"
     },
     "dependencies": {
-        "chokidar": "^3.6.0",
+        "chokidar": "^4.0.3",
         "colors": "^1.4.0",
         "commander": "^13.1.0"
     },
