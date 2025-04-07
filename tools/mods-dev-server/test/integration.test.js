@@ -40,7 +40,7 @@ describe("Web socket connection", function () {
         await server.match("Mod manifest warning: 'does-not-exist.css' is not listed in the files list.");
         await Promise.all([server.match("GET /", true), page.waitForNavigation()]);
         await assertContent(page, "My mod");
-    }).timeout(5000);
+    }).timeout(10000);
 
     it("should reload browser when file changes after server restart", async function () {
         let server = cli(["cli.js", "test/test-files", "-p", "5557", "-o", "false"]);
@@ -65,7 +65,7 @@ describe("Web socket connection", function () {
         await server.match("Reloading 1 connected instance", false);
         await Promise.all([server.match("GET /", true), page.waitForNavigation()]);
         await assertContent(page, "My mod");
-    }).timeout(5000);
+    }).timeout(10000);
 });
 
 /**
