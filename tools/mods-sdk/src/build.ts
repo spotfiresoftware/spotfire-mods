@@ -594,9 +594,7 @@ async function buildActionMod({
                 await createEnvFile({ manifestPath, envPath, ...quiet });
             } catch (e) {
                 console.error("Failed to create env file.");
-                if (typeof e === "string") {
-                    console.error(`Error: ${e}`);
-                }
+                console.error(`Error: ${e}`);
             }
             stdout("Watching for file changes.");
         }
