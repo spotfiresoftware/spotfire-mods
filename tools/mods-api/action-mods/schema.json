@@ -407,6 +407,153 @@
                               }
                             ]
                           }
+                        },
+                        {
+                          "if": {
+                            "oneOf": [
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Integer"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["LongInteger"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["SingleReal"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Real"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Currency"]
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "then": {
+                            "properties": {
+                              "range": {
+                                "type": "object",
+                                "title": "Range parameter",
+                                "description": "The valid range of a numeric parameter.",
+                                "properties": {
+                                  "min": {
+                                    "title": "Min value",
+                                    "description": "The minimum value of the valid parameter range."
+                                  },
+                                  "max": {
+                                    "title": "Max value",
+                                    "description": "The maximum value of the valid parameter range."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "if": {
+                            "oneOf": [
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Integer"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["LongInteger"]
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "then": {
+                            "properties": {
+                              "range": {
+                                "properties": {
+                                  "min": {
+                                    "type": "integer"
+                                  },
+                                  "max": {
+                                    "type": "integer"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "if": {
+                            "oneOf": [
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["SingleReal"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Real"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Currency"]
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "then": {
+                            "properties": {
+                              "range": {
+                                "properties": {
+                                  "min": {
+                                    "type": "number"
+                                  },
+                                  "max": {
+                                    "type": "number"
+                                  },
+                                  "minExcluded": {
+                                    "type": "boolean",
+                                    "title": "Exclude the min value",
+                                    "description": "If the min value is excluded from the range.",
+                                    "default": false
+                                  },
+                                  "maxExcluded": {
+                                    "type": "boolean",
+                                    "title": "Exclude the max value",
+                                    "description": "If the max value is excluded from the range.",
+                                    "default": false
+                                  }
+                                }
+                              }
+                            }
+                          }
                         }
                       ]
                     }

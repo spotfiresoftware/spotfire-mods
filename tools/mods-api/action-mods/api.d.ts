@@ -38196,16 +38196,39 @@ declare namespace Spotfire.Dxp {
                  */
                 constructor();
                 /**
-                 * Represents a  ... DataFunction that does x and y.
-                 * It expects x and y as inputs and x and y as outputs....
+                 * TODO: Describe CRS Transformation for Coordinates
                  * 
                  * @since 2.1
                  * 
                  * @group Default capability
                  */
-                static readonly AreaOfPolygon: BuiltInDataFunction;
+                static readonly CrsTransformationForCoordinates: BuiltInDataFunction;
                 /**
-                 * TODO: Describe Geographic Distance Matrix
+                 * TODO: Describe CRS Transformation for Geometries
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly CrsTransformationForGeometries: BuiltInDataFunction;
+                /**
+                 * TODO PMods: Describe Dynamic Time Warping
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly DynamicTimeWarping: BuiltInDataFunction;
+                /**
+                 * TODO PMods: Describe Geographic Area of Polygons
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly GeographicAreaOfPolygons: BuiltInDataFunction;
+                /**
+                 * TODO PMods: Describe Geographic Distance Matrix
                  * 
                  * @since 2.1
                  * 
@@ -38213,7 +38236,15 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly GeographicDistanceMatrix: BuiltInDataFunction;
                 /**
-                 * Represents a  ... DataFunction that does x and y.
+                 * TODO PMods: Describe Geographic Nearest Neighbors
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly GeographicNearestNeighbors: BuiltInDataFunction;
+                /**
+                 * TODO PMods: Represents a  ... DataFunction that does x and y.
                  * It expects x and y as inputs and x and y as outputs....
                  * 
                  * @since 2.1
@@ -38222,7 +38253,16 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly MissingDataSummary: BuiltInDataFunction;
                 /**
-                 * Represents a  ... DataFunction that does x and y.
+                 * TODO PMods: Represents a  ... DataFunction that does x and y.
+                 * It expects x and y as inputs and x and y as outputs....
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly TimeSeriesResampling: BuiltInDataFunction;
+                /**
+                 * TODO PMods: Represents a  ... DataFunction that does x and y.
                  * It expects x and y as inputs and x and y as outputs....
                  * 
                  * @since 2.1
@@ -41779,14 +41819,6 @@ declare namespace Spotfire.Dxp {
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
                 constructor();
-                /**
-                 * Identifies the ExcelXlsDataWriter, a data writer for writing data as Excel workbooks.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                static readonly ExcelXlsDataWriter: Framework.DocumentModel.TypeIdentifier;
                 /**
                  * Identifies the ExcelXlsxDataWriter, a data writer for writing data as Excel workbooks.
                  * 
@@ -52429,6 +52461,38 @@ declare namespace System {
              */
             constructor(x: (JsType<Int32> | Int32), y: (JsType<Int32> | Int32));
             /**
+             * Adds the specified {@link System.Drawing.Size} to the specified {@link System.Drawing.Point}.
+             * @param pt The {@link System.Drawing.Point} to add.
+             * @param sz The {@link System.Drawing.Size} to add
+             * @returns The {@link System.Drawing.Point} that is the result of the addition operation.
+             */
+            static Add(pt: (JsType<Point> | Point), sz: (JsType<Size> | Size)): JsType<Point>;
+            /**
+             * Converts the specified {@link System.Drawing.PointF} to a {@link System.Drawing.Point} by rounding the values of the {@link System.Drawing.PointF} to the next higher integer values.
+             * @param value The {@link System.Drawing.PointF} to convert.
+             * @returns The {@link System.Drawing.Point} this method converts to.
+             */
+            static Ceiling(value: (JsType<PointF> | PointF)): JsType<Point>;
+            /**
+             * Converts the specified {@link System.Drawing.PointF} to a {@link System.Drawing.Point} object by rounding the {@link System.Drawing.Point} values to the nearest integer.
+             * @param value The {@link System.Drawing.PointF} to convert.
+             * @returns The {@link System.Drawing.Point} this method converts to.
+             */
+            static Round(value: (JsType<PointF> | PointF)): JsType<Point>;
+            /**
+             * Returns the result of subtracting specified {@link System.Drawing.Size} from the specified {@link System.Drawing.Point}.
+             * @param pt The {@link System.Drawing.Point} to be subtracted from.
+             * @param sz The {@link System.Drawing.Size} to subtract from the {@link System.Drawing.Point}.
+             * @returns The {@link System.Drawing.Point} that is the result of the subtraction operation.
+             */
+            static Subtract(pt: (JsType<Point> | Point), sz: (JsType<Size> | Size)): JsType<Point>;
+            /**
+             * Converts the specified {@link System.Drawing.PointF} to a {@link System.Drawing.Point} by truncating the values of the {@link System.Drawing.Point}.
+             * @param value The {@link System.Drawing.PointF} to convert.
+             * @returns The {@link System.Drawing.Point} this method converts to.
+             */
+            static Truncate(value: (JsType<PointF> | PointF)): JsType<Point>;
+            /**
              * Translates this {@link System.Drawing.Point} by the specified {@link System.Drawing.Point}.
              * @param p The {@link System.Drawing.Point} used offset this {@link System.Drawing.Point}.
              */
@@ -52477,6 +52541,34 @@ declare namespace System {
              * @param y The vertical position of the point.
              */
             constructor(x: (JsType<Single> | Single), y: (JsType<Single> | Single));
+            /**
+             * Translates a given {@link System.Drawing.PointF} by the specified {@link System.Drawing.Size}.
+             * @param pt The {@link System.Drawing.PointF} to translate.
+             * @param sz The {@link System.Drawing.Size} that specifies the numbers to add to the coordinates of pt.
+             * @returns The translated {@link System.Drawing.PointF}.
+             */
+            static Add(pt: (JsType<PointF> | PointF), sz: (JsType<Size> | Size)): JsType<PointF>;
+            /**
+             * Translates a given {@link System.Drawing.PointF} by a specified {@link System.Drawing.SizeF}.
+             * @param pt The {@link System.Drawing.PointF} to translate.
+             * @param sz The {@link System.Drawing.SizeF} that specifies the numbers to add to the coordinates of pt.
+             * @returns The translated {@link System.Drawing.PointF}.
+             */
+            static Add(pt: (JsType<PointF> | PointF), sz: (JsType<SizeF> | SizeF)): JsType<PointF>;
+            /**
+             * Translates a {@link System.Drawing.PointF} by the negative of a specified size.
+             * @param pt The {@link System.Drawing.PointF} to translate.
+             * @param sz The {@link System.Drawing.Size} that specifies the numbers to subtract from the coordinates of pt.
+             * @returns The translated {@link System.Drawing.PointF}.
+             */
+            static Subtract(pt: (JsType<PointF> | PointF), sz: (JsType<Size> | Size)): JsType<PointF>;
+            /**
+             * Translates a {@link System.Drawing.PointF} by the negative of a specified size.
+             * @param pt The {@link System.Drawing.PointF} to translate.
+             * @param sz The {@link System.Drawing.SizeF} that specifies the numbers to subtract from the coordinates of pt.
+             * @returns The translated {@link System.Drawing.PointF}.
+             */
+            static Subtract(pt: (JsType<PointF> | PointF), sz: (JsType<SizeF> | SizeF)): JsType<PointF>;
             /** Represents a new instance of the {@link System.Drawing.PointF} class with member data left uninitialized. */
             static readonly Empty: PointF;
             /**
@@ -52590,11 +52682,52 @@ declare namespace System {
          */
         class Size extends Object {
             /**
+             * Gets or sets the vertical component of this {@link System.Drawing.Size} structure.
+             * @returns The vertical component of this {@link System.Drawing.Size} structure, typically measured in pixels.
+             */
+            get Height(): JsType<Int32>;
+            /**
+             * Tests whether this {@link System.Drawing.Size} structure has width and height of 0.
+             * @returns This property returns true when this {@link System.Drawing.Size} structure has both a width and height of 0; otherwise, false.
+             */
+            get IsEmpty(): JsType<Boolean>;
+            /**
+             * Gets or sets the horizontal component of this {@link System.Drawing.Size} structure.
+             * @returns The horizontal component of this {@link System.Drawing.Size} structure, typically measured in pixels.
+             */
+            get Width(): JsType<Int32>;
+            /**
              * Initializes a new instance of the {@link System.Drawing.Size} structure from the specified dimensions.
              * @param width The width component of the new {@link System.Drawing.Size}.
              * @param height The height component of the new {@link System.Drawing.Size}.
              */
             constructor(width: (JsType<Int32> | Int32), height: (JsType<Int32> | Int32));
+            /**
+             * Adds the width and height of one {@link System.Drawing.Size} structure to the width and height of another {@link System.Drawing.Size} structure.
+             * @param sz1 The first {@link System.Drawing.Size} structure to add.
+             * @param sz2 The second {@link System.Drawing.Size} structure to add.
+             * @returns A {@link System.Drawing.Size} structure that is the result of the addition operation.
+             */
+            static Add(sz1: (JsType<Size> | Size), sz2: (JsType<Size> | Size)): JsType<Size>;
+            /**
+             * Converts the specified {@link System.Drawing.SizeF} structure to a {@link System.Drawing.Size} structure by rounding the values of the {@link System.Drawing.Size} structure to the next higher integer values.
+             * @param value The {@link System.Drawing.SizeF} structure to convert.
+             * @returns The {@link System.Drawing.Size} structure this method converts to.
+             */
+            static Ceiling(value: (JsType<SizeF> | SizeF)): JsType<Size>;
+            /**
+             * Converts the specified {@link System.Drawing.SizeF} structure to a {@link System.Drawing.Size} structure by rounding the values of the {@link System.Drawing.SizeF} structure to the nearest integer values.
+             * @param value The {@link System.Drawing.SizeF} structure to convert.
+             * @returns The {@link System.Drawing.Size} structure this method converts to.
+             */
+            static Round(value: (JsType<SizeF> | SizeF)): JsType<Size>;
+            /**
+             * Subtracts the width and height of one {@link System.Drawing.Size} structure from the width and height of another {@link System.Drawing.Size} structure.
+             * @param sz1 The {@link System.Drawing.Size} structure on the left side of the subtraction operator.
+             * @param sz2 The {@link System.Drawing.Size} structure on the right side of the subtraction operator.
+             * @returns A {@link System.Drawing.Size} structure that is a result of the subtraction operation.
+             */
+            static Subtract(sz1: (JsType<Size> | Size), sz2: (JsType<Size> | Size)): JsType<Size>;
             /**
              * @ignore
              * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
@@ -52602,6 +52735,69 @@ declare namespace System {
             _interfaces: {
             };
             private __type_1332070666: null;
+        }
+        
+        /**
+         * Stores an ordered pair of floating-point numbers, typically the width and height of a rectangle.
+         */
+        class SizeF extends Object {
+            /**
+             * Gets or sets the vertical component of this {@link System.Drawing.SizeF} structure.
+             * @returns The vertical component of this {@link System.Drawing.SizeF} structure, typically measured in pixels.
+             */
+            get Height(): JsType<Single>;
+            /**
+             * Gets a value that indicates whether this {@link System.Drawing.SizeF} structure has zero width and height.
+             * @returns true when this {@link System.Drawing.SizeF} structure has both a width and height of zero; otherwise, false.
+             */
+            get IsEmpty(): JsType<Boolean>;
+            /**
+             * Gets or sets the horizontal component of this {@link System.Drawing.SizeF} structure.
+             * @returns The horizontal component of this {@link System.Drawing.SizeF} structure, typically measured in pixels.
+             */
+            get Width(): JsType<Single>;
+            /**
+             * Initializes a new instance of the {@link System.Drawing.SizeF} structure from the specified {@link System.Drawing.PointF} structure.
+             * @param pt The {@link System.Drawing.PointF} structure from which to initialize this {@link System.Drawing.SizeF} structure.
+             */
+            constructor(pt: (JsType<PointF> | PointF));
+            /**
+             * Initializes a new instance of the {@link System.Drawing.SizeF} structure from the specified existing {@link System.Drawing.SizeF} structure.
+             * @param size The {@link System.Drawing.SizeF} structure from which to create the new {@link System.Drawing.SizeF} structure.
+             */
+            constructor(size: (JsType<SizeF> | SizeF));
+            /**
+             * Initializes a new instance of the {@link System.Drawing.SizeF} structure from the specified dimensions.
+             * @param width The width component of the new {@link System.Drawing.SizeF} structure.
+             * @param height The height component of the new {@link System.Drawing.SizeF} structure.
+             */
+            constructor(width: (JsType<Single> | Single), height: (JsType<Single> | Single));
+            /**
+             * Adds the width and height of one {@link System.Drawing.SizeF} structure to the width and height of another {@link System.Drawing.SizeF} structure.
+             * @param sz1 The first {@link System.Drawing.SizeF} structure to add.
+             * @param sz2 The second {@link System.Drawing.SizeF} structure to add.
+             * @returns A {@link System.Drawing.SizeF} structure that is the result of the addition operation.
+             */
+            static Add(sz1: (JsType<SizeF> | SizeF), sz2: (JsType<SizeF> | SizeF)): JsType<SizeF>;
+            /**
+             * Subtracts the width and height of one {@link System.Drawing.SizeF} structure from the width and height of another {@link System.Drawing.SizeF} structure.
+             * @param sz1 The {@link System.Drawing.SizeF} structure on the left side of the subtraction operator.
+             * @param sz2 The {@link System.Drawing.SizeF} structure on the right side of the subtraction operator.
+             * @returns A {@link System.Drawing.SizeF} structure that is a result of the subtraction operation.
+             */
+            static Subtract(sz1: (JsType<SizeF> | SizeF), sz2: (JsType<SizeF> | SizeF)): JsType<SizeF>;
+            /**
+             * Converts a {@link System.Drawing.SizeF} structure to a {@link System.Drawing.Size} structure.
+             * @returns A {@link System.Drawing.Size} structure.
+             */
+            ToSize(): JsType<Size>;
+            /**
+             * @ignore
+             * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+             */
+            _interfaces: {
+            };
+            private __type_2971225676: null;
         }
     }
     
@@ -52722,6 +52918,17 @@ declare namespace System {
              */
             constructor(output: (JsType<Stream> | Stream));
             /**
+             * Clears all buffers for the current writer and causes any buffered data to be written to the underlying device.
+             */
+            Flush(): void;
+            /**
+             * Sets the position within the current stream.
+             * @param offset A byte offset relative to origin.
+             * @param origin A field of {@link System.IO.SeekOrigin} indicating the reference point from which the new position is to be obtained.
+             * @returns The position with the current stream.
+             */
+            Seek(offset: (JsType<Int32> | Int32), origin: (JsType<SeekOrigin> | SeekOrigin)): JsType<Int64>;
+            /**
              * Writes a byte array to the underlying stream.
              * @param buffer A byte array containing the data to write.
              */
@@ -52740,10 +52947,31 @@ declare namespace System {
          */
         class MemoryStream extends Stream {
             /**
+             * Gets a value indicating whether the current stream supports reading.
+             * @returns true if the stream is open.
+             */
+            get CanRead(): JsType<Boolean>;
+            /**
+             * Gets a value indicating whether the current stream supports seeking.
+             * @returns true if the stream is open.
+             */
+            get CanSeek(): JsType<Boolean>;
+            /**
+             * Gets a value indicating whether the current stream supports writing.
+             * @returns true if the stream supports writing; otherwise, false.
+             */
+            get CanWrite(): JsType<Boolean>;
+            /**
              * Gets the length of the stream in bytes.
              * @returns The length of the stream in bytes.
              */
             get Length(): JsType<Int64>;
+            /**
+             * Gets or sets the current position within the stream.
+             * @returns The current position within the stream.
+             */
+            get Position(): JsType<Int64>;
+            set Position(value: JsType<Int64>);
             /**
              * Initializes a new instance of the {@link System.IO.MemoryStream} class with an expandable capacity initialized to zero.
              */
@@ -52895,6 +53123,16 @@ declare namespace System {
              * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
              */
             constructor();
+            /**
+             * Reads the next character without changing the state of the reader or the character source. Returns the next available character without actually reading it from the reader.
+             * @returns An integer representing the next character to be read, or -1 if no more characters are available or the reader does not support seeking.
+             */
+            Peek(): JsType<Int32>;
+            /**
+             * Reads the next character from the text reader and advances the character position by one character.
+             * @returns The next character from the text reader, or -1 if no more characters are available. The default implementation returns -1.
+             */
+            Read(): JsType<Int32>;
             /**
              * Reads a line of characters from the text reader and returns the data as a string.
              * @returns The next line from the reader, or null if all characters have been read.
