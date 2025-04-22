@@ -6,7 +6,7 @@ const fs = require("fs");
 const mainCss = fs.readFileSync(path.join(__dirname, "test-files", "main.css"), { encoding: "utf8" });
 const indexHtml = fs.readFileSync(path.join(__dirname, "test-files", "index.html"), { encoding: "utf8" });
 
-const devServer = require("..").start({
+const devServer = require("../server").start({
     root: path.join(__dirname, "test-files"),
     open: false
 });
@@ -166,7 +166,7 @@ describe("CSP headers", function () {
 
 describe("multiple instances", function () {
     it("should add external resources to CSP header", function (done) {
-        const devServer2 = require("..").start({
+        const devServer2 = require("../server").start({
             root: path.join(__dirname, "test-files"),
             open: false
         });
