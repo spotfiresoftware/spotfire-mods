@@ -638,12 +638,25 @@ async function buildVisualizationMod({
     watch: boolean;
 } & QuietOtions) {
     const stdout = mkStdout(quiet);
-    const entryPoint = path.join(srcDir, "main.ts");
+    const entryPointCandidates = [
+        "main.ts",
+        "Main.ts",
+        "main.tsx",
+        "Main.tsx",
+        "main.js",
+        "Main.js",
+        "main.jsx",
+        "Main.jsx",
+    ];
+    let entryPoint = path.join(srcDir, entryPointCandidates[0]);
 
-    if (!existsSync(entryPoint)) {
-        throw new Error(
-            `Could not find entry point for visualization mod at '${entryPoint}'.`
-        );
+    for (const candidate of entryPointCandidates) {
+        const entryPointPath = path.join(srcDir, candidate);
+        if (existsSync(entryPointPath)) {
+            stdout(`Found possible entry point '${entryPointPath}'.`);
+            entryPoint = entryPointPath;
+            break;
+        }
     }
 
     const defaultConfig: esbuild.BuildOptions = {
