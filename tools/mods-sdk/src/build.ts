@@ -1,7 +1,7 @@
 import * as chokidar from "chokidar";
 import esbuild from "esbuild";
 import { existsSync } from "fs";
-import { readdir, readFile, writeFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 import path from "path";
 import {
     Manifest,
