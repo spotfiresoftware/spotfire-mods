@@ -159,7 +159,15 @@ async function createModTemplate({
         const modId = toModId(modFolderName);
         const modName = modIdToName(modId);
         const manifestPath = path.join(targetFolder, "mod-manifest.json");
-        await replaceInFile(manifestPath, (manifestJson) => {
+        await replaceInFile(manifestPath, (manifestTemplate) => {
+            let manifestJson = manifestTemplate;
+            if (!apiVersion.result.supportsFeature("ModType")) {
+                manifestJson = manifestJson.replace(
+                    `"type": "visualization",`,
+                    ""
+                );
+            }
+
             return manifestJson
                 .replace("$MOD-NAME", modName)
                 .replace("$MOD-ID", modId)

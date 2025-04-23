@@ -152,6 +152,7 @@ export class ApiVersion {
 }
 
 export const features = {
+    ModType: { major: 2, minor: 0 },
     DataColumnParameter: { major: 2, minor: 1 },
     Resources: { major: 2, minor: 1 },
     OptionalParameter: { major: 2, minor: 1 },

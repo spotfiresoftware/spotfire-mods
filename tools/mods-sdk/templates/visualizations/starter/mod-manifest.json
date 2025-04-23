@@ -4,6 +4,7 @@
     "name": "$MOD-NAME",
     "id": "$MOD-ID",
     "icon": "icon.svg",
+    "type": "visualization",
     "properties": [
         {
             "name": "myProperty",
