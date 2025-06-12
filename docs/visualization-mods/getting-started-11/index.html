@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.128.1"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.147.8"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
@@ -12,14 +12,14 @@
 <title>Getting started (before 14.4) | Spotfire® Mods</title>
   <meta itemprop="name" content="Getting started (before 14.4)">
   <meta itemprop="description" content="This guide describes how to get a visualization mod running in Spotfire.">
-  <meta itemprop="datePublished" content="2024-06-05T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-06-05T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1530">
+  <meta itemprop="datePublished" content="2025-01-13T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-01-13T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1533">
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" as="style">
-<link href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" as="style">
+<link href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -188,6 +188,31 @@
       
         
           
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/whats-new/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">What&#39;s new?</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocswhats-new">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
           
           <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
         
@@ -290,6 +315,31 @@
       
         
           
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Parameter types</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsusing-the-apiparameter-types">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
           
           <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apiapi-docs" href="/spotfire-mods/docs/action-mods/using-the-api/api-docs/">Action mods API documentation</a>
         
@@ -299,7 +349,7 @@
         
           
           
-          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod Schema</a>
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod schema</a>
         
       
       
@@ -632,7 +682,7 @@
 
 
 
-<p class="-text-primary pt-3 h6" >Reading time: 6 minutes and 57 seconds.</p>
+<p class="-text-primary pt-3 h6" >Reading time: 6 minutes and 58 seconds.</p>
 <p>
 <div class="td-content">
 	<h1>Getting started (before 14.4)</h1>
@@ -661,7 +711,7 @@ To enable live updates when developing a mod, a set of tools based on <a href="h
 <h2 id="getting-started">Getting started</h2>
 <h4 id="1-create-an-empty-visualization-mod-in-spotfire">1. Create an empty visualization mod in Spotfire</h4>
 <p>Open Spotfire and load some data. Go to <em>Tools &gt; Development &gt; Create visualization mod</em>. This will create an empty mod.</p>
-<p><img alt="Empty mod" src="/spotfire-mods/images/empty-mod.png"></p>
+<p><img src="/spotfire-mods/images/empty-mod.png" alt="Empty mod"></p>
 <h4 id="2-start-from-a-mod-example">2. Start from a mod example</h4>
 <p>Click <a href="http://spotfi.re/mods-examples">here</a> to access the example mod projects to start the development from. Extract the zip archive locally. The extracted zip archive contains examples of mods, using the mod API in different ways.</p>
 <ul>
@@ -704,7 +754,7 @@ This is an example of a spider chart developed in TypeScript, rendered with D3, 
 <p>If you are not using the VS Code editor you can start the development server by navigating to the <code>js-dev-barchart</code> folder in a command line tool. The first time you are building this example, type <code>npm install</code> and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type <code>npm run server</code> and press Enter. This will start a local web server and open the mod manifest in your web browser.</p>
 <h4 id="4-connect-spotfire-to-the-development-server">4. Connect Spotfire to the development server</h4>
 <p>Switch over to Spotfire and click the <em>Connect to project</em> button. In the pop-up that opens, click <em>Development server</em>. Make sure the port number (e.g. <code>8090</code>) in the displayed URL matches the launched URL in your browser, and then click the <em>Connect</em> button. This will make Spotfire navigate to your local server and serve files from your src folder.</p>
-<p><img alt="Connect to development server" src="/spotfire-mods/images/connect-to-development-server.gif"></p>
+<p><img src="/spotfire-mods/images/connect-to-development-server.gif" alt="Connect to development server"></p>
 <p>If a visualization appears, it means that Spotfire has successfully connected to the development server.</p>
 <h4 id="5-start-editing-your-example">5. Start editing your example</h4>
 <p>Now switch over to VS Code to start editing the mod implementation.</p>
@@ -714,42 +764,42 @@ This is an example of a spider chart developed in TypeScript, rendered with D3, 
 <h2 id="mod-example-folder-structure">Mod example folder structure</h2>
 <p>The following files and folders are part of the example:</p>
 <table>
-<thead>
-<tr>
-<th>File</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>.vscode</td>
-<td>Settings for VS Code.</td>
-</tr>
-<tr>
-<td>spotfire</td>
-<td>Files related to the mod API.</td>
-</tr>
-<tr>
-<td>src</td>
-<td>Folder for the mod&rsquo;s source code.</td>
-</tr>
-<tr>
-<td>package.json</td>
-<td>Lists the Node.js dependencies and necessary scripts.</td>
-</tr>
-<tr>
-<td>prettier.config.js</td>
-<td>Configuration file for formatting with the tool prettier.</td>
-</tr>
-<tr>
-<td>README.md</td>
-<td>Instructions on how to get started.</td>
-</tr>
-<tr>
-<td>tsconfig.json</td>
-<td>TypeScript project file. It links the <code>/spotfire/spotfire-api.dts</code> file for IntelliSense in your code.</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>File</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>.vscode</td>
+          <td>Settings for VS Code.</td>
+      </tr>
+      <tr>
+          <td>spotfire</td>
+          <td>Files related to the mod API.</td>
+      </tr>
+      <tr>
+          <td>src</td>
+          <td>Folder for the mod&rsquo;s source code.</td>
+      </tr>
+      <tr>
+          <td>package.json</td>
+          <td>Lists the Node.js dependencies and necessary scripts.</td>
+      </tr>
+      <tr>
+          <td>prettier.config.js</td>
+          <td>Configuration file for formatting with the tool prettier.</td>
+      </tr>
+      <tr>
+          <td>README.md</td>
+          <td>Instructions on how to get started.</td>
+      </tr>
+      <tr>
+          <td>tsconfig.json</td>
+          <td>TypeScript project file. It links the <code>/spotfire/spotfire-api.dts</code> file for IntelliSense in your code.</td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="the-mod-manifestjson-file">The mod-manifest.json file</h2>
 <p>All metadata that concerns the mod is defined in a file called mod-manifest.json. It is used to give the mod a name and an id, and to define axes and their placement. It is also used to list all files used by the mod. Only files listed in the ‘files’ property will be embedded by Spotfire.</p>
@@ -766,7 +816,7 @@ More information about Chrome DevTools can be found here:
 <p>Note also that when developing a mod in the web client, it is only possible to develop via a development server. Web browsers lack the file access that is needed to read files from a mod-manifest, which means that the <em>Browse</em> button will not be available in the web client.</p>
 <h2 id="embedding-the-mod-and-saving-to-the-library">Embedding the mod and saving to the library</h2>
 <p>When the development is done, disconnect from the server to embed the mod in the analysis.
-<img alt="Disconnect from development server to embed mod" src="/spotfire-mods/images/disconnect-and-embed.gif"></p>
+<img src="/spotfire-mods/images/disconnect-and-embed.gif" alt="Disconnect from development server to embed mod"></p>
 <h3 id="saving-the-mod-to-the-spotfire-library">Saving the mod to the Spotfire library</h3>
 <p>When your mod has been embedded in the analysis, you can share the mod with others by saving it to the library.</p>
 <ol>
@@ -777,12 +827,12 @@ When the mod has been saved to the library, it is possible for others, connected
 </ol>
 <h2 id="sharing-mods">Sharing mods</h2>
 <p>To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see <a href="https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html">Trusting custom content in the Spotfire environment</a>.</p>
-<p>When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See <a href="https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html">Signing a visualization mod using Package Builder</a> for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from <a href="https://edelivery.tibco.com/">edelivery.tibco.com</a>, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &gt; Downloads.</p>
+<p>When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See <a href="https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html">Signing a visualization mod using Package Builder</a> for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from the <a href="https://spotfi.re/download">Spotfire download site</a>, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &gt; Downloads.</p>
 <p>An administrator can also import a certificate from one system to another to keep signed items valid. See <a href="https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html">Moving certificates from one system to another</a> for more information.</p>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 5, 2024
+	<div class="text-muted mt-5 pt-3 border-top">Last modified January 13, 2025
 </div>
 </div>
 
@@ -866,7 +916,7 @@ When the mod has been saved to the library, it is possible for others, connected
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2024 Cloud Software Group All Rights Reserved</small>
+        <small class="text-white">&copy; 2025 Cloud Software Group All Rights Reserved</small>
         <small class="ml-1"><a href="https://www.cloud.com/privacy-policy" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>

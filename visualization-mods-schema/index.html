@@ -709,12 +709,21 @@
                                                 <dt data-property-name="allowNonAggregatingMeasures">
                                                     <span class="json-property-name">allowNonAggregatingMeasures:</span>
                                                     
-                                                    <span class="json-property-type">boolean</span>
+                                                    <span class="json-property-type">string</span>    <span class="json-property-enum" title="Possible values">, x &isin; {
+                                                                    <span class="json-property-enum-item">no</span>
+                                                                    (default)
+                                                                ,
+                                                                    <span class="json-property-enum-item">yes</span>
+                                                                ,
+                                                                    <span class="json-property-enum-item">prefer</span>
+                                                                
+                                                            }
+                                                            </span>
                                                     <span class="json-property-range" title="Value limits"></span>
                                                     
                                                 </dt>
                                                 <dd>
-                                                    <p>Specifies if this axis supports non-aggregating expressions (expressions without an aggregation method) when it is in continuous mode.</p>
+                                                    <p>Specifies if this axis supports non-aggregating expressions (expressions without an aggregation method) when it is in continuous mode, and whether it prefers to have a non-aggregating expression. The default is &#39;no&#39;.</p>
                                     
                                                     <div class="json-inner-schema">
                                                         
@@ -737,22 +746,63 @@
                                                                             <dt data-property-name="expressionHeuristics">
                                                                                 <span class="json-property-name">expressionHeuristics:</span>
                                                                                 
-                                                                                <span class="json-property-type">string</span>    <span class="json-property-enum" title="Possible values">, x &isin; {
-                                                                                                <span class="json-property-enum-item">none</span>
-                                                                                            ,
-                                                                                                <span class="json-property-enum-item">default</span>
-                                                                                                (default)
-                                                                                            
-                                                                                        }
-                                                                                        </span>
+                                                                                <span class="json-property-type"></span>
                                                                                 <span class="json-property-range" title="Value limits"></span>
                                                                                 
                                                                             </dt>
                                                                             <dd>
-                                                                                <p>Specifies the heuristics to use when this axis is assigned an initial expression. Use &#39;none&#39; to skip the heuristics and leave this axis with an empty expression.</p>
+                                                                                <p>Specifies the heuristics to use when this axis is assigned an initial expression. Use &#39;none&#39; to skip the heuristics and leave this axis with an empty expression. Use &#39;default&#39; to set an expression using Spotfire default heuristics. Use an object with an &#39;expression&#39; property to set a specified expression.</p>
                                                                 
                                                                                 <div class="json-inner-schema">
                                                                                     
+                                                                                        <section class="json-schema-anyOf">
+                                                                                            <dl>
+                                                                                                    <dt>
+                                                                                                        
+                                                                                                        <span class="json-property-type">string</span>    <span class="json-property-enum" title="Possible values">, x &isin; {
+                                                                                                                        <span class="json-property-enum-item">none</span>
+                                                                                                                    ,
+                                                                                                                        <span class="json-property-enum-item">default</span>
+                                                                                                                        (default)
+                                                                                                                    
+                                                                                                                }
+                                                                                                                </span>
+                                                                                                        <span class="json-property-range" title="Value limits"></span>
+                                                                                                        
+                                                                                                    </dt>
+                                                                                                    <dd>
+                                                                                                        
+                                                                                                    </dd>
+                                                                                                    <dt>
+                                                                                                        
+                                                                                                        <span class="json-property-type">object</span>
+                                                                                                        <span class="json-property-range" title="Value limits"></span>
+                                                                                                        
+                                                                                                    </dt>
+                                                                                                    <dd>
+                                                                                                        
+                                                                                                                <section class="json-schema-properties">
+                                                                                                                    <dl>
+                                                                                                                            <dt data-property-name="expression">
+                                                                                                                                <span class="json-property-name">expression:</span>
+                                                                                                                                
+                                                                                                                                <span class="json-property-type">string</span>
+                                                                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                
+                                                                                                                            </dt>
+                                                                                                                            <dd>
+                                                                                                                                <p>The initial expression to set.</p>
+                                                                                                                
+                                                                                                                                <div class="json-inner-schema">
+                                                                                                                                    
+                                                                                                                                </div>
+                                                                                                                            </dd>
+                                                                                                                    </dl>
+                                                                                                                </section>
+                                                                                                    </dd>
+                                                                                            </dl>
+                                                                                        
+                                                                                        </section>
                                                                                 </div>
                                                                             </dd>
                                                                             <dt data-property-name="priority">

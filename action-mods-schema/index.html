@@ -37,7 +37,7 @@
                                         <span class="json-property-type">string</span>
                                         <span class="json-property-range" title="Value limits"></span>
                                         
-                                                <span class="json-property-default-value">2.0</span>
+                                                <span class="json-property-default-value">2.1</span>
                                             <span class="json-property-pattern" title="String pattern">, must match <span class="json-schema--regex">^(.*)$</span></span>
                                             <span class="json-property-required"></span>
                                     </dt>
@@ -310,6 +310,21 @@
                                                                                                                     
                                                                                                                 </div>
                                                                                                             </dd>
+                                                                                                            <dt data-property-name="icon">
+                                                                                                                <span class="json-property-name">icon:</span>
+                                                                                                                
+                                                                                                                <span class="json-property-type">string</span>
+                                                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                                                
+                                                                                                                        <span class="json-property-default-value">script-icon.svg</span>
+                                                                                                                    <span class="json-property-pattern" title="String pattern">, must match <span class="json-schema--regex">^.*\.svg$</span></span>
+                                                                                                            </dt>
+                                                                                                            <dd>
+                                                                                                                
+                                                                                                                <div class="json-inner-schema">
+                                                                                                                    
+                                                                                                                </div>
+                                                                                                            </dd>
                                                                                                             <dt data-property-name="parameters">
                                                                                                                 <span class="json-property-name">parameters:</span>
                                                                                                                 
@@ -362,6 +377,7 @@
                                                                                                                                                                                                                 
                                                                                                                                                                                                                 
                                                                                                                                                                                                                 
+                                                                                                                                                                                                                
                                                                                                                                                                                                     </section>
                                                                                                                                                                                                 </section>
                                                                                                                                                                                         </div>
@@ -375,6 +391,8 @@
                                                                                                                                                                                                         <span class="json-property-enum-item">Currency</span>
                                                                                                                                                                                                     ,
                                                                                                                                                                                                         <span class="json-property-enum-item">DataTable</span>
+                                                                                                                                                                                                    ,
+                                                                                                                                                                                                        <span class="json-property-enum-item">DataColumn</span>
                                                                                                                                                                                                     ,
                                                                                                                                                                                                         <span class="json-property-enum-item">Date</span>
                                                                                                                                                                                                     ,
@@ -397,6 +415,8 @@
                                                                                                                                                                                                         <span class="json-property-enum-item">Page</span>
                                                                                                                                                                                                     ,
                                                                                                                                                                                                         <span class="json-property-enum-item">Visualization</span>
+                                                                                                                                                                                                    ,
+                                                                                                                                                                                                        <span class="json-property-enum-item">DataViewDefinition</span>
                                                                                                                                                                                                     
                                                                                                                                                                                                 }
                                                                                                                                                                                                 </span>
@@ -443,8 +463,156 @@
                                                                                                                                                                                             
                                                                                                                                                                                         </div>
                                                                                                                                                                                     </dd>
+                                                                                                                                                                                    <dt data-property-name="optional">
+                                                                                                                                                                                        <span class="json-property-name">optional:</span>
+                                                                                                                                                                                        
+                                                                                                                                                                                        <span class="json-property-type">boolean</span>
+                                                                                                                                                                                        <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                                                                        
+                                                                                                                                                                                                <span class="json-property-default-value">true</span>
+                                                                                                                                                                                    </dt>
+                                                                                                                                                                                    <dd>
+                                                                                                                                                                                        <p>If the parameter is optional.</p>
+                                                                                                                                                                        
+                                                                                                                                                                                        <div class="json-inner-schema">
+                                                                                                                                                                                            
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </dd>
+                                                                                                                                                                                    <dt data-property-name="enum">
+                                                                                                                                                                                        <span class="json-property-name">enum:</span>
+                                                                                                                                                                                        
+                                                                                                                                                                                        <span class="json-property-type">string[]</span>
+                                                                                                                                                                                        <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                                                                        
+                                                                                                                                                                                    </dt>
+                                                                                                                                                                                    <dd>
+                                                                                                                                                                                        <p>Array of allowed values for this parameter.</p>
+                                                                                                                                                                        
+                                                                                                                                                                                        <div class="json-inner-schema">
+                                                                                                                                                                                            
+                                                                                                                                                                                                            <section class="json-schema-array-items">
+                                                                                                                                                                                                                
+                                                                                                                                                                                                                <span class="json-property-type">string</span>
+                                                                                                                                                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                                                                                                
+                                                                                                                                                                                                                <div class="json-inner-schema">
+                                                                                                                                                                                                                    
+                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                            </section>                </div>
+                                                                                                                                                                                    </dd>
+                                                                                                                                                                                    <dt data-property-name="allowedDataTypes">
+                                                                                                                                                                                        <span class="json-property-name">allowedDataTypes:</span>
+                                                                                                                                                                                        
+                                                                                                                                                                                        <span class="json-property-type">string[]</span>
+                                                                                                                                                                                        <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                                                                        
+                                                                                                                                                                                    </dt>
+                                                                                                                                                                                    <dd>
+                                                                                                                                                                                        <p>Array of allowed values for this parameter.</p>
+                                                                                                                                                                        
+                                                                                                                                                                                        <div class="json-inner-schema">
+                                                                                                                                                                                            
+                                                                                                                                                                                                            <section class="json-schema-array-items">
+                                                                                                                                                                                                                
+                                                                                                                                                                                                                <span class="json-property-type">string</span>    <span class="json-property-enum" title="Possible values">, x &isin; {
+                                                                                                                                                                                                                                <span class="json-property-enum-item">All</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">AllNumeric</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">Integer</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">Real</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">SingleReal</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">Currency</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">String</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">Date</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">Time</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">DateTime</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">Boolean</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">Binary</span>
+                                                                                                                                                                                                                            ,
+                                                                                                                                                                                                                                <span class="json-property-enum-item">LongInteger</span>
+                                                                                                                                                                                                                            
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                        </span>
+                                                                                                                                                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                                                                                                
+                                                                                                                                                                                                                <div class="json-inner-schema">
+                                                                                                                                                                                                                    
+                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                            </section>                </div>
+                                                                                                                                                                                    </dd>
+                                                                                                                                                                                    <dt data-property-name="singleColumn">
+                                                                                                                                                                                        <span class="json-property-name">singleColumn:</span>
+                                                                                                                                                                                        
+                                                                                                                                                                                        <span class="json-property-type">boolean</span>
+                                                                                                                                                                                        <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                                                                        
+                                                                                                                                                                                                <span class="json-property-default-value">true</span>
+                                                                                                                                                                                    </dt>
+                                                                                                                                                                                    <dd>
+                                                                                                                                                                                        <p>If the data view should only allow single columns.</p>
+                                                                                                                                                                        
+                                                                                                                                                                                        <div class="json-inner-schema">
+                                                                                                                                                                                            
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </dd>
+                                                                                                                                                                                    <dt data-property-name="disableLimitations">
+                                                                                                                                                                                        <span class="json-property-name">disableLimitations:</span>
+                                                                                                                                                                                        
+                                                                                                                                                                                        <span class="json-property-type">boolean</span>
+                                                                                                                                                                                        <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                                                                        
+                                                                                                                                                                                                <span class="json-property-default-value">true</span>
+                                                                                                                                                                                    </dt>
+                                                                                                                                                                                    <dd>
+                                                                                                                                                                                        <p>If the data view should not allow limitations to be configured.</p>
+                                                                                                                                                                        
+                                                                                                                                                                                        <div class="json-inner-schema">
+                                                                                                                                                                                            
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </dd>
+                                                                                                                                                                                    <dt data-property-name="array">
+                                                                                                                                                                                        <span class="json-property-name">array:</span>
+                                                                                                                                                                                        
+                                                                                                                                                                                        <span class="json-property-type">boolean</span>
+                                                                                                                                                                                        <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                                                                        
+                                                                                                                                                                                                <span class="json-property-default-value">true</span>
+                                                                                                                                                                                    </dt>
+                                                                                                                                                                                    <dd>
+                                                                                                                                                                                        <p>If the parameter is an array.</p>
+                                                                                                                                                                        
+                                                                                                                                                                                        <div class="json-inner-schema">
+                                                                                                                                                                                            
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </dd>
                                                                                                                                                                             </dl>
                                                                                                                                                                         </section>
+                                                                                                                                                                    <section class="json-schema-allOf">
+                                                                                                                                                                        <section class="json-schema-allOf-inherited">
+                                                                                                                                                                            <ul>
+                                                                                                                                                                            </ul>
+                                                                                                                                                                        </section>
+                                                                                                                                                                        <section class="json-schema-allOf-additional">
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                                    
+                                                                                                                                                                        </section>
+                                                                                                                                                                    </section>
                                                                                                                                                     </section>
                                                                                                                                                 </section>
                                                                                                                                         </div>

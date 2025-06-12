@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.128.1"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.147.8"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
@@ -12,14 +12,14 @@
 <title>Working with mod readers | Spotfire® Mods</title>
   <meta itemprop="name" content="Working with mod readers">
   <meta itemprop="description" content="This document gives an introduction to the mod [reader](/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html).">
-  <meta itemprop="datePublished" content="2024-06-05T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-06-05T00:00:00+00:00">
+  <meta itemprop="datePublished" content="2024-06-14T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2024-06-14T00:00:00+00:00">
   <meta itemprop="wordCount" content="1372">
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" as="style">
-<link href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" as="style">
+<link href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -188,6 +188,31 @@
       
         
           
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/whats-new/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">What&#39;s new?</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocswhats-new">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
           
           <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
         
@@ -290,6 +315,31 @@
       
         
           
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Parameter types</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsusing-the-apiparameter-types">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
           
           <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apiapi-docs" href="/spotfire-mods/docs/action-mods/using-the-api/api-docs/">Action mods API documentation</a>
         
@@ -299,7 +349,7 @@
         
           
           
-          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod Schema</a>
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod schema</a>
         
       
       
@@ -670,7 +720,7 @@
 </span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">hasExpired</span><span style="color:#000;font-weight:bold">()</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
-</span></span></code></pre></div><p><img alt="Demonstration of subscribe callback" src="/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/subscribe.gif"></p>
+</span></span></code></pre></div><p><img src="/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/subscribe.gif" alt="Demonstration of subscribe callback"></p>
 <h4 id="oncecallback"><code>once(callback)</code></h4>
 <p>When a developer wants to control the pace of updates, the <code>once</code> method can be used to wait for changes. <code>Once</code> will invoke its provided <code>callback</code> a single time, when one or more of the provided <code>readables</code> have changed.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">loopsRunning</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#0000cf;font-weight:bold">0</span><span style="color:#000;font-weight:bold">;</span>
@@ -696,7 +746,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000">loopsRunning</span><span style="color:#ce5c00;font-weight:bold">--</span><span style="color:#000;font-weight:bold">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
-</span></span></code></pre></div><p><img alt="Demonstration of once callback" src="/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/once.gif"></p>
+</span></span></code></pre></div><p><img src="/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/once.gif" alt="Demonstration of once callback"></p>
 <h4 id="hasexpired"><code>hasExpired()</code></h4>
 <p>The <code>reader</code> keeps track of whether its readables are up to date or not. The <code>hasExpired</code> method can be invoked if you want to check whether all fetched values are up to date. This can be useful if your rendering loop takes a long time to complete and you want to quickly respond to changes.</p>
 <p>The following example shows how a <code>reader</code> becomes expired after a mod property has been modified.</p>
@@ -874,7 +924,7 @@
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 5, 2024
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 14, 2024
 </div>
 </div>
 
@@ -958,7 +1008,7 @@
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2024 Cloud Software Group All Rights Reserved</small>
+        <small class="text-white">&copy; 2025 Cloud Software Group All Rights Reserved</small>
         <small class="ml-1"><a href="https://www.cloud.com/privacy-policy" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>

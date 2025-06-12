@@ -5,7 +5,7 @@
     <description>Recent content in Using the action mods API on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 14 Jun 2024 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/action-mods/using-the-api/index.xml" rel="self" type="application/rss+xml" />
     
@@ -16,19 +16,111 @@
     
     
     <item>
+      <title>Docs: Action mod parameter types</title>
+      <link>/spotfire-mods/docs/action-mods/using-the-api/parameter-types/</link>
+      <pubDate>Thu, 12 Jun 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/action-mods/using-the-api/parameter-types/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;action-mod-parameter-types&#34;&gt;Action mod parameter types&lt;/h2&gt;
+&lt;p&gt;An action mod parameter is defined as an object in the &lt;strong&gt;parameters&lt;/strong&gt; array of the &lt;a href=&#34;/spotfire-mods/docs/action-mods/using-the-api/mod-schema/&#34;&gt;mod manifest&lt;/a&gt;.
+The type is defined using the &lt;strong&gt;type&lt;/strong&gt; property and is required (cannot be undefined).&lt;/p&gt;
+&lt;p&gt;All parameter types (except &lt;a href=&#34;/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#Boolean&#34;&gt;Boolean&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#String&#34;&gt;String&lt;/a&gt; with &lt;strong&gt;enum&lt;/strong&gt; defined) support setting the parameter to &lt;strong&gt;optional&lt;/strong&gt;.
+An optional parameter of type &lt;code&gt;T&lt;/code&gt; is passed to the script as &lt;code&gt;T?&lt;/code&gt; (see &lt;a href=&#34;https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#optional-properties&#34;&gt;&amp;ldquo;Optional Properties&amp;rdquo;&lt;/a&gt;).
+Some parameter types support additional properties, such as: &lt;strong&gt;enum&lt;/strong&gt;, &lt;strong&gt;array&lt;/strong&gt;, &lt;strong&gt;singleColumn&lt;/strong&gt;, &lt;strong&gt;allowedDataTypes&lt;/strong&gt;, &lt;strong&gt;disableLimitations&lt;/strong&gt; etc.&lt;/p&gt;
+&lt;h3 id=&#34;boolean&#34;&gt;Boolean&lt;/h3&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;Boolean&lt;/strong&gt; is passed to the script as a &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean&#34;&gt;Boolean&lt;/a&gt;.
+Booleans cannot be &lt;strong&gt;optional&lt;/strong&gt; because such a use case is more clearly modeled by &lt;a href=&#34;/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#String&#34;&gt;String&lt;/a&gt; &lt;strong&gt;enum&lt;/strong&gt; with three possible values.&lt;/p&gt;
+&lt;h3 id=&#34;string&#34;&gt;String&lt;/h3&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;String&lt;/strong&gt; is passed to the script as a &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String&#34;&gt;String&lt;/a&gt;.
+Strings can be empty (or &lt;code&gt;undefined&lt;/code&gt; if the &lt;strong&gt;optional&lt;/strong&gt; property of has been set).&lt;/p&gt;
+&lt;p&gt;The String parameter type supports the following additional property:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;enum&lt;/strong&gt; - An array of valid values for the string. When this property is specified, custom expressions are no longer allowed and the configuration UI has a drop-down list instead of a text input field.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;numerics&#34;&gt;Numerics&lt;/h3&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;Integer&lt;/strong&gt; (32-bit integer), &lt;strong&gt;LongInteger&lt;/strong&gt; (64-bit integer), &lt;strong&gt;SingleReal&lt;/strong&gt; (32-bit floating point decimal), &lt;strong&gt;Real&lt;/strong&gt; (64-bit floating point decimal), or &lt;strong&gt;Currency&lt;/strong&gt; (128-bit floating point decimal) is passed to the script as a &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number&#34;&gt;Number&lt;/a&gt; (64-bit floating point decimal).
+Note that this means that &lt;strong&gt;LongInteger&lt;/strong&gt; and &lt;strong&gt;Currency&lt;/strong&gt; might exhibit precision loss when passed to a script.
+The type of the numeric restricts the possible custom expressions which the parameter accepts.
+For example, a parameter of type &lt;strong&gt;Integer&lt;/strong&gt; cannot take a custom expression that evaluates to a &lt;strong&gt;LongInteger&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Starting in API version 2.1, numerics can be restricted to a range via the &lt;strong&gt;range&lt;/strong&gt; property.
+For example, an integer can be restricted to be positive by setting &lt;code&gt;&amp;quot;range&amp;quot;: { &amp;quot;min&amp;quot;: 0 }&lt;/code&gt;.
+The property supports defining &lt;strong&gt;min&lt;/strong&gt; and &lt;strong&gt;max&lt;/strong&gt;, and if the numeric is floating point, you can also define if the min/max value should be included or excluded from the range via &lt;strong&gt;minExcluded&lt;/strong&gt; and &lt;strong&gt;maxExcluded&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;time&#34;&gt;Time&lt;/h3&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;DateTime&lt;/strong&gt;, &lt;strong&gt;Date&lt;/strong&gt;, or &lt;strong&gt;Time&lt;/strong&gt; is passed to the script as a &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/System.DateTime.html&#34;&gt;System.DateTime&lt;/a&gt; object.
+A parameter of type &lt;strong&gt;TimeSpan&lt;/strong&gt; is passed as a &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/System.TimeSpan.html&#34;&gt;System.TimeSpan&lt;/a&gt; object.&lt;/p&gt;
+&lt;h3 id=&#34;page&#34;&gt;Page&lt;/h3&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;Page&lt;/strong&gt; is passed to the script as a &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Page.html&#34;&gt;Page&lt;/a&gt; object.
+The page will always be attached to the document at the start of the script execution.
+To get the active page in a script, use &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Document.html#activepagereference&#34;&gt;Document.ActivePageReference&lt;/a&gt;, but note that the active page might be null if the document contains no pages.&lt;/p&gt;
+&lt;h3 id=&#34;visualization&#34;&gt;Visualization&lt;/h3&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;Visualization&lt;/strong&gt; is passed to the script as a &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visual.html&#34;&gt;Visual&lt;/a&gt; object.
+The visual will be attached to a page which can be reached via its document node context, that is &lt;code&gt;page.Context.GetAncestor(Page)&lt;/code&gt;.
+To get the active visualization (useful for instance if your script is attached to a visualization as a floating button) use &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Document.html#activevisualreference&#34;&gt;Document.ActiveVisualReference&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To validate that the visual is of a specific type, use the &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visual.html#as&#34;&gt;Visual.As&lt;/a&gt; method and check the return value for null:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-ts&#34; data-lang=&#34;ts&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;ScatterPlot&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;Spotfire&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;Dxp&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;Application&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;Visuals&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;scatterPlot&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;visual&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;As&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;ScatterPlot&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;scatterPlot&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;Error&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Expected the visual to be a scatter plot&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Do scatter plot stuff.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;datatable&#34;&gt;DataTable&lt;/h3&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;DataTable&lt;/strong&gt; is passed to the script as a &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataTable.html&#34;&gt;DataTable&lt;/a&gt; object.
+To get the active or default data table, use &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Document.html#activedatatablereference&#34;&gt;Document.ActiveDataTableReference&lt;/a&gt; or &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataTableCollection.html#defaulttablereference&#34;&gt;DataTableCollection&lt;/a&gt;.
+See the &lt;a href=&#34;/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#dataviewdefinition&#34;&gt;DataViewDefinition&lt;/a&gt; parameter type in cases where you are interested in tables built from column expressions.&lt;/p&gt;
+&lt;h3 id=&#34;datacolumn&#34;&gt;DataColumn&lt;/h3&gt;
+&lt;p&gt;This parameter type was introduced in API version 2.1.&lt;/p&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;DataColumn&lt;/strong&gt; is passed to the script as a &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataColumn.html&#34;&gt;DataColumn&lt;/a&gt; object.
+The object corresponds to an actual data column in the document.
+The data table which contains the column can be retrieved via its document node context, i.e. &lt;code&gt;dataColumn.Context.GetAncestor(DataTable)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;DataColumn&lt;/strong&gt; parameter type supports the following additional properties:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;allowedDataTypes&lt;/strong&gt; - An array of parameter types that the data column should be restricted to. The array can contain the special &amp;ldquo;All&amp;rdquo; or &amp;ldquo;AllNumeric&amp;rdquo; values&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. If left undefined, then no type restrictions apply. Note that this is different from defining allowedDataTypes: [&amp;ldquo;All&amp;rdquo;] which behaves according to &lt;strong&gt;apiVersion&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;array&lt;/strong&gt; - If set to true, then the parameter will support an arbitrary amount of columns. The argument is passed to the script as an &lt;a href=&#34;https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#iterable-interface&#34;&gt;Iterable&lt;/a&gt;&amp;lt;&lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataColumn.html&#34;&gt;DataColum&lt;/a&gt;&amp;gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;dataviewdefinition&#34;&gt;DataViewDefinition&lt;/h3&gt;
+&lt;p&gt;This parameter type was introduced in API version 2.1.&lt;/p&gt;
+&lt;p&gt;A parameter of type &lt;strong&gt;DataViewDefinition&lt;/strong&gt; is passed to the script as a &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.ActionDataViewDefinition.html&#34;&gt;ActionDataViewDefinition&lt;/a&gt; object.
+This parameter requires that the &lt;strong&gt;allowedDataTypes&lt;/strong&gt; property is specified.&lt;/p&gt;
+&lt;p&gt;An argument of this type can be passed directly as an input to a data function via &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionInputCollection.html#setinput&#34;&gt;DataFunctionInputCollection.SetInput&lt;/a&gt;, see snippet &lt;a href=&#34;/spotfire-mods/docs/action-mods/snippets/#add-a-data-function-using-a-data-view-definition&#34;&gt;&amp;ldquo;Add a data function using a data view definition&amp;rdquo;&lt;/a&gt; for an example.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;DataViewDefinition&lt;/strong&gt; parameter type supports the following additional properties:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;allowedDataTypes&lt;/strong&gt; - An array of parameter types which the data column should be restricted to. Note that the behavior matches the behavior for data functions, meaning that if a non-allowed type can be cast to the correct type then it is allowed. All types can be cast to string. The array can contain the special &amp;ldquo;All&amp;rdquo; or &amp;ldquo;AllNumeric&amp;rdquo; values&lt;sup id=&#34;fnref1:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;singleColumn&lt;/strong&gt; - If the data view should be restricted to a single column expression. This property is required in order to pass the argument to a data function expecting a column.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;disableLimitations&lt;/strong&gt; - If limitations should be disabled, this guarantees that the entire row count is present in the view.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;&amp;ldquo;All&amp;rdquo; and &amp;ldquo;AllNumeric&amp;rdquo; expand to the relevant types which existed when the &lt;strong&gt;apiVersion&lt;/strong&gt; of the mod was defined. If Spotfire for instance introduces a new numeric, say a 256 bit floating point numeric, then &amp;ldquo;All&amp;rdquo; and &amp;ldquo;AllNumeric&amp;rdquo; will not accept this type until the &lt;strong&gt;apiVersion&lt;/strong&gt; is updated to the latest version.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&amp;#160;&lt;a href=&#34;#fnref1:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Action mods API documentation</title>
       <link>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</link>
-      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 30 Sep 2024 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</guid>
       <description>
         
         
-        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/spotfire-mods/api-docs/action-mods/&#34;&gt;action mods API documentation&lt;/a&gt; lists all namespaces, classes, types, and methods in the API. It contains a short introduction and describes how to use them.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;Action mods APIs &#34; src=&#34;/spotfire-mods/spotfire-mods/images/api-docs-action-mods.png&#34;&gt;&lt;/p&gt;
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/&#34;&gt;action mods API documentation&lt;/a&gt; lists all namespaces, classes, types, and methods in the API. It contains a short introduction and describes how to use them.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/images/api-docs-action-mods.png&#34; alt=&#34;Action mods APIs &#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;
 &lt;p&gt;The version number is the same for all mods API:s. Therefore, there are no older versions than 2.0 of this API.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/api-docs/action-mods/v2-0/&#34;&gt;API documentation version 2.0&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
       </description>
     </item>
@@ -36,13 +128,13 @@
     <item>
       <title>Docs: Action mod manifest schema</title>
       <link>/spotfire-mods/docs/action-mods/using-the-api/mod-schema/</link>
-      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 27 Feb 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/action-mods/using-the-api/mod-schema/</guid>
       <description>
         
         
-        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/spotfire-mods/action-mods-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
+        &lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/action-mods-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;
 &lt;script type=&#34;application/javascript&#34;&gt;
 
     function resizeIFrameToFitContent( ) {

@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.147.8"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/index.xml">
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
+
+
+<title>Action mod parameter types | Spotfire® Mods</title>
+  <meta itemprop="name" content="Action mod parameter types">
+  <meta itemprop="description" content="This page contains information about the available parameter types which can be used for action mod scripts.">
+  <meta itemprop="datePublished" content="2025-06-12T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-06-12T00:00:00+00:00">
+  <meta itemprop="wordCount" content="945">
+
+
+
+<link rel="preload" href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" as="style">
+<link href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+
+
+
+    <title>Action mod parameter types | Spotfire® Mods</title>
+  </head>
+  <body class="td-section">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/spotfire-mods/">
+		<span class="navbar-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232 40"><defs><style>.cls-1{fill:#333c66}.cls-1,.cls-2{stroke-width:0}.cls-2{fill:#e94165}</style></defs><g><path class="cls-1" d="m117.2 30.2h2.7c.1.0.2-.1.2-.2V16.1c0-.1-.1-.2-.2-.2h-2.6c-.1.0-.2.1-.2.2v14c-.1.1.0.1.1.1zm8.1-12.5v-1.6c0-.1-.1-.2-.2-.2h-2.6c-.1.0-.2.1-.2.2V30c0 .1.1.2.2.2h2.6c.1.0.2-.1.2-.2v-7.3c0-1.5.3-2.5.9-3.1s1.5-.9 2.7-.9h.6c.1.0.2-.1.2-.2v-2.7c0-.1-.1-.2-.2-.2-.9.0-1.7.2-2.4.6-.7.4-1.2.9-1.7 1.5.0.1-.1.0-.1.0h0zm-37.7.8c2.8.0 5 2.5 4.5 5.3-.3 1.8-1.8 3.2-3.6 3.5-3 .6-5.5-1.6-5.5-4.3.0-2.5 2.1-4.5 4.6-4.5m0-3c-4.5.0-8.1 3.8-7.6 8.3.4 3.4 3.2 6.2 6.7 6.6 4.6.5 8.5-3 8.5-7.4.0-4.1-3.4-7.4-7.6-7.5zm27.9-3.8V9.3c0-.1-.1-.2-.2-.2-2-.1-4.1.4-5.1 1.3-1.1 1-1.6 2.4-1.6 4.4v1.1h-2.4c-.1.0-.2.1-.2.2v2.4c0 .1.1.2.2.2h2.4V30c0 .1.1.2.2.2h2.7c.1.0.2-.1.2-.2V18.7h3.6c.1.0.2-.1.2-.2v-2.4c0-.1-.1-.2-.2-.2h-3.7v-1.1c0-2 1.5-2.9 3.6-2.8.2.0.3-.1.3-.3z"/><ellipse class="cls-1" cx="118.6" cy="10.9" rx="1.9" ry="1.8"/><path class="cls-1" d="m77.9 18.8c-.7-1.1-1.6-2-2.7-2.5s-2.3-.9-3.6-.9c-.5.0-1.1.1-1.6.2-.7.1-1.4.4-2 .7-.4.2-.7.4-1 .6q-.1.0-.1-.1v-1c0-.1-.1-.2-.2-.2H64c-.1.0-.2.1-.2.2v19.8c0 .1.1.2.2.2h2.6c.1.0.2-.1.2-.2V28c0-.1.1-.1.1.0.5.6 1.2 1.1 2 1.5.9.5 1.9.7 3 .7h.2c1.1-.1 2.1-.4 3-.9 1.1-.6 2-1.5 2.7-2.6s1-2.5 1-4-.2-2.8-.9-3.9h0zm-6.3 8.4c-2.4.0-4.4-2-4.4-4.5s2-4.5 4.4-4.5 4.4 2 4.4 4.5-2 4.5-4.4 4.5zm-11-6.3c-.8-.9-2-1.7-3.6-2.2l-2.1-.8c-2.1-.8-3.2-1.4-3.2-2.9s1.7-2.4 3.3-2.4c1 0 1.8.2 2.6.7.7.4 1.5.4 2.2.0l1.2-.8c.3-.2.3-.3.2-.4-1.5-1.6-3.7-2.6-6.1-2.6-1.9.0-3.6.5-4.8 1.5-1.3 1-1.9 2.5-1.9 4.2.0 2.7 1.5 4.5 4.9 5.7l2.3.8c2 .7 3 1.7 3 3.1.0 1.5-1.4 2.5-3.4 2.5-1.4.0-2.7-.5-3.7-1.3-.7-.6-1.7-.6-2.4-.1l-1 .7c-.3.2-.3.4-.2.5 1.4 2.1 4.1 3.4 7.2 3.4 2 0 3.7-.5 5-1.6 1.3-1 1.9-2.5 1.9-4.2-.1-1.6-.5-2.8-1.4-3.8zm43.9-2.2c.1.0.2-.1.2-.2v-2.4c0-.1-.1-.2-.2-.2h-3.7v-3.7c0-.1-.1-.2-.2-.2H98c-.1.0-.2.1-.2.2v3.7h-2.4c-.1.0-.2.1-.2.2v2.4c0 .1.1.2.2.2h2.4v7.5c0 1.4.4 2.5 1.1 3.1s1.8 1 3.2 1h2.5c.1.0.2-.1.2-.2V28c0-.1-.1-.2-.2-.2h-1.9c-.6.0-1.1-.1-1.3-.4s-.4-.6-.4-1.2v-7.5h3.5zm33.1 8.9c-1.2.0-2.2-.3-3-.9S133.2 25 133 24h11.3c.1.0.2-.1.2-.2.1-.4.1-.8.1-1.1.0-1.5-.4-2.5-1.1-3.9-.2-.4-.6-.8-.9-1.2-1.4-1.5-3.1-2.2-5.2-2.2s-4.1.7-5.5 2.1-2.1 3.2-2.1 5.3.7 3.9 2.2 5.3 3.4 2.1 5.7 2.1c2.5.0 4.4-.8 5.8-2.4.1-.1.1-.2.0-.3l-.7-.6c-.7-.6-1.7-.7-2.4-.2s-1.7.9-2.8.9zm-3.2-8.4c.8-.6 1.7-.9 2.9-.9 1 0 1.9.3 2.7.9s1.2 1.2 1.4 2.3v.1h-8.5c.2-1.1.7-1.7 1.5-2.4h0z"/></g><path class="cls-1" d="m146.4 13.4v.4h-.6v1.7h-.4v-1.7h-.6v-.4h1.6zm2 0h.4v2.1h-.4v-1.4l-.6 1-.6-1v1.4h-.4v-2.1h.4l.7 1.1.5-1.1h0z"/><path class="cls-1" d="m160.46 29.9V10.8h1.8V30h-1.8v-.1zm8.7-5.8-8.3-12.4.6-.5.7-.5 7.9 11.6-.9 1.8zm0 0-.8-1.8 7.8-11.6.7.5.6.5-8.3 12.4zm7.1 5.8V10.8h1.8V30h-1.8v-.1zm12.4.3c-1.3.0-2.5-.3-3.5-.9s-1.8-1.5-2.4-2.5c-.6-1.1-.9-2.3-.9-3.7s.3-2.6.8-3.7c.6-1.1 1.4-1.9 2.4-2.5s2.2-.9 3.5-.9 2.5.3 3.5.9 1.8 1.5 2.4 2.5c.6 1.1.8 2.3.8 3.7s-.3 2.6-.8 3.7-1.3 1.9-2.4 2.5c-.9.6-2.1.9-3.4.9h0zm0-1.5c1 0 1.9-.2 2.6-.7s1.3-1.1 1.8-2 .6-1.8.6-2.9-.2-2.1-.6-2.9c-.4-.8-1-1.5-1.8-2s-1.6-.7-2.6-.7-1.9.2-2.6.7c-.8.5-1.4 1.1-1.8 2-.4.8-.6 1.8-.6 2.9s.2 2.1.7 2.9c.4.8 1 1.5 1.8 2s1.5.7 2.5.7h0zm15.3 1.5c-1.2.0-2.3-.3-3.2-.9s-1.7-1.5-2.2-2.5c-.5-1.1-.8-2.3-.8-3.7s.3-2.6.8-3.7 1.3-1.9 2.2-2.5 2-.9 3.2-.9 2.2.3 3.1.9c.9.6 1.6 1.5 2.1 2.5.5 1.1.8 2.3.8 3.7s-.3 2.6-.8 3.7-1.2 1.9-2.1 2.5-1.9.9-3.1.9zm.3-1.4c.9.0 1.7-.2 2.3-.7.7-.5 1.2-1.2 1.6-2 .4-.9.6-1.8.6-3 0-1.1-.2-2.1-.6-3s-.9-1.5-1.6-2-1.5-.7-2.4-.7-1.8.2-2.5.7-1.3 1.2-1.7 2c-.4.9-.6 1.8-.6 3 0 1.1.2 2.1.6 3s1 1.5 1.7 2 1.7.7 2.6.7h0zm4.6 1.1-.1-2.5V10.8h1.6V30h-1.5v-.1zm10.3.3c-1 0-1.9-.2-2.7-.5-.7-.3-1.4-.7-1.8-1.2-.5-.5-.8-1-1-1.5l1.5-.5c.3.7.8 1.2 1.5 1.6s1.4.6 2.2.6c1 0 1.8-.2 2.5-.6s1-1 1-1.7-.2-1.2-.7-1.6-1.2-.8-2.2-1l-1.3-.4c-1.2-.3-2.2-.8-2.8-1.4s-1-1.3-1-2.1c0-1.3.4-2.2 1.2-2.9s2.1-1.1 3.8-1.1c.8.0 1.5.1 2.1.3s1.2.6 1.6 1 .8.9 1 1.5l-1.5.6c-.3-.7-.7-1.2-1.3-1.5s-1.3-.4-2.2-.4c-1 0-1.7.2-2.3.6s-.8 1-.8 1.7c0 .4.2.8.7 1.2s1.1.7 2 .9l1.2.3c.9.2 1.7.5 2.3.9s1.1.9 1.5 1.4.5 1.1.5 1.8c0 .8-.2 1.5-.6 2.1s-1 1-1.7 1.4c-.9.4-1.8.5-2.7.5z"/><g><path class="cls-1" d="m33.6 19.52-.02-.22-.03-.47-.06-.45c-.02-.15-.04-.3-.07-.45l-.08-.47c-.02-.08-.04-.17-.06-.26-.05-.21-.09-.42-.16-.63-.14-.52-.33-1.08-.62-1.75-.21-.49-.48-1.01-.85-1.64-.35-.57-.7-1.06-1.06-1.51-.8-.98-1.7-1.83-2.68-2.52-.17-.13-.35-.24-.53-.36-.08-.05-.16-.1-.24-.16-.08-.04-.17-.1-.26-.15-.18-.11-.35-.21-.53-.3-.48-.25-1.01-.49-1.69-.74-.52-.19-1.1-.35-1.77-.5l-.45-.08c-.16-.03-.3-.05-.45-.07l-.46-.06-.46-.03-.23-.02h-.22l-.46-.02h-.46l-.24.02-.22.02-.47.03-.45.06c-.15.02-.3.04-.45.07l-.46.08c-.66.15-1.24.31-1.76.5-.68.25-1.21.49-1.68.74-.19.09-.36.19-.54.3-.09.05-.18.11-.27.16-.07.05-.15.1-.23.15-.18.12-.36.23-.53.36-.99.69-1.89 1.54-2.69 2.52-.36.44-.71.94-1.06 1.51-.37.63-.63 1.15-.84 1.64-.28.67-.48 1.23-.61 1.74-.06.21-.11.42-.16.63-.02.09-.04.18-.06.27l-.08.45c-.03.16-.05.31-.07.45l-.06.47-.03.46-.02.23v.23l-.02.47v.46l.02.23.02.22.03.47.06.46c.02.15.04.29.07.45l.08.46c.02.08.04.17.06.25.05.22.1.43.16.63.14.52.33 1.08.62 1.75.21.49.48 1.01.85 1.64.35.57.7 1.06 1.06 1.51.8.98 1.7 1.83 2.68 2.52.17.13.34.24.52.35.08.05.17.11.25.16.08.04.17.1.26.15.18.11.35.21.53.29.48.26 1.01.49 1.69.74.37.13.72.24 1.07.34v-1.72c-.06-1.04-.58-2.01-1.43-2.66h-.01c-.15-.13-.28-.22-.39-.3-.11-.08-.21-.16-.31-.23l-.06-.05s-.03-.02-.05-.04c-.71-.49-1.37-1.12-1.97-1.85-.25-.31-.51-.68-.78-1.11-.25-.44-.45-.81-.62-1.21-.16-.39-.33-.82-.45-1.27-.04-.13-.07-.27-.1-.41-.02-.08-.03-.16-.05-.23l-.06-.34c-.02-.11-.04-.22-.05-.34l-.04-.32-.02-.35v-.16l-.02-.18v-.33-.35-.17l.02-.18.02-.33.05-.34c.01-.11.03-.23.05-.34l.06-.32c.02-.09.04-.17.06-.25.03-.14.06-.28.11-.42.11-.45.29-.89.44-1.26.18-.43.4-.83.62-1.2.28-.44.53-.79.78-1.11.6-.73 1.26-1.35 1.97-1.85.11-.09.23-.16.35-.24.07-.04.13-.09.2-.13h0v-.01c.07-.04.14-.08.21-.12.12-.07.24-.14.37-.2.42-.23.87-.41 1.22-.54.36-.13.76-.25 1.29-.37l.33-.06c.11-.02.22-.04.34-.05l.32-.04.34-.02h.16l.18-.02h.33.34.17l.18.02.33.02.34.05c.11.01.22.03.34.05l.32.06c.54.12.94.23 1.3.37.35.13.8.31 1.23.54.12.06.24.13.36.2.07.04.14.08.21.12h0v.01c.07.04.13.09.2.13.12.08.24.15.36.25.7.49 1.37 1.12 1.97 1.85.26.32.5.67.78 1.11.22.38.44.78.62 1.21.16.37.33.82.45 1.27.04.13.07.27.1.41.02.08.03.16.05.23l.06.34c.02.11.04.22.05.34l.04.32.02.34v.16l.02.18v.34.35.17l-.02.18-.02.33-.05.34c-.01.11-.03.23-.05.34l-.06.32c-.02.09-.04.17-.06.25-.03.14-.06.28-.11.42-.11.44-.28.87-.44 1.26-.17.4-.37.77-.62 1.2-.27.44-.53.8-.78 1.11-.6.73-1.26 1.35-1.97 1.85-.02.01-.03.03-.06.04l-.05.04c-.1.08-.2.15-.31.23-.11.08-.23.17-.38.29l-.02.02c-.84.65-1.36 1.62-1.43 2.66h0v1.71c.35-.09.7-.2 1.07-.34.67-.25 1.21-.48 1.68-.74.19-.09.36-.19.54-.3.09-.05.18-.11.27-.16.07-.05.15-.1.24-.15.18-.12.35-.23.52-.35.99-.7 1.89-1.54 2.69-2.52.36-.44.71-.94 1.06-1.51.37-.63.63-1.15.84-1.64.28-.67.48-1.23.61-1.74.06-.21.11-.42.16-.64.02-.09.04-.18.06-.26l.08-.45c.03-.16.05-.31.07-.45l.06-.47.03-.46.02-.24v-.22l.02-.47v-.46l-.02-.24z"/><ellipse class="cls-2" cx="20.15" cy="20" rx="5.21" ry="5.17"/><path class="cls-1" d="m20.15 3.65c4.41.0 8.56 1.7 11.68 4.8 3.11 3.09 4.82 7.19 4.82 11.55s-1.71 8.46-4.82 11.55c-3.12 3.09-7.26 4.8-11.68 4.8s-8.56-1.7-11.68-4.8C5.36 28.46 3.65 24.36 3.65 20s1.71-8.46 4.82-11.55c3.12-3.09 7.26-4.8 11.68-4.8m0-3.65C9.02.0.0 8.95.0 20s9.02 20 20.15 20S40.3 31.05 40.3 20 31.28.0 20.15.0h0z"/></g></svg></span><span class="text-uppercase font-weight-bold"></span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" 
+				href="/spotfire-mods/about/" 
+				>
+				<span>About</span></a>
+				
+				
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" 
+				href="/spotfire-mods/docs/" 
+				>
+				<span class="active">Working with mods</span></a>
+				
+				
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				<span class="nav-link active hasChildren">
+					<span  class="active">API documentation</span>
+				</span>
+				
+				
+				<ul class="navbar-subnav top">
+					
+					<li class="nav-item">
+						<span class="active">Action mods</span>
+
+						
+						
+						<ul class="navbar-subnav">
+							
+							<li class="nav-item">
+								<a class="nav-link active" 
+								href="/spotfire-mods/api-docs/action-mods/index.html" 
+								>
+								<span class="active">API documentation</span></a>
+									</li>
+							
+						</ul>
+						
+		
+
+					</li>
+					
+					<li class="nav-item">
+						<span class="active">Visualization mods</span>
+
+						
+						
+						<ul class="navbar-subnav">
+							
+							<li class="nav-item">
+								<a class="nav-link active" 
+								href="/spotfire-mods/overview/" 
+								>
+								<span class="active">API Overview</span></a>
+									</li>
+							
+							<li class="nav-item">
+								<a class="nav-link active" 
+								href="/spotfire-mods/api-docs/visualization-mods/index.html" 
+								>
+								<span class="active">API documentation</span></a>
+									</li>
+							
+						</ul>
+						
+		
+
+					</li>
+					
+				</ul>
+				
+			</li>
+			
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block">
+</div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center d-lg-none">
+    
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Working with mods</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="spotfire-modsdocs">
+      
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/whats-new/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">What&#39;s new?</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocswhats-new">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Action mods</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="spotfire-modsdocsaction-mods">
+      
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsdeveloping-action-mods" href="/spotfire-mods/docs/action-mods/developing-action-mods/">Developing action mods</a>
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorial</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modstutorial">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/snippets/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Snippets</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modssnippets">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/using-the-api/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Using the API</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="spotfire-modsdocsaction-modsusing-the-api">
+      
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Parameter types</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="spotfire-modsdocsaction-modsusing-the-apiparameter-types">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apiapi-docs" href="/spotfire-mods/docs/action-mods/using-the-api/api-docs/">Action mods API documentation</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod schema</a>
+        
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/faq/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">FAQ</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsfaq">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/visualization-mods/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Visualization mods</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsvisualization-mods">
+      
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modsdeveloping-visualization-mods" href="/spotfire-mods/docs/visualization-mods/developing-visualization-mods/">Developing visualization mods</a>
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/visualization-mods/tutorials/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorials</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsvisualization-modstutorials">
+      
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modstutorialsbarchart-googlechart" href="/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/">Create a bar chart using Google Charts</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modstutorialsmod-icons" href="/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/">Create an icon for your visualization mod</a>
+        
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/visualization-mods/using-the-api/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Using the API</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsvisualization-modsusing-the-api">
+      
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modsusing-the-apiapi-overview" href="/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/">API overview</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modsusing-the-apiapi-docs" href="/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/">Visualization mods API documentation</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modsusing-the-apimod-data-views" href="/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/">Mod data views</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modsusing-the-apimod-schema" href="/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/">Mod schema</a>
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modsusing-the-apiworking-with-readables" href="/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/">Mod reader</a>
+        
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/visualization-mods/faq/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">FAQ</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsvisualization-modsfaq">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsvisualization-modsgetting-started-11" href="/spotfire-mods/docs/visualization-mods/getting-started-11/">Getting started (before 14.4)</a>
+        
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+
+
+
+
+
+
+
+
+
+
+
+
+<a href="https://github.com/spotfiresoftware/spotfire-mods/issues/new?title=Action%20mod%20parameter%20types" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+
+
+<a href="https://github.com/spotfiresoftware/spotfire-mods/issues/new" target="_blank"><i class="fas fa-tasks fa-fw"></i> Create project issue</a>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#action-mod-parameter-types">Action mod parameter types</a>
+      <ul>
+        <li><a href="#boolean">Boolean</a></li>
+        <li><a href="#string">String</a></li>
+        <li><a href="#numerics">Numerics</a></li>
+        <li><a href="#time">Time</a></li>
+        <li><a href="#page">Page</a></li>
+        <li><a href="#visualization">Visualization</a></li>
+        <li><a href="#datatable">DataTable</a></li>
+        <li><a href="#datacolumn">DataColumn</a></li>
+        <li><a href="#dataviewdefinition">DataViewDefinition</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/spotfire-mods/docs/">Working with mods</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/spotfire-mods/docs/action-mods/">Action mods</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/spotfire-mods/docs/action-mods/using-the-api/">Using the API</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/">Parameter types</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	
+	
+	
+	<p class="-text-secondary pt-3 h6" >Reading time: 4 minutes and 45 seconds.</p>
+	<h1>Action mod parameter types</h1>
+	<div class="lead">This page contains information about the available parameter types which can be used for action mod scripts.</div>
+	
+	<h2 id="action-mod-parameter-types">Action mod parameter types</h2>
+<p>An action mod parameter is defined as an object in the <strong>parameters</strong> array of the <a href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">mod manifest</a>.
+The type is defined using the <strong>type</strong> property and is required (cannot be undefined).</p>
+<p>All parameter types (except <a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#Boolean">Boolean</a> and <a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#String">String</a> with <strong>enum</strong> defined) support setting the parameter to <strong>optional</strong>.
+An optional parameter of type <code>T</code> is passed to the script as <code>T?</code> (see <a href="https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#optional-properties">&ldquo;Optional Properties&rdquo;</a>).
+Some parameter types support additional properties, such as: <strong>enum</strong>, <strong>array</strong>, <strong>singleColumn</strong>, <strong>allowedDataTypes</strong>, <strong>disableLimitations</strong> etc.</p>
+<h3 id="boolean">Boolean</h3>
+<p>A parameter of type <strong>Boolean</strong> is passed to the script as a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>.
+Booleans cannot be <strong>optional</strong> because such a use case is more clearly modeled by <a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#String">String</a> <strong>enum</strong> with three possible values.</p>
+<h3 id="string">String</h3>
+<p>A parameter of type <strong>String</strong> is passed to the script as a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>.
+Strings can be empty (or <code>undefined</code> if the <strong>optional</strong> property of has been set).</p>
+<p>The String parameter type supports the following additional property:</p>
+<ul>
+<li><strong>enum</strong> - An array of valid values for the string. When this property is specified, custom expressions are no longer allowed and the configuration UI has a drop-down list instead of a text input field.</li>
+</ul>
+<h3 id="numerics">Numerics</h3>
+<p>A parameter of type <strong>Integer</strong> (32-bit integer), <strong>LongInteger</strong> (64-bit integer), <strong>SingleReal</strong> (32-bit floating point decimal), <strong>Real</strong> (64-bit floating point decimal), or <strong>Currency</strong> (128-bit floating point decimal) is passed to the script as a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a> (64-bit floating point decimal).
+Note that this means that <strong>LongInteger</strong> and <strong>Currency</strong> might exhibit precision loss when passed to a script.
+The type of the numeric restricts the possible custom expressions which the parameter accepts.
+For example, a parameter of type <strong>Integer</strong> cannot take a custom expression that evaluates to a <strong>LongInteger</strong>.</p>
+<p>Starting in API version 2.1, numerics can be restricted to a range via the <strong>range</strong> property.
+For example, an integer can be restricted to be positive by setting <code>&quot;range&quot;: { &quot;min&quot;: 0 }</code>.
+The property supports defining <strong>min</strong> and <strong>max</strong>, and if the numeric is floating point, you can also define if the min/max value should be included or excluded from the range via <strong>minExcluded</strong> and <strong>maxExcluded</strong>.</p>
+<h3 id="time">Time</h3>
+<p>A parameter of type <strong>DateTime</strong>, <strong>Date</strong>, or <strong>Time</strong> is passed to the script as a <a href="/spotfire-mods/api-docs/action-mods/classes/System.DateTime.html">System.DateTime</a> object.
+A parameter of type <strong>TimeSpan</strong> is passed as a <a href="/spotfire-mods/api-docs/action-mods/classes/System.TimeSpan.html">System.TimeSpan</a> object.</p>
+<h3 id="page">Page</h3>
+<p>A parameter of type <strong>Page</strong> is passed to the script as a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Page.html">Page</a> object.
+The page will always be attached to the document at the start of the script execution.
+To get the active page in a script, use <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Document.html#activepagereference">Document.ActivePageReference</a>, but note that the active page might be null if the document contains no pages.</p>
+<h3 id="visualization">Visualization</h3>
+<p>A parameter of type <strong>Visualization</strong> is passed to the script as a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visual.html">Visual</a> object.
+The visual will be attached to a page which can be reached via its document node context, that is <code>page.Context.GetAncestor(Page)</code>.
+To get the active visualization (useful for instance if your script is attached to a visualization as a floating button) use <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Document.html#activevisualreference">Document.ActiveVisualReference</a>.</p>
+<p>To validate that the visual is of a specific type, use the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visual.html#as">Visual.As</a> method and check the return value for null:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">ScatterPlot</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Application</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Visuals</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">scatterPlot</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">visual</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">As</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ScatterPlot</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000">scatterPlot</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#204a87">Error</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Expected the visual to be a scatter plot&#34;</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">// Do scatter plot stuff.
+</span></span></span></code></pre></div><h3 id="datatable">DataTable</h3>
+<p>A parameter of type <strong>DataTable</strong> is passed to the script as a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataTable.html">DataTable</a> object.
+To get the active or default data table, use <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Document.html#activedatatablereference">Document.ActiveDataTableReference</a> or <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataTableCollection.html#defaulttablereference">DataTableCollection</a>.
+See the <a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#dataviewdefinition">DataViewDefinition</a> parameter type in cases where you are interested in tables built from column expressions.</p>
+<h3 id="datacolumn">DataColumn</h3>
+<p>This parameter type was introduced in API version 2.1.</p>
+<p>A parameter of type <strong>DataColumn</strong> is passed to the script as a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataColumn.html">DataColumn</a> object.
+The object corresponds to an actual data column in the document.
+The data table which contains the column can be retrieved via its document node context, i.e. <code>dataColumn.Context.GetAncestor(DataTable)</code>.</p>
+<p>The <strong>DataColumn</strong> parameter type supports the following additional properties:</p>
+<ul>
+<li><strong>allowedDataTypes</strong> - An array of parameter types that the data column should be restricted to. The array can contain the special &ldquo;All&rdquo; or &ldquo;AllNumeric&rdquo; values<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. If left undefined, then no type restrictions apply. Note that this is different from defining allowedDataTypes: [&ldquo;All&rdquo;] which behaves according to <strong>apiVersion</strong>.</li>
+<li><strong>array</strong> - If set to true, then the parameter will support an arbitrary amount of columns. The argument is passed to the script as an <a href="https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#iterable-interface">Iterable</a>&lt;<a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataColumn.html">DataColum</a>&gt;.</li>
+</ul>
+<h3 id="dataviewdefinition">DataViewDefinition</h3>
+<p>This parameter type was introduced in API version 2.1.</p>
+<p>A parameter of type <strong>DataViewDefinition</strong> is passed to the script as a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.ActionDataViewDefinition.html">ActionDataViewDefinition</a> object.
+This parameter requires that the <strong>allowedDataTypes</strong> property is specified.</p>
+<p>An argument of this type can be passed directly as an input to a data function via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionInputCollection.html#setinput">DataFunctionInputCollection.SetInput</a>, see snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-a-data-function-using-a-data-view-definition">&ldquo;Add a data function using a data view definition&rdquo;</a> for an example.</p>
+<p>The <strong>DataViewDefinition</strong> parameter type supports the following additional properties:</p>
+<ul>
+<li><strong>allowedDataTypes</strong> - An array of parameter types which the data column should be restricted to. Note that the behavior matches the behavior for data functions, meaning that if a non-allowed type can be cast to the correct type then it is allowed. All types can be cast to string. The array can contain the special &ldquo;All&rdquo; or &ldquo;AllNumeric&rdquo; values<sup id="fnref1:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</li>
+<li><strong>singleColumn</strong> - If the data view should be restricted to a single column expression. This property is required in order to pass the argument to a data function expecting a column.</li>
+<li><strong>disableLimitations</strong> - If limitations should be disabled, this guarantees that the entire row count is present in the view.</li>
+</ul>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>&ldquo;All&rdquo; and &ldquo;AllNumeric&rdquo; expand to the relevant types which existed when the <strong>apiVersion</strong> of the mod was defined. If Spotfire for instance introduces a new numeric, say a 256 bit floating point numeric, then &ldquo;All&rdquo; and &ldquo;AllNumeric&rdquo; will not accept this type until the <strong>apiVersion</strong> is updated to the latest version.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+        
+
+
+
+
+
+
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 12, 2025
+</div>
+</div>
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-4 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Open the official Spotfire page on X" aria-label="Open the official Spotfire page on X">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://x.com/spotfire">
+      <i class="fab fa-x-twitter"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Open the official Spotfire page on LinkedIn" aria-label="Open the official Spotfire page on LinkedIn">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/company/spotfire/">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Open the Dr. Spotfire YouTube channel" aria-label="Open the Dr. Spotfire YouTube channel">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/@drspotfire">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Open the Facebook group for Spotfire users, partners, and practitioners" aria-label="Open the Facebook group for Spotfire users, partners, and practitioners">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/groups/651751391967838">
+      <i class="fab fa-facebook"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Open the Spotfire user group on LinkedIn" aria-label="Open the Spotfire user group on LinkedIn">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/groups/12253057/">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://github.com/spotfiresoftware/spotfire-mods">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Spotfire Community" aria-label="Spotfire Community">
+    <a class="text-white" target="_blank" rel="noopener noreferrer" href="https://spotfi.re/community/mods-overview">
+      <i class="fa fa-comment-alt"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        <small class="text-white">&copy; 2025 Cloud Software Group All Rights Reserved</small>
+        <small class="ml-1"><a href="https://www.cloud.com/privacy-policy" target="_blank">Privacy Policy</a></small>
+	
+		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script src="/spotfire-mods/js/main.min.2e372965989862d7e055760988f44f8141d8237a114d3737f4f38d503db9494b.js" data-integrity="sha256-LjcpZZiYYtfgVXYJiPRPgUHYI3oRTTc39PONUD25SUs=" crossorigin="anonymous"></script>
+
+
+
+
+  </body>
+</html>

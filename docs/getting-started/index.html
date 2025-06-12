@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.128.1"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.147.8"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
@@ -12,14 +12,14 @@
 <title>Getting started | Spotfire® Mods</title>
   <meta itemprop="name" content="Getting started">
   <meta itemprop="description" content="This guide describes how to get started with mods development in Spotfire.">
-  <meta itemprop="datePublished" content="2024-06-05T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-06-05T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1179">
+  <meta itemprop="datePublished" content="2025-06-09T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-06-09T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1181">
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" as="style">
-<link href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" as="style">
+<link href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -188,6 +188,31 @@
       
         
           
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/whats-new/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">What&#39;s new?</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocswhats-new">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
           
           <a class="td-sidebar-link td-sidebar-link__page  active" id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
         
@@ -290,6 +315,31 @@
       
         
           
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Parameter types</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsusing-the-apiparameter-types">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
           
           <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apiapi-docs" href="/spotfire-mods/docs/action-mods/using-the-api/api-docs/">Action mods API documentation</a>
         
@@ -299,7 +349,7 @@
         
           
           
-          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod Schema</a>
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod schema</a>
         
       
       
@@ -632,8 +682,8 @@ This is needed to develop and test a mod. Development can be done against the in
 The development experience is designed to integrate well with Microsoft <a href="https://code.visualstudio.com/">Visual Studio Code</a> (VS Code) by providing default build tasks, debug target, and IntelliSense.</p>
 </li>
 <li>
-<p><strong>Node.js (version 20 or later) installed.</strong><br>
-The development tooling requires <a href="https://nodejs.org/en/download/">Node.js</a> version 20 LTS or later to be installed. In particular, to create mods and work with the development tooling, it must be possible to execute the <code>npm</code> and <code>npx</code> commands.</p>
+<p><strong>Node.js (version 22 or later) installed.</strong><br>
+The development tooling requires <a href="https://nodejs.org/en/download/">Node.js</a> version 22 LTS or later to be installed. In particular, to create mods and work with the development tooling, it must be possible to execute the <code>npm</code> and <code>npx</code> commands.</p>
 </li>
 </ul>
 <p><em>Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.</em></p>
@@ -663,10 +713,10 @@ Your mod will be rebuilt when any TypeScript file is changed or when the mod man
 </ul>
 <h3 id="3-connect-spotfire-to-the-development-server">3. Connect Spotfire to the development server</h3>
 <p>Open Spotfire and load some data. Go to <em>Tools &gt; Development &gt; Mods development</em>. This will open the <em>Mods development</em> tool.</p>
-<p><img alt="Mods developer tool" src="/spotfire-mods/images/dev-ui.png"></p>
+<p><img src="/spotfire-mods/images/dev-ui.png" alt="Mods developer tool"></p>
 <p>Click the <em>Connect to development server</em> button. In the pop-up that opens, make sure the port number (e.g. <code>8090</code>) in the displayed URL matches the port number shown in VS Code, and then click the <em>Connect</em> button. This will make Spotfire load the mod from the local development server.</p>
 <p>If the mod appears under <em>In development</em> in the sidebar to the left, it means that Spotfire has successfully connected to the development server.</p>
-<p><img alt="Connected to development server " src="/spotfire-mods/images/dev-ui-dev-server.png"></p>
+<p><img src="/spotfire-mods/images/dev-ui-dev-server.png" alt="Connected to development server "></p>
 <p>Alternative workflows:</p>
 <ul>
 <li>
@@ -680,46 +730,46 @@ Your mod will be rebuilt when any TypeScript file is changed or when the mod man
 <p>When updating and saving the source file, the build watcher will automatically rebuild the mod. The mods development server will then, when connected, send the new mod content to Spotfire for automatic update.</p>
 <p>All metadata that concerns the mod is defined in the mod-manifest.json file. Below is a list of the entries that are common to all mods. Each mod type also has some specific entries that you can read more about in <a href="/spotfire-mods/docs/action-mods/developing-action-mods/#3-continue-development">Developing action mods</a> and <a href="/spotfire-mods/docs/visualization-mods/developing-visualization-mods/#3-edit-your-example">Developing visualization mods</a>.</p>
 <table>
-<thead>
-<tr>
-<th>Entry</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>id</td>
-<td>The id of the mod. Note that this must be unique.</td>
-</tr>
-<tr>
-<td>type</td>
-<td>Specifies the type of mod, <em>action</em> or <em>visualization</em>. This is available from apiVersion 2.0.</td>
-</tr>
-<tr>
-<td>apiVersion</td>
-<td>The api version requested. This will affect which Spotfire versions the mod will work on.</td>
-</tr>
-<tr>
-<td>name</td>
-<td>The name of the mod.</td>
-</tr>
-<tr>
-<td>description</td>
-<td>A description of the mod. This is available from apiVersion 2.0.</td>
-</tr>
-<tr>
-<td>version</td>
-<td>The version of the mod.</td>
-</tr>
-<tr>
-<td>icon</td>
-<td>File path to the embedded icon, which is used in various places in the Spotfire UI.</td>
-</tr>
-<tr>
-<td>files</td>
-<td>An array of all files that should be bundled in the mod. Only files specified here will be embedded by Spotfire.</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Entry</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>id</td>
+          <td>The id of the mod. Note that this must be unique.</td>
+      </tr>
+      <tr>
+          <td>type</td>
+          <td>Specifies the type of mod, <em>action</em> or <em>visualization</em>. This is available from apiVersion 2.0.</td>
+      </tr>
+      <tr>
+          <td>apiVersion</td>
+          <td>The api version requested. This will affect which Spotfire versions the mod will work on.</td>
+      </tr>
+      <tr>
+          <td>name</td>
+          <td>The name of the mod.</td>
+      </tr>
+      <tr>
+          <td>description</td>
+          <td>A description of the mod. This is available from apiVersion 2.0.</td>
+      </tr>
+      <tr>
+          <td>version</td>
+          <td>The version of the mod.</td>
+      </tr>
+      <tr>
+          <td>icon</td>
+          <td>File path to the embedded icon, which is used in various places in the Spotfire UI.</td>
+      </tr>
+      <tr>
+          <td>files</td>
+          <td>An array of all files that should be bundled in the mod. Only files specified here will be embedded by Spotfire.</td>
+      </tr>
+  </tbody>
 </table>
 <p>Changes to the mod manifest are not automatically sent to Spotfire like the content. Whenever the manifest is updated, you must click the <em>Reload manifest</em> button.</p>
 <p>Depending on the type of the connected mod, the actual workflow of developing and testing the mod is different. See <a href="/spotfire-mods/docs/action-mods/developing-action-mods//">Developing action mods</a> and <a href="/spotfire-mods/docs/visualization-mods/developing-visualization-mods//">Developing visualization mods</a> for details.</p>
@@ -740,12 +790,12 @@ Your mod will be rebuilt when any TypeScript file is changed or when the mod man
 </ul>
 <p>You can now connect to the mods development server just like described above.</p>
 <p>To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see <a href="https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html">Trusting custom content in the Spotfire environment</a>.</p>
-<p>When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See <a href="https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html">Signing a mod using Package Builder</a> for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from <a href="https://edelivery.tibco.com/">edelivery.tibco.com</a>, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &gt; Downloads.</p>
+<p>When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See <a href="https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html">Signing a mod using Package Builder</a> for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from the <a href="https://spotfi.re/download">Spotfire Download site</a>, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &gt; Downloads.</p>
 <p>An administrator can also import a certificate from one system to another to keep signed items valid. See <a href="https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html">Moving certificates from one system to another</a> for more information.</p>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 5, 2024
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 9, 2025
 </div>
 </div>
 
@@ -829,7 +879,7 @@ Your mod will be rebuilt when any TypeScript file is changed or when the mod man
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2024 Cloud Software Group All Rights Reserved</small>
+        <small class="text-white">&copy; 2025 Cloud Software Group All Rights Reserved</small>
         <small class="ml-1"><a href="https://www.cloud.com/privacy-policy" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>

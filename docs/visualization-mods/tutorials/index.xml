@@ -5,7 +5,7 @@
     <description>Recent content in Tutorials on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 14 Jun 2024 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/visualization-mods/tutorials/index.xml" rel="self" type="application/rss+xml" />
     
@@ -18,7 +18,7 @@
     <item>
       <title>Docs: Create a bar chart using Google Charts</title>
       <link>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</link>
-      <pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</guid>
       <description>
@@ -36,20 +36,20 @@
 &lt;/ul&gt;
 &lt;p&gt;The mod created in this tutorial (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;js-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;. The example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
 &lt;h3 id=&#34;dataset&#34;&gt;Dataset&lt;/h3&gt;
-&lt;p&gt;The dataset used in this tutorial can be found &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/heroes.txt&#34;&gt;here&lt;/a&gt;. It is a reduced version of this &lt;a href=&#34;https://www.kaggle.com/claudiodavi/superhero-set&#34;&gt;dataset&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The dataset used in this tutorial can be found &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/heroes.txt&#34;&gt;here&lt;/a&gt;. It is a reduced version of this &lt;a href=&#34;https://www.kaggle.com/claudiodavi/superhero-set&#34;&gt;dataset&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
-&lt;p&gt;All prerequisites are listed in the general &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/#prerequisites&#34;&gt;getting started guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;All prerequisites are listed in the general &lt;a href=&#34;/spotfire-mods/docs/getting-started/#prerequisites&#34;&gt;getting started guide&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;1-initial-setup&#34;&gt;1. Initial setup&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;Create a visualization mod using the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/#1-create-a-new-project&#34;&gt;SDK&lt;/a&gt;, follow the initial instructions and then open the project in Visual Studio Code.&lt;/li&gt;
-&lt;li&gt;In Visual Studio Code start the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/getting-started/#2-start-the-local-development-servers&#34;&gt;local development server&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;In Spotfire, load the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/#dataset&#34;&gt;dataset&lt;/a&gt; to create a new analysis file.&lt;/li&gt;
+&lt;li&gt;Create a visualization mod using the &lt;a href=&#34;/spotfire-mods/docs/getting-started/#1-create-a-new-project&#34;&gt;SDK&lt;/a&gt;, follow the initial instructions and then open the project in Visual Studio Code.&lt;/li&gt;
+&lt;li&gt;In Visual Studio Code start the &lt;a href=&#34;/spotfire-mods/docs/getting-started/#2-start-the-local-development-servers&#34;&gt;local development server&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;In Spotfire, load the &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/#dataset&#34;&gt;dataset&lt;/a&gt; to create a new analysis file.&lt;/li&gt;
 &lt;li&gt;Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Mods development&lt;/em&gt; and click the button &lt;em&gt;Connect to development server&lt;/em&gt;. Make sure that the default server is the same in Spotfire and Visual Studio code (http://127.0.0.1:8090).&lt;/li&gt;
 &lt;li&gt;You should see some mod metadata on the screen, which means the mod is working.&lt;/li&gt;
 &lt;li&gt;Click &lt;em&gt;Add to page&lt;/em&gt; to add a first instance of your new visualization mod.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt=&#34;Step 1&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step1.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step1.PNG&#34; alt=&#34;Step 1&#34;&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;2-add-google-charts-library&#34;&gt;2. Add Google Charts library&lt;/h3&gt;
 &lt;ul&gt;
@@ -192,7 +192,7 @@ This is done by adding an exclamation mark (&lt;code&gt;!&lt;/code&gt;) after th
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;Save the changes. You should see the example working in Spotfire and there should be no warnings in the code editor.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt=&#34;Step 2&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step2.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step2.PNG&#34; alt=&#34;Step 2&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Use &lt;code&gt;async&lt;/code&gt;/&lt;code&gt;await&lt;/code&gt; to get rid of extra code.&lt;/li&gt;
 &lt;li&gt;Make the chart fit the screen by providing a chart area with some predefined margins.&lt;/li&gt;
@@ -247,37 +247,37 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
 &lt;li&gt;A Google visualization expects data to be in the following format (and complains if it&amp;rsquo;s not):&lt;/li&gt;
 &lt;/ul&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;SeriesNames&lt;/th&gt;
-&lt;th&gt;Series1&lt;/th&gt;
-&lt;th&gt;Style&lt;/th&gt;
-&lt;th&gt;Series2&lt;/th&gt;
-&lt;th&gt;Style&lt;/th&gt;
-&lt;th&gt;Series3&lt;/th&gt;
-&lt;th&gt;Style&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Category1&lt;/td&gt;
-&lt;td&gt;Value11&lt;/td&gt;
-&lt;td&gt;CssColor11&lt;/td&gt;
-&lt;td&gt;Value12&lt;/td&gt;
-&lt;td&gt;CssColor12&lt;/td&gt;
-&lt;td&gt;Value13&lt;/td&gt;
-&lt;td&gt;CssColor13&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Category2&lt;/td&gt;
-&lt;td&gt;Value21&lt;/td&gt;
-&lt;td&gt;CssColor21&lt;/td&gt;
-&lt;td&gt;Value22&lt;/td&gt;
-&lt;td&gt;CssColor22&lt;/td&gt;
-&lt;td&gt;Value23&lt;/td&gt;
-&lt;td&gt;CssColor23&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;SeriesNames&lt;/th&gt;
+          &lt;th&gt;Series1&lt;/th&gt;
+          &lt;th&gt;Style&lt;/th&gt;
+          &lt;th&gt;Series2&lt;/th&gt;
+          &lt;th&gt;Style&lt;/th&gt;
+          &lt;th&gt;Series3&lt;/th&gt;
+          &lt;th&gt;Style&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Category1&lt;/td&gt;
+          &lt;td&gt;Value11&lt;/td&gt;
+          &lt;td&gt;CssColor11&lt;/td&gt;
+          &lt;td&gt;Value12&lt;/td&gt;
+          &lt;td&gt;CssColor12&lt;/td&gt;
+          &lt;td&gt;Value13&lt;/td&gt;
+          &lt;td&gt;CssColor13&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Category2&lt;/td&gt;
+          &lt;td&gt;Value21&lt;/td&gt;
+          &lt;td&gt;CssColor21&lt;/td&gt;
+          &lt;td&gt;Value22&lt;/td&gt;
+          &lt;td&gt;CssColor22&lt;/td&gt;
+          &lt;td&gt;Value23&lt;/td&gt;
+          &lt;td&gt;CssColor23&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;ul&gt;
 &lt;li&gt;We loop over the X hierarchy to create the data table by filling a row with null values first, and then populating it with existing values at proper positions.&lt;/li&gt;
@@ -342,7 +342,7 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            mod.controls.errorOverlay.show(e);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            return;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img alt=&#34;Step 3&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step3.PNG&#34;&gt;&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step3.PNG&#34; alt=&#34;Step 3&#34;&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;4-selectionmarking&#34;&gt;4. Selection/marking&lt;/h3&gt;
 &lt;ul&gt;
@@ -371,7 +371,7 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+            return rows1.filter((r) =&amp;gt; rows2.indexOf(r) &amp;gt; -1);
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        }
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img alt=&#34;Step 4&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step4.PNG&#34;&gt;&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step4.PNG&#34; alt=&#34;Step 4&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;To clear the marking on background click, as native Spotfire visualizations do, we listen for the &lt;code&gt;&amp;quot;click&amp;quot;&lt;/code&gt; event and check its target ID. Unfortunately, the Google API is untyped regarding events, hence the &lt;code&gt;any&lt;/code&gt; type.&lt;/li&gt;
 &lt;/ul&gt;
@@ -474,7 +474,7 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+        function popoutChangeHandler() {}
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;     }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; });
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img alt=&#34;Step 5&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step5.PNG&#34;&gt;&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step5.PNG&#34; alt=&#34;Step 5&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Add a tiny helper function to check property value.&lt;/li&gt;
 &lt;li&gt;On each render we check the stacking and orientation properties and update the chart configuration accordingly. Stacking is a simple boolean, but orientation requires different classes for &lt;code&gt;horizontal&lt;/code&gt; and &lt;code&gt;vertical&lt;/code&gt; types of charts.&lt;/li&gt;
@@ -586,7 +586,7 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+svg text {
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+    cursor: pointer;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+}
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img alt=&#34;Step 5-1&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step5-1.PNG&#34;&gt;&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step5-1.PNG&#34; alt=&#34;Step 5-1&#34;&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;6-use-spotfire-theme-and-styling&#34;&gt;6. Use Spotfire theme and styling&lt;/h3&gt;
 &lt;ul&gt;
@@ -629,7 +629,7 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;In Spotfire, change canvas styling to &lt;em&gt;Dark&lt;/em&gt; (&lt;em&gt;Visualizations &amp;gt; Canvas styling &amp;gt; Dark&lt;/em&gt;). You should see the colors change according to the theme.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt=&#34;Step 6&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step6.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step6.PNG&#34; alt=&#34;Step 6&#34;&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;7-prepare-for-export&#34;&gt;7. Prepare for export&lt;/h3&gt;
 &lt;ul&gt;
@@ -644,9 +644,9 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;Go to &lt;em&gt;File &amp;gt; Export &amp;gt; Visualization to PDF&lt;/em&gt; to test the export feature.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt=&#34;Step 7&#34; src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step7.PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/images/step7.PNG&#34; alt=&#34;Step 7&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Note that this example mod is using external resources, hence it will not be possible to export using the web client, see the &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/&#34;&gt;manifest schema documentation&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Note that this example mod is using external resources, hence it will not be possible to export using the web client, see the &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/&#34;&gt;manifest schema documentation&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -655,7 +655,7 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
     <item>
       <title>Docs: Create an icon for your visualization mod</title>
       <link>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</link>
-      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</guid>
       <description>
@@ -667,27 +667,27 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
 &lt;p&gt;There are a number of ways to create SVG icons; either you can create them in a web-based SVG editor, using a licensed program on your computer, or using a web-based design program.&lt;/p&gt;
 &lt;p&gt;One easy way to make an SVG icon is to use a web-based SVG editor, where you can create the icon directly in the web browser. Two examples of web-based editors are: &lt;a href=&#34;https://editor.method.ac/&#34;&gt;https://editor.method.ac/&lt;/a&gt; and &lt;a href=&#34;https://vectr.com/&#34;&gt;https://vectr.com/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;You can also use installed programs on your computer, such as Adobe Illustrator, Sketch, or Adobe XD. However, use of such programs might require previous knowledge to be efficient.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.figma.com/&#34;&gt;Figma&lt;/a&gt; is another alternative. This is a web-based resource to create digital design, and has a free for all license. A &lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/#how-to-create-your-visualization-mod-icon-using-figma&#34;&gt;tutorial&lt;/a&gt; on how to create your own visualization mod icon using Figma can be found below.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.figma.com/&#34;&gt;Figma&lt;/a&gt; is another alternative. This is a web-based resource to create digital design, and has a free for all license. A &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/#how-to-create-your-visualization-mod-icon-using-figma&#34;&gt;tutorial&lt;/a&gt; on how to create your own visualization mod icon using Figma can be found below.&lt;/p&gt;
 &lt;h2 id=&#34;specifications-for-the-spotfire-visualization-icons&#34;&gt;Specifications for the Spotfire visualization icons&lt;/h2&gt;
 &lt;h3 id=&#34;sizes-of-svg-icons-in-spotfire&#34;&gt;Sizes of SVG icons in Spotfire&lt;/h3&gt;
 &lt;p&gt;The main container of SVG icons is called a viewbox. The preferred size to create an SVG icon for a visualization mod is 24x24 px. This icon is then scaled up to 32x32 px and down to 16x16 px depending on where in the UI it is placed. See examples below.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img1.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Examples in use within Spotfire:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img2.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;colors&#34;&gt;Colors&lt;/h3&gt;
 &lt;p&gt;Spotfire visualizations have icons with three distinct colors. For a consistent style, it is recommended that you use the same pattern.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img3.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;opacity&#34;&gt;Opacity&lt;/h3&gt;
 &lt;p&gt;In order to add tinted areas, you can use opacity, as seen in the example below.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img4.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;how-to-create-your-visualization-mod-icon-using-figma&#34;&gt;How to create your visualization mod icon using Figma&lt;/h2&gt;
 &lt;p&gt;This guide describes how to create your icon in Figma. Figma is an interface design application that runs in the browser. It has a free-for-all licence and all you will need is an email account. Read more and download Figma here:&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.figma.com/&#34;&gt;https://www.figma.com/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Below is a tutorial on how to create an SVG icon for a donut chart.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img5.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img5.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Step 1:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/Template_24x24.fig&#34;&gt;Download&lt;/a&gt; the template file to begin:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img6.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/Template_24x24.fig&#34;&gt;Download&lt;/a&gt; the template file to begin:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/img6.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Step 2:&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Follow the tutorial to create your icon:&lt;/p&gt;
 &lt;p&gt;Click &lt;a href=&#34;https://www.youtube.com/watch?v=9YmlHZ-Tx_A&#34;&gt;here&lt;/a&gt; for a video tutorial on how to create an SVG icon for your visualization mod.&lt;/p&gt;

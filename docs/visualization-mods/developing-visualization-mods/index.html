@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.128.1"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.147.8"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
@@ -11,15 +11,15 @@
 
 <title>Developing visualization mods | Spotfire® Mods</title>
   <meta itemprop="name" content="Developing visualization mods">
-  <meta itemprop="description" content="This guide describes how to get a visualization mod running in Spotfire. ">
-  <meta itemprop="datePublished" content="2024-06-05T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-06-05T00:00:00+00:00">
+  <meta itemprop="description" content="This guide describes how to get a visualization mod running in Spotfire.">
+  <meta itemprop="datePublished" content="2024-06-14T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2024-06-14T00:00:00+00:00">
   <meta itemprop="wordCount" content="592">
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" as="style">
-<link href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" as="style">
+<link href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -188,6 +188,31 @@
       
         
           
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/whats-new/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">What&#39;s new?</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocswhats-new">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
           
           <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
         
@@ -290,6 +315,31 @@
       
         
           
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Parameter types</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsusing-the-apiparameter-types">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
           
           <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apiapi-docs" href="/spotfire-mods/docs/action-mods/using-the-api/api-docs/">Action mods API documentation</a>
         
@@ -299,7 +349,7 @@
         
           
           
-          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod Schema</a>
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsaction-modsusing-the-apimod-schema" href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">Mod schema</a>
         
       
       
@@ -656,30 +706,30 @@ The root folder contains all static content, like the <code>index.html</code>, a
 <p>The SDK template for visualization mods contains a simple mod with a categorical X-axis, a continuous Y-axis, a dual mode color axis, and a mod property. The only source code file is located in <code>src/main.ts</code>, but in most cases a mod should be split in multiple source code files.</p>
 <p>All metadata that concerns the mod is defined in the mod-manifest.json file. A list of the entries that are common to all mods can be found in the <a href="/spotfire-mods/docs/getting-started/">getting started guide</a>. The entries that are specific to visualization mods are listed below:</p>
 <table>
-<thead>
-<tr>
-<th>Entry</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>dataViewDefinition</td>
-<td>Specifies how Spotfire computes the data consumed by the mod.</td>
-</tr>
-<tr>
-<td>externalResources</td>
-<td>An array of any external resources that the mod is required to load.</td>
-</tr>
-<tr>
-<td>properties</td>
-<td>An array of mod properties.</td>
-</tr>
-<tr>
-<td>legend</td>
-<td>Specifies the default behavior of the legend.</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Entry</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>dataViewDefinition</td>
+          <td>Specifies how Spotfire computes the data consumed by the mod.</td>
+      </tr>
+      <tr>
+          <td>externalResources</td>
+          <td>An array of any external resources that the mod is required to load.</td>
+      </tr>
+      <tr>
+          <td>properties</td>
+          <td>An array of mod properties.</td>
+      </tr>
+      <tr>
+          <td>legend</td>
+          <td>Specifies the default behavior of the legend.</td>
+      </tr>
+  </tbody>
 </table>
 <p>For details, see the <a href="/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/">manifest schema</a>.</p>
 <h2 id="development-in-web-client">Development in the Spotfire web client</h2>
@@ -688,7 +738,7 @@ The root folder contains all static content, like the <code>index.html</code>, a
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 5, 2024
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 14, 2024
 </div>
 </div>
 
@@ -772,7 +822,7 @@ The root folder contains all static content, like the <code>index.html</code>, a
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2024 Cloud Software Group All Rights Reserved</small>
+        <small class="text-white">&copy; 2025 Cloud Software Group All Rights Reserved</small>
         <small class="ml-1"><a href="https://www.cloud.com/privacy-policy" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>
