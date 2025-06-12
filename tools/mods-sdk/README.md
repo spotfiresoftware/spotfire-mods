@@ -34,9 +34,10 @@ npx @spotfire/mods-sdk new [action|visualization]
 Creates a new mod of the specified type in the current folder using the starter template.
 This command sets up the project in such a way that it can be built by the build command.
 
-| Option             | Description                                 |
-| ------------------ | ------------------------------------------- |
-| --out-dir \<path\> | Creates the mod in the specified directory. |
+| Option                    | Description                                 |
+| ------------------------- | ------------------------------------------- |
+| --out-dir \<path\>        | Creates the mod in the specified directory. |
+| --api-version \<version\> | The version of the mods API to use.         |
 
 #### build
 
