@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import path from "path";
-import { modIdToName, toModId } from "../src/new-template";
+import { createGitIgnore, modIdToName, toModId } from "../src/new-template";
 import { ModType } from "../src/utils";
 import { setupProject } from "./test-utils";
 
@@ -15,6 +15,12 @@ describe("new-template", () => {
         expect(manifestJson["type"]).toEqual("action");
         expect(manifestJson["name"]).toEqual("New Action Mod");
         expect(manifestJson["id"]).toEqual("new-action-mod");
+
+        await createGitIgnore({
+            targetFolder: path.resolve(projectFolder),
+            quiet: true,
+        });
+        expect(existsSync(path.join(projectFolder, ".gitignore"))).toBeTruthy();
     });
 
     test("visualization mod starter can be created", async () => {
@@ -27,6 +33,51 @@ describe("new-template", () => {
         expect(manifestJson["type"]).toBeUndefined();
         expect(manifestJson["name"]).toEqual("New Visualization Mod");
         expect(manifestJson["id"]).toEqual("new-visualization-mod");
+        expect(manifestJson["type"]).toBeUndefined();
+
+        await createGitIgnore({
+            targetFolder: path.resolve(projectFolder),
+            quiet: true,
+        });
+        expect(existsSync(path.join(projectFolder, ".gitignore"))).toBeTruthy();
+    });
+
+    describe("can create project with different api version", () => {
+        test("action mod", async () => {
+            const projectFolder = "tests/testprojects/action-mod-2.1";
+            await setupProject(projectFolder, ModType.Action, "2.1");
+
+            const manifest = path.join(projectFolder, "mod-manifest.json");
+            const manifestJson = JSON.parse(readFileSync(manifest, "utf-8"));
+            expect(manifestJson["apiVersion"]).toEqual("2.1");
+            expect(manifestJson["type"]).toEqual("action");
+
+            const packageJsonPath = path.join(projectFolder, "package.json");
+            const packageJson = JSON.parse(
+                readFileSync(packageJsonPath, "utf-8")
+            );
+            expect(
+                packageJson["devDependencies"]["@spotfire/mods-api"]
+            ).toEqual("~2.1.0");
+        });
+
+        test("visualization mod", async () => {
+            const projectFolder = "tests/testprojects/visualization-mod-2.1";
+            await setupProject(projectFolder, ModType.Visualization, "2.1");
+
+            const manifest = path.join(projectFolder, "mod-manifest.json");
+            const manifestJson = JSON.parse(readFileSync(manifest, "utf-8"));
+            expect(manifestJson["apiVersion"]).toEqual("2.1");
+            expect(manifestJson["type"]).toEqual("visualization");
+
+            const packageJsonPath = path.join(projectFolder, "package.json");
+            const packageJson = JSON.parse(
+                readFileSync(packageJsonPath, "utf-8")
+            );
+            expect(
+                packageJson["devDependencies"]["@spotfire/mods-api"]
+            ).toEqual("~2.1.0");
+        });
     });
 });
 

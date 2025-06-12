@@ -1,9 +1,9 @@
 #! /usr/bin/env node
 
 import { Command } from "commander";
-import { createTemplate } from "./new-template.js";
+import { createTemplate, TemplateType } from "./new-template.js";
 import { build } from "./build.js";
-import { ModType, getVersion } from "./utils.js";
+import { ModType, getVersion, parseApiVersion } from "./utils.js";
 import { addScript } from "./add-script.js";
 import { addParameter } from "./add-parameter.js";
 
@@ -28,8 +28,8 @@ Command.prototype.quiet = function () {
         .command("new")
         .argument(
             "<mod-type>",
-            "the type of Mod you want to create, action or visualization",
-            (arg) => assertModType(arg)
+            "what you want to create: action, visualization, or gitignore",
+            (arg) => assertTemplateType(arg)
         )
         .description("Create a new Mods project based on a template")
         .option(
@@ -37,6 +37,12 @@ Command.prototype.quiet = function () {
             "the folder in which the project should be created",
             "."
         )
+        .option(
+            "--api-version <api-version>",
+            "the Mods API version to use",
+            (arg) => assertValidVersion(arg)
+        )
+        .option("--no-gitignore", "if no .gitignore file should be created")
         .quiet()
         .action(exec(createTemplate));
 
@@ -96,6 +102,7 @@ Command.prototype.quiet = function () {
             "path to the mod-manifest.json file",
             "mod-manifest.json"
         )
+        .option("--optional", "if the parameter is optional", false)
         .quiet()
         .action(exec(addParameter));
 
@@ -111,15 +118,32 @@ Command.prototype.quiet = function () {
         };
     }
 
-    function assertModType(arg: string) {
+    function assertTemplateType(arg: TemplateType | string) {
         if (arg === "action") {
             return ModType.Action;
         } else if (arg === "visualization") {
             return ModType.Visualization;
+        } else if (arg === "gitignore") {
+            return "gitignore";
         } else {
             program.error(
-                `Invalid mod type '${arg}'. Possible values are: action or visualization.`
+                `Invalid template type '${arg}'. Possible values are: action, visualization, or gitignore.`
             );
+        }
+    }
+
+    function assertValidVersion(arg: string | undefined) {
+        if (arg == null) {
+            return undefined;
+        }
+
+        const result = parseApiVersion(arg);
+        if (result.status === "error") {
+            program.error(
+                `Invalid api version argument, error: ${result.error}`
+            );
+        } else {
+            return arg;
         }
     }
 })();

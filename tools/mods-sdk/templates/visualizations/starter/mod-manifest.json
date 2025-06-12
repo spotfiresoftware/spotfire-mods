@@ -1,9 +1,10 @@
 {
-    "apiVersion": "1.3",
+    "apiVersion": "$MOD-API-VERSION",
     "version": "1.0",
     "name": "$MOD-NAME",
     "id": "$MOD-ID",
     "icon": "icon.svg",
+    "type": "visualization",
     "properties": [
         {
             "name": "myProperty",

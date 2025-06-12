@@ -6,12 +6,12 @@
         "allowUnreachableCode": false,
         "noImplicitAny": true,
         "moduleResolution": "Node",
-        "charset": "utf8",
         "sourceMap": true,
         "inlineSources": true,
         "module": "es2015",
         "outDir": "./dist/",
-        "lib": ["es2019"]
+        "lib": ["es2019"],
+        "resolveJsonModule": true
     },
     "include": ["./**/*.js", "./node_modules/@types/**/*.d.ts"]
 }

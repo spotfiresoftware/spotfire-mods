@@ -44,6 +44,10 @@ const colors = require("colors/safe");
  */
 const _ = require("lodash");
 
+const package = require("./package.json");
+
+const applicationJson = "application/json; charset=utf-8";
+
 const injectHtml = fs.readFileSync(path.join(__dirname, "websocket.html"), { encoding: "utf8" });
 
 const manifestName = "mod-manifest.json";
@@ -92,6 +96,7 @@ function start(settings = {}) {
     app.use(cacheHeaders);
     app.use(cspHeaders);
     app.use(corsHeaders);
+    app.use(preflight);
 
     if (settings.allowProjectRoot) {
         // We need to be able to retrieve the absolute path to the project root to
@@ -102,6 +107,10 @@ function start(settings = {}) {
             res.end();
         });
     }
+
+    // API endpoints for Spotfire
+    app.use("/@spotfire/api/snapshot", snapshot);
+    app.use("/@spotfire/api/info", info);
 
     app.use(checkIfPartOfManifest);
     app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(settings)));
@@ -139,7 +148,7 @@ function start(settings = {}) {
         if (settings.open) {
             let { path: serverPath = "/" } = settings;
             serverPath = serverPath.startsWith("/") ? serverPath : "/" + serverPath;
-            open(serverUrl + serverPath);
+            open.openApp(serverUrl + serverPath);
         }
     });
 
@@ -172,7 +181,7 @@ function start(settings = {}) {
     }, 500);
 
     chokidar
-        .watch(settings.root, {})
+        .watch(settings.root, { ignored: /node_modules.*\.d\.ts/, persistent: true })
         .on("add", reloadInstances)
         .on("change", reloadInstances)
         .on("unlink", reloadInstances)
@@ -223,6 +232,12 @@ function start(settings = {}) {
      */
     function checkIfPartOfManifest(req, res, next) {
         let url = cleanUrl(req.url).slice(1);
+
+        // Do not report ugly error.
+        if (!settings.allowProjectRoot && url === "modProjectRoot") {
+            next();
+        }
+
         if (manifestFiles.length && url != manifestName && !manifestFiles.includes(url)) {
             console.log(colors.yellow(`Mod manifest warning: '${url}' is not listed in the files list.`));
         }
@@ -264,9 +279,13 @@ function start(settings = {}) {
                     if (script.file) {
                         manifestFiles.push(script.file);
                     }
+
+                    if (script.icon) {
+                        manifestFiles.push(script.icon);
+                    }
                 }
             }
-        } catch (err) {}
+        } catch (err) { }
     }
 
     /**
@@ -286,9 +305,103 @@ function start(settings = {}) {
 
             res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Private-Network", "true");
         }
 
         next();
+    }
+
+    /**
+     * Middleware for handling preflight requests.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function preflight(req, res, next) {
+        if (req.method === "OPTIONS") {
+            res.statusCode = 204;
+            res.end();
+        } else {
+            next();
+        }
+    }
+
+    /**
+     * Middleware for taking a snapshot of the mod files.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function snapshot(req, res, next) {
+        if (
+            !req.method ||
+            req.method !== "POST" ||
+            (req.headers["content-type"] ?? "").toLowerCase() !== applicationJson
+        ) {
+            res.statusCode = 400;
+            res.setHeader("Content-Type", applicationJson);
+            res.write(
+                JSON.stringify({
+                    title: "Invalid request",
+                    message: "Expected request with method 'POST' and Content-Type 'application/json; charset=UTF-8'."
+                })
+            );
+            res.end();
+            return;
+        }
+
+        let body = "";
+        req.setEncoding("utf-8");
+        req.on("data", (chunk) => {
+            if (typeof chunk === "string") {
+                body += chunk;
+            }
+        });
+        req.on("end", () => {
+            res.setHeader("Content-Type", applicationJson);
+
+            try {
+                /**
+                 * @type {{filePaths?: string[]}}
+                 */
+                const manifestFiles = JSON.parse(body);
+                if (!manifestFiles.filePaths) {
+                    throw new Error("Missing property 'filePaths'");
+                }
+
+                res.write(JSON.stringify(takeSnapshot(manifestFiles.filePaths)));
+            } catch (e) {
+                res.statusCode = 400;
+                res.write(
+                    JSON.stringify({
+                        title: "Invalid JSON payload",
+                        message: "The JSON payload does not follow expected schema '{ filePaths: string[] }'.",
+                        error: `${e}`
+                    })
+                );
+            } finally {
+                res.end();
+            }
+        });
+    }
+    /**
+     * Middleware for querying info about the dev server.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function info(req, res, next) {
+        res.setHeader("Content-Type", applicationJson);
+        res.write(
+            JSON.stringify({
+                version: package.version,
+                allowProjectRoot: settings.allowProjectRoot
+            })
+        );
+        res.end();
     }
 }
 
@@ -374,4 +487,24 @@ function cleanUrl(url = "") {
 function cacheHeaders(req, res, next) {
     res.setHeader("Cache-Control", "no-store");
     next();
+}
+
+/**
+ * Records the modified time (ms since UNIX epoch) of the requested files.
+ * @param {string[]} filePaths
+ */
+function takeSnapshot(filePaths) {
+    /**
+     * @type {[string, number][]}
+     */
+    const snapshot = [];
+    for (const filePath of filePaths) {
+        try {
+            const stats = fs.statSync(filePath);
+            snapshot.push([filePath, stats.mtimeMs]);
+        } catch (e) {
+            snapshot.push([filePath, 0]);
+        }
+    }
+    return { snapshot: snapshot };
 }

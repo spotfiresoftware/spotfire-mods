@@ -1,7 +1,6 @@
 import * as chokidar from "chokidar";
 import esbuild from "esbuild";
 import { existsSync } from "fs";
-import fse from "fs-extra";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
 import {
@@ -9,12 +8,17 @@ import {
     ModType,
     ParameterType,
     QuietOtions,
+    Result,
     debounce,
+    features,
     formatIfPossible,
+    formatVersion,
     getDirname,
     isParameterType,
     mkStdout,
+    readApiVersion,
     toTypeName,
+    typeFeature,
 } from "./utils.js";
 
 function isValidEntryPoint(entryPoint: string) {
@@ -45,42 +49,48 @@ function toCsType(type: ParameterType) {
             return "string";
         case "Date":
             return "System.DateTime";
+        case "DataViewDefinition":
+            return "ActionDataViewDefinition";
         default:
             return type;
     }
 }
 
-/**
- * Generates an environment file from the specified action mods manifest at the specified location.
- * The environment file references the action mods API and makes these types available globally.
- * The file also contains the input parameters for each script as defined in the manifest.
- */
-async function createEnvFile({
-    manifestPath,
+export type GenerateEnvFileResult = Result<string, string[]>;
+
+export async function generateEnvFile({
+    manifest,
     envPath,
     ...quiet
-}: CreateEnvOptions & QuietOtions) {
+}: {
+    manifest: Manifest;
+    envPath?: string;
+} & QuietOtions): Promise<GenerateEnvFileResult> {
     const stdout = mkStdout(quiet);
-    let hasFailed = false;
-    const errors: string[] = [];
-
-    if (!existsSync(manifestPath)) {
-        throw `Cannot find ${manifestPath}`;
-    }
-
-    const manifestJson = await readFile(manifestPath, { encoding: "utf8" });
-    const manifest: Manifest = JSON.parse(manifestJson);
-
-    if (!manifest.scripts) {
-        throw "No scripts defined in manifest file.";
-    }
 
     let envFileContent = "";
-
     envFileContent +=
         "// This file is auto-generated and will be overwritten on build.\n";
     envFileContent +=
         '/// <reference types="@spotfire/mods-api/action-mods/api.d.ts" />\n';
+
+    if (!manifest.scripts) {
+        return {
+            status: "success",
+            result: envFileContent,
+        };
+    }
+
+    let hasFailed = false;
+    const errors: string[] = [];
+
+    const apiVersionResult = readApiVersion(manifest);
+    if (apiVersionResult.status === "error") {
+        error(
+            `Failed to read apiVersion from manifest, ${envPath} could not be generated.`
+        );
+        error(apiVersionResult.error);
+    }
 
     for (const script of manifest.scripts!) {
         if (!script.name) {
@@ -109,24 +119,118 @@ async function createEnvFile({
 
 `;
 
+        if (apiVersionResult.status === "success") {
+            const apiVersion = apiVersionResult.result;
+            if (apiVersion.supportsFeature("Resources")) {
+                const resourcesType =
+                    manifest.files != null
+                        ? `<${manifest.files.map((f) => `"${f}"`).join(" | ")}>`
+                        : "";
+                tsType += `
+    /** The resources (specified in the 'files' field in the mod manifest) available to this mod. */
+    resources: Spotfire.Dxp.Application.Mods.ActionModResource${resourcesType};
+`;
+            } else if (manifest.files) {
+                stdout(
+                    `Warning: The mod manifest contains resource files (specified under 'files' in the manifest) but targets an apiVersion earlier than ${formatVersion(
+                        features.Resources
+                    )}. These files will not be reachable from within the scripts in this action mod unless you increase your apiVersion.`
+                );
+            }
+        }
+
         for (const param of script.parameters ?? []) {
             if (!param.name) {
                 error("Parameter has no name.");
             }
+
+            if (param.description) {
+                tsType += `\n    /** ${param.description} */\n`;
+            }
+
+            tsType += `    ${param.name}`;
+
+            if (param.optional) {
+                if (
+                    apiVersionResult.status === "success" &&
+                    !apiVersionResult.result.supportsFeature(
+                        "OptionalParameter"
+                    )
+                ) {
+                    error(
+                        `Parameter '${
+                            param.name
+                        }' is declared optional but the mod targets an apiVersion earlier than ${formatVersion(
+                            features.OptionalParameter
+                        )}. Consider targeting a later version to enable this feature.`
+                    );
+                }
+
+                tsType += `?`;
+            }
+
+            tsType += `: `;
+
             if (!param.type) {
                 error(`Parameter '${param.name}' has no type`);
             } else if (isParameterType(param.type)) {
-                const type = toCsType(param.type);
-                if (param.description) {
-                    tsType += `\n    /** ${param.description} */\n`;
+                const feature = typeFeature(param.type);
+                if (
+                    feature != null &&
+                    apiVersionResult.status === "success" &&
+                    !apiVersionResult.result.supportsFeature(feature)
+                ) {
+                    error(
+                        `Parameter '${param.name}' is type '${
+                            param.type
+                        }' but the mod targets an apiVersion earlier than ${formatVersion(
+                            features[feature]
+                        )}. Consider targeting a later version to use this type.`
+                    );
                 }
 
-                tsType += `    ${param.name}: ${type};\n`;
+                if (param.enum) {
+                    if (
+                        apiVersionResult.status === "success" &&
+                        !apiVersionResult.result.supportsFeature(
+                            "EnumParameter"
+                        )
+                    ) {
+                        error(
+                            `Parameter '${
+                                param.name
+                            }' declares an enum but the mod targets an apiVersion earlier than ${formatVersion(
+                                features.EnumParameter
+                            )}. Consider targeting a later version to enable this feature.`
+                        );
+                    }
+
+                    tsType += param.enum.map((x) => `"${x}"`).join(" | ");
+                } else if (param.array) {
+                    if (
+                        apiVersionResult.status === "success" &&
+                        !apiVersionResult.result.supportsFeature("DataViews")
+                    ) {
+                        error(
+                            `Parameter '${
+                                param.name
+                            }' declares array but the mod targets an apiVersion earlier than ${formatVersion(
+                                features.DataViews
+                            )}. Consider targeting a later version to enable this feature.`
+                        );
+                    }
+
+                    tsType += `Iterable<${toCsType(param.type)}>`;
+                } else {
+                    tsType += toCsType(param.type);
+                }
             } else {
                 error(
                     `Parameter '${param.name}' has an invalid type: '${param.type}'`
                 );
             }
+
+            tsType += `;\n`;
         }
 
         tsType = tsType.trimEnd();
@@ -135,16 +239,24 @@ async function createEnvFile({
     }
 
     if (!hasFailed) {
-        const formattedEnvFileContent = await formatIfPossible(
-            envPath,
-            envFileContent,
-            true
-        );
-        await writeFile(envPath, formattedEnvFileContent, "utf-8");
-        stdout(`Environment file finished writing to '${envPath}'`);
-    } else {
-        throw errors.join("\n");
+        if (envPath) {
+            envFileContent = await formatIfPossible(
+                envPath,
+                envFileContent,
+                true
+            );
+        }
+
+        return {
+            status: "success",
+            result: envFileContent,
+        };
     }
+
+    return {
+        status: "error",
+        error: errors,
+    };
 
     /**
      * Reports an error without exiting the function.
@@ -152,6 +264,38 @@ async function createEnvFile({
     function error(msg: string) {
         errors.push(msg);
         hasFailed = true;
+    }
+}
+
+/**
+ * Generates an environment file from the specified action mods manifest at the specified location.
+ * The environment file references the action mods API and makes these types available globally.
+ * The file also contains the input parameters for each script as defined in the manifest.
+ */
+async function createEnvFile({
+    manifestPath,
+    envPath,
+    ...quiet
+}: CreateEnvOptions & QuietOtions) {
+    const stdout = mkStdout(quiet);
+
+    if (!existsSync(manifestPath)) {
+        throw `Cannot find ${manifestPath}`;
+    }
+
+    const manifestJson = await readFile(manifestPath, { encoding: "utf8" });
+    const manifest: Manifest = JSON.parse(manifestJson);
+    const envFileContent = await generateEnvFile({
+        manifest,
+        envPath,
+        ...quiet,
+    });
+
+    if (envFileContent.status === "success") {
+        await writeFile(envPath, envFileContent.result, "utf-8");
+        stdout(`Environment file finished writing to '${envPath}'`);
+    } else {
+        throw new Error(envFileContent.error.join("\n"));
     }
 }
 
@@ -244,11 +388,11 @@ export async function build({
     /** Absolute path to the output directory. */
     const absOutDir = path.resolve(outDir);
 
-    if (!fse.existsSync(absSrcDir)) {
+    if (!existsSync(absSrcDir)) {
         throw new Error(`Cannot find source folder: '${absSrcDir}'`);
     }
 
-    const manifestExists = await fse.exists(manifestPath);
+    const manifestExists = existsSync(manifestPath);
 
     if (!manifestExists) {
         throw new Error(`Cannot find manifest at: '${manifestPath}'`);
@@ -281,7 +425,7 @@ export async function build({
 }
 
 async function getTypeFromManifest(manifestPath: string) {
-    const manifestJson = await fse.readFile(manifestPath, "utf-8");
+    const manifestJson = await readFile(manifestPath, "utf-8");
     try {
         const manifest = JSON.parse(manifestJson);
         const apiVersion = Number.parseFloat(manifest["apiVersion"]);
@@ -401,7 +545,7 @@ async function buildActionMod({
 } & QuietOtions) {
     const stdout = mkStdout(quiet);
     const scriptsDir = path.join(srcDir, "scripts");
-    if (!fse.existsSync(scriptsDir)) {
+    if (!existsSync(scriptsDir)) {
         throw new Error(
             `Cannot find 'scripts' folder in source directory, looked at '${scriptsDir}'.`
         );
@@ -412,6 +556,11 @@ async function buildActionMod({
         format: "iife",
         minify: !debug,
         sourcemap: debug,
+        entryNames: "[name]",
+        entryPoints: [".js", ".ts"].map((extension) =>
+            path.join(scriptsDir, `*${extension}`)
+        ),
+        logOverride: { "empty-glob": "silent" },
 
         /**
          * Action mods have no access to Web APIs.
@@ -430,6 +579,14 @@ async function buildActionMod({
         manifestWatcher.on("change", async (path) => onChange());
         manifestWatcher.on("ready", onChange);
 
+        restartEsbuildImpl({
+            defaultConfig,
+            esbuildConfigPath,
+            outdir: absOutDir,
+            debug,
+            ...quiet,
+        });
+
         async function onChange() {
             console.clear();
             stdout("Manifest change detected, generating new env file.");
@@ -437,64 +594,12 @@ async function buildActionMod({
                 await createEnvFile({ manifestPath, envPath, ...quiet });
             } catch (e) {
                 console.error("Failed to create env file.");
-                if (typeof e === "string") {
-                    console.error(`Error: ${e}`);
-                }
+                console.error(`Error: ${e}`);
             }
             stdout("Watching for file changes.");
         }
-
-        const scriptFiles: string[] = [];
-        const restartEsbuild = debounce(
-            () =>
-                restartEsbuildImpl({
-                    defaultConfig: {
-                        entryPoints: buildFlatEntryPointsMap(scriptFiles),
-                        ...defaultConfig,
-                    },
-                    esbuildConfigPath,
-                    outdir: absOutDir,
-                    debug,
-                    ...quiet,
-                }),
-            500
-        );
-
-        const chokidarPattern = path
-            .join(scriptsDir, "*.ts")
-            .replace(/\\/g, "/");
-        const buildWatcher = chokidar.watch([chokidarPattern], {
-            persistent: true,
-            awaitWriteFinish: true,
-        });
-        buildWatcher.on("add", (fileName) => {
-            scriptFiles.push(fileName);
-            restartEsbuild();
-        });
-        buildWatcher.on("unlink", (fileName) => {
-            const ix = scriptFiles.indexOf(fileName);
-            if (ix >= 0) {
-                scriptFiles.splice(ix, 1);
-            }
-        });
     } else {
         stdout(`Looking for script files in '${scriptsDir}'`);
-
-        const scripts = await fse.readdir(scriptsDir);
-        const scriptEntryPoints = scripts
-            .filter((fileName) => {
-                if (isAllowedEndpointPath(fileName)) {
-                    stdout(`  Found script: ${fileName}`);
-                    return true;
-                } else {
-                    stdout(`  Ignoring non-script: ${fileName}`);
-                    return false;
-                }
-            })
-            .map((fileName) => {
-                return path.resolve(scriptsDir, fileName);
-            });
-
         const esbuildOptions = await getEsbuildOptions({
             esbuildConfigPath,
             defaultConfig,
@@ -504,7 +609,6 @@ async function buildActionMod({
         });
         const ctx = await esbuild.context({
             ...esbuildOptions,
-            entryPoints: buildFlatEntryPointsMap(scriptEntryPoints),
         });
         stdout("Building Action Mod");
         await ctx.rebuild();
@@ -517,20 +621,6 @@ async function buildActionMod({
         }
         await ctx.dispose();
     }
-}
-
-/**
- * Flattens the entry points so that they lose their directory structure in the output folder.
- * @param entryPointPaths The paths to the entry point for each bundle.
- * @returns The map where the key is the file name and the value is the path to the entry point.
- */
-export function buildFlatEntryPointsMap(entryPointPaths: string[]) {
-    const flatEntryPoints: { [fileName: string]: string } = {};
-    for (const filePath of entryPointPaths) {
-        const fileName = path.parse(filePath).name;
-        flatEntryPoints[fileName] = filePath;
-    }
-    return flatEntryPoints;
 }
 
 async function buildVisualizationMod({
@@ -548,12 +638,25 @@ async function buildVisualizationMod({
     watch: boolean;
 } & QuietOtions) {
     const stdout = mkStdout(quiet);
-    const entryPoint = path.join(srcDir, "main.ts");
+    const entryPointCandidates = [
+        "main.ts",
+        "Main.ts",
+        "main.tsx",
+        "Main.tsx",
+        "main.js",
+        "Main.js",
+        "main.jsx",
+        "Main.jsx",
+    ];
+    let entryPoint = path.join(srcDir, entryPointCandidates[0]);
 
-    if (!fse.existsSync(entryPoint)) {
-        throw new Error(
-            `Could not find entry point for visualization mod at '${entryPoint}'.`
-        );
+    for (const candidate of entryPointCandidates) {
+        const entryPointPath = path.join(srcDir, candidate);
+        if (existsSync(entryPointPath)) {
+            stdout(`Found possible entry point '${entryPointPath}'.`);
+            entryPoint = entryPointPath;
+            break;
+        }
     }
 
     const defaultConfig: esbuild.BuildOptions = {

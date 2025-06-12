@@ -1,10 +1,10 @@
 /**
- * Copyright © 2024 Cloud Software Group, Inc.
+ * Copyright © 2006 - 2025 Cloud Software Group, Inc.
  * This file is subject to the license terms contained
  * in the license file that is distributed with this file.
  * 
  * Spotfire Action Mods API declaration.
- * Version: 2.0
+ * Version: 2.1
  */
 
 declare namespace Spotfire.Dxp {
@@ -23,6 +23,9 @@ declare namespace Spotfire.Dxp {
          * If an analysis file (DXP file) has been opened in the application, an
          * object representing that document is available through
          * {@link Spotfire.Dxp.Application.AnalysisApplication.Document}.
+         * @remark New objects of this type cannot be created. Also, the one and only
+         * instance of this class is available throughout the entire lifetime of
+         * the running instance of the application as a service.
          * 
          * @since 2.0
          * 
@@ -94,6 +97,7 @@ declare namespace Spotfire.Dxp {
             /**
              * Saves the currently loaded document to the library
              * with the specified title in the specified folder.
+             * @remark This method will overwrite an existing item but keep the existing library item id.
              * @param folder The library folder in which to save the document.
              * @param title The title of the library item that the document will be saved to.
              * @param metadataSettings The metadata to associate with the library item.
@@ -110,6 +114,8 @@ declare namespace Spotfire.Dxp {
             /**
              * Saves a copy of the currently loaded document to the library
              * with the specified title in the specified folder.
+             * @remark Does not update DocumentOrigin et al.
+             * Will overwrite an existing item and keep the existing library item id (if permissions allow this).
              * @param folder The library folder in which to save the document.
              * @param title The title of the library item that the document will be saved to.
              * @param metadataSpecification The metadata to associate with the library item.
@@ -283,6 +289,13 @@ declare namespace Spotfire.Dxp {
         
         /**
          * Represents a collection of custom nodes.
+         * @remark The collection cannot hold more than one instance of a specific custom node type.
+         * To store many instances of a certain node type, MyNode, do as follows:
+         * 
+         * 
+         * Derive MyNode from DocumentNode instead of CustomNode. Then create a class MyNodeCollection that
+         * derives from CustomNode. Add a collection structure to MyNodeCollection (typically an UndoableList) that
+         * can hold instances of MyNode. Then simply add a single MyNodeCollection instance to the CustomNodeCollection.
          * 
          * @since 2.0
          * 
@@ -553,6 +566,22 @@ declare namespace Spotfire.Dxp {
              */
             get FilteringSchemes(): Filters.FilteringSchemeCollection;
             /**
+             * Gets an object that can be used to embed custom shapes in the document.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            get MarkerShapeDefinitions(): Visuals.MarkerShapeDefinitions;
+            /**
+             * Gets the mod manager.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            get ModManager(): Mods.ModManager;
+            /**
              * Gets the pages of this document.
              * 
              * @since 2.0
@@ -595,6 +624,9 @@ declare namespace Spotfire.Dxp {
              * Configures a newly created document with reasonable default
              * values such as an initial page with a visualization on it and a filter
              * panel containing default filters for all columns and hierarchies.
+             * @remark This method is called when a document is created by the user, but the
+             * exact configuration produced is undefined and can change between versions.
+             * This method should only be called once. It implicitly calls {@link Spotfire.Dxp.Application.Document.ApplyUserPreferences}.
              * 
              * @since 2.0
              * 
@@ -654,6 +686,12 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets or sets a value indicating whether visualizations should use the behavior
              * of versions 10.7 and prior when limited by their own marking.
+             * @remark Up until version 10.7, marking in visualizations limited by their own marking was mostly ignored.
+             * As of version 10.7 marking is enabled, unless this flag is set to true.
+             * 
+             * 
+             * When opening dxp files that have been created in version 10.7 or prior, this property will be set to true.
+             * When creating new analyses, this property will be false.
              * 
              * @since 2.0
              * 
@@ -713,6 +751,8 @@ declare namespace Spotfire.Dxp {
             get IsDirty(): JsType<System.Boolean>;
             /**
              * Gets the library item that the analysis was last saved to in the library;  otherwise null.
+             * @remark If there is no analysis open or if the analysis last save operation was not to the library,
+             * null is returned.
              * 
              * @since 2.0
              * 
@@ -721,6 +761,8 @@ declare namespace Spotfire.Dxp {
             get LibraryItemUsedBySave(): Framework.Library.LibraryItem;
             /**
              * Gets the file name that the analysis was opened from; otherwise null.
+             * @remark If there is no analysis open or if the analysis was no loaded from a file,
+             * null is returned.
              * 
              * @since 2.0
              * 
@@ -729,6 +771,8 @@ declare namespace Spotfire.Dxp {
             get LoadedFromFileName(): JsType<System.String>;
             /**
              * Gets the library item that the analysis was opened from; otherwise null.
+             * @remark If there is no analysis open or if the analysis was not loaded from the library,
+             * null is returned.
              * 
              * @since 2.0
              * 
@@ -737,6 +781,8 @@ declare namespace Spotfire.Dxp {
             get LoadedFromLibraryItem(): Framework.Library.LibraryItem;
             /**
              * Gets the library path that the analysis was opened from; otherwise null.
+             * @remark If there is no analysis open or if the analysis was not loaded from the library,
+             * null is returned.
              * 
              * @since 2.0
              * 
@@ -955,6 +1001,8 @@ declare namespace Spotfire.Dxp {
         
         /**
          * A page contains {@link Spotfire.Dxp.Application.Visual | visuals} and {@link Spotfire.Dxp.Application.Panel | panels}.
+         * @remark The visuals are displayed in the {@link Spotfire.Dxp.Application.Page.GetVisualizationAreaSize | visualization area}
+         * at the center of the page. The panels are docked to the sides around the visualization area.
          * 
          * @since 2.0
          * 
@@ -1101,6 +1149,13 @@ declare namespace Spotfire.Dxp {
             set Title(value: JsType<System.String>);
             /**
              * Gets or sets a value indicating whether this {@link Spotfire.Dxp.Application.Page} is visible.
+             * @remark Only pages that are visible are shown when a Spotfire analysis is used in "Viewing" mode and only
+             * the visible pages are included by default when exporting to PDF. An IronPython script or action can
+             * still be used to navigate to a hidden (the Visible property set to false) page in "Viewing" mode.
+             * 
+             * 
+             * When a Spotfire analysis is used in "Editing" mode all pages are shown in the page navigation, but pages with
+             * the Visible property set to false are indicated.
              * 
              * @since 2.0
              * 
@@ -1159,6 +1214,17 @@ declare namespace Spotfire.Dxp {
             AutoConfigure(source: Page): void;
             /**
              * Gets the bounds of a visual in the user interface.
+             * @remark This methods gets the current bounds of a visual in the user interface.
+             * In order to get a reliable and up to date result from this method, the user
+             * interface must be allowed to run its layout code. This can be forced
+             * by setting the ActivePageReference property on the {@link Spotfire.Dxp.Application.Document | document}.
+             * 
+             * 
+             * If no user interface is present, or if the user interface has not displayed this
+             * visual yet, the method returns Rectangle.Empty.
+             * 
+             * 
+             * The rectangle is relative to the visualization area of a page. It is not adjusted for margins.
              * @param visual The {@link Spotfire.Dxp.Application.Visual} to get the bounds for.
              * @returns Current bounds.
              * 
@@ -1169,6 +1235,12 @@ declare namespace Spotfire.Dxp {
             GetVisualBounds(visual: Visual): JsType<System.Drawing.Rectangle>;
             /**
              * Gets the bounds of a visual given a rectangle defining a visualization area.
+             * @remark This method can be used together with the
+             * {@link Spotfire.Dxp.Application.Visual.RenderAsync|Visual.Render} method to render the visuals
+             * on a page using the current page layout, but with a different visualization area size.
+             * 
+             * 
+             * The returned rectangle is not adjusted for margins.
              * @param visualizationAreaBounds A rectangle defining a visualization area.
              * @param visual A visual.
              * @returns The bounds the visual would have, given the bounds of a visualization area.
@@ -1180,6 +1252,17 @@ declare namespace Spotfire.Dxp {
             GetVisualBounds(visual: Visual, visualizationAreaBounds: (JsType<System.Drawing.Rectangle> | System.Drawing.Rectangle)): JsType<System.Drawing.Rectangle>;
             /**
              * Gets the size of the visualization area in the user interface.
+             * @remark All the visuals are displayed in the visualization area
+             * at the center of the page. The panels are docked to the sides around the visualization area.
+             * 
+             * 
+             * The size of the visualization area is controlled by the user interface.
+             * In order to get a reliable and up to date result from this method, the user
+             * interface must be allowed to run its layout code. This can be forced
+             * by setting the ActivePageReference property on the {@link Spotfire.Dxp.Application.Document | document}.
+             * 
+             * 
+             * If the application has no running user interface, this method returns Size.Empty.
              * @returns The size of the visualization area in pixels.
              * 
              * @since 2.0
@@ -1398,6 +1481,8 @@ declare namespace Spotfire.Dxp {
         
         /**
          * Base class for panels placed at the sides or at the bottom of the application.
+         * @remark See the {@link Spotfire.Dxp.Application.Extension.CustomPanel} class for
+         * creating custom panels.
          * 
          * @since 2.0
          * 
@@ -1440,6 +1525,7 @@ declare namespace Spotfire.Dxp {
             get TypeId(): Framework.DocumentModel.TypeIdentifier;
             /**
              * Gets or sets whether the panel is visible.
+             * @remark When the panel state is popover, this property is disregarded.
              * 
              * @since 2.0
              * 
@@ -1644,6 +1730,7 @@ declare namespace Spotfire.Dxp {
             static readonly CollaborationPanel: Framework.DocumentModel.TypeIdentifier;
             /**
              * DataPanel identifier.
+             * @deprecated The data panel no longer belongs to a page.
              * 
              * @since 2.0
              * 
@@ -1763,6 +1850,14 @@ declare namespace Spotfire.Dxp {
         
         /**
          * This class represents either a visualization or a text area.
+         * @remark The type is determined by the {@link Spotfire.Dxp.Application.Visual.TypeId} property, which typically is one of the {@link Spotfire.Dxp.Application.Visuals.VisualTypeIdentifiers}.
+         * By setting the TypeId property, the visual is converted to the new type.
+         * Since the user can convert any visual at any time via the user interface,
+         * the TypeId must always be determined before calling {@link Spotfire.Dxp.Application.Visual.As} to get the specific
+         * visualization (or text area) type.
+         * Although the visualization methods and properties are sometimes declared on
+         * abstract base classes such as {@link Spotfire.Dxp.Application.Visuals.TablePlotBase} and {@link Spotfire.Dxp.Application.Visuals.TrellisVisualization},
+         * always use the concrete visualization classes, such as {@link Spotfire.Dxp.Application.Visuals.BarChart}, directly.
          * 
          * @since 2.0
          * 
@@ -1839,6 +1934,10 @@ declare namespace Spotfire.Dxp {
             /**
              * Configures a newly created visual with reasonable default
              * values given the current data set.
+             * @remark This method is called when a visual is created by the user, but the
+             * exact configuration produced is undefined and can change between versions.
+             * This method should only be called once.
+             * It implicity calls {@link Spotfire.Dxp.Application.Visual.ApplyUserPreferences}.
              * 
              * @since 2.0
              * 
@@ -1890,6 +1989,16 @@ declare namespace Spotfire.Dxp {
              */
             AddDuplicate(visual: Visual): Visual;
             /**
+             * Adds a new visual with a {@link Spotfire.Dxp.Application.Mods.ModVisualization} content as specified by the modIdentifier.
+             * @param modIdentifier Specifies which mod to add.
+             * @returns The newly created {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            AddNew(modIdentifier: Mods.ModIdentifier): Mods.ModVisualization;
+            /**
              * Adds a new visual of the specified type.
              * @returns The newly created content.
              * 
@@ -1930,6 +2039,8 @@ declare namespace Spotfire.Dxp {
             Contains(visual: Visual): JsType<System.Boolean>;
             /**
              * Removes the specified {@link Spotfire.Dxp.Application.Visual}.
+             * @remark Removing null or a {@link Spotfire.Dxp.Application.Visual} not in the
+             * collection results in false but no exception.
              * @param visual The {@link Spotfire.Dxp.Application.Visual} to remove.
              * @returns true is successful, otherwise false.
              * 
@@ -2094,6 +2205,7 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Tries to get a uri for a Spotfire Server redirect page of the specified bookmark, which
                  * should be accessed through http or https.
+                 * @remark Use Uri.AbsoluteUri on the resulting uri for a correct string representation if url encoded path are used.
                  * @param bookmark The bookmark to retrieve the Spotfire Server redirect page uri for.
                  * @param option The option for generating the resulting uri.
                  * @param uri The Spotfire Server redirect page uri for the specified bookmark.
@@ -2120,6 +2232,7 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Tries to get a uri for a Spotfire Web Player Server redirect page of the specified bookmark, which
                  * should be accessed through http or https.
+                 * @remark Use Uri.AbsoluteUri on the resulting uri for a correct string representation if url encoded path are used.
                  * @param bookmark The bookmark to retrieve the Spotfire Web Player Server redirect page uri for.
                  * @param option The option for generating the resulting uri.
                  * @param uri The Spotfire Web Player Server redirect page uri for the specified bookmark.
@@ -2133,6 +2246,7 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Tries to get a uri for a Spotfire Web Player analysis with the specified bookmark, which
                  * should be accessed through http or https.
+                 * @remark Use Uri.AbsoluteUri on the resulting uri for a correct string representation if url encoded path are used.
                  * @param bookmark The bookmark to retrieve the Spotfire Web Player Player analysis uri for.
                  * @param option The option for generating the resulting uri.
                  * @param uri The Spotfire Web Player analysis uri with the specified bookmark.
@@ -2368,6 +2482,9 @@ declare namespace Spotfire.Dxp {
         namespace Calculations {
             /**
              * Base class for calculations.
+             * @remark This class cannot be extended through inheritance. Use Spotfire.Dxp.Application.Extension.CustomCalculation instead.
+             * To make a calculation work you need to implement Spotfire.Dxp.Application.Extension.CustomCalculation, {@link Spotfire.Dxp.Application.Calculations.Calculation.CalculationSettings} and
+             * {@link Spotfire.Dxp.Application.Calculations.Calculation.CalculationResults} classes.
              * 
              * @since 2.0
              * 
@@ -2648,6 +2765,9 @@ declare namespace Spotfire.Dxp {
             /**
              * Abstract base class for calculation results. After a calculation has been executed the results can be found here. This class must be extended to
              * implement a specialized results class that is suited for a concrete calculations implementation.
+             * @remark The deriving class can ask this base class for default result types such as columns or tables by using
+             * {@link Spotfire.Dxp.Application.Calculations.CalculationResultsIdentifier} objects created in the nested {@link Spotfire.Dxp.Application.Calculations.CalculationResults.CalculationResultsIdentifiers} class. These should then be
+             * exposed as normal properties in the deriving class so user of the implementation calculation doesn't have to know anything about identifiers etc.
              * 
              * @since 2.0
              * 
@@ -2710,6 +2830,11 @@ declare namespace Spotfire.Dxp {
             /**
              * Base class for calculation settings. Holds the input to a calculation and uses it to determine when the calculation needs to be rerun,
              * invalidated etc. This class must be extended to implement a specialized settings class that is suited for a concrete calculations implementation.
+             * @remark Adding the input as dependencies allows the framework to ask for a recalculation/invalidation when they change. In addition it will
+             * detect when they disappear due to the user deleting vital columns and avoid recalculation until new ones are set up. The deriving class can ask
+             * this base class for default result types such as columns or tables by using
+             * {@link Spotfire.Dxp.Application.Calculations.CalculationDependencyIdentifier} objects created in the nested {@link Spotfire.Dxp.Application.Calculations.CalculationSettings.CalculationDependencyIdentifiers} class. These should then be
+             * exposed as normal properties in the deriving class so user of the implementation calculation doesn't have to know anything about identifiers etc.
              * 
              * @since 2.0
              * 
@@ -2727,6 +2852,9 @@ declare namespace Spotfire.Dxp {
                 get IsNew(): JsType<System.Boolean>;
                 /**
                  * Gets the update behavior of the calculation.
+                 * @remark This determines whether the calculation should be reexecuted immediately when dependencies change or just
+                 * indicate their need for manual refresh. Note that columns residing in a normal table will also be asked to recalculate
+                 * themselves when the rowcount of their table changes regardless of their normal UpdateBehavior.
                  * 
                  * @since 2.0
                  * 
@@ -2962,6 +3090,8 @@ declare namespace Spotfire.Dxp {
             class DataColumnCalculationDependencyCollection extends CalculationDependencyCollection<DataColumnCalculationDependency> implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext>, Explicit<System.Collections.Generic.IEnumerable<DataColumnCalculationDependency>>, Explicit<System.Collections.IEnumerable> {
                 /**
                  * The {@link Spotfire.Dxp.Data.DataColumn} objects that this dependency represents.
+                 * @remark Note that these are the existing dependencies. A dependency might be added and be reported here but is subsequently deleted
+                 * by the user in which case it will not show up here.
                  * 
                  * @since 2.0
                  * 
@@ -3046,6 +3176,8 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 /**
                  * Adds a column to an existing table or replaces it if it already exist.
+                 * @remark This method can be called multiple times with new builders to add to the same id within a calculation.
+                 * In that case they all need to reference the same table.
                  * @param id A unique identifier for this result.
                  * @param table The {@link Spotfire.Dxp.Data.DataTable} to insert the columns in.
                  * @param builder A {@link Spotfire.Dxp.Data.Columns.ColumnBuilder} containing the values that the column should contain. Column name will be made unique within this {@link Spotfire.Dxp.Data.DataTable}.
@@ -3057,6 +3189,8 @@ declare namespace Spotfire.Dxp {
                 AddColumns(id: CalculationResultsIdentifier, table: Data.DataTable, builder: Data.Columns.ColumnBuilder): void;
                 /**
                  * Adds columns to an existing table or replaces them if they already exist.
+                 * @remark This method can be called multiple times with new builders to add to the same id within a calculation.
+                 * In that case they all need to reference the same table.
                  * @param id A unique identifier for this result.
                  * @param table The {@link Spotfire.Dxp.Data.DataTable} to insert the columns in.
                  * @param columns The {@link Spotfire.Dxp.Data.Columns.ColumnBuilder} instances containing the values that the columns should contain. Column names will be made unique within this {@link Spotfire.Dxp.Data.DataTable}.
@@ -3068,6 +3202,8 @@ declare namespace Spotfire.Dxp {
                 AddColumns(id: CalculationResultsIdentifier, table: Data.DataTable, columns: OrExplicit<System.Collections.Generic.IEnumerable<Data.Columns.ColumnBuilder>>): void;
                 /**
                  * Adds a completely new {@link Spotfire.Dxp.Data.DataTable} consisting of the columns provided here or replaces them if the table already exists.
+                 * @remark Column name will be made unique. This method can be called multiple times with new builders to add to the same id within a calculation.
+                 * In that case they all need to reference the same table.
                  * @param id A unique identifier for this result.
                  * @param tableName The name of the {@link Spotfire.Dxp.Data.DataTable} to create. If the table exists and is given another name it will be renamed. If
                  * the name is not unique it will be made unique.
@@ -3080,6 +3216,8 @@ declare namespace Spotfire.Dxp {
                 AddTable(id: CalculationResultsIdentifier, tableName: (JsType<System.String> | System.String), builder: Data.Columns.ColumnBuilder): void;
                 /**
                  * Adds a completely new {@link Spotfire.Dxp.Data.DataTable} consisting of the columns provided here or replaces them if the table already exists.
+                 * @remark This method can be called multiple times with new builders to add to the same id within a calculation.
+                 * In that case they all need to reference the same table.
                  * @param id A unique identifier for this result.
                  * @param tableName The name of the {@link Spotfire.Dxp.Data.DataTable} to create. If the table exists and is given another name it will be renamed. If
                  * the name is not unique it will be made unique.
@@ -3159,6 +3297,7 @@ declare namespace Spotfire.Dxp {
                     constructor();
                     /**
                      * Tries to get the resulting {@link Spotfire.Dxp.Data.DataColumn} specified by column
+                     * @remark
                      * @param measure Specifies which measure to get.
                      * @param column The {@link Spotfire.Dxp.Data.DataColumn} in the result, null if it cannot be found.
                      * @returns True if the column was found, false otherwise.
@@ -3200,6 +3339,7 @@ declare namespace Spotfire.Dxp {
                     set ComparisonMethod(value: ComparisonMethod);
                     /**
                      * Specifies which {@link Spotfire.Dxp.Data.DataFilteringSelection} the {@link Spotfire.Dxp.Application.Calculations.DataRelationships.DataRelationshipsCalculation} operates on.
+                     * @remark If no {@link Spotfire.Dxp.Data.DataFilteringSelection} is set the
                      * 
                      * @since 2.0
                      * 
@@ -3209,6 +3349,9 @@ declare namespace Spotfire.Dxp {
                     set DataFilteringSelectionReference(value: Data.DataFilteringSelection);
                     /**
                      * Gets the update behavior of the calculation.
+                     * @remark This determines whether the calculation should be reexecuted immediately when dependencies change or just
+                     * indicate their need for manual refresh. Note that columns residing in a normal table will also be asked to recalculate
+                     * themselves when the rowcount of their table changes regardless of their normal UpdateBehavior.
                      * 
                      * @since 2.0
                      * 
@@ -3538,6 +3681,13 @@ declare namespace Spotfire.Dxp {
         namespace Extension {
             /**
              * Base class for custom nodes.
+             * @remark By implementing a custom node, new state and behavior can be
+             * added to the document. A custom node can listen to internal events from
+             * other nodes and update the document accordingly.
+             * 
+             * 
+             * For example, a custom node on a page could listen to changes to the y-axis expression of any
+             * bar chart on that page and update the other bar charts accordingly.
              * 
              * @since 2.0
              * 
@@ -3620,6 +3770,8 @@ declare namespace Spotfire.Dxp {
                 IsChecked(value: any): JsType<System.Boolean>;
                 /**
                  * Unchecks the checkbox for value.
+                 * @remark To uncheck all values, use the {@link Spotfire.Dxp.Application.Filters.CheckBoxFilter.UncheckAll} method. It has better performance than a large number
+                 * of consecutive calls to this method.
                  * @param value The value to uncheck.
                  * 
                  * @since 2.0
@@ -3629,6 +3781,8 @@ declare namespace Spotfire.Dxp {
                 Uncheck(value: any): void;
                 /**
                  * Unchecks the checkboxes for all values in this instance.
+                 * @remark To check just a few of the values in a check box filter, first call this method to uncheck all values followed
+                 * by a few calls to {@link Spotfire.Dxp.Application.Filters.CheckBoxFilter.Check|Check(value)} as desired.
                  * 
                  * @since 2.0
                  * 
@@ -3929,6 +4083,8 @@ declare namespace Spotfire.Dxp {
                 get FilteredRows(): Data.IndexSet;
                 /**
                  * Flag indicating whether the filter is modified.
+                 * @remark A filter working on in-memory data is considered to be modified if its {@link Spotfire.Dxp.Application.Filters.Filter.FilteredRows | filtered rows} IndexSet is not full.
+                 * If the data table is external the filter is considered modified if the user has changed it.
                  * 
                  * @since 2.0
                  * 
@@ -4115,6 +4271,9 @@ declare namespace Spotfire.Dxp {
                 get DataTableReference(): Data.DataTable;
                 /**
                  * Gets the filtered rows.
+                 * @remark The returned {@link Spotfire.Dxp.Data.IndexSet} can be used to read which rows are included and which are filtered out from the filter collection.
+                 * It should not be used to modify the filtered rows since this is a computed property which will change when users modify the setting of any individual filter.
+                 * To filter individual values, instead use the {@link Spotfire.Dxp.Application.Filters.CheckBoxFilter}'s {@link Spotfire.Dxp.Application.Filters.CheckBoxFilter.Check|Check(value)} and {@link Spotfire.Dxp.Application.Filters.CheckBoxFilter.Uncheck|Uncheck(value)} methods.
                  * 
                  * @since 2.0
                  * 
@@ -4246,6 +4405,7 @@ declare namespace Spotfire.Dxp {
              * A container for one or more {@link Spotfire.Dxp.Application.Filters.FilterHandle}s which can
              * be placed into a {@link Spotfire.Dxp.Application.Filters.FilterPanel} to group filters. A
              * FilterGroup is uniquely identified by its name within any given panel.
+             * @remark This class cannot be extended through inheritance.
              * 
              * @since 2.0
              * 
@@ -4405,6 +4565,12 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets a value indicating whether this {@link Spotfire.Dxp.Application.Filters.FilterGroupItem}
                  * is visible in its {@link Spotfire.Dxp.Application.Filters.FilterGroup}.
+                 * @remark Hiding a {@link Spotfire.Dxp.Application.Filters.FilterHandle} by setting this property to false will not
+                 * remove the {@link Spotfire.Dxp.Application.Filters.FilterHandle} from its group. Note that filters that are
+                 * hidden as a cause of them not matching the
+                 * {@link Spotfire.Dxp.Application.Filters.FilterPanel.InteractiveSearchPattern} of the
+                 * {@link Spotfire.Dxp.Application.Filters.FilterPanel} can still return true
+                 * for queries to this property.
                  * 
                  * @since 2.0
                  * 
@@ -4505,6 +4671,7 @@ declare namespace Spotfire.Dxp {
             /**
              * A FilteringScheme contains {@link Spotfire.Dxp.Application.Filters} separated in {@link Spotfire.Dxp.Application.Filters.FilterCollection}s
              * for each {@link Spotfire.Dxp.Data.DataTable} in the {@link Spotfire.Dxp.Application.Document}.
+             * @remark A {@link Spotfire.Dxp.Application.Filters.FilterPanel} references one FilteringScheme at a time. But several FilteringSchemes can exist in the {@link Spotfire.Dxp.Application.Document}
              * 
              * @since 2.0
              * 
@@ -4522,6 +4689,7 @@ declare namespace Spotfire.Dxp {
                 set AutoConfigureFilterCollections(value: JsType<System.Boolean>);
                 /**
                  * Gets the default filter collection.
+                 * @remark The default filter collection is the one that corresponds to the {@link Spotfire.Dxp.Data.DataTableCollection.DefaultTableReference} table.
                  * 
                  * @since 2.0
                  * 
@@ -4587,6 +4755,10 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Collection of all FilteringSchemes in this {@link Spotfire.Dxp.Application.Document}.
+             * @remark The contents of this collection is kept in sync with the data filtering selection collection
+             *  owned by the data manager.
+             *  Filtering schemes cannot be explicitly added to or removed from this collection but they can be
+             *  implicitly added or removed by adding or removing filtering selections.
              * 
              * @since 2.0
              * 
@@ -4604,6 +4776,7 @@ declare namespace Spotfire.Dxp {
                 set AutoConfigureFilteringSchemes(value: JsType<System.Boolean>);
                 /**
                  * Gets the default filtering scheme.
+                 * @remark The default {@link Spotfire.Dxp.Application.Filters.FilteringScheme} is the one that corresponds to {@link Spotfire.Dxp.Data.DataFilteringSelectionCollection.DefaultFilteringReference}
                  * 
                  * @since 2.0
                  * 
@@ -5217,6 +5390,8 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets a value indicating whether or not the filter should
                  * include empty value rows.
+                 * @remark Settings this property to true on columns that do
+                 * not contain empty values will have no effect.
                  * 
                  * @since 2.0
                  * 
@@ -5237,6 +5412,13 @@ declare namespace Spotfire.Dxp {
                 get ValidVisualScales(): System.Collections.ObjectModel.ReadOnlyCollection<VisualScale>;
                 /**
                  * Gets or sets this range filter's min and max value.
+                 * @remark When the ValueDataRange is tightened, the {@link Spotfire.Dxp.Application.Filters.RangeFilter.ValueRange}
+                 * is tightened equally to match the ValueDataRange. The ValueRange is
+                 * however not set to the High and Low end-point values.
+                 * 
+                 * 
+                 * The Range Filter visually represents custom value
+                 * ranges that are less/greater that the default range with three dots.
                  * 
                  * @since 2.0
                  * 
@@ -5269,6 +5451,8 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 /**
                  * Resets the filter data range to the extreme values in the column.
+                 * @remark Resetting the data range does not affect the
+                 * {@link Spotfire.Dxp.Application.Filters.RangeFilter.ValueRange} of the filter.
                  * 
                  * @since 2.0
                  * 
@@ -5379,6 +5563,8 @@ declare namespace Spotfire.Dxp {
                 set ShowNone(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the filtered value.
+                 * @remark Setting this property to {@link Spotfire.Dxp.Application.Filters.ItemFiltering.Empty}
+                 * when the filter column does not have empty values will have no effect.
                  * 
                  * @since 2.0
                  * 
@@ -5625,6 +5811,8 @@ declare namespace Spotfire.Dxp {
              * A ValueRange represents an interval in a scale containing values
              * of arbitrary types. The range is defined by the properties
              * {@link Spotfire.Dxp.Application.Filters.ValueRange.High} and {@link Spotfire.Dxp.Application.Filters.ValueRange.Low}.
+             * @remark Do not use the empty constructor of this struct to create new
+             * instances. Doing so will cause the range to be invalid.
              * 
              * @since 2.0
              * 
@@ -5791,6 +5979,10 @@ declare namespace Spotfire.Dxp {
             /**
              * Defines the layout structure and content to be applied within
              * a {@link Spotfire.Dxp.Application.Page}.
+             * @remark Each BeginStackedSection/BeginSideBySideSection call splits the space available into two sections
+             * either vertically or horizontally. Space within a section is divided amongst the visuals that are actually
+             * added so if we make five subsections and only add a visual to one of them it will take the entire space of
+             * all the sections.
              * 
              * @since 2.0
              * 
@@ -6007,6 +6199,8 @@ declare namespace Spotfire.Dxp {
                 set FitToWindow(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the size in pixels for the visualization area.
+                 * @remark If you are setting this property you probably want to set
+                 * the {@link Spotfire.Dxp.Application.Layout.VisualizationAreaSize.FitToWindow} property as well.
                  * 
                  * @since 2.0
                  * 
@@ -6030,6 +6224,353 @@ declare namespace Spotfire.Dxp {
                 };
                 private __type_3771384762: null;
             }
+        }
+        
+        namespace Mods {
+            /**
+             * Represents an axis in a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModAxis extends Visuals.Axis implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the legend item.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get LegendItem(): ModLegendAxisItem;
+                /**
+                 * Gets or sets a value indicating whether an axis selector should be shown for this axis.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ShowAxisSelector(): JsType<System.Boolean>;
+                set ShowAxisSelector(value: JsType<System.Boolean>);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_380656612: null;
+            }
+            
+            /**
+             * Identifies a Mod that can be used in the Document.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModIdentifier extends Object {
+                /**
+                 * Gets the id of the Mod that this instance represents, as declared in the mod-manifest.json of the Mod.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Id(): JsType<System.String>;
+                /**
+                 * Gets the name of the Mod that this instance represents, as declared in the mod-manifest.json of the Mod.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Name(): JsType<System.String>;
+                /**
+                 * Gets the version of the Mod that this instance represents, as declared in the mod-manifest.json of the Mod.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Version(): JsType<System.Version>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_307779478: null;
+            }
+            
+            /**
+             * Represents a legend item for a {@link Spotfire.Dxp.Application.Mods.ModAxis}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModLegendAxisItem extends Visuals.LegendAxisItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /** Gets the title of this legend item. */
+                get Title(): JsType<System.String>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_2917640002: null;
+            }
+            
+            /**
+             * Manages the Mods in a document. There is one instance of the ModManager in each document and
+             * it is owned by the Document.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModManager extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Enumerates all visualization mods embedded in the document as well as all visualization mods that have been pinned by the current user.
+                 * @returns The visualization mods available to the current user.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                GetVisualizationModsIncludingPinned(): System.Collections.Generic.IEnumerable<ModIdentifier>;
+                /**
+                 * Tries to load a Visualization Mod from the specified libraryItem in the library.
+                 * @param libraryItem The item in the library representing a Visualization Mod.
+                 * @param modIdentifier The {@link Spotfire.Dxp.Application.Mods.ModIdentifier} for the Visualization Mod that has been loaded, or null.
+                 * @param exception The exception that occured during load, or null.
+                 * @returns true if the Visualization Mod was successfully loaded, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Extended capability 'LibraryRead'
+                 */
+                TryLoadVisualizationModFromLibrary(libraryItem: Framework.Library.LibraryItem, modIdentifier: OutParam<ModIdentifier>, exception: OutParam<System.Exception>): JsType<System.Boolean>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_1474382124: null;
+            }
+            
+            /**
+             * Represents the base class for custom properties owned by a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModProperty extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the name of the property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Name(): JsType<System.String>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_4017307848: null;
+            }
+            
+            /**
+             * Represents a property owned by a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModPropertyGeneric<T> extends ModProperty implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets or sets the value.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Value(): JsType<T>;
+                set Value(value: JsType<T>);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_4058750729: null;
+            }
+            
+            /**
+             * Represents a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ModVisualization extends Visuals.Visualization implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the axes declared by this Mod Visualization, as defined in the mod-manifest.json,
+                 * excluding the color axis. To access the color axis, use the ColorAxis property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Axes(): TypedArray<ModAxis>;
+                /**
+                 * Gets the names of the axes declared by this instance, including the Color axis, if declared.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get AxesNames(): TypedArray<JsType<System.String>>;
+                /**
+                 * Gets the color axis, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ColorAxis(): (Visuals.ColorAxis | null);
+                /**
+                 * Gets the details.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Details(): Visuals.Details;
+                /**
+                 * Gets a value indicating whether this instance has a color axis in the mod manifest.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get HasColorAxis(): JsType<System.Boolean>;
+                /**
+                 * Gets a value indicating whether this instance has tooltips enabled.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get HasTooltips(): JsType<System.Boolean>;
+                /**
+                 * Gets the static mod identifier, as specified in the mod manifest, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ModIdentifier(): (ModIdentifier | null);
+                /**
+                 * Gets the properties of this Mod Visualization, as defined in the mod-manifest.json.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Properties(): TypedArray<ModProperty>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Gets the axis with the specified name declared by this Mod Visualization, as
+                 * defined in the mod-manifest.json, excluding the color axis.
+                 * To access the color axis, use the ColorAxis property.
+                 * @param name The name of the axis to get.
+                 * @returns An object representing the Mod Axis, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Axis(name: (JsType<System.String> | System.String)): (ModAxis | null);
+                /**
+                 * Gets the Mod Property with the specified name, or null if no such property
+                 * of the specified type TValue exists.
+                 * @param name The name of the Mod Property, as defined in the mod-manifest.json.
+                 * @returns An object representing the Mod Property, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 * @param typeTValue - Generic type argument
+                 */
+                Property<TValue>(typeTValue: TypeRefParam<TValue>, name: (JsType<System.String> | System.String)): (ModPropertyGeneric<TValue> | null);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_2600286319: null;
+            }
+            
+            function ModProperty<T>(typeT: TypeRefParam<T>): TypeRef<ModPropertyGeneric<T>>;
         }
         
         namespace Tools {
@@ -6329,6 +6870,10 @@ declare namespace Spotfire.Dxp {
                 get AxisMode(): AxisMode;
                 /**
                  * Gets or sets the axis binding.
+                 * @remark Axis bindings are used to bind the expression on an axis to the currently marked value in a column.
+                 * 
+                 * 
+                 * The default value of this property is null.
                  * 
                  * @since 2.0
                  * 
@@ -6358,6 +6903,26 @@ declare namespace Spotfire.Dxp {
                 set EvaluationMode(value: AxisEvaluationMode);
                 /**
                  * Gets or sets the expression that defines how data is mapped to this axis.
+                 * @remark Expressions are either continuous or categorical. Categorical
+                 *  expressions are embraced by angle brackets: The expression X is
+                 *  continuous, whereas the expression &lt;X&gt; is categorical.
+                 * 
+                 * In its simplest form an expression is simply a column name,
+                 *  such as Sales. In aggregated visualization this is often combined
+                 *  with an aggregation method, as in Sum(Sales).
+                 * 
+                 * 
+                 *  An axis may support categorical expressions, continuous expressions,
+                 *  or both. This depends on the axis in question. The Y axis of a
+                 *  scatter plot, for instance, can be either continuous or categorical,
+                 *  but the Y axis of a bar chart only supports continuous expressions.
+                 * 
+                 * When building expressions programmatically, identifiers such as column
+                 *  names should be escaped. This is to ensure that special characters such as
+                 *  square brackets and spaces are treated correctly. This can be done using
+                 *  the {@link Spotfire.Dxp.Data.Expressions.ExpressionUtilities} class, or by using
+                 *  the {@link Spotfire.Dxp.Data.DataColumn.NameEscapedForExpression} property
+                 *  of {@link Spotfire.Dxp.Data.DataColumn}.
                  * 
                  * @since 2.0
                  * 
@@ -6401,6 +6966,8 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Axis bindings are used to base the expression on an axis on currently marked value in a column.
+             * @remark Axis bindings can be used to create visualizations whose axis expressions change in response
+             * to marking in another visualization.
              * 
              * @since 2.0
              * 
@@ -6409,6 +6976,8 @@ declare namespace Spotfire.Dxp {
             class AxisBinding extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
                  * Gets or sets the data column containing the values used to control the expression on an axis.
+                 * @remark This column would typically contain names of columns in another table, or parts of
+                 * names that can be combined with the {@link Spotfire.Dxp.Application.Visuals.AxisBinding.ExpressionTemplate} property to generate an expression.
                  * 
                  * @since 2.0
                  * 
@@ -6418,6 +6987,15 @@ declare namespace Spotfire.Dxp {
                 set ColumnReference(value: Data.DataColumn);
                 /**
                  * Gets or sets the expression template used to build the expression. Defaults to an empty string.
+                 * @remark Set this property to specify how values should be used when building the axis expression.
+                 * The format is a string where the sequence {0} represents the value.
+                 * <list type="bullet"><item><description>Given the value Sales, the template Sum({0})
+                 * evaluates to the expression Sum([Sales]).</description></item><item><description>Given the value Region, the template &lt;{0} NEST [Year]&gt;
+                 * evauates to the expression &lt;[Region] NEST [Year]&gt;.</description></item></list>
+                 * 
+                 * By default, this property is an empty string. This enables automatic mode
+                 * where the marked cell value is passed through a heuristics
+                 * function to generate an appropriate aggregation method, if required.
                  * 
                  * @since 2.0
                  * 
@@ -6505,6 +7083,7 @@ declare namespace Spotfire.Dxp {
             class AxisRange extends Object {
                 /**
                  * Gets the high value.
+                 * @remark This value may be null, in which case the the low value is automatically derived from the data.
                  * 
                  * @since 2.0
                  * 
@@ -6513,6 +7092,7 @@ declare namespace Spotfire.Dxp {
                 get High(): unknown;
                 /**
                  * Gets the low value.
+                 * @remark This value may be null, in which case the the low value is automatically derived from the data.
                  * 
                  * @since 2.0
                  * 
@@ -6611,6 +7191,14 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the width of the bars.
                  * Allowed values are in the range [0, 100].
+                 * @remark This property is only used when the x axis is categorical. A value of
+                 * 100 means the bar will occupy the full width of a category. A value of 0
+                 * will cause the bars will have a minimum width.
+                 * 
+                 * 
+                 * If the x axis is continuous, this property is ignored. If binning is used
+                 * on the x axis, the bars will occupy the full width of the bins.
+                 * If binning is not used, bars will have a minimum width.
                  * 
                  * @since 2.0
                  * 
@@ -6628,6 +7216,10 @@ declare namespace Spotfire.Dxp {
                 get ColorAxis(): ColorAxis;
                 /**
                  * Gets or sets a value indicating whether the visualization should inject empty values for missing time series data.
+                 * @remark When this flag is set to true, empty values will be injected into time series data prior to aggregation.
+                 * 
+                 * The data is considered to be a time series if any of the expressions used on the visualization's axes use the
+                 * BinByDateTime method, or any time part methods such as Year, Quarter, DayOfWeek etc.
                  * 
                  * @since 2.0
                  * 
@@ -6765,8 +7357,21 @@ declare namespace Spotfire.Dxp {
                 get ShowShadowBars(): JsType<System.Boolean>;
                 set ShowShadowBars(value: JsType<System.Boolean>);
                 /**
-                 * Gets or sets a value indicating whether or not the bars
-                 * in this plot are sorted.
+                 * Gets or sets a {@link Spotfire.Dxp.Application.Visuals.CategoryKey} that identifies the segment of the bars to sort the X axis by.
+                 * @remark The default value of this property is an empty category key, which means sorting will be based on the
+                 * entire bars and not just one of the bar segments.
+                 * This property applies only when {@link Spotfire.Dxp.Application.Visuals.BarChart.SortedBars} is set to true.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get SortBy(): CategoryKey;
+                set SortBy(value: CategoryKey);
+                /**
+                 * Gets or sets a value indicating whether the bars in this plot are sorted.
+                 * @remark This property applies only when the X axis is categorical. A continuous axis cannot be sorted.
+                 * The sorting can be further controlled by the {@link Spotfire.Dxp.Application.Visuals.BarChart.SortBy} property.
                  * 
                  * @since 2.0
                  * 
@@ -6910,6 +7515,8 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the width of the boxes.
                  * Allowed values are in the range [0, 100].
+                 * @remark The marker size is expressed relative to the width of a category on
+                 * the x-axis. A value of 100 means it will occupy the full width.
                  * 
                  * @since 2.0
                  * 
@@ -6951,6 +7558,8 @@ declare namespace Spotfire.Dxp {
                 get FittingModels(): FittingModels.FittingModelCollection;
                 /**
                  * Gets or sets the size of the markers.
+                 * @remark The marker size is expressed relative to the width of a category on
+                 * the x-axis. A value of 100 means it will occupy the full width.
                  * 
                  * @since 2.0
                  * 
@@ -7011,6 +7620,7 @@ declare namespace Spotfire.Dxp {
                 get XAxis(): ScaleAxis;
                 /**
                  * Gets or sets the amount of jittering in the x direction.
+                 * @remark Jittering is applied to outer values only. It does not affect the boxes.
                  * 
                  * @since 2.0
                  * 
@@ -7063,6 +7673,7 @@ declare namespace Spotfire.Dxp {
                 set AlphaLevel(value: JsType<System.Double>);
                 /**
                  * Gets or sets the span of the comparison circles area.
+                 * @remark If the span has not be set previously, the value is -1. Otherwise the minimum value is always 5.
                  * 
                  * @since 2.0
                  * 
@@ -7242,6 +7853,9 @@ declare namespace Spotfire.Dxp {
             
             /**
              * A collection of reference points in a box plot.
+             * @remark This collection is read only. All supported reference points are already present in the collection.
+             * You control which ones to show by setting the {@link Spotfire.Dxp.Application.Visuals.BoxPlotReferencePoint.Visible} property
+             * on items in this collection.
              * 
              * @since 2.0
              * 
@@ -7317,6 +7931,7 @@ declare namespace Spotfire.Dxp {
                 set FontMetadata(value: Framework.Styles.FontMetadata);
                 /**
                  * Gets the measures in the table.
+                 * @deprecated Use BoxPlot.Statistics instead.
                  * 
                  * @since 2.0
                  * 
@@ -7334,6 +7949,7 @@ declare namespace Spotfire.Dxp {
                 set ShowGridlines(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the measure to sort by.
+                 * @deprecated Use BoxPlot.SortStatistic instead
                  * 
                  * @since 2.0
                  * 
@@ -7412,6 +8028,7 @@ declare namespace Spotfire.Dxp {
                 set Position(value: Tuple3D);
                 /**
                  * Sets or gets the up direction.
+                 * @remark This vector does not need to be perpendicular to the direction of the camera, but the two vectors must not coincide.
                  * 
                  * @since 2.0
                  * 
@@ -7496,6 +8113,12 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Class representing a category on an axis.
+             * @remark This class is primarily used when mapping categories to aestetic attributes like color and shape.
+             * 
+             * 
+             * Since categorical axes are hierarchical, a CategoryKey is made from the values of each level in the hierarchy.
+             * For instance, if an axis has an expression that nests an integer column within a string column, a category key
+             * would be defined by a string value and an integer.
              * 
              * @since 2.0
              * 
@@ -7504,6 +8127,7 @@ declare namespace Spotfire.Dxp {
             class CategoryKey extends Object {
                 /**
                  * Initializes a new instance of the {@link Spotfire.Dxp.Application.Visuals.CategoryKey} class.
+                 * @remark null is used to refer to empty values.
                  * @param parts Values for each level in the hierarchy this CategoryKey refers to.
                  * 
                  * @since 2.0
@@ -7548,7 +8172,11 @@ declare namespace Spotfire.Dxp {
                 static readonly ShowAll: CategoryMode;
                 /** Show filtered values only. Categories that contain no data after filtering will be removed. Most axes have this as default. */
                 static readonly ShowFiltered: CategoryMode;
-                /** Show filtered range of values. Empty categories at the beginning and end of the scale will be removed. Empty categories in between categories with data are kept. */
+                /**
+                 * Show filtered range of values. Empty categories at the beginning and end of the scale will be removed. Empty categories in between categories with data are kept.
+                 * @remark The range is computed before any sorting of the values on the axis.
+                 * This value is currently only supported of axes of type {@link Spotfire.Dxp.Application.Visuals.ScaleAxis | ScaleAxis}
+                 */
                 static readonly ShowFilteredRange: CategoryMode;
                 private __type_1138841696: null;
             }
@@ -7677,6 +8305,11 @@ declare namespace Spotfire.Dxp {
             class ColorAxis extends Axis implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
                  * Gets the categorical part of this axis. Can be null for axes that do not support categorical expressions.
+                 * @remark With version 3.1, the {@link Spotfire.Dxp.Application.Visuals.ColorAxis.Coloring} property should be used to control how values are mapped to colors.
+                 * 
+                 * 
+                 * In versions prior to 3.1, the {@link Spotfire.Dxp.Application.Visuals.ColorAxis.CategoricalColorAxis.ColorMap} property or the {@link Spotfire.Dxp.Application.Visuals.ColorAxis.CategoricalColorAxis.ColorMap}
+                 * property can be used to do this.
                  * 
                  * @since 2.0
                  * 
@@ -7685,6 +8318,8 @@ declare namespace Spotfire.Dxp {
                 get Categorical(): ColorAxis.CategoricalColorAxis;
                 /**
                  * Gets a {@link Spotfire.Dxp.Application.Visuals.ConditionalColoring.Coloring} object that controls how values are mapped to colors.
+                 * @remark Note that the {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot} does not use this property, although its measure axis is of type ColorAxis.
+                 * The coloring in the cross table is controlled by the {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot.Colorings} property.
                  * 
                  * @since 2.0
                  * 
@@ -7693,6 +8328,10 @@ declare namespace Spotfire.Dxp {
                 get Coloring(): ConditionalColoring.Coloring;
                 /**
                  * Gets the continuous part of this axis. Can be null for axes that do not support continuous expressions.
+                 * @remark With version 3.1, the {@link Spotfire.Dxp.Application.Visuals.ColorAxis.Coloring} property should be used to control how values are mapped to colors.
+                 * 
+                 * 
+                 * In versions prior to 3.1, the {@link Spotfire.Dxp.Application.Visuals.ColorAxis.ContinuousColorAxis.ColorScheme} property can be used to do this.
                  * 
                  * @since 2.0
                  * 
@@ -7701,6 +8340,7 @@ declare namespace Spotfire.Dxp {
                 get Continuous(): ColorAxis.ContinuousColorAxis;
                 /**
                  * Gets or sets the default color.
+                 * @remark In versions 3.1 and later, this is a shortcut to the {@link Coloring.DefaultColor} property.
                  * 
                  * @since 2.0
                  * 
@@ -7751,6 +8391,7 @@ declare namespace Spotfire.Dxp {
                 get Bars(): CombinationChartBarProperties;
                 /**
                  * Gets the axis that controls how data is split into series with assigned colors.
+                 * @remark This axis is always categorical.
                  * 
                  * @since 2.0
                  * 
@@ -7759,6 +8400,10 @@ declare namespace Spotfire.Dxp {
                 get ColorAxis(): ColorAxis;
                 /**
                  * Gets or sets a value indicating whether the visualization should inject empty values for missing time series data.
+                 * @remark When this flag is set to true, empty values will be injected into time series data prior to aggregation.
+                 * 
+                 * The data is considered to be a time series if any of the expressions used on the visualization's axes use the
+                 * BinByDateTime method, or any time part methods such as Year, Quarter, DayOfWeek etc.
                  * 
                  * @since 2.0
                  * 
@@ -7828,6 +8473,7 @@ declare namespace Spotfire.Dxp {
                 set MaxNumberOfLabels(value: JsType<System.Int32>);
                 /**
                  * Gets the legend item that displays series information.
+                 * @remark This is the legend items that displays color and series information. The combination chart does not display the legend item of its color axis.
                  * 
                  * @since 2.0
                  * 
@@ -7846,6 +8492,7 @@ declare namespace Spotfire.Dxp {
                 set SeriesType(value: CombinationChartSeriesType);
                 /**
                  * Gets or sets a {@link Spotfire.Dxp.Application.Visuals.CategoryKey} that identifies the series to sort the X axis by.
+                 * @remark The default value of this property is an empty category key, which means no sorting will occur.
                  * 
                  * @since 2.0
                  * 
@@ -7934,6 +8581,14 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the relative width of the bars.
                  * Allowed values are in the range [0, 100].
+                 * @remark This property is only used when the x axis is categorical. A value of
+                 * 100 means the bar will occupy the full width of a category. A value of 0
+                 * will cause the bars will have a minimum width.
+                 * 
+                 * 
+                 * If the x axis is continuous, this property is ignored. If binning is used
+                 * on the x axis, the bars will occupy the full width of the bins.
+                 * If binning is not used, bars will have a minimum width.
                  * 
                  * @since 2.0
                  * 
@@ -8026,6 +8681,7 @@ declare namespace Spotfire.Dxp {
                 set BreakOnEmpty(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the size of the markers.
+                 * @remark Allowed values are 1-100.
                  * 
                  * @since 2.0
                  * 
@@ -8062,6 +8718,7 @@ declare namespace Spotfire.Dxp {
                 set SteppedLines(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the width of lines.
+                 * @remark Allowed values are 1-10.
                  * 
                  * @since 2.0
                  * 
@@ -8153,6 +8810,14 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Cross table plot class.
+             * @remark The cross table visualizes one or more measures specified by the expression on its {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot.MeasureAxis}.
+             * The {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot.RowAxis} and {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot.ColumnAxis} control how to split the data into rows and columns.
+             * 
+             * 
+             * The cells in the table can be colored via the {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot.Colorings} property, that can be used to specify coloring rules and how they should be applied.
+             * 
+             * 
+             * In versions prior to 3.1, coloring is controlled via properties found under the {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot.MeasureAxis}.
              * 
              * @since 2.0
              * 
@@ -8283,6 +8948,9 @@ declare namespace Spotfire.Dxp {
                 set IndicateHiddenRows(value: JsType<System.Boolean>);
                 /**
                  * Gets the measure axis.
+                 * @remark In versions prior to 3.1, the properties on this axis can be used to control the coloring of cells. With version 3.1
+                 * and later, this functionality has been marked as obsolete. The cells in the table are now colored via the {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot.Colorings} property,
+                 * that can be used to specify coloring rules and how they should be applied.
                  * 
                  * @since 2.0
                  * 
@@ -8342,6 +9010,8 @@ declare namespace Spotfire.Dxp {
                 set ShowColumnGrandTotal(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets a value indicating whether to use continuous coloring for numeric cells.
+                 * @remark In versions prior to 3.1 this property can be used to toggle the coloring on and off. From version 3.1 this
+                 * property will configure the color rules found in the {@link Colorings.DefaultNumericReference} property to include or exclude a {@link Spotfire.Dxp.Application.Visuals.ConditionalColoring.ContinuousColorRule}.
                  * 
                  * @since 2.0
                  * 
@@ -8499,6 +9169,17 @@ declare namespace Spotfire.Dxp {
                 CreateLayout(): TableLayout;
                 /**
                  * Exports the content of the cross table as tab separated text.
+                 * @remark Each cell value is formatted as displayed on screen, and the cells values are tab separated.
+                 * Each row is terminated by a carriage return, line feed sequence (\r\n).
+                 * 
+                 * 
+                 * Cell text that contain quotes, tabs or newlines are escaped. An escaped text value is
+                 * surrounded by quotes and each quote inside the text is duplicated.
+                 * Any carriage return (\r) or carriage return, line feed sequence (\r\n) inside the text is replaced with a line feed (\n).
+                 * 
+                 * 
+                 * For example, 22" would become "22""" and
+                 * Hello\r\nWorld. would become "Hello\nWorld."
                  * @param writer The text writer.
                  * 
                  * @since 2.0
@@ -8653,6 +9334,8 @@ declare namespace Spotfire.Dxp {
                 set DefaultCalculationMode(value: CrossTableTotals.CalculationMode);
                 /**
                  * Gets the indexed totals calculation mode for an expression.
+                 * @remark It is not supported to use an expression with a property as a key in the dictionary.
+                 *  To avoid problems with properties in expressions, you can use the 'as' part of the expression as key in the dictionary, see example below.
                  * 
                  * @since 2.0
                  * 
@@ -8969,6 +9652,12 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Base class for detail items.
+             * @remark Detail items are used to build the detail information displayed in
+             * tooltips for objects in plots.
+             * There are two kinds of detail items derived from this class. The first is
+             * {@link Spotfire.Dxp.Application.Visuals.NamedDetailItem} which represents the built in details supplied by the
+             * various plots. The second one is {@link Spotfire.Dxp.Application.Visuals.ExpressionDetailItem} which calculates
+             * detail information based on an expression.
              * 
              * @since 2.0
              * 
@@ -9074,6 +9763,8 @@ declare namespace Spotfire.Dxp {
                 Move(oldIndex: (JsType<System.Int32> | System.Int32), newIndex: (JsType<System.Int32> | System.Int32)): void;
                 /**
                  * Removes the specified item from the collection.
+                 * @remark Only user defined items ({@link Spotfire.Dxp.Application.Visuals.ExpressionDetailItem}) can bed added and removed.
+                 * The default items supplied by the owning plot cannot be removed, and hence return false.
                  * @param item The item.
                  * @returns True if the item was succesfully removed. False if the item could not be removed or
                  * if it could not be found in the collection
@@ -9171,6 +9862,8 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Represents Error Bars on a {@link Spotfire.Dxp.Application.Visuals.ScaleAxis}.
+             * @remark Error bars are lines drawn from the center of a marker (or from the end of a bar in a
+             *  bar chart) to indicate the error (uncertainty) of a measurement or aggregation.
              * 
              * @since 2.0
              * 
@@ -9189,6 +9882,7 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the fixed color used for drawing error bars when
                  * {@link Spotfire.Dxp.Application.Visuals.ErrorBars.UseMarkerColor} is false.
+                 * @remark This color is only used when {@link Spotfire.Dxp.Application.Visuals.ErrorBars.UseMarkerColor} is false.
                  * 
                  * @since 2.0
                  * 
@@ -9208,6 +9902,9 @@ declare namespace Spotfire.Dxp {
                 set IncludeInAxisRange(value: JsType<System.Boolean>);
                 /**
                  * Gets the indexed enabled property.
+                 * @remark The indexed enabled property is used instead of the {@link Spotfire.Dxp.Application.Visuals.ErrorBars.Enabled} property when there
+                 *  are multiple measures on the {@link Spotfire.Dxp.Application.Visuals.ScaleAxis} (e.g. multiple columns on the
+                 *  Y axis in a line chart).
                  * 
                  * @since 2.0
                  * 
@@ -9216,6 +9913,11 @@ declare namespace Spotfire.Dxp {
                 get IndexedEnabled(): IndexedBool;
                 /**
                  * Gets the indexed Lower Expression property.
+                 * @remark The indexed lower expression property is used instead of the {@link Spotfire.Dxp.Application.Visuals.ErrorBars.LowerExpression} property when there
+                 *  are multiple measures on the {@link Spotfire.Dxp.Application.Visuals.ScaleAxis} (e.g. multiple columns on the
+                 *  Y axis in a line chart).
+                 *  Pre-processor syntax is not supported.
+                 *  Expressions with pre-processor syntax will be stored as static values, that is, what it evaluates to when set.
                  * 
                  * @since 2.0
                  * 
@@ -9224,6 +9926,11 @@ declare namespace Spotfire.Dxp {
                 get IndexedLowerExpression(): IndexedExpression;
                 /**
                  * Gets the indexed Upper Expression property.
+                 * @remark The indexed upper expression property is used instead of the {@link Spotfire.Dxp.Application.Visuals.ErrorBars.UpperExpression} property when there
+                 *  are multiple measures on the {@link Spotfire.Dxp.Application.Visuals.ScaleAxis} (e.g. multiple columns on the
+                 *  Y axis in a line chart).
+                 *  Pre-processor syntax is not supported.
+                 *  Expressions with pre-processor syntax will be stored as static values, that is, what it evaluates to when set.
                  * 
                  * @since 2.0
                  * 
@@ -9241,6 +9948,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the expression used to define the
                  * lower error of the error bar.
+                 * @remark The expression must evaluate to a numeric value.
+                 * Pre-processor syntax is not supported.
+                 * Expressions with pre-processor syntax will be stored as static values, that is, what it evaluates to when set.
                  * 
                  * @since 2.0
                  * 
@@ -9251,6 +9961,7 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets whether or not the error bars should be drawn
                  * using end caps.
+                 * @remark End caps are small perpendicular lines at the end of error bars.
                  * 
                  * @since 2.0
                  * 
@@ -9261,6 +9972,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the expression used to define the
                  * upper error of the error bar.
+                 * @remark The expression must evaluate to a numeric value.
+                 * Pre-processor syntax is not supported.
+                 * Expressions with pre-processor syntax will be stored as static values, that is, what it evaluates to when set.
                  * 
                  * @since 2.0
                  * 
@@ -9331,6 +10045,8 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Represents a marker detail (tooltip) based on an expression.
+             * @remark This class is creatable only via the {@link Spotfire.Dxp.Application.Visuals.DetailItemCollection.AddExpression|AddExpression(expression)}
+             * or the {@link Spotfire.Dxp.Application.Visuals.DetailItemCollection.InsertExpression|InsertExpression(index, expression)} methods.
              * 
              * @since 2.0
              * 
@@ -9985,6 +10701,9 @@ declare namespace Spotfire.Dxp {
                 get RowDendrogram(): Dendrogram;
                 /**
                  * Gets or sets the measure to sort by.
+                 * @remark Setting the property to an empty CategoryKey removes the sorting.
+                 * A value that does not correspond to a valid measure name is
+                 * ignored and no sorting will take place.
                  * 
                  * @since 2.0
                  * 
@@ -11636,6 +12355,10 @@ declare namespace Spotfire.Dxp {
             /**
              * Represents a visualization for one or several key performance indicators (KPIs),
              * each represented by a {@link Spotfire.Dxp.Application.Visuals.KpiVisualization}.
+             * @remark The {@link Spotfire.Dxp.Application.Visuals.KpiChart} does not have a {@link Spotfire.Dxp.Data.DataTable} of its own. Instead
+             * it exposes the {@link Spotfire.Dxp.Data.DataTable} of the {@link Spotfire.Dxp.Application.Visuals.KpiVisualization} which is
+             * currently active. This {@link Spotfire.Dxp.Application.Visuals.KpiVisualization} is exposed via the {@link Spotfire.Dxp.Application.Visuals.KpiChart.ActiveKpi}
+             * property of this instance.
              * 
              * @since 2.0
              * 
@@ -11738,6 +12461,9 @@ declare namespace Spotfire.Dxp {
                 set ShowTitlesForKpis(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the sort mode for the individual tiles for all KPIs in the {@link Spotfire.Dxp.Application.Visuals.KpiChart}.
+                 * @remark Note: The {@link Spotfire.Dxp.Application.Visuals.KpiSortMode.HighestFirst} and {@link Spotfire.Dxp.Application.Visuals.KpiSortMode.LowestFirst} modes
+                 * require the {@link Spotfire.Dxp.Application.Visuals.KpiSortColumn} to be set consistently on all {@link Spotfire.Dxp.Application.Visuals.KpiVisualization}s
+                 * in the KpiCollection.
                  * 
                  * @since 2.0
                  * 
@@ -12390,6 +13116,13 @@ declare namespace Spotfire.Dxp {
             /**
              * Representation of a plot legend. The legend is a key to the features
              * (that is, symbols or pictures) used in the plot.
+             * @remark Each legend contains a
+             * series of {@link Spotfire.Dxp.Application.Visuals.LegendItem | Legend Items}, each of which
+             * describes a feature.
+             * 
+             * 
+             * A Legend can be turned on/off by setting the {@link Spotfire.Dxp.Application.Visuals.Legend.Visible}
+             * property. A Legend that is turned off can be shown as a popover when requested.
              * 
              * @since 2.0
              * 
@@ -13368,6 +14101,10 @@ declare namespace Spotfire.Dxp {
                 get ColorAxis(): ColorAxis;
                 /**
                  * Gets or sets a value indicating whether the visualization should inject empty values for missing time series data.
+                 * @remark When this flag is set to true, empty values will be injected into time series data prior to aggregation.
+                 * 
+                 * The data is considered to be a time series if any of the expressions used on the visualization's axes use the
+                 * BinByDateTime method, or any time part methods such as Year, Quarter, DayOfWeek etc.
                  * 
                  * @since 2.0
                  * 
@@ -13419,6 +14156,7 @@ declare namespace Spotfire.Dxp {
                 get LineByAxis(): GroupByAxis;
                 /**
                  * Gets or sets the width of the lines.
+                 * @remark Allowed values are 1-10.
                  * 
                  * @since 2.0
                  * 
@@ -13428,6 +14166,7 @@ declare namespace Spotfire.Dxp {
                 set LineWidth(value: JsType<System.Int32>);
                 /**
                  * Gets or sets the size of the markers.
+                 * @remark Allowed values are 1-100.
                  * 
                  * @since 2.0
                  * 
@@ -13446,6 +14185,11 @@ declare namespace Spotfire.Dxp {
                 set MaxNumberOfLabels(value: JsType<System.Int32>);
                 /**
                  * Gets or sets a value indicating whether the lines are individually scaled.
+                 * @remark The Y-axis scale can either be the same for all lines, or individual for each line.
+                 * Individual means the lines are normalized so that all lines are shown on a scale with the actual value expressed as a
+                 * percentage of the maximum value for each line.
+                 * If all lines have the same scale it ranges from the lowest to the highest value of all lines being plotted.
+                 * This should be used when the values are of the same unit and similar magnitude.
                  * 
                  * @since 2.0
                  * 
@@ -13581,6 +14325,9 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Representation of the Line Connection properties for a {@link Spotfire.Dxp.Application.Visuals.ScatterPlot}.
+             * @remark Using the {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.LineConnection} property of the plot,
+             * the line connection features can be set up such that the plot draws
+             * a line between its markers to visualize additional dimensions of data.
              * 
              * @since 2.0
              * 
@@ -13650,6 +14397,7 @@ declare namespace Spotfire.Dxp {
                 set UseMarkerColor(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the width of lines.
+                 * @remark Allowed values are 1-10.
                  * 
                  * @since 2.0
                  * 
@@ -13793,6 +14541,17 @@ declare namespace Spotfire.Dxp {
              */
             class MarkerShape extends Object {
                 /**
+                 * Gets the anchor point override. Valid coordinates are in the range [-0.5, 0.5].
+                 * (-0.5, -0.5) is the top left corner of the image, and (0, 0) is at the center.
+                 * By default, this property is null, which implies the anchor point is derived from
+                 * the marker type. For the built-in markers, this is (0, 0).
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get AnchorPointOverride(): (JsType<System.Drawing.PointF> | null);
+                /**
                  * Gets the type of the marker.
                  * 
                  * @since 2.0
@@ -13819,12 +14578,96 @@ declare namespace Spotfire.Dxp {
                  */
                 Clone(): MarkerShape;
                 /**
+                 * Creates a new {@link Spotfire.Dxp.Application.Visuals.MarkerShape} instance with an updated value for
+                 * the {@link Spotfire.Dxp.Application.Visuals.MarkerShape.AnchorPointOverride} property.
+                 * @param anchorPoint The new value. The x and y values of the point will
+                 * be clamped to the range [-0.5, 0.5]. Passing null to this method will reset the
+                 * override and the default anchor point for the marker will be used.
+                 * @returns A new {@link Spotfire.Dxp.Application.Visuals.MarkerShape} instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                WithAnchorPointOverride(anchorPoint: ((JsType<System.Drawing.PointF> | System.Drawing.PointF) | null)): MarkerShape;
+                /**
                  * @ignore
                  * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
                  */
                 _interfaces: {
                 };
                 private __type_3619610642: null;
+            }
+            
+            /**
+             * Class is responsible for embedding custom markers in the document.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class MarkerShapeDefinitions extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Embeds a custom shape in the document, and returns a {@link Spotfire.Dxp.Application.Visuals.MarkerShape} object that can be used
+                 * to configure visualizations. If the specified shape is already embedded, a corresponding marker shape object is returned.
+                 * @remark This method will also update any embedded shapes that come from another shape collection
+                 * with same id as the collection the supplied shape comes from. This is because only one version of
+                 * a shape collection can be used in the document.
+                 * @param shape The shape to embed.
+                 * @returns A marker shape object that can be used when configuring visualizations.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Embed(shape: Shapes.CustomShape): MarkerShape;
+                /**
+                 * Replaces the usage of a custom shape in the document with the specified marker shape.
+                 * @param shape The custom shape to replace usages for.
+                 * @param markerShape The marker shape to use in its place.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                ReplaceUsagesInDocument(shape: Shapes.CustomShape, markerShape: MarkerShape): void;
+                /**
+                 * Tries to get a marker shape that can be used to configure visualization from a see {@link Spotfire.Dxp.Application.Visuals.Shapes.CustomShape} object.
+                 * If the specified custom shape has not already been embedded, this method will return false.
+                 * @param shape The custom shape to get a {@link Spotfire.Dxp.Application.Visuals.MarkerShape} for.
+                 * @param markerShape The resulting marker shape if the shape has already been embedded, otherwise null.
+                 * @returns True if the given marker shape has already been embedded in the document.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                TryGetMarkerShape(shape: Shapes.CustomShape, markerShape: OutParam<MarkerShape>): JsType<System.Boolean>;
+                /**
+                 * Updates any embedded shapes that uses a collection with the same id to use shapes from the supplied collection.
+                 * @param shapeCollection The shape collection to update from.
+                 * @returns true if an update was made.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                UpdateEmbeddedShapes(shapeCollection: Shapes.CustomShapeCollection): JsType<System.Boolean>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_1126792864: null;
             }
             
             /**
@@ -13937,6 +14780,11 @@ declare namespace Spotfire.Dxp {
             
             /**
              * A detail item that can be referenced by name.
+             * @remark Detail items are used to build the detail information displayed in
+             * tooltips for objects in plots.
+             * This class is used by plots to expose the built-in details supplied
+             * by the plot. For instance, the name of the detail item that displays information
+             * about the x position of a marker is "X".
              * 
              * @since 2.0
              * 
@@ -14470,6 +15318,8 @@ declare namespace Spotfire.Dxp {
                 get Details(): PieDetails;
                 /**
                  * Gets or sets the size of pies.
+                 * @remark The size is expressed in percent of the height or width of the chart. A value of 100 means that
+                 * a marker will occupy the full height or width of the chart (whichever is smallest).
                  * 
                  * @since 2.0
                  * 
@@ -14487,6 +15337,7 @@ declare namespace Spotfire.Dxp {
                 get SectorSizeAxis(): SectorSizeAxis;
                 /**
                  * Gets the size axis.
+                 * @remark The size axis is used to scale the size of pies according to a variable in the data. It is only useful in combination with trellising.
                  * 
                  * @since 2.0
                  * 
@@ -14555,6 +15406,7 @@ declare namespace Spotfire.Dxp {
                 set LabelPercentage(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the number of decimal digits for percentages.
+                 * @remark The value should be in the interval [0, 6].
                  * 
                  * @since 2.0
                  * 
@@ -14565,6 +15417,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets a value indicating the limit for label percentage.
                  * Labels with a percentage above this value will be rendered.
+                 * @remark The value should be in the interval [0, 100].
+                 * An exception is thrown if negative.
+                 * Values greater than 100 are set to 100.
                  * 
                  * @since 2.0
                  * 
@@ -14601,6 +15456,9 @@ declare namespace Spotfire.Dxp {
                 set LabelVisibility(value: LabelVisibility);
                 /**
                  * Gets or sets a value indicating max number of drawn labels.
+                 * @remark The value should be in the interval [0, 200].
+                 * An exception is thrown if negative.
+                 * Values greater than 200 are set to 200.
                  * 
                  * @since 2.0
                  * 
@@ -14958,6 +15816,13 @@ declare namespace Spotfire.Dxp {
              * Represents an X or Y axis in a visualization. It is used to map values
              * to an axis, typically by applying a range. When mapping, the scale axis
              * can transform the values.
+             * @remark The visualization type defines the axis characteristics.
+             * 
+             * The scale axis always has only one {@link Spotfire.Dxp.Application.Visuals.ScaleAxis.Scale}, which is
+             * used to control how the scale is drawn in the user interface. It can
+             * nevertheless implement multiple scales for the Y axis in scatter plots
+             * and line charts. Multiple scales is a way to set different transforms
+             * and ranges for subsets of data in the data set.
              * 
              * @since 2.0
              * 
@@ -15009,6 +15874,10 @@ declare namespace Spotfire.Dxp {
              * Represents an X, Y or Z axis in a 3D Scatter Plot. It is used to map values
              * to an axis, typically by applying a range. When mapping, the scale axis
              * can transform the values.
+             * @remark The visualization type defines the axis characteristics.
+             * 
+             * The scale axis always has only one {@link Spotfire.Dxp.Application.Visuals.ScaleAxis3D.Scale}, which is
+             * used to control how the scale is drawn in the user interface.
              * 
              * @since 2.0
              * 
@@ -15138,6 +16007,8 @@ declare namespace Spotfire.Dxp {
                 set ManualZoom(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the overall range of this axis.
+                 * @remark For categorical data, the range is expressed as two indices.
+                 * Either end can be null, indicating a default value.
                  * 
                  * @since 2.0
                  * 
@@ -15183,6 +16054,11 @@ declare namespace Spotfire.Dxp {
                 set TransformType(value: AxisTransformType);
                 /**
                  * Get or sets the visible range of the axis.
+                 * @remark For categorical data, the range is expressed as two indices.
+                 * Either end can be null, indicating a default value.
+                 * 
+                 * 
+                 * This property is ignored unless {@link Spotfire.Dxp.Application.Visuals.ScaleAxisBase.ManualZoom} is set to true.
                  * 
                  * @since 2.0
                  * 
@@ -15417,6 +16293,12 @@ declare namespace Spotfire.Dxp {
                 RemoveLevelSettings(expressionDisplayName: (JsType<System.String> | System.String)): void;
                 /**
                  * Sets the scale value renderer type for a hierarchy level on a categorical axis.
+                 * @remark This feature will only have effect on the following axes: Bar chart x axis,
+                 * Line chart x axis, Combination Chart x axis, Scatter plot x and y axes and Heat map x
+                 * and y axes, and Cross Table horizontal and vertical axes. For the Cross Table the size
+                 * can not be set via this API. Instead use the setters for cell and header size avaiable
+                 * on the Cross Table plot itself. For the case when the axis can be both continuous and
+                 * categorical, the feature will only have effect when the axis is in categorical mode.
                  * @param expressionDisplayName The display name of the expression to be rendered.
                  * @param typeId The type id for the renderer.
                  * 
@@ -15466,6 +16348,12 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the maximum side length in pixels of the square within which each image label
                  * is rendered on the axis and in its default tooltip.
+                 * @remark This maximum size measure can only be achieved if there is enough space without labels overlapping
+                 * each other. If there is not sufficient space the images will be made smaller. If all labels
+                 * cannot fit on the axes at their smallest size, images are weeded out evenly with according to
+                 * the same algorithm as for categorical text labels.
+                 * The default tooltip for the axis label level always uses the given side length in pixels
+                 * also when the images on the axis are not able to achieve the size.
                  * 
                  * @since 2.0
                  * 
@@ -15492,6 +16380,19 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Representation of a Scatter Plot.
+             * @remark Scatter plots are used to plot data points on a horizontal and a
+             * vertical axis in the attempt to show how much one variable is affected
+             * by another. Each row in the data set is represented by a marker whose
+             * position depends on its values in the columns set on the
+             * {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.XAxis | X} and
+             * {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.YAxis | Y} axes.
+             * 
+             * 
+             * The Scatter Plot supports additional variables corresponding to the
+             * {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.ColorAxis | color},
+             * {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.SizeAxis | size}, and the
+             * {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.ShapeAxis | shape} of the markers to be set,
+             * thus adding more dimensions to the plot.
              * 
              * @since 2.0
              * 
@@ -15550,6 +16451,8 @@ declare namespace Spotfire.Dxp {
                 set LabelFontMetadata(value: Framework.Styles.FontMetadata);
                 /**
                  * Gets or sets the size of labels showing images.
+                 * @remark The labels size is expressed as a percentage of the size of the panel in the range of minimum 15 pixels and maximum the least of the width or height.
+                 * I.e. a value of 0 will allow images as large as 15 x 15 pixels, and a value of 100 will allow images as large as the least of the width or the height of the panel.
                  * 
                  * @since 2.0
                  * 
@@ -15595,6 +16498,10 @@ declare namespace Spotfire.Dxp {
                  * Gets or sets the class type of the markers in this scatter plot.
                  * Using this property the markers can be switched between simple
                  * markers, tiled markers and separate charts (for example pie charts).
+                 * @remark When set to {@link Spotfire.Dxp.Application.Visuals.MarkerClass.Tile}
+                 * the {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.ShapeAxis} and the {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.SizeAxis} will be ignored.
+                 * When set to {@link Spotfire.Dxp.Application.Visuals.MarkerClass.Chart}
+                 * the {@link Spotfire.Dxp.Application.Visuals.ScatterPlot.ShapeAxis} will be ignored.
                  * 
                  * @since 2.0
                  * 
@@ -15613,6 +16520,9 @@ declare namespace Spotfire.Dxp {
                 set MarkerLabelLayout(value: MarkerLabelLayout);
                 /**
                  * Gets or sets the size of the markers.
+                 * @remark The size is expressed in percent of the height or width of the plot.
+                 * A value of 100 means that a marker will occupy the full height or
+                 * width of the plot (whichever is smallest).
                  * 
                  * @since 2.0
                  * 
@@ -15744,6 +16654,16 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Representation of a 3D Scatter Plot.
+             * @remark A 3D scatter plot is a generalization of a scatter plot that adds an
+             * extra axis. Besides having X and Y-axes, the 3D scatter plot also has a
+             * Z-axis.
+             * 
+             * 
+             * The 3D Scatter Plot supports additional variables corresponding to the
+             * {@link Spotfire.Dxp.Application.Visuals.ScatterPlot3D.ColorAxis | color},
+             * {@link Spotfire.Dxp.Application.Visuals.ScatterPlot3D.SizeAxis | size}, and the
+             * {@link Spotfire.Dxp.Application.Visuals.ScatterPlot3D.ShapeAxis | shape} of the markers to be set,
+             * thus adding more dimensions to the plot.
              * 
              * @since 2.0
              * 
@@ -15777,6 +16697,12 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets the label column, that is, an object whose expression controls what is
                  * displayed in the marker labels in the plot.
+                 * @remark When the {@link Spotfire.Dxp.Application.Visuals.ExpressionColumn.Expression | Expression} property on this object is set to an empty expression, no marker
+                 * labels are generated.
+                 * 
+                 * 
+                 * When set to a non-empty expression, the subset of that markers that will have labels is
+                 * controlled by the {@link Spotfire.Dxp.Application.Visuals.ScatterPlot3D.LabelVisibility} property.
                  * 
                  * @since 2.0
                  * 
@@ -15803,6 +16729,9 @@ declare namespace Spotfire.Dxp {
                 set LabelVisibility(value: LabelVisibility);
                 /**
                  * Gets the axis that controls aggregation of markers.
+                 * @remark If the expression on this axis is set to "&lt;baserowid()&gt;", the plot will
+                 * not perform any aggregation and display a marker for every row in the
+                 * data table the it is based on.
                  * 
                  * @since 2.0
                  * 
@@ -15811,6 +16740,8 @@ declare namespace Spotfire.Dxp {
                 get MarkerByAxis(): GroupByAxis;
                 /**
                  * Gets or sets the size of the markers. Allowed values are 0-100.
+                 * @remark The size is relative to the size of the box containing the markers. Setting the property to 100 means a
+                 * marker will occupy the whole box.
                  * 
                  * @since 2.0
                  * 
@@ -16119,6 +17050,8 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Class representing a marker shape in a {@link Spotfire.Dxp.Application.Visuals.ScatterPlot3D | 3D scatter plot}.
+             * @remark Instances of this class cannot be created. Use the static {@link Spotfire.Dxp.Application.Visuals.Shapes3D} class
+             * to retrieve the various shapes that can be used in a 3D scatter plot.
              * 
              * @since 2.0
              * 
@@ -16241,6 +17174,7 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Class used to map data values to {@link Spotfire.Dxp.Application.Visuals.MarkerShape | shapes} in a {@link Spotfire.Dxp.Application.Visuals.ScatterPlot | scatter plot}.
+             * @remark This class is basically a dictionary that maps data values, or categories, to specific shapes.
              * 
              * @since 2.0
              * 
@@ -16311,6 +17245,7 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Class used to map data values to shapes in a {@link Spotfire.Dxp.Application.Visuals.ScatterPlot3D | 3D scatter plot}.
+             * @remark This class is basically a dictionary that maps data values, or categories, to specific shapes.
              * 
              * @since 2.0
              * 
@@ -16711,6 +17646,17 @@ declare namespace Spotfire.Dxp {
                 CreateLayout(): TableLayout;
                 /**
                  * Exports the content of the summary table as tab separated text.
+                 * @remark Each cell value is formatted as displayed on screen, and the cells values are tab separated.
+                 * Each row is terminated by a carriage return, line feed sequence (\r\n).
+                 * 
+                 * 
+                 * Cell text that contain quotes, tabs or newlines are escaped. An escaped text value is
+                 * surrounded by quotes and each quote inside the text is duplicated.
+                 * Any carriage return (\r) or carriage return, line feed sequence (\r\n) inside the text is replaced with a line feed (\n).
+                 * 
+                 * 
+                 * For example, 22" would become "22""" and
+                 * Hello\r\nWorld. would become "Hello\nWorld."
                  * @param writer The text writer.
                  * 
                  * @since 2.0
@@ -17039,6 +17985,12 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Move the item at fromIndex to toIndex where both
                  * indexes are prior to any insertion and removal operations.
+                 * @remark This method will move the item at position
+                 * fromIndex in the collection to position
+                 * toIndex, where toIndex
+                 * is the index  in the original collection where the moved item will be inserted; Move(0, 2)
+                 * with input { A, B, C } will result in { B, C, A } after the move operation. Move(0, 0)
+                 * will leave the collection unchanged. Move(0, 1) will result in { B, A, C }. Move(2, 0) will result in { C, A, B }.
                  * @param fromIndex From index.
                  * @param toIndex To index.
                  * 
@@ -17143,6 +18095,8 @@ declare namespace Spotfire.Dxp {
                 get Bounds(): JsType<System.Drawing.Rectangle>;
                 /**
                  * Gets a value indicating whether this instance can have image.
+                 * @remark This is a convenience property to avoid calling GetImage when not
+                 * necessary.
                  * 
                  * @since 2.0
                  * 
@@ -17717,6 +18671,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * The current scroll position in the view. This point is expressed as an offset into the area of
                  * the non-frozen rows and columns. The value Point.Empty signals that no scrolling has taken place.
+                 * @remark The {@link System.Drawing.Point} returned from this property will sometimes lie outside of the area
+                 * defined by the layout. This can occur due to filtering, etc. If so is the case, it should
+                 * be interpreted that the scrolling position is at the end of the table.
                  * 
                  * @since 2.0
                  * 
@@ -17766,6 +18723,7 @@ declare namespace Spotfire.Dxp {
                 GetCellRange(rectangle: (JsType<System.Drawing.Rectangle> | System.Drawing.Rectangle)): CellRange;
                 /**
                  * Gets an iterator to all cells in the table.
+                 * @remark All requested columns in one row are returned in sequence, before moving to the next row.
                  * @returns An iterator.
                  * 
                  * @since 2.0
@@ -17775,6 +18733,7 @@ declare namespace Spotfire.Dxp {
                 GetCells(): System.Collections.Generic.IEnumerable<TableCell>;
                 /**
                  * Gets an iterator to the cells in the table.
+                 * @remark All requested columns in one row are returned in sequence, before moving to the next row.
                  * @param cellRange The range of the cells to iterate over.
                  * @returns An iterator.
                  * 
@@ -17785,6 +18744,7 @@ declare namespace Spotfire.Dxp {
                 GetCells(cellRange: CellRange): System.Collections.Generic.IEnumerable<TableCell>;
                 /**
                  * Gets an iterator to the cells in the table.
+                 * @remark All requested columns in one row are returned in sequence, before moving to the next row.
                  * @param range The range of the cells to iterate over.
                  * @param sizeProvider Delegate used to calculate a suitable size for an image that is to be rendered in a cell.
                  * @returns An iterator.
@@ -18037,6 +18997,17 @@ declare namespace Spotfire.Dxp {
                 CreateLayout(): TableLayout;
                 /**
                  * Exports the content of the table plot as tab separated text.
+                 * @remark Each cell value is formatted as displayed on screen, and the cells values are tab separated.
+                 * Each row is terminated by a carriage return, line feed sequence (\r\n).
+                 * 
+                 * 
+                 * Cell text that contain quotes, tabs or newlines are escaped. An escaped text value is
+                 * surrounded by quotes and each quote inside the text is duplicated.
+                 * Any carriage return (\r) or carriage return, line feed sequence (\r\n) inside the text is replaced with a line feed (\n).
+                 * 
+                 * 
+                 * For example, 22" would become "22""" and
+                 * Hello\r\nWorld. would become "Hello\nWorld."
                  * @param writer The text writer.
                  * 
                  * @since 2.0
@@ -18117,6 +19088,8 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Contains info on how to sort the table plot.
+             * @remark An empty collection corresponds to an unsorted table plot. As elements are added they are considered in the order
+             * that they exist in this collection.
              * 
              * @since 2.0
              * 
@@ -18139,6 +19112,7 @@ declare namespace Spotfire.Dxp {
                 [Symbol.iterator](): Iterator<TableSortInfo>;
                 /**
                  * Adds a column that will be used to sort the table plot after.
+                 * @remark The order of the columns in the collection determines the order in which they influence the sort.
                  * @param dataColumn The data column to sort by.
                  * @param sortMode Determines how to sort
                  * 
@@ -18317,6 +19291,9 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Class representing a treemap.
+             * @remark Treemaps show hierarchical data in a set of nested rectangles. The size and color of the rectangles
+             * can be controlled via the {@link Spotfire.Dxp.Application.Visuals.Treemap.SizeAxis} and the {@link Spotfire.Dxp.Application.Visuals.Treemap.ColorAxis}. The {@link Spotfire.Dxp.Application.Visuals.Treemap.HierarchyAxis}
+             * is used to define the structure of the tree.
              * 
              * @since 2.0
              * 
@@ -18475,6 +19452,9 @@ declare namespace Spotfire.Dxp {
                 get LegendItem(): LegendTreemapHierarchyItem;
                 /**
                  * Set of gets the zoom path.
+                 * @remark The default value for this property is an empty {@link Spotfire.Dxp.Application.Visuals.CategoryKey},
+                 * which means there is no zooming. To zoom into the the treemap, set this property
+                 * to a category key referring to values in the hierarchy.
                  * 
                  * @since 2.0
                  * 
@@ -18835,6 +19815,8 @@ declare namespace Spotfire.Dxp {
             class VisualContent extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
                  * Gets or sets the Visual's title.
+                 * @remark Note that for {@link Spotfire.Dxp.Application.Visuals.Maps.LayerVisualization} instances, you should use the
+                 * Title property of the owning {@link Spotfire.Dxp.Application.Visuals.Maps.MapChartLayer} instead.
                  * 
                  * @since 2.0
                  * 
@@ -18874,6 +19856,13 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Configures a newly created visual with reasonable default
                  * values given the current data set.
+                 * @remark This method is called when a visual is created by the user, but the
+                 * exact configuration produced is undefined and can change between versions.
+                 * This method should only be used if you want to mimic the user's action in the application,
+                 * and it should only be called once.
+                 * It implicity calls {@link Spotfire.Dxp.Application.Visuals.VisualContent.ApplyUserPreferences}.<br />
+                 * Code samples on how to create and configure a visualization are available in Spotfire Technology Network.
+                 * Additional action needed for the Map Chart: in order to load the default layers (i.e. base map layer) you need to explicitly call {@link Spotfire.Dxp.Application.Visuals.Maps.MapChart.AutoConfigureLayers}.<br />
                  * 
                  * @since 2.0
                  * 
@@ -18987,6 +19976,7 @@ declare namespace Spotfire.Dxp {
                  * This includes on-demand data with manual refresh, data functions with update behavior Manual
                  * and calculations with update behavior Invalidate.
                  * Only data tables used by this visualization will be included.
+                 * @remark This will only refresh the data tables where the {@link Spotfire.Dxp.Data.DataTable.NeedsRefresh} property is true.
                  * 
                  * @since 2.0
                  * 
@@ -19043,6 +20033,8 @@ declare namespace Spotfire.Dxp {
                 set DataTableReference(value: (Data.DataTable | null));
                 /**
                  * A collection of auxilliary selections to filter the visualization data by.
+                 * @remark This collection can be used to create detail visualizations.
+                 * To do that, simply add one or more marking selections to the collection.
                  * 
                  * @since 2.0
                  * 
@@ -19106,6 +20098,11 @@ declare namespace Spotfire.Dxp {
                 get MarkingLegendItem(): LegendMarkingItem;
                 /**
                  * Gets or sets the marking selection used to mark markers in the visualization.
+                 * @remark If the marking reference is set to null (the default), no marking will be displayed
+                 * in the visualization, and the user cannot mark anything.
+                 * 
+                 * Note that if the marking reference is also present in {@link Spotfire.Dxp.Application.Visuals.VisualizationData.Filterings}, the user will not
+                 * be able to mark anything either.
                  * 
                  * @since 2.0
                  * 
@@ -19131,6 +20128,9 @@ declare namespace Spotfire.Dxp {
                 get Subsets(): VisualizationSubsetCollection;
                 /**
                  * Gets or sets a value indicating whether to use the filtering from the page's filter panel or not.
+                 * @remark This is true by default. By setting it to false, the visualization
+                 * data is no longer filtered by the filter panel, only explicitly by the selections defined by
+                 * {@link Spotfire.Dxp.Application.Visuals.VisualizationData.Filterings}.
                  * 
                  * @since 2.0
                  * 
@@ -19775,6 +20775,8 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the width of the bars.
                  * Allowed values are in the range [0, 100].
+                 * @remark A value of 100 means the bar will occupy the full width of a category.
+                 * A value of 0 will cause the bars will have a minimum width.
                  * 
                  * @since 2.0
                  * 
@@ -19792,6 +20794,10 @@ declare namespace Spotfire.Dxp {
                 get ColorAxis(): ColorAxis;
                 /**
                  * Gets or sets a value indicating whether the visualization should inject empty values for missing time series data.
+                 * @remark When this flag is set to true, empty values will be injected into time series data prior to aggregation.
+                 * 
+                 * The data is considered to be a time series if any of the expressions used on the visualization's axes use the
+                 * BinByDateTime method, or any time part methods such as Year, Quarter, DayOfWeek etc.
                  * 
                  * @since 2.0
                  * 
@@ -19937,6 +20943,12 @@ declare namespace Spotfire.Dxp {
                 set TotalBarColor(value: Framework.Styles.ColorInfo);
                 /**
                  * Gets or sets the hierarchy level at which to (try) to show total bars.
+                 * @remark Level zero corresponds to just one total bar (i.e. no subtotals). If set
+                 * to a higher level than presently exists in the x hierarchy just one total bar will
+                 * be shown. Hierarchies with slider are counted as fully expanded with respect to the
+                 * number of hierarchy levels they give rise to in this sense. When set to the highest
+                 * level of a hierarchy with a slider, changing level with the slider with result in
+                 * (sub)total bars at the level at which the slider indicates.
                  * 
                  * @since 2.0
                  * 
@@ -20134,6 +21146,7 @@ declare namespace Spotfire.Dxp {
             namespace BoxPlotStatisticsTable {
                 /**
                  * MeasureCollection class.
+                 * @deprecated Use the BoxPlotStatisticCollection returned by the property BoxPlot.Statistics instead.
                  * 
                  * @since 2.0
                  * 
@@ -20550,6 +21563,11 @@ declare namespace Spotfire.Dxp {
                     set EmptyColor(value: JsType<System.Drawing.Color>);
                     /**
                      * Gets or sets a value indicating whether this {@link Spotfire.Dxp.Application.Visuals.ConditionalColoring.Coloring} should be evaluated per column.
+                     * @remark This setting will only affect the color assignment when the Coloring is applied to more than one column,
+                     * which is only possible in {@link Spotfire.Dxp.Application.Visuals.CrossTablePlot}, {@link Spotfire.Dxp.Application.Visuals.TablePlot} and {@link Spotfire.Dxp.Application.Visuals.HeatMap}.
+                     * When set to true, each column the Coloring is applied to is treated as an individual subset, meaning that
+                     * statistical calculations will be calculated individually for each column (i.e. each column will have their
+                     * own min and max value).
                      * 
                      * @since 2.0
                      * 
@@ -20793,6 +21811,7 @@ declare namespace Spotfire.Dxp {
                     SaveAs(stream: (JsType<System.IO.Stream> | System.IO.Stream)): void;
                     /**
                      * Saves the coloring as a new item in the library.
+                     * @remark This method will overwrite any existing item but keep the existing library item id.
                      * @param folder The library folder in which to save the coloring to.
                      * @param title The title of the library item.
                      * @param keywords The keywords.
@@ -21988,8 +23007,8 @@ declare namespace Spotfire.Dxp {
                      * 
                      * @group Default capability
                      */
-                    get SortColumnReference(): Data.DataColumn;
-                    set SortColumnReference(value: Data.DataColumn);
+                    get SortColumnReference(): (Data.DataColumn | null);
+                    set SortColumnReference(value: (Data.DataColumn | null));
                     /**
                      * Gets or sets the column containing the x-values.
                      * 
@@ -22028,6 +23047,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * The exponential fitting model defines an exponential curve that minimizes the sum-of-squares of the
                  * y-distances between the data and the curve.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -22196,6 +23218,8 @@ declare namespace Spotfire.Dxp {
                     /**
                      * Adds a curve. The curve is defined by the specified expression,
                      * for example "a + b*x", where a and b are columns in the specified data table.
+                     * @remark As of version 3.3, any columns to be used for labels and tooltips must be specified
+                     * by the {@link Spotfire.Dxp.Application.Visuals.FittingModels.ReferenceCurveFittingModel.DataTableDetailItemsExpression} property.
                      * @param dataTable The data table. May be null.
                      * @param expression The expression defining the curve.
                      * @returns A {@link Spotfire.Dxp.Application.Visuals.FittingModels.ReferenceCurveFittingModel}.
@@ -22228,6 +23252,8 @@ declare namespace Spotfire.Dxp {
                     /**
                      * Adds a horizontal reference line. The position of the line is defined by the expression,
                      * for example "Avg(y)". The expression is evaluated using the columns in the specified data table.
+                     * @remark As of version 3.3, any columns to be used for labels and tooltips must be specified
+                     * by the {@link Spotfire.Dxp.Application.Visuals.FittingModels.ReferenceLineFittingModel.DataTableDetailItemsExpression} property.
                      * @param dataTable The data table. May be null.
                      * @param expression The expression defining the position of the line.
                      * @returns A {@link Spotfire.Dxp.Application.Visuals.FittingModels.ReferenceLineFittingModel}.
@@ -22291,6 +23317,8 @@ declare namespace Spotfire.Dxp {
                     /**
                      * Adds a vertical reference line. The position of the line is defined by the expression
                      * which is evaluated using the columns in the specified data table.
+                     * @remark As of version 3.3, any columns to be used for labels and tooltips must be specified
+                     * by the {@link Spotfire.Dxp.Application.Visuals.FittingModels.ReferenceLineFittingModel.DataTableDetailItemsExpression} property.
                      * @param dataTable The data table. May be null.
                      * @param expression The expression defining the position of the line with references to columns in the data table.
                      * @returns A {@link Spotfire.Dxp.Application.Visuals.FittingModels.ReferenceLineFittingModel}.
@@ -22699,6 +23727,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * A model contining the parameters for a Holt-Winters forecast. Usually applied to time series data,
                  * but it can be used with any discrete set of repeated measurements.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -22710,6 +23741,7 @@ declare namespace Spotfire.Dxp {
                      * Setting this to true will mean that an empty value in the time series will be replaced by linear interpolation between
                      * the values before and after it. If there are multiple empty values in a row then no curve fit is computed.
                      * Setting this value to false will mean that if empty values are found in the time series, no curve fit is computed.
+                     * @remark Empty values at the start and end of the time series are always trimmed.
                      * 
                      * @since 2.0
                      * 
@@ -22884,6 +23916,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Represents a Gausssian fitting model that defines a Gaussian curve that minimizes the sum-of-squares of the
                  * y-distances between the data and the curve.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -23019,6 +24054,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * The logarithmic fitting model defines a logarithmic curve that minimizes the sum-of-squares of the
                  * y-distances between the data and the curve.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -23053,6 +24091,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * The logistic regression fitting model defines a logistic regression curve that minimizes the sum-of-squares of the
                  * y-distances between the data and the curve.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -23141,6 +24182,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * The polynomial fitting model defines a polynomial curve that minimizes the sum-of-squares of the
                  * y-distances between the data and the curve.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -23184,6 +24228,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * The power fitting model defines a power curve that minimizes the sum-of-squares of the
                  * y-distances between the data and the curve.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -23335,6 +24382,9 @@ declare namespace Spotfire.Dxp {
                  * The shape of the curve is defined by an expression.
                  * The expression may reference the variable x and column names in the data table
                  * defined by {@link Spotfire.Dxp.Application.Visuals.FittingModels.ReferenceCurveFittingModel.DataTableReference}.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -23343,6 +24393,9 @@ declare namespace Spotfire.Dxp {
                 class ReferenceCurveFittingModel extends FittingModel implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                     /**
                      * Gets or sets the expression defining where this reference curve begins.
+                     * @remark This is typically set to a constant value.
+                     * If the expression is empty or evaluates to null, the
+                     * curve will extend to the low end of the x-axis range.
                      * 
                      * @since 2.0
                      * 
@@ -23371,6 +24424,9 @@ declare namespace Spotfire.Dxp {
                     set DataTableDetailItemsExpression(value: JsType<System.String>);
                     /**
                      * Gets a value indicating whether the reference curve model uses a data table for looking up values.
+                     * @remark Specifying either {@link Spotfire.Dxp.Application.Visuals.FittingModels.FittingModelTypeIdentifiers.ReferenceCurveFromTableFittingModel}
+                     * or {@link Spotfire.Dxp.Application.Visuals.FittingModels.FittingModelTypeIdentifiers.ReferenceCurveFittingModel}
+                     * when the model is created sets this property to true and false, respectively.
                      * 
                      * @since 2.0
                      * 
@@ -23379,6 +24435,9 @@ declare namespace Spotfire.Dxp {
                     get DataTableEnabled(): JsType<System.Boolean>;
                     /**
                      * Gets or sets the data table.
+                     * @remark This property can only be set for a reference curve that was created to use data tables.
+                     * This is enabled by specifying {@link Spotfire.Dxp.Application.Visuals.FittingModels.FittingModelTypeIdentifiers.ReferenceCurveFromTableFittingModel}
+                     * when the model is created.
                      * 
                      * @since 2.0
                      * 
@@ -23388,6 +24447,9 @@ declare namespace Spotfire.Dxp {
                     set DataTableReference(value: Data.DataTable);
                     /**
                      * Gets or sets the expression defining where this reference curve ends.
+                     * @remark This is typically set to a constant value.
+                     * If the expression is empty or evaluates to null, the
+                     * curve will extend to the high end of the x-axis range.
                      * 
                      * @since 2.0
                      * 
@@ -23537,6 +24599,9 @@ declare namespace Spotfire.Dxp {
                 
                 /**
                  * Represents a horizontal or vertical reference line.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -23565,6 +24630,9 @@ declare namespace Spotfire.Dxp {
                     set DataTableDetailItemsExpression(value: JsType<System.String>);
                     /**
                      * Gets a value indicating whether this reference line uses a data table for looking up values.
+                     * @remark Specifying either {@link Spotfire.Dxp.Application.Visuals.FittingModels.FittingModelTypeIdentifiers.ReferenceLineFromTableFittingModel}
+                     * or {@link Spotfire.Dxp.Application.Visuals.FittingModels.FittingModelTypeIdentifiers.ReferenceLineFittingModel}
+                     * when the model is created sets this property to true and false, respectively.
                      * 
                      * @since 2.0
                      * 
@@ -23573,6 +24641,9 @@ declare namespace Spotfire.Dxp {
                     get DataTableEnabled(): JsType<System.Boolean>;
                     /**
                      * Gets or sets the data table.
+                     * @remark This property can only be set for a reference line that was created to use data tables.
+                     * This is enabled by specifying {@link Spotfire.Dxp.Application.Visuals.FittingModels.FittingModelTypeIdentifiers.ReferenceLineFromTableFittingModel}
+                     * when the model is created.
                      * 
                      * @since 2.0
                      * 
@@ -23584,6 +24655,8 @@ declare namespace Spotfire.Dxp {
                      * Gets or sets the expression used to calculate the value to draw at.
                      * This may also be a constant value.
                      * For a horizontal line, for example use "Avg(Y)". For a vertical line, for example use "Avg(X)".
+                     * @remark The expression must evaluate to a single numeric value,
+                     * thus an aggregation must be used when refering to an axis.
                      * 
                      * @since 2.0
                      * 
@@ -23814,6 +24887,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * The straight line fitting model defines a straight line that minimizes the sum-of-squares of the
                  * y-distances between the data and the line.
+                 * @remark This class cannot be inherited. See the
+                 * {@link Spotfire.Dxp.Application.Extension.CustomFittingModel}
+                 * class for creating custom fitting models.
                  * 
                  * @since 2.0
                  * 
@@ -23929,6 +25005,12 @@ declare namespace Spotfire.Dxp {
                     /**
                      * Gets or sets the threshold for geometry simplification, geometries with as
                      * many points as this or more will be subject to simplification.
+                     * @remark Specify the number of points below which geometry simplification will not be used when rendering features.
+                     * Geometry simplification facilitates the rendering of features with a large number of points by snapping the points to even pixels.
+                     * If two adjacent points fall within the same pixel, one is omitted.
+                     * For rectangle features that are typically represented by 5 points (the fifth point is the same as the first point),
+                     * the simplification might cause rendering inconsistencies. If you encounter these issues, try setting "Turn off simplification
+                     * for features with less points than" to 6 to deactivate the simplification when rendering the rectangles.
                      * 
                      * @since 2.0
                      * 
@@ -24440,6 +25522,8 @@ declare namespace Spotfire.Dxp {
                     /**
                      * Automatically configures geocoding for this layer by (optionally) attempting to apply column classification,
                      * (optionally) changing the geocoding axis expression, and then applying automatic geocoding hierarchies.
+                     * @remark This will attempt to configure geocoding with reasonable defaults. The behavior
+                     * may change in future releases.
                      * @param forceAutoload Force automatic loading of geocoding tables from the library.
                      * @param allowChangeAxisExpression truec&gt; if the geocoding axis expression is allowed to be changed by automatic geocoding.
                      * @param applyColumnClassification If set to true, automatic column classification is applied.
@@ -24705,6 +25789,8 @@ declare namespace Spotfire.Dxp {
                     set Transform(value: MapChartTransform);
                     /**
                      * Gets or sets the trellis layer, that is, the data layer that will control trellising.
+                     * @remark Data layers can be configured to adapt to the trellising of the main trellis layer.
+                     * To enable trellising on an additional layer set the {@link Spotfire.Dxp.Application.Visuals.Maps.LayerVisualization.TrellisingFollowsMainLayer} property of the visualization associated with the layer.
                      * 
                      * @since 2.0
                      * 
@@ -24841,6 +25927,7 @@ declare namespace Spotfire.Dxp {
                     set IncludeInAutoZoom(value: JsType<System.Boolean>);
                     /**
                      * Gets or sets a value indicating whether this layer's extent should be taken into account when resetting view extent.
+                     * @remark Tile and Wms layers are always false. Setting the property on these layers is always ignored.
                      * 
                      * @since 2.0
                      * 
@@ -24952,6 +26039,17 @@ declare namespace Spotfire.Dxp {
                      * @group Default capability
                      */
                     AddNewFeatureLayer(featureTable: Data.DataTable, featureLayerVisualization: OutParam<FeatureLayerVisualization>): MapChartDataLayer;
+                    /**
+                     * Adds a new image layer to this collection, using the specified stream.
+                     * @remark Supported file formats are: PNG, JPEG, BMP, TIFF and GIF. EMF and WMF files are supported on Windows only.
+                     * @param stream The stream to use for creating the image layer.
+                     * @returns The newly created image layer.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    AddNewImageLayer(stream: (JsType<System.IO.Stream> | System.IO.Stream)): ImageLayer;
                     /**
                      * Adds a new {@link Spotfire.Dxp.Application.Visuals.Maps.MapChartDataLayer} to this collection.
                      * @param dataTable The data table to be used for the layer.
@@ -25172,6 +26270,8 @@ declare namespace Spotfire.Dxp {
                     set LabelFontMetadata(value: Framework.Styles.FontMetadata);
                     /**
                      * Gets or sets the size of labels showing images.
+                     * @remark The labels size is expressed as a percentage of the size of the panel in the range of minimum 15 pixels and maximum the least of the width or height.
+                     * I.e. a value of 0 will allow images as large as 15 x 15 pixels, and a value of 100 will allow images as large as the least of the width or the height of the panel.
                      * 
                      * @since 2.0
                      * 
@@ -25225,6 +26325,10 @@ declare namespace Spotfire.Dxp {
                      * Gets or sets the class type of the markers in this marker layer visualization.
                      * Using this property the markers can be switched between simple
                      * markers, tiled markers and separate charts (for example pies).
+                     * @remark When set to {@link Spotfire.Dxp.Application.Visuals.MarkerClass.Tile}
+                     * the {@link Spotfire.Dxp.Application.Visuals.Maps.MarkerLayerVisualization.ShapeAxis} and the {@link Spotfire.Dxp.Application.Visuals.Maps.MarkerLayerVisualization.SizeAxis} will be ignored.
+                     * When set to {@link Spotfire.Dxp.Application.Visuals.MarkerClass.Chart}
+                     * the {@link Spotfire.Dxp.Application.Visuals.Maps.MarkerLayerVisualization.ShapeAxis} will be ignored.
                      * 
                      * @since 2.0
                      * 
@@ -25234,6 +26338,8 @@ declare namespace Spotfire.Dxp {
                     set MarkerClass(value: MarkerClass);
                     /**
                      * Gets or sets the size of the markers.
+                     * @remark The size is expressed in percent of the height or width of the plot. A value of 100 means that
+                     * a marker will occupy the full height or width of the plot (whichever is smallest).
                      * 
                      * @since 2.0
                      * 
@@ -25543,7 +26649,9 @@ declare namespace Spotfire.Dxp {
                     get Identifier(): JsType<System.String>;
                     /**
                      * Initializes a new instance of the {@link Spotfire.Dxp.Application.Visuals.Maps.Projection} class.
-                     * @param identifier The projection identifier, EPSG code on the form "EPSG:1234". Any whitespace is removed from both ends of the string.
+                     * @param identifier The projection identifier, either an EPSG code on the form "EPSG:1234" or "CustomIdentifierPrefix:ID"
+                     * when referring to an imported coordinate reference system with id 'ID'.
+                     * Any whitespace is removed from both ends of the string.
                      * 
                      * @since 2.0
                      * 
@@ -25553,7 +26661,9 @@ declare namespace Spotfire.Dxp {
                     /**
                      * Initializes a new instance of the {@link Spotfire.Dxp.Application.Visuals.Maps.Projection} class as a custom defined projection.
                      * This type of projection can be generated from imported GeoTIFF image files or from imported Shape files or they can be added by users.
-                     * @param identifier The projection identifier, EPSG code on the form "EPSG:1234". Any whitespace is removed from both ends of the string.
+                     * @param identifier The projection identifier, either an EPSG code on the form "EPSG:1234" or "CustomIdentifierPrefix:ID"
+                     * when referring to an imported coordinate reference system with id 'ID'.
+                     * Any whitespace is removed from both ends of the string.
                      * @param proj4Definition The projection PROJ4 definition.
                      * @param displayName The projection display name.
                      * 
@@ -25671,6 +26781,7 @@ declare namespace Spotfire.Dxp {
                 class TileLayer extends MapChartLayer implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                     /**
                      * Gets or sets a value indicating whether this layer's extent should be taken into account when resetting view extent.
+                     * @remark Tile and Wms layers are always false. Setting the property on these layers is always ignored.
                      * 
                      * @since 2.0
                      * 
@@ -25790,6 +26901,7 @@ declare namespace Spotfire.Dxp {
                     get Extent(): GeographicExtent;
                     /**
                      * Gets or sets a value indicating whether this layer's extent should be taken into account when resetting view extent.
+                     * @remark Tile and Wms layers are always false. Setting the property on these layers is always ignored.
                      * 
                      * @since 2.0
                      * 
@@ -25839,15 +26951,6 @@ declare namespace Spotfire.Dxp {
                     get ShowWarnings(): JsType<System.Boolean>;
                     set ShowWarnings(value: JsType<System.Boolean>);
                     /**
-                     * Gets or sets a value indicating whether credentials for the layer are stored in the dxp file
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get StoreCredentials(): JsType<System.Boolean>;
-                    set StoreCredentials(value: JsType<System.Boolean>);
-                    /**
                      * Gets the sublayers.
                      * 
                      * @since 2.0
@@ -25873,7 +26976,7 @@ declare namespace Spotfire.Dxp {
                     get TiledRendering(): JsType<System.Boolean>;
                     set TiledRendering(value: JsType<System.Boolean>);
                     /**
-                     * Gets or sets a value indicating whether credentials are used for WMS layer.
+                     * Gets or sets a value indicating whether credentials are used for WMS layer. When false it might be because the authentication method currently used is OAuth.
                      * 
                      * @since 2.0
                      * 
@@ -27668,6 +28771,7 @@ declare namespace Spotfire.Dxp {
                     /**
                      * Gets or sets a value indicating whether filtering behavior is inherited from the owner of this visualization.
                      * It is only used in the case where the owner has filtering settings, i.e. when the owner os a graphical table.
+                     * @remark When filtering is inherited, the filtering settings under the Data property of this node is not used.
                      * 
                      * @since 2.0
                      * 
@@ -28055,6 +29159,155 @@ declare namespace Spotfire.Dxp {
                 }
             }
             
+            namespace Shapes {
+                /**
+                 * Class representing a custom marker shape belonging to a {@link Spotfire.Dxp.Application.Visuals.Shapes.CustomShapeCollection}
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                class CustomShape extends Object {
+                    /**
+                     * Gets the id.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Id(): JsType<System.String>;
+                    /**
+                     * Gets the list of keywords.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Keywords(): System.Collections.Generic.IReadOnlyList<JsType<System.String>>;
+                    /**
+                     * Gets the name.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Name(): JsType<System.String>;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                    };
+                    private __type_1107324243: null;
+                }
+                
+                /**
+                 * Represents a collection of marker shapes.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                class CustomShapeCollection extends Object {
+                    /**
+                     * Gets the description of the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Description(): JsType<System.String>;
+                    /**
+                     * Gets the id of the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Id(): JsType<System.String>;
+                    /**
+                     * Gets the name of the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Name(): JsType<System.String>;
+                    /**
+                     * Gets the list of shapes in the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    get Shapes(): System.Collections.Generic.IReadOnlyList<CustomShape>;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                    };
+                    private __type_2646700929: null;
+                }
+                
+                /**
+                 * Service used to manage collections of custom marker shapes.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                class CustomShapeCollections extends Object implements Explicit<System.Collections.Generic.IEnumerable<CustomShapeCollection>>, Explicit<System.Collections.IEnumerable> {
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    [Symbol.iterator](): Iterator<CustomShapeCollection>;
+                    /**
+                     * Returns an enumerator that iterates through the collection.
+                     * @returns An {@link System.Collections.Generic.IEnumerator} object that
+                     * can be used to iterate through the collection.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Default capability
+                     */
+                    GetEnumerator(): System.Collections.Generic.IEnumerator<CustomShapeCollection>;
+                    /**
+                     * Loads a shape collection from the library.
+                     * @param libraryItem The library item to load.
+                     * @param customShapeCollection The shape collection that was loaded. Will be null on failure.
+                     * @param exception Any exception shown during the loading process.
+                     * @returns True if the shape collection was successfully loaded, otherwise false.
+                     * 
+                     * @since 2.1
+                     * 
+                     * @group Extended capability 'LibraryRead'
+                     */
+                    TryLoadFromLibrary(libraryItem: Framework.Library.LibraryItem, customShapeCollection: OutParam<CustomShapeCollection>, exception: OutParam<System.Exception>): JsType<System.Boolean>;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                        System_Collections_Generic_IEnumerable: Implementation<System.Collections.Generic.IEnumerable<CustomShapeCollection>>,
+                        System_Collections_IEnumerable: Implementation<System.Collections.IEnumerable>,
+                    };
+                    private __type_3274882784: null;
+                }
+            }
+            
             namespace TablePlotBase {
                 /**
                  * Represents the style the border of cells will be drawn in.
@@ -28097,6 +29350,7 @@ declare namespace Spotfire.Dxp {
                     set BorderColor(value: JsType<System.Drawing.Color>);
                     /**
                      * Gets or sets the border width.
+                     * @remark Allowed values are 0-10.
                      * 
                      * @since 2.0
                      * 
@@ -28140,6 +29394,8 @@ declare namespace Spotfire.Dxp {
                 class ImageFromUrlRendererSettings extends ValueRendererSettings implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                     /**
                      * Gets or sets the Url template.
+                     * @remark The Url template is a string, where "{$}" (without quotes)
+                     * will be replaced by a data value, "{$width}" and "{$height}" will be replaced by the width and height of the requested image.
                      * 
                      * @since 2.0
                      * 
@@ -28174,6 +29430,8 @@ declare namespace Spotfire.Dxp {
                 class LinkValueRendererSettings extends ValueRendererSettings implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                     /**
                      * Gets or sets the link template.
+                     * @remark The link template is a string, where "{$}" (without quotes)
+                     * will be replaced by a data value.
                      * 
                      * @since 2.0
                      * 
@@ -28539,6 +29797,8 @@ declare namespace Spotfire.Dxp {
         
         /**
          * This is the interface for creating data nodes.
+         * @remark This interface is used when iterating over a collection but one wants
+         * to reuse the same DataNode for each iteration.
          * 
          * @since 2.0
          * 
@@ -28565,6 +29825,7 @@ declare namespace Spotfire.Dxp {
         class AddColumnsSettings extends Object {
             /**
              * Gets the signatures for the columns in the added data that should be ignored, i.e. not part of the resulting columns.
+             * @remark The list is read-only.
              * 
              * @since 2.0
              * 
@@ -28581,6 +29842,7 @@ declare namespace Spotfire.Dxp {
             get JoinType(): JoinType;
             /**
              * Gets the join condition between columns in the original data (keys) and columns in the added data (values).
+             * @remark The dictionary is read-only.
              * 
              * @since 2.0
              * 
@@ -28724,6 +29986,7 @@ declare namespace Spotfire.Dxp {
             get CreateNewSourceColumn(): JsType<System.Boolean>;
             /**
              * Gets the signatures for the columns in the added data that should not be included in the result.
+             * @remark The list is read-only.
              * 
              * @since 2.0
              * 
@@ -28732,6 +29995,7 @@ declare namespace Spotfire.Dxp {
             get IgnoredColumns(): System.Collections.Generic.IReadOnlyList<DataColumnSignature>;
             /**
              * Gets the mapping between columns in the original data (keys) and columns in the added data (values).
+             * @remark The dictionary is read-only.
              * 
              * @since 2.0
              * 
@@ -29055,6 +30319,7 @@ declare namespace Spotfire.Dxp {
         
         /**
          * Abstract class representing a calculation.
+         * @remark This class cannot be extended through inheritance. See Spotfire.Dxp.Application.Extension.CustomCalculation instead
          * 
          * @since 2.0
          * 
@@ -29098,6 +30363,12 @@ declare namespace Spotfire.Dxp {
             get TypeId(): Framework.DocumentModel.TypeIdentifier;
             /**
              * Gets the {@link Spotfire.Dxp.Data.CalculationUpdateBehavior} of the calculation.
+             * @remark This determines whether the calculation should be reexecuted immediately when dependencies change or just
+             * indicate their need of refresh. Note that columns residing in a normal table will also be asked to recalculate
+             * themselves when the rowcount of their table changes regardless of their normal UpdateBehavior.
+             * Note that automatic update behavior does not apply to filterdependencies which will never cause an automatic update.
+             * If filterdependencies are used it is recommended to use Invalidate behavior instead to ensure
+             * a smooth user experience when filtering.
              * 
              * @since 2.0
              * 
@@ -29111,6 +30382,7 @@ declare namespace Spotfire.Dxp {
             constructor();
             /**
              * Execute the calculation. If the results exists they will updated - otherwise they will be created.
+             * @remark This is equal to calling Execute(CalculationExecutionPromptMode.Always)
              * @returns True if the execution was successfully performed;
              * otherwise false.
              * 
@@ -29122,6 +30394,7 @@ declare namespace Spotfire.Dxp {
             /**
              * Set the unique (within the CalculationCollection) name of
              * this {@link Spotfire.Dxp.Data.Calculation} instance.
+             * @remark Always use the returned value rather than the suggestedName to refer to the calculation
              * @param suggestedName The name suggestion
              * @returns If suggestedName is unique it is used and returned, otherwise it is first made unique by adding (2), (3) etc.
              * 
@@ -29178,6 +30451,9 @@ declare namespace Spotfire.Dxp {
             /**
              * Specifies that a calculation should be automatically recalculated
              * when changes occur.
+             * @remark This does not apply to dependencies on filtering selections, which will never cause an automatic update.
+             * If filterdependencies are used it is recommended to use Invalidate behavior instead to ensure
+             * a smooth user experience when filtering.
              */
             static readonly Calculate: CalculationUpdateBehavior;
             /**
@@ -29777,6 +31053,8 @@ declare namespace Spotfire.Dxp {
         
         /**
          * Represents a collection of the properties in a column.
+         * @remark This collection can be
+         * retrieved from a {@link Spotfire.Dxp.Data.IDataColumn}, {@link Spotfire.Dxp.Data.DataColumn} or {@link Spotfire.Dxp.Data.DataRowReaderColumn}.
          * 
          * @since 2.0
          * 
@@ -29786,6 +31064,7 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets the derived expression of the column.
              * The calculated expression is the expression text after preprocessing the original expression ({@link Spotfire.Dxp.Data.DataColumnProperties.Expression}).
+             * @remark Automatic column name changes, e.g., changing case of column names have also been applied to the calculated expression.
              * 
              * @since 2.0
              * 
@@ -29847,6 +31126,8 @@ declare namespace Spotfire.Dxp {
             get Expression(): JsType<System.String>;
             /**
              * Gets or sets the external identifier of the column.
+             * @remark This is an external identifier of some sort that identifies the
+             * column.
              * 
              * @since 2.0
              * 
@@ -29856,6 +31137,8 @@ declare namespace Spotfire.Dxp {
             set ExternalId(value: JsType<System.String>);
             /**
              * Gets or sets the external name of the column.
+             * @remark The external name is the name that the column originally had
+             * in the original {@link Spotfire.Dxp.Data.DataSource}.
              * 
              * @since 2.0
              * 
@@ -29865,6 +31148,9 @@ declare namespace Spotfire.Dxp {
             set ExternalName(value: JsType<System.String>);
             /**
              * Gets or sets the value formatter of the column.
+             * @remark The {@link Spotfire.Dxp.Data.Formatters.IDataFormatter} return is read-only. If modifications
+             * to the formatter's properties are required then first clone the formatter
+             * and then set the new formatter.
              * 
              * @since 2.0
              * 
@@ -29925,6 +31211,7 @@ declare namespace Spotfire.Dxp {
             Get(propertyName: (JsType<System.String> | System.String)): unknown;
             /**
              * Checks if a property with a given name exists.
+             * @remark The property value may still be undefined even if it exists.
              * @param name The name of the property.
              * @returns true if the property exists; otherwise, false.
              * 
@@ -30045,6 +31332,7 @@ declare namespace Spotfire.Dxp {
             constructor(dataRowReaderColumn: DataRowReaderColumn);
             /**
              * Creates a column signature from a properties collection for a column.
+             * @remark At least the name property must be set.
              * @param properties The properties collection.
              * 
              * @since 2.0
@@ -30070,6 +31358,9 @@ declare namespace Spotfire.Dxp {
             Equals(obj: any): JsType<System.Boolean>;
             /**
              * Compares a signature instance to another for equality.
+             * @remark This method does not perform a match but checks if the signature are exactly
+             * equal. For example if two signature are equal but one has an external name and the other
+             * does not then they are not considered equal.
              * @param other Another column signature instance.
              * @returns True if the signatures are equal; otherwise, false.
              * 
@@ -30159,6 +31450,9 @@ declare namespace Spotfire.Dxp {
              * modified by this method. Note that this is a property that is set in one
              * direction only, filtering in one table may affect the filtering in another table
              * while the filtering in that table may or may not affect the first table.
+             * @remark If propagation of filtering in both directions between the two tables
+             * are needed then call this method twice with the toTable
+             * and fromTable switched.
              * @param toTable The table to propagate to.
              * @param fromTable The table to propagate from.
              * @param relationPropagationBehavior The requested behavior.
@@ -30199,6 +31493,8 @@ declare namespace Spotfire.Dxp {
             get Count(): JsType<System.Int32>;
             /**
              * Gets the default filtering scheme.
+             * @remark If the current filtering is requested, use
+             * Document.ActiveFilteringSelection.
              * 
              * @since 2.0
              * 
@@ -30213,6 +31509,8 @@ declare namespace Spotfire.Dxp {
             [Symbol.iterator](): Iterator<DataFilteringSelection>;
             /**
              * Add a new filtering selection.
+             * @remark The name of the marking selection has to be unique in all selections including
+             * selections in the {@link Spotfire.Dxp.Data.DataMarkingSelectionCollection}.
              * @param name The name of the new filtering selection.
              * @returns The newly created filtering selection.
              * 
@@ -30291,6 +31589,7 @@ declare namespace Spotfire.Dxp {
         /**
          * Represents a flow of data from the {@link Spotfire.Dxp.Data.DataFlow.DataSource} through
          * an ordered set of {@link Spotfire.Dxp.Data.DataTransformation}'s.
+         * @remark This class is immutable with no public constructor; use a {@link Spotfire.Dxp.Data.DataFlowBuilder} to create an instance of this class.
          * 
          * @since 2.0
          * 
@@ -30299,6 +31598,8 @@ declare namespace Spotfire.Dxp {
         class DataFlow extends DataSource {
             /**
              * Gets a copy of the {@link Spotfire.Dxp.Data.DataFlow.DataSource} that this flow is based on.
+             * @remark The {@link Spotfire.Dxp.Data.DataFlow.DataSource} is used as input to the first {@link Spotfire.Dxp.Data.DataTransformation}.
+             * If no transformations are added then the {@link Spotfire.Dxp.Data.DataFlow.DataSource} is the output of the flow.
              * 
              * @since 2.0
              * 
@@ -30307,6 +31608,7 @@ declare namespace Spotfire.Dxp {
             get DataSource(): DataSource;
             /**
              * Gets a document title for the data returned from this data source with the current configuration.
+             * @remark The default implementation returns string.Empty.
              * 
              * @since 2.0
              * 
@@ -30357,6 +31659,12 @@ declare namespace Spotfire.Dxp {
         
         /**
          * This class is a builder that can be used to dynamically create a {@link Spotfire.Dxp.Data.DataFlow} instance.
+         * @remark The flow is initially created from a {@link Spotfire.Dxp.Data.DataFlowBuilder.DataSource} and then transformations
+         * may be added after it has been created.
+         * 
+         * 
+         * After a {@link Spotfire.Dxp.Data.DataFlowBuilder.DataSource} and {@link Spotfire.Dxp.Data.DataTransformation} objects have been added it can
+         * also be used execute the flow up to a certain {@link Spotfire.Dxp.Data.DataTransformation}.
          * 
          * @since 2.0
          * 
@@ -30375,6 +31683,7 @@ declare namespace Spotfire.Dxp {
             constructor(dataSource: DataSource, importContext: Import.ImportContext);
             /**
              * Adds a {@link Spotfire.Dxp.Data.DataTransformation} to the flow.
+             * @remark This transformation will be executed after all the previously added transformations.
              * @param transformation The transformation to add.
              * @returns The index of the added transformation.
              * 
@@ -30406,6 +31715,7 @@ declare namespace Spotfire.Dxp {
              * Executes the flow. A connection to the data source will
              * be made using the {@link Spotfire.Dxp.Data.DataSourcePromptMode}. The data will be passed through the
              * list of {@link Spotfire.Dxp.Data.DataTransformation}'s and the result returned.
+             * @remark The user of this method should not dispose the returned {@link Spotfire.Dxp.Data.DataRowReader}.
              * @param promptMode The prompt mode.
              * @returns The resulting {@link Spotfire.Dxp.Data.DataRowReader}.
              * 
@@ -30418,6 +31728,7 @@ declare namespace Spotfire.Dxp {
              * Executes the flow. A connection to the data source will
              * be made using the {@link Spotfire.Dxp.Data.DataSourcePromptMode}. The data will be passed through the
              * list of {@link Spotfire.Dxp.Data.DataTransformation}'s up to the specified step and the result will be returned.
+             * @remark The user of this method should not dispose the returned {@link Spotfire.Dxp.Data.DataRowReader}.
              * @param transformationIndex At which transformation the execution should stop,
              * 0 to just execute the data source.
              * @param promptMode The prompt mode.
@@ -30766,6 +32077,7 @@ declare namespace Spotfire.Dxp {
              * Gets the {@link Spotfire.Dxp.Data.DataLoadReport} to retrieve information
              * on changes that occured the {@link Spotfire.Dxp.Data.DataManager} was loaded using
              * linked data.
+             * @remark Do not set this value.
              * 
              * @since 2.0
              * 
@@ -30856,6 +32168,7 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets or sets the color that should be used when drawing this
              * marking selection.
+             * @remark The color may not be empty.
              * 
              * @since 2.0
              * 
@@ -30882,6 +32195,16 @@ declare namespace Spotfire.Dxp {
             SetSelection(rowMask: RowSelection, dataTable: DataTable): void;
             /**
              * Set the marking selection for a given table.
+             * @param whereClause An expression string with conditions for the data columns used to set the marking. For more information, see the documentation for the Spotfire Expression Language.
+             * @param dataTable The table to set the selection on.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            SetSelection(whereClause: (JsType<System.String> | System.String), dataTable: DataTable): void;
+            /**
+             * Set the marking selection for a given table.
              * @param rowMask The row selection to set.
              * @param dataTable The table to set the selection on.
              * @param dataSelectionOperation The operation to use when
@@ -30892,6 +32215,18 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             SetSelection(rowMask: RowSelection, dataTable: DataTable, dataSelectionOperation: DataSelectionOperation): void;
+            /**
+             * Set the marking selection for a given table.
+             * @param whereClause An expression string with conditions for the data columns used to set the marking. For more information, see the documentation for the Spotfire Expression Language.
+             * @param dataTable The table to set the selection on.
+             * @param dataSelectionOperation The operation to use when
+             * combining this selection with previously set selections.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            SetSelection(whereClause: (JsType<System.String> | System.String), dataTable: DataTable, dataSelectionOperation: DataSelectionOperation): void;
             /**
              * @ignore
              * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
@@ -30923,6 +32258,9 @@ declare namespace Spotfire.Dxp {
             get Count(): JsType<System.Int32>;
             /**
              * Get or set the default marking.
+             * @remark If the active marking is required then this
+             * property should not be used but use {@link Spotfire.Dxp.Application.Document.ActiveMarkingSelectionReference}
+             * instead.
              * 
              * @since 2.0
              * 
@@ -30938,6 +32276,8 @@ declare namespace Spotfire.Dxp {
             [Symbol.iterator](): Iterator<DataMarkingSelection>;
             /**
              * Add a new data marking selection.
+             * @remark The name of the marking selection has to be unique in all selections including
+             * selections in the {@link Spotfire.Dxp.Data.DataFilteringSelectionCollection}.
              * @param name The name of the new data marking selection.
              * @returns The new data marking selection.
              * 
@@ -31061,6 +32401,7 @@ declare namespace Spotfire.Dxp {
             get Value(): DataValue;
             /**
              * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataNode} class. Create a new node from a node collection.
+             * @remark This method is supposed to be used to retrieve an IDataNodeProducer.
              * @param nodes The node collection.
              * 
              * @since 2.0
@@ -31380,6 +32721,9 @@ declare namespace Spotfire.Dxp {
             get IsUserVisible(): JsType<System.Boolean>;
             /**
              * Gets or sets the name of the data property.
+             * @remark Do not use the setter of this property. It is in practice obsolete but can not be made so
+             * due to a bug in the compiler that does not allow setting the obsolete attribute on only the setter.
+             * Changing the name will effectively render it another property in many places that only recognize properties by name.
              * 
              * @since 2.0
              * 
@@ -31514,7 +32858,10 @@ declare namespace Spotfire.Dxp {
              * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
              */
             constructor();
-            /** The property is shared in the entire analysis. */
+            /**
+             * The property is shared in the entire analysis.
+             * @deprecated Use Document instead.
+             */
             static readonly Analysis: DataPropertyClass;
             /** The property is for a specific {@link Spotfire.Dxp.Data.DataColumn}. */
             static readonly Column: DataPropertyClass;
@@ -31932,6 +33279,12 @@ declare namespace Spotfire.Dxp {
         /**
          * Represents a resettable iterator of rows values. It is used to retrieve data from
          * a {@link Spotfire.Dxp.Data.DataSource} or {@link Spotfire.Dxp.Data.DataTransformation}.
+         * @remark Instances of this class can be retrieved from a {@link Spotfire.Dxp.Data.DataSourceConnection} or
+         * a {@link Spotfire.Dxp.Data.DataTransformationConnection}.
+         * 
+         * 
+         * It is not possible to inherit directly from this class, this should be done through the
+         * CustomDataRowReader class.
          * 
          * @since 2.0
          * 
@@ -31986,6 +33339,7 @@ declare namespace Spotfire.Dxp {
             Dispose(): void;
             /**
              * Advances the reader to the next row.
+             * @remark The {@link Spotfire.Dxp.Data.DataValueCursor}s in the {@link Spotfire.Dxp.Data.DataRowReaderColumn}s now have the new values.
              * @returns true if there are more rows; otherwise, false.
              * 
              * @since 2.0
@@ -32013,6 +33367,8 @@ declare namespace Spotfire.Dxp {
         
         /**
          * Represents a column returned by a {@link Spotfire.Dxp.Data.DataRowReader}.
+         * @remark This class can be used to retrieve properties and the current value.
+         * Instances of this class can be retrieved from the {@link Spotfire.Dxp.Data.DataRowReader.Columns} collection.
          * 
          * @since 2.0
          * 
@@ -32097,6 +33453,7 @@ declare namespace Spotfire.Dxp {
         /**
          * Represents a collection of the {@link Spotfire.Dxp.Data.DataRowReaderColumn}s that a
          * {@link Spotfire.Dxp.Data.DataRowReader} returns.
+         * @remark This collection can be retrieved from the {@link Spotfire.Dxp.Data.DataRowReader.Columns} property.
          * 
          * @since 2.0
          * 
@@ -32119,6 +33476,7 @@ declare namespace Spotfire.Dxp {
             [Symbol.iterator](): Iterator<DataRowReaderColumn>;
             /**
              * Find all columns that match the search expression.
+             * @remark For search syntax see Spotfire user manual.
              * @param searchExpression The search expression.
              * @returns All columns that match the search expression.
              * 
@@ -32234,6 +33592,8 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets or sets a value indicating whether markings, tags and bookmarks shall be kept for
              * tables with linked data.
+             * @remark Note that you need to specify a primary key on the corresponding tables in order for this
+             * to work.
              * 
              * @since 2.0
              * 
@@ -32303,6 +33663,7 @@ declare namespace Spotfire.Dxp {
          * 
          * See the {@link Spotfire.Dxp.Data.DataMarkingSelection}
          * and {@link Spotfire.Dxp.Data.DataFilteringSelection} for concrete classes.
+         * @remark It is not possible in inherit from this class.
          * 
          * @since 2.0
          * 
@@ -32342,6 +33703,18 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             GetSelection(dataTable: DataTable): RowSelection;
+            /**
+             * Tries to get the selection expression.
+             * @param dataTable The table to get the selection from.
+             * @param expression The selection expression.
+             * @returns True if the expression could be retrieved; false otherwise.
+             * The method will fail if the selection contains index sets.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            TryGetSelectionExpression(dataTable: DataTable, expression: OutParam<System.String>): JsType<System.Boolean>;
             /**
              * @ignore
              * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
@@ -32408,6 +33781,7 @@ declare namespace Spotfire.Dxp {
         
         /**
          * Abstract class for data sources. Used when loading and saving linked data.
+         * @remark Implementors of this class must be serializable.
          * 
          * @since 2.0
          * 
@@ -32416,6 +33790,7 @@ declare namespace Spotfire.Dxp {
         class DataSource extends Object {
             /**
              * Gets a document title for the data returned from this data source with the current configuration.
+             * @remark The default implementation returns string.Empty.
              * 
              * @since 2.0
              * 
@@ -32477,6 +33852,7 @@ declare namespace Spotfire.Dxp {
             /**
              * Creates a {@link Spotfire.Dxp.Data.DataSourceConnection}, using the specified serviceProvider and the settings in this data source instance. If needed, and allowed by the current prompt mode,
              * the user may be prompted for additional settings.
+             * @remark The internal state of this data source object is not changed by this call. The returned connection will include a cloned and updated copy of this data source.
              * @param serviceProvider The service provider.
              * @param promptMode The prompt mode.
              * @returns A new DataSourceConnection instance.
@@ -32489,6 +33865,11 @@ declare namespace Spotfire.Dxp {
             /**
              * Creates a {@link Spotfire.Dxp.Data.DataSourceConnection}, using the specified serviceProvider and the settings in this data source instance. If needed, and allowed by the current prompt mode,
              * the user may be prompted for additional settings.
+             * @remark The caller of this method MUST retrieve the prompt models using the GetPromptModels() call on the connection
+             * and iterate over the entire collection of prompt models before the query is executed.
+             * 
+             * 
+             * The internal state of this data source object is not changed by this call. The returned connection will include a cloned and updated copy of this data source.
              * @param serviceProvider The service provider.
              * @param promptMode The prompt mode.
              * @returns A new DataSourceConnection instance.
@@ -32588,6 +33969,7 @@ declare namespace Spotfire.Dxp {
             Dispose(): void;
             /**
              * Executes the query with the current data source settings and returns the resulting {@link Spotfire.Dxp.Data.DataRowReader}.
+             * @remark The caller is responsible to dispose the returned data reader.
              * @returns A new {@link Spotfire.Dxp.Data.DataRowReader} instance.
              * 
              * @since 2.0
@@ -32607,6 +33989,8 @@ declare namespace Spotfire.Dxp {
         /**
          * Defines how a {@link Spotfire.Dxp.Data.DataSource} should prompt a user
          * for settings when loading data.
+         * @remark Note that the application can run
+         * in a mode where it is not allowed to show a UI.
          * 
          * @since 2.0
          * 
@@ -32632,6 +34016,8 @@ declare namespace Spotfire.Dxp {
         
         /**
          * A DataTable is a collection of columns and metadata.
+         * @remark No public constructors are defined for a data table, see the
+         * {@link Spotfire.Dxp.Data.DataTableCollection} class for creation methods.
          * 
          * @since 2.0
          * 
@@ -32683,6 +34069,7 @@ declare namespace Spotfire.Dxp {
              * Gets a value indicating whether this table is refreshable by need, that is,
              * it supports {@link Spotfire.Dxp.Data.DataTable.RefreshOnDemandData} calls and uses the {@link Spotfire.Dxp.Data.DataTable.NeedsRefresh}
              * property to indicate if refresh is needed.
+             * @remark Default is false.
              * 
              * @since 2.0
              * 
@@ -32737,6 +34124,8 @@ declare namespace Spotfire.Dxp {
             get Properties(): DataTableProperties;
             /**
              * Gets a value indicating whether the data table is refreshing.
+             * @remark Only external events are raised when this property is changed.
+             * Internal events are not raised.
              * 
              * @since 2.0
              * 
@@ -32773,6 +34162,8 @@ declare namespace Spotfire.Dxp {
              * settings parameter. Use
              * {@link Spotfire.Dxp.Data.DataManager.CreateFileDataSource|CreateFileDataSource(filePath)} to create a data
              * source from a file path.
+             * @remark If the settings specifies a join condition
+             * based on a calculated column, that column must be frozen. See {@link Spotfire.Dxp.Data.CalculatedColumn.Freeze}.
              * @param dataSource The data source to retrieve the new
              * columns from.
              * @param settings The settings to use when adding the columns
@@ -32829,6 +34220,7 @@ declare namespace Spotfire.Dxp {
             AddTransformations(transformations: OrExplicit<System.Collections.Generic.IEnumerable<DataTransformation>>): ColumnsChangedResult;
             /**
              * Gets a value indicating whether the data table can be reloaded using the {@link Spotfire.Dxp.Data.DataTable.ReloadAllData} method.
+             * @remark Reloading data might not be possible if the data table contains parts that cannot be reloaded, such as clipboard data.
              * @returns True if the data table can be reloaded; false otherwise.
              * 
              * @since 2.0
@@ -32838,6 +34230,9 @@ declare namespace Spotfire.Dxp {
             CanReloadAllData(): JsType<System.Boolean>;
             /**
              * Gets a value indicating whether the data table can be reloaded using the {@link Spotfire.Dxp.Data.DataTable.ReloadLinkedData} method.
+             * @remark Reloading only linked data is not possible for an embedded data table, and might not be possible if the
+             * data table contains parts that cannot be reloaded, such as clipboard data, or data sources that have been set to
+             * store their data.
              * @returns True if the data table can be reloaded; false otherwise.
              * 
              * @since 2.0
@@ -32859,6 +34254,9 @@ declare namespace Spotfire.Dxp {
             ExportDataToLibrary(libraryItem: Framework.Library.LibraryItem, title: (JsType<System.String> | System.String)): Framework.Library.LibraryItem;
             /**
              * Generates a {@link Spotfire.Dxp.Data.SourceView} representing {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s performed to construct this data table.
+             * @remark The object returned is only valid as long as the data table structure is not modified,
+             * i.e. as long as the set of {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s is the same.
+             * Examples of invalidating modifications include adding rows/columns or transformations.
              * @returns A generated {@link Spotfire.Dxp.Data.SourceView}.
              * 
              * @since 2.0
@@ -32868,6 +34266,7 @@ declare namespace Spotfire.Dxp {
             GenerateSourceView(): SourceView;
             /**
              * Gets the distinct rows for the specified cursors. Note that this method is not supported for external data tables.
+             * @remark Note that the Index property on the DataRow will not return any valid values for this method.
              * @param rowIndexes The row indexes to enumerate. May be null for all rows.
              * @param valueCursors Specifies which columns to include in the enumeration. These are used to
              * access the individual data values for each row. You need to specify at least one value cursor.
@@ -32914,6 +34313,7 @@ declare namespace Spotfire.Dxp {
              * Refreshes data that depends on other data and is not automatically updated.
              * This includes on-demand data with manual refresh, data functions with update behavior Manual
              * and calculations with update behavior Invalidate.
+             * @remark This will only refresh the data table if the {@link Spotfire.Dxp.Data.DataTable.NeedsRefresh} property is true.
              * 
              * @since 2.0
              * 
@@ -32922,6 +34322,10 @@ declare namespace Spotfire.Dxp {
             RefreshOnDemandData(): void;
             /**
              * Reloads all data in this data table including data sources set to store their data.
+             * @remark Reloading data might not be possible if the data table contains parts that cannot be reloaded,
+             * such as clipboard data.
+             * For more fine-grained control over data reloading, use the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} API
+             * on the {@link Spotfire.Dxp.Data.SourceView}
              * 
              * @since 2.0
              * 
@@ -32930,6 +34334,11 @@ declare namespace Spotfire.Dxp {
             ReloadAllData(): void;
             /**
              * Reloads only linked data in this data table.
+             * @remark Reloading only linked data is not possible for an embedded data table, and might not be possible if the
+             * data table contains parts that cannot be reloaded, such as clipboard data, or data sources that have been set to
+             * store their data.
+             * For more fine-grained control over data reloading, use the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} API
+             * on the {@link Spotfire.Dxp.Data.SourceView}
              * 
              * @since 2.0
              * 
@@ -33002,6 +34411,8 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets or sets the current default table. The value may not be set
              * to null but will be null when there are no tables in the collection.
+             * @remark If the current active table is needed, instead use the
+             * {@link Spotfire.Dxp.Application.Document.ActiveDataTableReference} property.
              * 
              * @since 2.0
              * 
@@ -33046,6 +34457,8 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets a value indicating whether any data tables can be reloaded using the
              * {@link Spotfire.Dxp.Data.DataTableCollection.ReloadAllData} method.
+             * @remark Reloading data might not be possible if the data table contains parts that cannot be reloaded,
+             * such as clipboard data.
              * @returns True if any data table can be reloaded; false otherwise.
              * 
              * @since 2.0
@@ -33056,6 +34469,8 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets a value indicating whether any of the specified data tables can be reloaded using the
              * {@link Spotfire.Dxp.Data.DataTableCollection.ReloadAllData|ReloadAllData(tables)} method.
+             * @remark Reloading data might not be possible if the data table contains parts that cannot be reloaded,
+             * such as clipboard data.
              * @param tables The data tables to reload.
              * @returns True if any data table can be reloaded; false otherwise.
              * 
@@ -33067,6 +34482,9 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets a value indicating whether any data tables can be reloaded using the
              * {@link Spotfire.Dxp.Data.DataTableCollection.ReloadLinkedData} method.
+             * @remark Reloading only linked data is not possible for embedded data tables, and might not be possible if the
+             * data table contains parts that cannot be reloaded, such as clipboard data, or data sources that have been set to
+             * store their data.
              * @returns True if any data table can be reloaded; false otherwise.
              * 
              * @since 2.0
@@ -33077,6 +34495,9 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets a value indicating whether any of the specified data tables can be reloaded using the
              * {@link Spotfire.Dxp.Data.DataTableCollection.ReloadLinkedData|ReloadLinkedData(tables)} method.
+             * @remark Reloading only linked data is not possible for embedded data tables, and might not be possible if the
+             * data table contains parts that cannot be reloaded, such as clipboard data, or data sources that have been set to
+             * store their data.
              * @param tables The data tables to reload.
              * @returns True if any data table can be reloaded; false otherwise.
              * 
@@ -33157,6 +34578,7 @@ declare namespace Spotfire.Dxp {
              * Refreshes data that depends on other data and is not automatically updated.
              * This includes on-demand data with manual refresh, data functions with update behavior Manual
              * and calculations with update behavior Invalidate.
+             * @remark This will only refresh data tables where the {@link Spotfire.Dxp.Data.DataTable.NeedsRefresh} property is true.
              * 
              * @since 2.0
              * 
@@ -33167,6 +34589,7 @@ declare namespace Spotfire.Dxp {
              * Refreshes data that depends on other data and is not automatically updated.
              * This includes on-demand data with manual refresh, data functions with update behavior Manual
              * and calculations with update behavior Invalidate.
+             * @remark This will only refresh data tables where the {@link Spotfire.Dxp.Data.DataTable.NeedsRefresh} property is true.
              * @param tables The data tables to refresh.
              * 
              * @since 2.0
@@ -33176,6 +34599,10 @@ declare namespace Spotfire.Dxp {
             RefreshOnDemandData(tables: OrExplicit<System.Collections.Generic.IEnumerable<DataTable>>): void;
             /**
              * Reloads all data in all data tables, including embedded data tables and data sources set to store their data.
+             * @remark Reloading data might not be possible if the data table contains parts that cannot be reloaded,
+             * such as clipboard data.
+             * For more fine-grained control over data reloading, use the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} API
+             * on the {@link Spotfire.Dxp.Data.SourceView}
              * 
              * @since 2.0
              * 
@@ -33184,6 +34611,10 @@ declare namespace Spotfire.Dxp {
             ReloadAllData(): void;
             /**
              * Reloads all data in the specified data tables, including embedded data tables and data sources set to store their data.
+             * @remark Reloading data might not be possible if the data table contains parts that cannot be reloaded,
+             * such as clipboard data.
+             * For more fine-grained control over data reloading, use the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} API
+             * on the {@link Spotfire.Dxp.Data.SourceView}
              * @param tables The data tables to reload.
              * 
              * @since 2.0
@@ -33194,6 +34625,11 @@ declare namespace Spotfire.Dxp {
             /**
              * Reloads only linked data in all data tables. Embedded data tables and data sources set to store their
              * data will be ignored.
+             * @remark Reloading only linked data is not possible for an embedded data table, and might not be possible if the
+             * data table contains parts that cannot be reloaded, such as clipboard data, or data sources that have been set to
+             * store their data.
+             * For more fine-grained control over data reloading, use the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} API
+             * on the {@link Spotfire.Dxp.Data.SourceView}
              * 
              * @since 2.0
              * 
@@ -33203,6 +34639,11 @@ declare namespace Spotfire.Dxp {
             /**
              * Reloads only linked data in the specified data tables. Embedded data tables and data sources set to store their
              * data will be ignored.
+             * @remark Reloading only linked data is not possible for an embedded data table, and might not be possible if the
+             * data table contains parts that cannot be reloaded, such as clipboard data, or data sources that have been set to
+             * store their data.
+             * For more fine-grained control over data reloading, use the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} API
+             * on the {@link Spotfire.Dxp.Data.SourceView}
              * @param tables The data tables to reload.
              * 
              * @since 2.0
@@ -33212,6 +34653,8 @@ declare namespace Spotfire.Dxp {
             ReloadLinkedData(tables: OrExplicit<System.Collections.Generic.IEnumerable<DataTable>>): void;
             /**
              * Remove the dataTable from the collection.
+             * @remark All relations that the table is part of will also be
+             * removed.
              * @param dataTable The data table to remove.
              * 
              * @since 2.0
@@ -33222,6 +34665,8 @@ declare namespace Spotfire.Dxp {
             /**
              * Remove the {@link Spotfire.Dxp.Data.DataTable} with the given name from the
              * collection.
+             * @remark All relations that the table is part of will also be
+             * removed.
              * @param tableName The table name.
              * 
              * @since 2.0
@@ -33401,6 +34846,11 @@ declare namespace Spotfire.Dxp {
          * Represents a transformation of data, when data is imported from a {@link Spotfire.Dxp.Data.DataSource}
          * it may optionally be transformed by one or more transformations. A transformation takes a {@link Spotfire.Dxp.Data.DataRowReader}
          * as input and a {@link Spotfire.Dxp.Data.DataRowReader} as output with the transformed rows.
+         * @remark To use a transformation for transforming data create a {@link Spotfire.Dxp.Data.DataFlowBuilder} and add the transformation.
+         * 
+         * 
+         * This cannot be inherited from directly, instead inherit from
+         * Spotfire.Dxp.Application.Extension.CustomDataTransformation.
          * 
          * @since 2.0
          * 
@@ -33453,6 +34903,13 @@ declare namespace Spotfire.Dxp {
          * Represents a connected {@link Spotfire.Dxp.Data.DataTransformation}. The connection
          * is created when the transformation is bound to a {@link Spotfire.Dxp.Data.DataRowReader}
          * that is used as input to the transformation.
+         * @remark A connection is used to support perform prompting in a {@link Spotfire.Dxp.Data.DataTransformation}
+         * before returning the {@link Spotfire.Dxp.Data.DataRowReader}.
+         * 
+         * A creator of a transformation typically does not need to explicitly implement this class
+         * but can instead use the factory methods
+         * {@link Spotfire.Dxp.Data.DataTransformationConnection.CreateConnection|CreateConnection(transformationExecutor)}
+         * or {@link Spotfire.Dxp.Data.DataTransformationConnection.CreateConnection|CreateConnection(transformationExecutor, promptModels)}.
          * 
          * @since 2.0
          * 
@@ -33483,6 +34940,7 @@ declare namespace Spotfire.Dxp {
             /**
              * Performs prompting for all the prompt models and after that is finished the transformation
              * is executed and the resulting {@link Spotfire.Dxp.Data.DataRowReader} is returned.
+             * @remark The caller is responsible to dispose the returned data reader.
              * @returns A new {@link Spotfire.Dxp.Data.DataRowReader} instance.
              * 
              * @since 2.0
@@ -33620,6 +35078,8 @@ declare namespace Spotfire.Dxp {
             /**
              * Converts the type from an import source to the DataType used
              * in the Data Manager.
+             * @remark Note that this is not always possible to correctly determine the {@link Spotfire.Dxp.Data.DataType} from type since
+             * all the date and time types share the same representation type.
              * @param type The import source .Net-type.
              * @returns The converted DataType, DataType.Undefined if no conversion was possible.
              * 
@@ -33684,6 +35144,8 @@ declare namespace Spotfire.Dxp {
              * DataType.DateTime it is {@link Spotfire.Dxp.Data.Formatters.DateTimeFormatter}.
              * The formatter class for DataType.String is
              * {@link Spotfire.Dxp.Data.Formatters.StringFormatter}.
+             * @remark Formatters created with this method will always have a fixed culture. Use {@link Spotfire.Dxp.Data.DataType.CreateLocalizedFormatter} instead, when the formatting should be
+             * dynamically adapted to the culture of the current thread.
              * @param cultureName The name of the culture for this formatter.
              * @returns A formatter.
              * 
@@ -33704,6 +35166,7 @@ declare namespace Spotfire.Dxp {
              * DataType.DateTime it is {@link Spotfire.Dxp.Data.Formatters.DateTimeFormatter}.
              * The formatter class for DataType.String is
              * {@link Spotfire.Dxp.Data.Formatters.StringFormatter}.
+             * @remark The formatter will use the CultureInfo of the current thread, including any user-selected culture settings.
              * @returns A formatter.
              * 
              * @since 2.0
@@ -33855,6 +35318,9 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets the data type corresponding to the runtime values that can be stored in this value container.
              * The data type is fixed, since a data value cannot be used for values of varying types.
+             * @remark For the time and and date data types, DataType.DateTime will be returned.
+             * That is, the subtype information is not maintained. This behaviour is not ideal and should be
+             * considered as a known issue which may be improved in a future release.
              * 
              * @since 2.0
              * 
@@ -33964,6 +35430,7 @@ declare namespace Spotfire.Dxp {
             AssignFrom(other: DataValue): void;
             /**
              * Creates a copy of this instance.
+             * @remark This is not an implementation of {@link System.ICloneable}.
              * @returns A copy of this instance.
              * 
              * @since 2.0
@@ -34166,6 +35633,7 @@ declare namespace Spotfire.Dxp {
             get CurrentDataValue(): DataValue;
             /**
              * Gets a value indicating whether the current value is valid or not.
+             * @remark Moved to this level from the generic subclass in version 3.1.0.
              * 
              * @since 2.0
              * 
@@ -34321,6 +35789,9 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets the data type corresponding to the runtime values that can be stored in this value container.
              * The data type is fixed, since a data value cannot be used for values of varying types.
+             * @remark For the time and and date data types, DataType.DateTime will be returned.
+             * That is, the subtype information is not maintained. This behaviour is not ideal and should be
+             * considered as a known issue which may be improved in a future release.
              * 
              * @since 2.0
              * 
@@ -34415,6 +35886,8 @@ declare namespace Spotfire.Dxp {
             Equals(other: DataValueProperties): JsType<System.Boolean>;
             /**
              * Gets the value of a named property.
+             * @remark Use HasPropertyValue to check if a property name exists,
+             * before calling this function.
              * @param propertyName The name of the property.
              * @returns The property value.
              * 
@@ -34452,6 +35925,11 @@ declare namespace Spotfire.Dxp {
         class DisplayValueSettings extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
             /**
              * Gets or sets the expression that computes the display values of the data column.
+             * @remark This expression can either reference columns in the same table as the column,
+             * or (by way of a {@link Spotfire.Dxp.Data.ColumnRelation}) refer to columns in a separate table.
+             * 
+             * 
+             * The expression must evaluate to a String value.
              * 
              * @since 2.0
              * 
@@ -34461,6 +35939,7 @@ declare namespace Spotfire.Dxp {
             set Expression(value: JsType<System.String>);
             /**
              * Gets or sets the sorting mode for the display values.
+             * @remark The default sorting mode is {@link Spotfire.Dxp.Data.DisplayValueSortMode.DisplayValues}.
              * 
              * @since 2.0
              * 
@@ -34509,6 +35988,7 @@ declare namespace Spotfire.Dxp {
          * A wrapper class that holds a value that can occur in the column of a data table.
          * The class provides equality and an ordering of the values even if they are of different underlying types.
          * Values of the class can therefore be used in UndoableList and UndoableDictionary.
+         * @remark If the underlying types differ the values are never considered equal.
          * 
          * @since 2.0
          * 
@@ -35073,6 +36553,9 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets the number of indexes in a subset defined by the startIndex
              * and endIndex arguments.
+             * @remark If an IndexSet is not filled, GetSubsetCount(0,index) can
+             * be used to retrieve the index (between 0 and Count - 1) for a particular
+             * index (between 0 and Capacity - 1).
              * @param startIndex Start index in subset.
              * @param endIndex End index in subset.
              * @returns Number of indexes in subset.
@@ -35523,6 +37006,10 @@ declare namespace Spotfire.Dxp {
          * This is a wrapper class around a {@link Spotfire.Dxp.Data.DataView} which
          * performs the code for serializing the {@link Spotfire.Dxp.Data.DataView} since a
          * data view is not possible to persist.
+         * @remark This is the only way to create a {@link Spotfire.Dxp.Data.DataView} and should be used
+         * even if the view does not need to be persisted. If a real persistence of the view is
+         * not needed then the persistent data view may be set to null after the {@link Spotfire.Dxp.Data.DataView}
+         * has been used.
          * 
          * @since 2.0
          * 
@@ -35767,6 +37254,12 @@ declare namespace Spotfire.Dxp {
          * from a data source, transformation or calculation.
          * These properties are used to set properties on
          * the resulting data table.
+         * @remark Also used to propagate metadata within a {@link Spotfire.Dxp.Data.DataFlow}
+         * or between table operations, like {@link Spotfire.Dxp.Data.DataTable.AddColumns|AddColumns(dataSource, settings)} or
+         * {@link Spotfire.Dxp.Data.DataTable.AddRows|AddRows(dataSource, settings)}
+         * This collection is almost always read-only except in
+         * custom implementations (like in a {@link Spotfire.Dxp.Data.DataRowReader})
+         * where the implementor is creating the result properties.
          * 
          * @since 2.0
          * 
@@ -35979,6 +37472,13 @@ declare namespace Spotfire.Dxp {
          * This class describes operations performed on a {@link Spotfire.Dxp.Data.DataTable}.
          * The SourceView consists of {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s and the columns returned by
          * {@link Spotfire.Dxp.Data.SourceView.AdditionalDataColumns}.
+         * @remark The content of the SourceView is only valid as long as the data table structure is not modified,
+         * i.e. as long as the set of {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s is the same, otherwise the behavior is undefined.
+         * Examples of invalidating modifications include adding rows/columns or transformations to the data table,
+         * removing operations, as well as e.g. freezing calculated columns. If such modifications have been
+         * made, and further operations are to be done on a source view instance, then a new instance must be
+         * generated for the data table. (Some methods return such a new instance directly, for
+         * convenience.)
          * 
          * @since 2.0
          * 
@@ -35987,6 +37487,11 @@ declare namespace Spotfire.Dxp {
         class SourceView extends Object {
             /**
              * Gets the additional {@link Spotfire.Dxp.Data.DataColumn}s added to the final data table after {@link Spotfire.Dxp.Data.SourceView.LastOperation}.
+             * @remark Examples of such columns include those where the {@link Spotfire.Dxp.Data.DataColumnProperties.ColumnType} property in {@link Spotfire.Dxp.Data.DataColumn.Properties}
+             * is {@link Spotfire.Dxp.Data.DataColumnType.Calculated}, {@link Spotfire.Dxp.Data.DataColumnType.Hierarchy}, and {@link Spotfire.Dxp.Data.DataColumnType.Tags}.
+             * 
+             * 
+             * Additional columns are recomputed when {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s in the structure are altered.
              * 
              * @since 2.0
              * 
@@ -36004,6 +37509,16 @@ declare namespace Spotfire.Dxp {
             /**
              * Gets all {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s that can have {@link Spotfire.Dxp.Data.DataTransformation}s,
              * using the utility class {@link Spotfire.Dxp.Data.DataOperations.DataOperationSupportingTransformations}.
+             * @remark Examples of {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s that can have {@link Spotfire.Dxp.Data.DataTransformation}s include
+             * {@link Spotfire.Dxp.Data.DataOperations.DataTransformationsOperation}, {@link Spotfire.Dxp.Data.DataOperations.DataSourceOperation}, {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation},
+             * {@link Spotfire.Dxp.Data.DataOperations.DataFunctionOperation}, and {@link Spotfire.Dxp.Data.DataOperations.InformationLinkOnDemandOperation}.
+             * 
+             * 
+             * This is a convenience method, which traverses the tree
+             * of operations, only including those operations that may have {@link Spotfire.Dxp.Data.DataTransformation}s.
+             * The operation that was performed last is last in the returned list.
+             * If structure is important, then use {@link Spotfire.Dxp.Data.SourceView.LastOperation} to
+             * traverse the tree.
              * 
              * @since 2.0
              * 
@@ -36017,6 +37532,15 @@ declare namespace Spotfire.Dxp {
             constructor();
             /**
              * Adds columns after the specified operation.
+             * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.SourceView.CanAddColumnsAfter|CanAddColumnsAfter(operation)} returns true.
+             * 
+             * 
+             * The original source view object is not updated. Instead, a new source view object
+             * is returned from this method. Any further operations on the source view
+             * should be performed on this new instance.
+             * 
+             * 
+             * The affected operations will be refreshed synchronously.
              * @param operation The operation that the added columns should be added after.
              * @param dataSource The data source to add columns from.
              * @param settings The settings to use when adding the columns.
@@ -36029,6 +37553,15 @@ declare namespace Spotfire.Dxp {
             AddColumnsAfter(operation: DataOperations.DataOperation, dataSource: DataSource, settings: AddColumnsSettings): SourceView;
             /**
              * Adds rows after the specified operation.
+             * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.SourceView.CanAddRowsAfter|CanAddRowsAfter(operation)} returns true.
+             * 
+             * 
+             * The original source view object is not updated. Instead, a new source view object
+             * is returned from this method. Any further operations on the source view
+             * should be performed on this new instance.
+             * 
+             * 
+             * The affected operations will be refreshed synchronously.
              * @param operation The operation that the added rows should be added after.
              * @param dataSource The data source to add rows from.
              * @param settings The settings to use when adding the rows.
@@ -36041,6 +37574,15 @@ declare namespace Spotfire.Dxp {
             AddRowsAfter(operation: DataOperations.DataOperation, dataSource: DataSource, settings: AddRowsSettings): SourceView;
             /**
              * Adds a transformation after the specified operation.
+             * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.SourceView.CanAddTransformationsAfter|CanAddTransformationsAfter(operation)} returns true.
+             * 
+             * 
+             * The original source view object is not updated. Instead, a new source view object
+             * is returned from this method. Any further operations on the source view
+             * should be performed on this new instance.
+             * 
+             * 
+             * The affected operations will be refreshed synchronously.
              * @param operation The operation to add transformations after.
              * @param transformation The transformation to add.
              * @returns The resulting source view containing the newly added {@link Spotfire.Dxp.Data.DataOperations.DataTransformationsOperation}.
@@ -36052,6 +37594,18 @@ declare namespace Spotfire.Dxp {
             AddTransformationAfter(operation: DataOperations.DataOperation, transformation: DataTransformation): SourceView;
             /**
              * Adds transformations after the specified operation.
+             * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.SourceView.CanAddTransformationsAfter|CanAddTransformationsAfter(operation)} returns true.
+             * 
+             * 
+             * Note that it is not possible to supply transformations with no elements.
+             * 
+             * 
+             * The original source view object is not updated. Instead, a new source view object
+             * is returned from this method. Any further operations on the source view
+             * should be performed on this new instance.
+             * 
+             * 
+             * The affected operations will be refreshed synchronously.
              * @param operation The operation to add transformations after.
              * @param transformations The transformations to add.
              * @returns The resulting source view containing the newly added {@link Spotfire.Dxp.Data.DataOperations.DataTransformationsOperation}.
@@ -36103,6 +37657,11 @@ declare namespace Spotfire.Dxp {
             CanRemoveOperation(operation: DataOperations.DataOperation): JsType<System.Boolean>;
             /**
              * Gets all {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s of a certain type.
+             * @remark This is a convenience method, which traverses the tree
+             * of operations and returns a flat list.
+             * The operation that was performed last is last in the returned list.
+             * If structure is important, then use {@link Spotfire.Dxp.Data.SourceView.LastOperation} to
+             * traverse the tree.
              * @returns A list of {@link Spotfire.Dxp.Data.DataOperations.DataOperation}s.
              * 
              * @since 2.0
@@ -36115,6 +37674,9 @@ declare namespace Spotfire.Dxp {
              * Removes the specified {@link Spotfire.Dxp.Data.DataOperations.DataOperation}. As a side effect, other
              * operations may be removed as well, e.g., an add rows operation
              * will implicitly be removed when removing either of its source inputs.
+             * @remark The original source view object is not updated. Instead, a new source view object
+             * is returned from this method. Any further operations on the source view
+             * should be performed on this new instance.
              * @param operation The operation to remove.
              * @returns The resulting source view.
              * 
@@ -36438,6 +38000,7 @@ declare namespace Spotfire.Dxp {
             namespace Clustering {
                 /**
                  * Holds the settings for a Hierarchical Clustering.
+                 * @remark Row clustering and column clustering use separate settings.
                  * 
                  * @since 2.0
                  * 
@@ -36508,6 +38071,8 @@ declare namespace Spotfire.Dxp {
                 static DataType: System.String;
                 /**
                  * The DerivedExpression property.
+                 * @remark The calculated expression is the expression after preprocessing the original expression ({@link Spotfire.Dxp.Data.DataColumnProperties.DefaultProperties.Expression}).
+                 * Automatic column name changes, e.g., changing case of column names have also been applied to the calculated expression.
                  * 
                  * @since 2.0
                  * 
@@ -36582,9 +38147,395 @@ declare namespace Spotfire.Dxp {
         
         namespace DataFunctions {
             /**
+             * Read-only representation of a configured data view for use in action mod scripts.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ActionDataViewDefinition extends Object {
+                /**
+                 * Gets the base data table that defines the data view.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                /**
+                 * Gets the expression that defines the data view.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Expression(): JsType<System.String>;
+                /**
+                 * Gets a value indicating whether the data view is limited by marking and/or filtering.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Limitations(): System.Collections.Generic.IEnumerable<DataSelection>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_377016299: null;
+            }
+            
+            /**
+             * Available built-in data functions that can be used to add new {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}s
+             * to the document using {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionCollection.AddNew|AddNew(suggestedName, builtInDataFunction)}
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class BuiltInDataFunction extends Object {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * A built-in data function for transforming coordinates between different Coordinate Reference Systems (CRS).
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>first_coordinate</term><description>A column containing the first coordinate value to transform. If the CRS is projected, this will be
+                 *  the X (easting) coordinate. If the CRS is geographic, this will be the latitude of the point.</description></item><item><term>second_coordinate</term><description>A column containing the second coordinate value to transform. If the CRS is projected, this will be
+                 *  the Y (northing) coordinate. If the CRS is geographic, this will be the longitude of the point.</description></item><item><term>source_crs</term><description>The coordinate reference system (CRS) of the input coordinates. A string or integer value containing
+                 *  a valid EPSG code (a value between 2000 and 32766), or a known projection for the coordinate reference system of
+                 *  the input data.</description></item><item><term>target_crs</term><description>The target coordinate reference system (CRS), that is, the CRS you want to project the coordinate
+                 *  columns to. A string or integer value containing a valid EPSG code (a value between 2000 and 32766), or a known
+                 *  projection for the coordinate reference system of the resulting data.</description></item></list>
+                 * 
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>projected_coords_df</term><description>A data table containing the projected coordinates.</description></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly CrsTransformationForCoordinates: BuiltInDataFunction;
+                /**
+                 * A built-in data function for transforming geometries between different Coordinate Reference Systems (CRS).
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>geo_data</term><description>A binary column containing the input geometry in a Well Known Binary (WKB) format.</description></item><item><term>source_crs</term><description>The coordinate reference system (CRS) of the input geometry column. A string or integer value
+                 *  containing a valid EPSG code (a value between 2000 and 32766), or a known projection for the coordinate
+                 *  reference system of the input data.</description></item><item><term>target_crs</term><description>The target coordinate reference system (CRS), that is, the CRS you want to project the geometry
+                 *  column to. A string or integer value containing a valid EPSG code (a value between 2000 and 32766), or a known
+                 *  projection for the coordinate reference system of the resulting data.</description></item></list>
+                 * 
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>projected_geoms_df</term><description>A data table containing the projected geometry along with its geometric bounds and centroid.</description></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly CrsTransformationForGeometries: BuiltInDataFunction;
+                /**
+                 * A built-in data function for applying dynamic time warping (DTW) on a set of sequences.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>sequence_data</term><description>A data table containing numeric data to be used to measure similarities between sequences.
+                 *  For a given sequence, the order of the rows in the data table must correspond to the order of the data
+                 *  points in the sequence. </description></item><item><term>sequence_id</term><description>An ID column identifying the sequence that each row in sequence_data belongs to.
+                 *  The column must contain at least two distinct values (one reference value and at least one other value to
+                 *  compare against the reference).</description></item><item><term>reference_id</term><description>The ID of the reference sequence to compare all other sequences against. The reference ID
+                 *  must be a value included in sequence_id and is case-sensitive.</description></item><item><term>extrapolation</term><description>(Optional) A boolean indicating whether to extrapolate (in addition to interpolating) missing
+                 *  values. Used when there are leading or trailing missing values. If set to False, and leading or
+                 *  trailing missing data are found, the rows will be removed. Default is False.</description></item><item><term>normalization</term><description>(Optional) An optional string parameter indicating a method to use for normalization.
+                 *  Default is None.
+                 *  <para>
+                 *  Allowed values (case-insensitive):
+                 *  <list type="bullet"><item>mean</item><item>z-score</item><item>min-max</item><item>standard-deviation</item></list></description></item><item><term>detrending</term><description>(Optional) A boolean indicating whether detrending (adjusting data to get rid of long-term
+                 *  trends) should be applied. If set to True, linear detrending is applied as a preprocessing step. Default is
+                 *  False.</description></item><item><term>smoothing</term><description>(Optional) An integer indicating the size window to use for smoothing. If a valid value is provided,
+                 *  a moving average smoothing is applied as a preprocessing step. Valid values are integers greater than one and less
+                 *  than or equal to the number of rows for the smallest sequence. Default is None.</description></item><item><term>result_type</term><description>(Optional) A string indicating the level of detail returned in the results. Default is minimal.
+                 * 
+                 * 
+                 *  Allowed values (case-insensitive):
+                 *  <list type="bullet"><item>minimal</item><item>detailed</item><item>complete</item></list></description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><item><term>warp_distance</term><description>A data table containing the warping distance for each feature and comparison sequence pair. This is the
+                 *  only output returned when result_type is minimal.</description></item><item><term>warp_metrics</term><description>A data table containing the warping distance, path length and additional metrics for each feature and
+                 *  comparison sequence pair. This output is returned when result_type is detailed or complete.
+                 *  </description></item><item><term>warp_paths</term><description>A data table containing the dynamic time warping paths. For each comparison sequence and feature, the
+                 *  (Reference, Comparison) pair indicates the mapping of the corresponding sequence to the warped sequence. This output
+                 *  is returned when result_type is detailed or complete.</description></item><item><term>processed_sequence_data</term><description>A data table containing the intermediate sequence data after any specified preprocessing was applied to
+                 *  the first input data. This is the actual data that was used as the input to the dynamic time warping calculation.
+                 *  This output is returned when result_type is complete.</description></item></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly DynamicTimeWarping: BuiltInDataFunction;
+                /**
+                 * A built-in data function for calculating the area of polygons.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>geo_data</term><description>A binary column containing the input geometry in a Well Known Binary (WKB) format.</description></item><item><term>unit</term><description>A string containing the value of the unit for the area calculation. The area will be expressed
+                 *  in unit squared.
+                 *  <para>
+                 *  Allowed units (case-insensitive and including different spelling and abbreviations):
+                 *  <list type="bullet"><item>m</item><item>meter</item><item>km</item><item>kilometer</item><item>mi</item><item>miles</item><item>ft</item><item>feet</item></list></description></item><item><term>crs</term><description>A string or integer value containing a valid EPSG code (a value between 2000 and 32766), or a
+                 *  known projection for the coordinate reference system of the input data.
+                 * 
+                 * 
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list></description></item><item><term>method</term><description>A string value containing the method to use for the area calculation.
+                 * 
+                 * 
+                 *  Allowed methods (case-insensitive):
+                 *  <list type="bullet"><item>geodesic</item><item>planar</item></list></description></item><item><term>planar_projection_crs</term><description>(Optional) A string or integer value parameter for specifying the projection CRS to use together
+                 *  with planar area calculation. Default is 6933.</description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>area</term><description>A numeric column which contains the calculated surface area for each row of the geometry input,
+                 *  expressed using the specified unit.</description></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly GeographicAreaOfPolygons: BuiltInDataFunction;
+                /**
+                 * A built-in data function for calculating a (spatial) distance matrix within a set of point coordinates,
+                 *  or between two sets of point coordinates.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>crs</term><description>A string or integer value containing a valid EPSG code (a value between 2000 and 32766),
+                 *  or a known projection for the coordinate reference system of the input data.
+                 *  <para>
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list></description></item><item><term>distance_metric</term><description>The method to use for calculating distances.
+                 * 
+                 * 
+                 *  For the CRS WGS84 (standard latitude/longitude) the metric can have the following values:
+                 *  <list type="bullet"><item>haversine (the great circle distance)</item><item>haversine_r (modified with variable radius)</item><item>geodesic (most accurate but slowest)</item></list>
+                 * 
+                 *  For a projected CRS (for example, web mercator) the only available metric is cartesian.
+                 *  </description></item><item><term>point1_first_coordinate</term><description>A numeric column representing the first coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the X (easting) coordinate. If the CRS is geographic, this will be
+                 *  the latitude of the point.</description></item><item><term>point1_second_coordinate</term><description>A numeric column representing the second coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the Y (northing) coordinate. If the CRS is geographic, this will be
+                 *  the longitude of the point.</description></item><item><term>point1_id</term><description>An integer or string column identifying each point in the first set of coordinates.</description></item><item><term>distance_unit</term><description>The unit to specify the calculated distances and buffer.
+                 * 
+                 * 
+                 *  Allowed units (case-insensitive and including different spelling and abbreviations):
+                 *  <list type="bullet"><item>meters</item><item>km</item><item>miles</item></list></description></item><item><term>distance_buffer</term><description>(Optional) A number indicating the maximum distance to return. It will be expressed in the selected
+                 *  distance unit. Default is None. If less than or equal to zero, it will be changed to None
+                 *  (that is, all distances will be returned).</description></item><item><term>point2_first_coordinate</term><description>(Optional) A numeric column representing the first coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the X (easting) coordinate. If the CRS is geographic, this will be
+                 *  the latitude of the point. Default is None. Only specify this parameter if distances should be calculated
+                 *  between two distinct data sets.</description></item><item><term>point2_second_coordinate</term><description>(Optional) A numeric column representing the second coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the Y (northing) coordinate. If the CRS is geographic, this will be
+                 *  the longitude of the point. Default is None. Only specify this parameter if distances should be calculated
+                 *  between two distinct data sets.</description></item><item><term>point2_id</term><description>(Optional) An integer or string column identifying each point in the first set of coordinates. Default
+                 *  is None. Only specify this parameter if distances should be calculated between two distinct data sets.
+                 *  </description></item><item><term>output_format</term><description>(Optional) The format of the output distance matrix. Can be either tall-minimal, tall
+                 *  (default), or wide. If values for point 2 are provided, tall and tall-minimal are equivalent.
+                 * 
+                 * 
+                 *  Formats:
+                 *  <list type="table"><item><term>tall-minimal</term><description>A tall table with three columns: From, To, and Distance. This option does not
+                 *  include any redundant pairs (for example, a row representing A to B is included but not B to A). It does not include
+                 *  the distance of a point to itself (always zero).</description></item><item><term>tall</term><description>A tall table with three columns: From, To, and Distance. It includes all possible
+                 *  pairs, including redundant pairs (so that you can find each value in either the To or From column).</description></item><item><term>wide</term><description>A wide table with the first column representing the From points, and the remaining columns
+                 *  representing the To points. The table includes all possible pairs, including redundant pairs and the distance
+                 *  of a point to itself.</description></item></list></description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><item><term>distance_matrix</term><description>A data table representing the calculated distance matrix.</description></item></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly GeographicDistanceMatrix: BuiltInDataFunction;
+                /**
+                 * A built-in data function for calculating nearest neighbors for a given set of points either within
+                 *  the set or with respect to a second set of points.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>crs</term><description>A string or integer value containing a valid EPSG code (a value between 2000 and 32766),
+                 *  or a known projection for the coordinate reference system of the input data.
+                 *  <para>
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list></description></item><item><term>distance_metric</term><description>The method to use for calculating distances.
+                 * 
+                 * 
+                 *  For the CRS WGS84 (standard latitude/longitude) the metric can have the following values:
+                 *  <list type="bullet"><item>haversine (the great circle distance)</item><item>haversine_r (modified with variable radius)</item><item>geodesic (most accurate but slowest)</item></list>
+                 * 
+                 *  For a projected CRS (for example, web mercator) the only available metric is cartesian.
+                 *  </description></item><item><term>point1_first_coordinate</term><description>A numeric column representing the first coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the X (easting) coordinate. If the CRS is geographic, this will be
+                 *  the latitude of the point.</description></item><item><term>point1_second_coordinate</term><description>A numeric column representing the second coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the Y (northing) coordinate. If the CRS is geographic, this will be
+                 *  the longitude of the point.</description></item><item><term>point1_id</term><description>An integer or string column identifying each point in the first set of coordinates.</description></item><item><term>distance_unit</term><description>The unit to specify the calculated distances and buffer.
+                 * 
+                 * 
+                 *  Allowed units (case-insensitive and including different spelling and abbreviations):
+                 *  <list type="bullet"><item>meters</item><item>km</item><item>miles</item></list></description></item><item><term>distance_buffer</term><description>(Optional) A number indicating the maximum distance to return. It will be expressed in the selected
+                 *  distance unit. Default is None. If less than or equal to zero, it will be changed to None
+                 *  (that is, all distances will be returned).</description></item><item><term>number_of_neighbors</term><description>(Optional) The number of nearest neighbors to return for each point. Default is 1.</description></item><item><term>point2_first_coordinate</term><description>(Optional) A numeric column representing the first coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the X (easting) coordinate. If the CRS is geographic, this will be
+                 *  the latitude of the point. Default is None. Only specify this parameter if distances should be calculated
+                 *  between two distinct data sets.</description></item><item><term>point2_second_coordinate</term><description>(Optional) A numeric column representing the second coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the Y (northing) coordinate. If the CRS is geographic, this will be
+                 *  the longitude of the point. Default is None. Only specify this parameter if distances should be<br />calculated
+                 *  between two distinct data sets.</description></item><item><term>point2_id</term><description>(Optional) An integer or string column identifying each point in the first set of coordinates. Default
+                 *  is None. Only specify this parameter if distances should be calculated between two distinct data sets.
+                 *  </description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><item><term>nearest_neighbors</term><description>A data table representing the nearest neighbor information.</description></item></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly GeographicNearestNeighbors: BuiltInDataFunction;
+                /**
+                 * A built-in data function for summary of missing data. <br /><b>Note:</b> Empty string values are not included in
+                 *  the count, only empty (null) values. You can use transformations on your data to replace values before running
+                 *  this data function.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>data</term><description>The data table or columns containing missing values.</description></item></list>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><item><term>data_summary</term><description>A table summarizing missing data information across the entire input data table.</description></item><item><term>row_summary</term><description>A table summarizing missing data information across rows.</description></item><item><term>column_summary</term><description>A table summarizing missing data information across columns.</description></item></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly MissingDataSummary: BuiltInDataFunction;
+                /**
+                 * A built-in data function for resampling time series data.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>ts</term><description>A data table or columns where at least one column contains a Time, Date, DateTime, or an index,
+                 *  and each of the other columns contains the values of different variables recorded at the corresponding times.
+                 *  The values can be numeric or non-numeric.</description></item><item><term>index_col</term><description>The column containing the timestamps or a numeric index. The index can be a time-related number,
+                 *  for example, elapsed seconds. The index must be unique.</description></item><item><term>rule</term><description>(Optional) The resampling frequency. A frequency string, optionally together with a quantifier.
+                 *  Only applicable if the index column is a Date/Time/DateTime column. You must provide either this parameter or
+                 *  a Number of samples. For example, 12hh (12 hours), 3dd (3 days), or wk (one week).
+                 *  <para>
+                 *  Allowed options are (case-insensitive):
+                 *  <list type="bullet"><item>yy or year</item><item>qq or quarter</item><item>mm or month</item><item>dd or day</item><item>wk or week</item><item>hh or hour</item><item>mi or minute</item><item>ss or second</item><item>ms or millisecond</item></list></description></item><item><term>n_samples</term><description>(Optional) The number of samples in the resulting data table. Must be an integer between 1 and 500000.
+                 *  You must provide either this parameter or a rule. If this input is provided, rule is ignored.
+                 *  </description></item><item><term>fill_method</term><description>(Optional) The method to use to either fill missing values (upsampling) or to aggregate values
+                 *  (downsampling). Default is previous.
+                 * 
+                 * 
+                 *  Allowed options (case-insensitive):
+                 *  <list type="bullet"><item>nearest</item><item>linear</item><item>previous</item><item>next</item><item>mean</item><item>median</item><item>sum</item></list>
+                 *  Note that mean, median, and sum are only available for downsampling. Non-numeric columns will
+                 *  use the nearest fill method instead of linear, mean, median, or sum.
+                 *  </description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>ts_resampled</term><description>The resampled copy of the input data with the desired number of samples or the applied resampling rule.
+                 *  </description></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly TimeSeriesResampling: BuiltInDataFunction;
+                /**
+                 * A built-in data function for smoothing time series data.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>measurement_col</term><description>The measurement column for which to calculate the smoothing. Any numerical data type can be used.
+                 *  </description></item><item><term>smoother</term><description>(Optional) The smoothing method to apply. Can be either Supersmoother (default), LOESS,
+                 *  or Exponential. The input is case insensitive.
+                 *  <para><list type="table"><item><term>Supersmoother</term><description>
+                 *  Friedman's supersmoother is an extension of the LOESS method, designed to produce a smooth curve that captures
+                 *  both the underlying trend and the fluctuations in the data.</description></item><item><term>LOESS</term><description>
+                 *  Locally Estimated Scatterplot Smoothing (LOESS) is often used when the time series has non-linear patterns or is
+                 *  sensitive to outliers. It can capture these patterns and reduce the impact of outliers on the smoothed line.
+                 *  </description></item><item><term>Exponential</term><description>
+                 *  Simple exponential smoothing is used for smoothing time series data without a clear trend or seasonality,
+                 *  particularly for data with much noise or random fluctuations.</description></item></list></description></item><item><term>smoothing_level</term><description>(Optional) The smoothing level for the selected smoothing method. The smoothing level has different
+                 *  meanings for the various methods.
+                 * 
+                 * <list type="table"><item><term>Supersmoother</term><description>
+                 *  The alpha value. It must be a real value between 0 and 1. A value of 0 corresponds to no smoothing and a value of
+                 *  1 corresponds to the maximum smoothing. If nothing is specified, the alpha is determined automatically.
+                 *  </description></item><item><term>LOESS</term><description>
+                 *  The span value. Either the proportion of data points to use for each local fit (a real number between 0-1), or the
+                 *  explicit number of data points to use (an integer larger than 1). Default is 0.25.
+                 *  </description></item><item><term>Exponential</term><description>
+                 *  The smoothing level. A high value gives more weight to the most recent observation and produces a smoother curve.
+                 *  A low value gives less weight to the most recent observation and produces a curve with more fluctuations.
+                 *  The value should be a real number between 0 and 1. Default is 0.25.</description></item></list></description></item><item><term>index_col</term><description>(Optional) An index column for the input data, for use with the Supersmoother or LOESS
+                 *  smoothing methods. Supports date/time and numeric data types. The index must be unique. If no column is selected,
+                 *  an evenly spaced integer index is created. Not applicable for Exponential.</description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>smoothed_col</term><description>A column containing the smoothed version of the selected input column.</description></list>
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly TimeSeriesSmoothing: BuiltInDataFunction;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_355140284: null;
+            }
+            
+            /**
              * Represents the settings for the handling of a {@link Spotfire.Dxp.Data.DataFunctions.OutputParameter} of
              * a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}. This class will add columns to an existing table when first executed and
              * when updated it will either update those column or add new columns depending on the settings.
+             * @remark Instance of this class is created in the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
              * 
              * @since 2.0
              * 
@@ -36611,6 +38562,8 @@ declare namespace Spotfire.Dxp {
                 get DataTableReference(): DataTable;
                 /**
                  * Gets the columns created by this output.
+                 * @remark May be empty if the {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} has not been executed yet
+                 * or if those columns have been removed.
                  * 
                  * @since 2.0
                  * 
@@ -36635,7 +38588,47 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for creating a {@link Spotfire.Dxp.Data.DataFunctions.ColumnsOutput} for a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
+             * Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ColumnsOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the table to add columns to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                set DataTable(value: DataTable);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.ColumnsOutputBuilder} class.
+                 * @param dataTable The data table to add columns to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(dataTable: DataTable);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_3206032276: null;
+            }
+            
+            /**
              * Represents an execution of a data function defined from a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction.DataFunctionDefinition}.
+             * @remark This class describes how inputs and outputs should be handled from the function.
+             * 
+             * 
+             * Instances of this class are created in the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionCollection} on the {@link Spotfire.Dxp.Data.DataManager}.
              * 
              * @since 2.0
              * 
@@ -36660,6 +38653,7 @@ declare namespace Spotfire.Dxp {
                 get Inputs(): DataFunctionInputCollection;
                 /**
                  * Gets or sets the name of the function.
+                 * @remark The name has to be unique in the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionCollection}.
                  * 
                  * @since 2.0
                  * 
@@ -36669,6 +38663,10 @@ declare namespace Spotfire.Dxp {
                 set Name(value: JsType<System.String>);
                 /**
                  * Gets a value indicating whether the data function needs to be refreshed.
+                 * @remark This occurs when the input to the function have changed since it was previously executed.
+                 * 
+                 * 
+                 * This value may be expensive to calculated.
                  * 
                  * @since 2.0
                  * 
@@ -36685,6 +38683,7 @@ declare namespace Spotfire.Dxp {
                 get Outputs(): DataFunctionOutputCollection;
                 /**
                  * Gets or sets the update behavior.
+                 * @remark This will start an update if switching from manual to automatic mode.
                  * 
                  * @since 2.0
                  * 
@@ -36708,6 +38707,12 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 /**
                  * Asynchronously executes the data function.
+                 * @remark There is no guarantee regarding timing
+                 * when the function will be executed and when it has finished executing.
+                 * 
+                 * 
+                 * If you need to know when the execute has finished then use the overload
+                 * with a callback instead.
                  * 
                  * @since 2.0
                  * 
@@ -36894,6 +38899,14 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly Text: DataFunctionCategory;
                 /**
+                 * The Time series category, used e.g. for processing and analyzing time series data.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly TimeSeries: DataFunctionCategory;
+                /**
                  * The Vision category, used e.g. for processing, analyzing and outputting images and data from image recognition.
                  * 
                  * @since 2.0
@@ -36912,6 +38925,7 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Represents a list of {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} instances.
+             * @remark There is only one instance of this collection and it can be retrieved from the {@link Spotfire.Dxp.Data.DataManager}.
              * 
              * @since 2.0
              * 
@@ -36933,6 +38947,28 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 [Symbol.iterator](): Iterator<DataFunction>;
                 /**
+                 * Adds a new {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} from a {@link Spotfire.Dxp.Data.DataFunctions.BuiltInDataFunction}.
+                 * @param suggestedName The suggested name.
+                 * @param builtInDataFunction The built-in data function.
+                 * @returns The newly added {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddNew(suggestedName: (JsType<System.String> | System.String), builtInDataFunction: BuiltInDataFunction): DataFunction;
+                /**
+                 * Adds a new {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} from a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionDefinition}.
+                 * @param suggestedName The suggested name of the function.
+                 * @param dataFunctionDefinition The function definition.
+                 * @returns The newly added {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddNew(suggestedName: (JsType<System.String> | System.String), dataFunctionDefinition: DataFunctionDefinition): DataFunction;
+                /**
                  * Determines whether the specified value is in this collection.
                  * @param value The object to locate in this collection.
                  * The value can be null.
@@ -36945,6 +38981,17 @@ declare namespace Spotfire.Dxp {
                  */
                 Contains(value: DataFunction): JsType<System.Boolean>;
                 /**
+                 * Create a new unique function name from a suggestion. The
+                 * suggested name is used if possible.
+                 * @param functionName The suggested function name.
+                 * @returns A function functionName which is unique in the collection.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                CreateUniqueName(functionName: (JsType<System.String> | System.String)): JsType<System.String>;
+                /**
                  * Returns an enumerator that iterates through this collection.
                  * @returns An {@link System.Collections.Generic.IEnumerator} for this collection.
                  * 
@@ -36953,6 +39000,35 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 GetEnumerator(): System.Collections.Generic.IEnumerator<DataFunction>;
+                /**
+                 * Check if the suggested name is a valid name.
+                 * @param suggestedName The suggested name.
+                 * @returns True if the name is valid and not already used; false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                IsValidName(suggestedName: (JsType<System.String> | System.String)): JsType<System.Boolean>;
+                /**
+                 * Remove a function.
+                 * @param _function The function to remove.
+                 * @returns True if the function was part of the collection and could be removed, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Remove(_function: DataFunction): JsType<System.Boolean>;
+                /**
+                 * Remove all functions matching the predicate.
+                 * @param predicate The predicate.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                RemoveAll(predicate: System.Predicate<DataFunction>): void;
                 /**
                  * @ignore
                  * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
@@ -36993,6 +39069,7 @@ declare namespace Spotfire.Dxp {
             class DataFunctionDefinition extends Object {
                 /**
                  * Gets a value indicating whether caching of the result of the function is allowed or not.
+                 * @remark This is needed when the function is dependent on state outside of the Spotfire document.
                  * 
                  * @since 2.0
                  * 
@@ -37017,6 +39094,7 @@ declare namespace Spotfire.Dxp {
                 get Description(): JsType<System.String>;
                 /**
                  * Gets the display name.
+                 * @remark If no display name is set then it returns the function name.
                  * 
                  * @since 2.0
                  * 
@@ -37041,6 +39119,16 @@ declare namespace Spotfire.Dxp {
                 get InputParameters(): System.Collections.Generic.IList<InputParameter>;
                 /**
                  * Gets a value indicating whether this data function is approved by the current Windows user.
+                 * @remark The approval information is associated with the current Windows user. The user concept defined by
+                 * the Spotfire system is not involved.
+                 * 
+                 * 
+                 * This property only works correctly in Spotfire Analyst and other Windows desktop versions of Spotfire. When
+                 * called in a server side version of Spotfire, like the Web Player or Automation Services, it will always return false.
+                 * 
+                 * 
+                 * When this property returns true, this data function instance will be allowed to execute. Note that when
+                 * this property returns false it might still be trusted in the Spotfire Library and thereby be allowed to execute.
                  * 
                  * @since 2.0
                  * 
@@ -37049,6 +39137,7 @@ declare namespace Spotfire.Dxp {
                 get IsApprovedByCurrentUser(): JsType<System.Boolean>;
                 /**
                  * Gets the identifier to the function definition as stored in the library.
+                 * @remark May be Guid.Empty if the function definition is not stored in the library.
                  * 
                  * @since 2.0
                  * 
@@ -37106,6 +39195,7 @@ declare namespace Spotfire.Dxp {
                 Save(): Framework.Library.LibraryItem;
                 /**
                  * Saves the function definition as a new item in the library.
+                 * @remark This method will overwrite any existing item but keep the existing library item id.
                  * @param folder The library folder in which to save the function definition to.
                  * @param title The title of the library item.
                  * @param keywords The keywords.
@@ -37293,6 +39383,7 @@ declare namespace Spotfire.Dxp {
             class DataFunctionInput extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
                  * Gets the expression that describes how to retrieve values for the input argument.
+                 * @remark The expression is a comma separated list of column expressions.
                  * 
                  * @since 2.0
                  * 
@@ -37301,6 +39392,8 @@ declare namespace Spotfire.Dxp {
                 get Expression(): JsType<System.String>;
                 /**
                  * Gets a value indicating whether active filtering should be included in the selections as well.
+                 * @remark The expression is calculated on the
+                 * intersection of all the included selections.
                  * 
                  * @since 2.0
                  * 
@@ -37309,6 +39402,8 @@ declare namespace Spotfire.Dxp {
                 get IncludeActiveFiltering(): JsType<System.Boolean>;
                 /**
                  * Gets a readonly list of the selections to use when calculating the expression.
+                 * @remark The expression is calculated on the
+                 * intersection of all the included selections.
                  * 
                  * @since 2.0
                  * 
@@ -37367,6 +39462,74 @@ declare namespace Spotfire.Dxp {
                  */
                 GetEnumerator(): System.Collections.Generic.IEnumerator<DataFunctionInput>;
                 /**
+                 * Removes the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for the given {@link Spotfire.Dxp.Data.DataFunctions.InputParameter}.
+                 * @param inputParameter The input parameter to remove the input for.
+                 * @returns True if the inputParameter was present and could be removed, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Remove(inputParameter: InputParameter): JsType<System.Boolean>;
+                /**
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using a {@link Spotfire.Dxp.Data.DataFunctions.ActionDataViewDefinition} instance.
+                 * @param inputParameter The input parameter.
+                 * @param actionDataViewDefinition The data view.
+                 * @returns The newly created input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetInput(inputParameter: InputParameter, actionDataViewDefinition: ActionDataViewDefinition): DataFunctionInput;
+                /**
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
+                 * representing a list of column expressions. The value is calculated on all rows in the input.
+                 * @param inputParameter The input parameter.
+                 * @param expression The expression that defines the input. This is comma separated list of column expressions with qualified table names that
+                 * may only refer to one single table.
+                 * @returns The newly created input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetInput(inputParameter: InputParameter, expression: (JsType<System.String> | System.String)): DataFunctionInput;
+                /**
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
+                 * representing a list of column expressions. The value is calculated on the intersection of all the input selections.
+                 * @param inputParameter The input parameter.
+                 * @param expression The expression that defines the input. This is comma separated list of column expressions with qualified table names that
+                 * may only refer to one single table.
+                 * @param selections The selections that define which rows to use to calculate the expression result.
+                 * If multiple selections are sent as input then the resulting rows will be the rows that are included in all the
+                 * selections.
+                 * @returns The newly created input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetInput(inputParameter: InputParameter, expression: (JsType<System.String> | System.String), ...selections: DataSelection[]): DataFunctionInput;
+                /**
+                 * Sets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for an {@link Spotfire.Dxp.Data.DataFunctions.InputParameter} using an expression
+                 * representing a list of column expressions. The value is calculated on the intersection of all the input selections.
+                 * @param inputParameter The input parameter.
+                 * @param expression The expression that defines the input. This is comma separated list of column expressions with qualified table names that
+                 * may only refer to one single table.
+                 * @param includeActiveFiltering A value indicating whether the active filtering be included in the
+                 * selections or not.
+                 * @param selections The selections that define which rows to use to calculate the expression result.
+                 * If multiple selections are sent as input then the resulting rows will be the rows that are included in all the
+                 * selections.
+                 * @returns The newly created input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetInput(inputParameter: InputParameter, expression: (JsType<System.String> | System.String), includeActiveFiltering: (JsType<System.Boolean> | System.Boolean), ...selections: DataSelection[]): DataFunctionInput;
+                /**
                  * Tries to get a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionInput} for the given {@link Spotfire.Dxp.Data.DataFunctions.InputParameter}.
                  * @param inputParameter The input parameter.
                  * @param dataFunctionInput The input definition.
@@ -37401,6 +39564,7 @@ declare namespace Spotfire.Dxp {
             class DataFunctionOutput extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
                  * Gets the input whose selections should be used to map output rows back into the application.
+                 * @remark May be null.
                  * 
                  * @since 2.0
                  * 
@@ -37430,6 +39594,45 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
                 private __type_2483145408: null;
+            }
+            
+            /**
+             * Represents a builder for output mappings.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class DataFunctionOutputBuilder extends Object {
+                /**
+                 * Gets or sets an input where this output can find selections to remap the output data with.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get InputToAdaptSelectionsFrom(): InputParameter;
+                set InputToAdaptSelectionsFrom(value: InputParameter);
+                /**
+                 * Gets the transformations that should be applied to the result.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Transformations(): System.Collections.Generic.IList<DataTransformation>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_444349353: null;
             }
             
             /**
@@ -37466,6 +39669,182 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 GetEnumerator(): System.Collections.Generic.IEnumerator<DataFunctionOutput>;
+                /**
+                 * Removes the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutput} for the outputParameter.
+                 * @param outputParameter The output parameter to remove the output for.
+                 * @returns True if the outputParameter was present and could be removed, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Remove(outputParameter: OutputParameter): JsType<System.Boolean>;
+                /**
+                 * Sets the output to add columns to a {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @remark This does not perform a join, instead it assumes the output has a suitable row count for being
+                 * added to the table.
+                 * @param outputParameter The output parameter.
+                 * @param addColumnsOutputBuilder The builder that will produce the appropriate configuration.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.ColumnsOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetColumnsOutput(outputParameter: OutputParameter, addColumnsOutputBuilder: ColumnsOutputBuilder): ColumnsOutput;
+                /**
+                 * Sets the output to add columns to a {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @remark This does not perform a join, instead it assumes the output has a suitable row count for being
+                 * added to the table.
+                 * @param outputParameter The output parameter.
+                 * @param dataTable The table to add columns to.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.ColumnsOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetColumnsOutput(outputParameter: OutputParameter, dataTable: DataTable): ColumnsOutput;
+                /**
+                 * Sets the output to a update a {@link Spotfire.Dxp.Data.DataColumn}{@link Spotfire.Dxp.Data.DataProperty} for the outputParameter.
+                 * If the property is not present it will be created.
+                 * @param outputParameter The output parameter.
+                 * @param propertyName The property name.
+                 * @param dataColumn The data column.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDataColumnPropertyOutput(outputParameter: OutputParameter, propertyName: (JsType<System.String> | System.String), dataColumn: DataColumn): PropertyOutput;
+                /**
+                 * Sets the output to a update a {@link Spotfire.Dxp.Data.DataTable}{@link Spotfire.Dxp.Data.DataProperty} for the outputParameter.
+                 * If the property is not present it will be created.
+                 * @param outputParameter The output parameter.
+                 * @param propertyName The property name.
+                 * @param dataTable The data table.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDataTablePropertyOutput(outputParameter: OutputParameter, propertyName: (JsType<System.String> | System.String), dataTable: DataTable): PropertyOutput;
+                /**
+                 * Sets the output to a update a document {@link Spotfire.Dxp.Data.DataProperty} for the outputParameter.
+                 * If the property is not present it will be created.
+                 * @param outputParameter The output parameter.
+                 * @param propertyName The property name.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDocumentPropertyOutput(outputParameter: OutputParameter, propertyName: (JsType<System.String> | System.String)): PropertyOutput;
+                /**
+                 * Sets the output to join columns to a {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param joinColumnsOutputBuilder The builder that contains the settings for the operation.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.JoinOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetJoinOutput(outputParameter: OutputParameter, joinColumnsOutputBuilder: JoinOutputBuilder): JoinOutput;
+                /**
+                 * Sets the output to join columns to a {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @remark Automatic match will be performed.
+                 * @param outputParameter The output parameter.
+                 * @param dataTable The table to add columns to.
+                 * @param joinType The type of join to perform.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.JoinOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetJoinOutput(outputParameter: OutputParameter, dataTable: DataTable, joinType: JoinType): JoinOutput;
+                /**
+                 * Sets the output to a update a {@link Spotfire.Dxp.Data.DataProperty} for the outputParameter.
+                 * If the property is not present it will be created.
+                 * @param outputParameter The output parameter.
+                 * @param propertyOutputBuilder The builder that will produce the appropriate output.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetPropertyOutput(outputParameter: OutputParameter, propertyOutputBuilder: PropertyOutputBuilder): PropertyOutput;
+                /**
+                 * Sets the output to replace data in a new {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param dataTable The table to replace data in.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.ReplaceDataOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetReplaceDataOutput(outputParameter: OutputParameter, dataTable: DataTable): ReplaceDataOutput;
+                /**
+                 * Sets the output to replace data in a new {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param mappingBuilder The builder that will produce the appropriate configuration.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.ReplaceDataOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetReplaceDataOutput(outputParameter: OutputParameter, mappingBuilder: ReplaceDataOutputBuilder): ReplaceDataOutput;
+                /**
+                 * Sets the output to adding rows for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param addRowsOutputBuilder The builder that contains the settings used to create the output.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.RowsOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetRowsOutput(outputParameter: OutputParameter, addRowsOutputBuilder: RowsOutputBuilder): RowsOutput;
+                /**
+                 * Sets the output to adding rows for the outputParameter. Matching will occur automatically.
+                 * @param outputParameter The output parameter.
+                 * @param table The table to add rows to.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.RowsOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetRowsOutput(outputParameter: OutputParameter, table: DataTable): RowsOutput;
+                /**
+                 * Sets the output to create a new {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param newTableOutputBuilder The builder that will produce the appropriate configuration.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.TableOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetTableOutput(outputParameter: OutputParameter, newTableOutputBuilder: TableOutputBuilder): TableOutput;
+                /**
+                 * Sets the output to create a new {@link Spotfire.Dxp.Data.DataTable} for the outputParameter.
+                 * @param outputParameter The output parameter.
+                 * @param suggestedName The suggested name of the new table. If a table with this already exists another unique name will be used.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.TableOutput}.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetTableOutput(outputParameter: OutputParameter, suggestedName: (JsType<System.String> | System.String)): TableOutput;
                 /**
                  * Tries to get a {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutput} for the outputParameter.
                  * @param outputParameter The output parameter.
@@ -37659,6 +40038,69 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for outputmappings that add columns to a table. Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class JoinOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the table to add rows to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                set DataTable(value: DataTable);
+                /**
+                 * Gets the columns not included in the mapping or
+                 * the additional columns from the output that should be ignored.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IgnoredColumns(): System.Collections.Generic.IList<DataColumnSignature>;
+                /**
+                 * Gets or sets the type of join that should occur.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get JoinType(): JoinType;
+                set JoinType(value: JoinType);
+                /**
+                 * Gets a map matching columns from the original table to columns
+                 * in the output.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Map(): System.Collections.Generic.IDictionary<DataColumnSignature, DataColumnSignature>;
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.JoinOutputBuilder} class.
+                 * @param dataTable The table to add rows to.
+                 * @param joinType The type of join to perform.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(dataTable: DataTable, joinType: JoinType);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_3869334937: null;
+            }
+            
+            /**
              * An output parameter from an data function.
              * 
              * @since 2.0
@@ -37752,6 +40194,7 @@ declare namespace Spotfire.Dxp {
             class PropertyOutput extends DataFunctionOutput implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
                  * Gets the column that the property value is set on.
+                 * @remark This is only valid if the property class is Column.
                  * 
                  * @since 2.0
                  * 
@@ -37760,6 +40203,7 @@ declare namespace Spotfire.Dxp {
                 get DataColumn(): DataColumn;
                 /**
                  * Gets the table that the property value is set on.
+                 * @remark This is only valid if the property class is Column or Table.
                  * 
                  * @since 2.0
                  * 
@@ -37800,6 +40244,100 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for outputmappings that create a new table. Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class PropertyOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets the name of property to set. If there is no property with that name it will become auto created
+                 * when the data function is run.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get PropertyName(): JsType<System.String>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Create a {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder} where a data column property is used as output.
+                 * @param propertyName The name of the property to use as output.
+                 * @param dataColumn The data column where the property should be set.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder}
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static CreateDataColumnPropertyOutput(propertyName: (JsType<System.String> | System.String), dataColumn: DataColumn): PropertyOutputBuilder;
+                /**
+                 * Create a {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder} where a datatable property is used as output.
+                 * @param propertyName The name of the property to use as output.
+                 * @param dataTable The data table where the property should be set.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder}
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static CreateDataTablePropertyOutput(propertyName: (JsType<System.String> | System.String), dataTable: DataTable): PropertyOutputBuilder;
+                /**
+                 * Create a {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder} where a document property is used as output.
+                 * @param propertyName The name of the property to use as output.
+                 * @param dataManager The data manager.
+                 * @returns The newly created {@link Spotfire.Dxp.Data.DataFunctions.PropertyOutputBuilder}
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static CreateDocumentPropertyOutput(propertyName: (JsType<System.String> | System.String), dataManager: DataManager): PropertyOutputBuilder;
+                /**
+                 * Create a mapping to a column property.
+                 * @param propertyName The property name.
+                 * @param column The data column.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDataColumnProperty(propertyName: (JsType<System.String> | System.String), column: DataColumn): void;
+                /**
+                 * Create a mapping to a table property.
+                 * @param propertyName The property name.
+                 * @param dataTable The data table.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDataTableProperty(propertyName: (JsType<System.String> | System.String), dataTable: DataTable): void;
+                /**
+                 * Create a mapping to a document property.
+                 * @param propertyName The property name.
+                 * @param dataManager The data manager.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                SetDocumentProperty(propertyName: (JsType<System.String> | System.String), dataManager: DataManager): void;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_1472217892: null;
+            }
+            
+            /**
              * Output mapping class for replacing data.
              * 
              * @since 2.0
@@ -37833,9 +40371,45 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for outputmappings that replace a datatable. Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class ReplaceDataOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the table to add rows to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                set DataTable(value: DataTable);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.ReplaceDataOutputBuilder} class.
+                 * @param dataTable The datatable to replace.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(dataTable: DataTable);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_3671925059: null;
+            }
+            
+            /**
              * Represents the settings for the handling of a {@link Spotfire.Dxp.Data.DataFunctions.OutputParameter} of
              * a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}. This class will add rows to an existing table when first executed and
              * when updated it will either update those rows or add new rows depending on the settings.
+             * @remark Instance of this class is created in the {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
              * 
              * @since 2.0
              * 
@@ -37923,7 +40497,92 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a builder class for creating a {@link Spotfire.Dxp.Data.DataFunctions.RowsOutput} for a {@link Spotfire.Dxp.Data.DataFunctions.DataFunction}.
+             * Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class RowsOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the table to add rows to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataTable(): DataTable;
+                set DataTable(value: DataTable);
+                /**
+                 * Gets the columns not included in the mapping or
+                 * the additional columns from the output that should be ignored.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IgnoredColumns(): System.Collections.Generic.IList<DataColumnSignature>;
+                /**
+                 * Gets a map matching columns from the original table to columns
+                 * in the output.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Map(): System.Collections.Generic.IDictionary<DataColumnSignature, DataColumnSignature>;
+                /**
+                 * Gets or sets the value that new elements in the
+                 * row source column should get.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get NewRowSourceValue(): JsType<System.String>;
+                set NewRowSourceValue(value: JsType<System.String>);
+                /**
+                 * Gets or sets the value that the existing elements
+                 * in the row source column should get.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get OriginalRowSourceValue(): JsType<System.String>;
+                set OriginalRowSourceValue(value: JsType<System.String>);
+                /**
+                 * Gets or sets the column in the table that
+                 * will be created to indicate the source of the rows.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get RowSourceColumn(): JsType<System.String>;
+                set RowSourceColumn(value: JsType<System.String>);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.RowsOutputBuilder} class.
+                 * @param dataTable The table to add rows to.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(dataTable: DataTable);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_1388119872: null;
+            }
+            
+            /**
              * Output mapping class for adding a new table.
+             * @remark The name is only suggested since the table is not created until after the asynchronous jobs is completed.
              * 
              * @since 2.0
              * 
@@ -37953,6 +40612,42 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
                 private __type_3874316814: null;
+            }
+            
+            /**
+             * Represents a builder class for outputmappings that create a new table. Used as input in {@link Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputCollection}.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class TableOutputBuilder extends DataFunctionOutputBuilder {
+                /**
+                 * Gets or sets the suggested name of the new table. If there is a table with that name already
+                 * it will be uniquefied.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get SuggestedName(): JsType<System.String>;
+                set SuggestedName(value: JsType<System.String>);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.DataFunctions.TableOutputBuilder} class.
+                 * @param suggestedName The suggested name for the new table.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(suggestedName: (JsType<System.String> | System.String));
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_1913823033: null;
             }
         }
         
@@ -38008,6 +40703,10 @@ declare namespace Spotfire.Dxp {
             class AddColumnsOperation extends DataOperation {
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.AddColumnsSettings} used to add columns.
+                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.AddColumnsOperation.CanSetAddColumnsSettings} is true.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously.
                  * 
                  * @since 2.0
                  * 
@@ -38026,6 +40725,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38090,6 +40794,10 @@ declare namespace Spotfire.Dxp {
                 get AddedData(): DataOperation;
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.AddRowsSettings} used to add rows.
+                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.AddRowsOperation.CanSetAddRowsSettings} is true.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously.
                  * 
                  * @since 2.0
                  * 
@@ -38100,6 +40808,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38165,6 +40878,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38195,6 +40913,7 @@ declare namespace Spotfire.Dxp {
             
             /**
              * This source operation represents data loaded from a view in a Data Connection.
+             * @remark See {@link Spotfire.Dxp.Data.DataOperations.DataConnectionOnDemandOperation} for On-Demand loaded data.
              * 
              * @since 2.0
              * 
@@ -38203,6 +40922,7 @@ declare namespace Spotfire.Dxp {
             class DataConnectionOperation extends DataOperation {
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior} for this operation.
+                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataOperation.CanSetDataLoadingBehavior|CanSetDataLoadingBehavior(behavior)} is true.
                  * 
                  * @since 2.0
                  * 
@@ -38213,6 +40933,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38243,6 +40968,10 @@ declare namespace Spotfire.Dxp {
                 CanReplaceTransformations(): JsType<System.Boolean>;
                 /**
                  * Gets a copy of the {@link Spotfire.Dxp.Data.DataTransformation}s performed on the result of the {@link Spotfire.Dxp.Data.DataOperations.DataConnectionOperation} output.
+                 * @remark The list may be empty if no transformations exist, or if this operation is used for external data.
+                 * 
+                 * 
+                 * After modifying the list, use {@link Spotfire.Dxp.Data.DataOperations.DataConnectionOperation.ReplaceTransformations|ReplaceTransformations(transformations)} to apply changes.
                  * @returns A list of data transformations.
                  * 
                  * @since 2.0
@@ -38253,6 +40982,13 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Replaces the current (if any) {@link Spotfire.Dxp.Data.DataTransformation}s performed on the result of the {@link Spotfire.Dxp.Data.DataOperations.DataConnectionOperation} output,
                  * with the supplied transformations.
+                 * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.DataOperations.DataConnectionOperation.CanReplaceTransformations} is true.
+                 * 
+                 * 
+                 * To remove all transformations, supply an empty transformations parameter.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously, which includes reading data from the connection.
                  * @param transformations The new transformations.
                  * 
                  * @since 2.0
@@ -38279,6 +41015,7 @@ declare namespace Spotfire.Dxp {
             class DataFunctionOperation extends DataOperation {
                 /**
                  * Gets the {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} whose output is used in this operation.
+                 * @remark The returned value may be null, indicating that the data has been embedded and the reference was lost.
                  * 
                  * @since 2.0
                  * 
@@ -38288,6 +41025,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38304,6 +41046,8 @@ declare namespace Spotfire.Dxp {
                 get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
                 /**
                  * Gets the {@link Spotfire.Dxp.Data.DataFunctions.OutputParameter} for the {@link Spotfire.Dxp.Data.DataOperations.DataFunctionOperation.DataFunction}.
+                 * @remark A {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} can have several outputs.
+                 * The returned value may be null, indicating that the output parameter has been removed or replaced.
                  * 
                  * @since 2.0
                  * 
@@ -38326,6 +41070,10 @@ declare namespace Spotfire.Dxp {
                 CanReplaceTransformations(): JsType<System.Boolean>;
                 /**
                  * Gets a copy of the {@link Spotfire.Dxp.Data.DataTransformation}s performed on the result of the {@link Spotfire.Dxp.Data.DataOperations.DataFunctionOperation.DataFunction} output.
+                 * @remark The list may be empty if no transformations exist, or if {@link Spotfire.Dxp.Data.DataOperations.DataFunctionOperation.DataFunction} is null.
+                 * 
+                 * 
+                 * After modifying the list, use {@link Spotfire.Dxp.Data.DataOperations.DataFunctionOperation.ReplaceTransformations|ReplaceTransformations(transformations)} to apply changes.
                  * @returns A list of data transformations.
                  * 
                  * @since 2.0
@@ -38336,6 +41084,13 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Replaces the current (if any) {@link Spotfire.Dxp.Data.DataTransformation}s performed on the result of the {@link Spotfire.Dxp.Data.DataOperations.DataFunctionOperation.DataFunction} output,
                  * with the supplied transformations.
+                 * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.DataOperations.DataFunctionOperation.CanReplaceTransformations} is true.
+                 * 
+                 * 
+                 * To remove all transformations, supply an empty transformations parameter.
+                 * 
+                 * 
+                 * The data function will be re-executed synchronously, and all its outputs will be updated.
                  * @param transformations The new transformations.
                  * 
                  * @since 2.0
@@ -38372,7 +41127,14 @@ declare namespace Spotfire.Dxp {
                 static readonly AlwaysNewData: DataLoadingBehavior;
                 /** Data is stored in the analysis, but new data will be loaded if available when the analysis is opened. */
                 static readonly NewDataWhenPossible: DataLoadingBehavior;
-                /** The data loading behavior is not applicable for the operation. */
+                /**
+                 * The data loading behavior is not applicable for the operation.
+                 * @remark Based on the current state of the DataTable, the data loading behavior may not be applicable, for example
+                 * if the entire DataTable is embedded, or if the data operation was added before a {@link Spotfire.Dxp.Data.DataOperations.FreezeColumnOperation}.
+                 * 
+                 * 
+                 * The operation may not support any data loading behavior at all, in which case it will never be anything other than NotApplicable.
+                 */
                 static readonly NotApplicable: DataLoadingBehavior;
                 /** Data is stored in the analysis. */
                 static readonly StoredData: DataLoadingBehavior;
@@ -38397,6 +41159,7 @@ declare namespace Spotfire.Dxp {
             class DataOperation extends Object {
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior} for this operation.
+                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataOperation.CanSetDataLoadingBehavior|CanSetDataLoadingBehavior(behavior)} is true.
                  * 
                  * @since 2.0
                  * 
@@ -38407,6 +41170,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38456,6 +41224,7 @@ declare namespace Spotfire.Dxp {
                 Reload(): void;
                 /**
                  * Tries to get the output {@link Spotfire.Dxp.Data.DataColumnSignature}s from this operation.
+                 * @remark If the entire data table was embedded, for example, then column signatures may not be available.
                  * @param outputSignatures If the method returns true, then these are the
                  * column signatures. (Note that zero columns is possible.)
                  * @returns true if the column signatures are available, false otherwise.
@@ -38507,6 +41276,10 @@ declare namespace Spotfire.Dxp {
                 CanReplaceTransformations(): JsType<System.Boolean>;
                 /**
                  * Gets a copy of the {@link Spotfire.Dxp.Data.DataTransformation}s performed by the {@link Spotfire.Dxp.Data.DataOperations.DataOperationSupportingTransformations.DataOperation}.
+                 * @remark The list may be empty if no transformations exist.
+                 * 
+                 * 
+                 * After modifying the list, use {@link Spotfire.Dxp.Data.DataOperations.DataOperationSupportingTransformations.ReplaceTransformations|ReplaceTransformations(transformations)} to apply changes.
                  * @returns A list of data transformations.
                  * 
                  * @since 2.0
@@ -38517,6 +41290,16 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Replaces the current (if any) {@link Spotfire.Dxp.Data.DataTransformation}s performed by the {@link Spotfire.Dxp.Data.DataOperations.DataOperationSupportingTransformations.DataOperation},
                  * with the supplied transformations.
+                 * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.DataOperations.DataOperationSupportingTransformations.CanReplaceTransformations} is true.
+                 * 
+                 * 
+                 * To remove all transformations, supply an empty transformations parameter.
+                 * Note that if the {@link Spotfire.Dxp.Data.DataOperations.DataOperationSupportingTransformations.DataOperation} is a {@link Spotfire.Dxp.Data.DataOperations.DataTransformationsOperation},
+                 * this is not possible since the {@link Spotfire.Dxp.Data.DataOperations.DataTransformationsOperation} needs to include
+                 * at least one {@link Spotfire.Dxp.Data.DataTransformation}.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously.
                  * @param transformations The new transformations.
                  * 
                  * @since 2.0
@@ -38535,6 +41318,8 @@ declare namespace Spotfire.Dxp {
             
             /**
              * This source operation represents data loaded from a {@link Spotfire.Dxp.Data.DataSource}.
+             * @remark See {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation} for data loaded from a {@link Spotfire.Dxp.Data.Import.DataTableDataSource}.
+             * See {@link Spotfire.Dxp.Data.DataOperations.InformationLinkOnDemandOperation} for On-Demand loaded data from an Information Link.
              * 
              * @since 2.0
              * 
@@ -38543,6 +41328,7 @@ declare namespace Spotfire.Dxp {
             class DataSourceOperation extends DataOperation {
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior} for this operation.
+                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataOperation.CanSetDataLoadingBehavior|CanSetDataLoadingBehavior(behavior)} is true.
                  * 
                  * @since 2.0
                  * 
@@ -38553,6 +41339,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38601,6 +41392,10 @@ declare namespace Spotfire.Dxp {
                 GetDataFlow(): DataFlow;
                 /**
                  * Gets a copy of the {@link Spotfire.Dxp.Data.DataTransformation}s contained in the data flow.
+                 * @remark The list may be empty if no transformations exist.
+                 * 
+                 * 
+                 * After modifying the list, use {@link Spotfire.Dxp.Data.DataOperations.DataSourceOperation.ReplaceTransformations|ReplaceTransformations(transformations)} to apply changes.
                  * @returns A list of data transformations.
                  * 
                  * @since 2.0
@@ -38610,6 +41405,22 @@ declare namespace Spotfire.Dxp {
                 GetTransformations(): System.Collections.Generic.IList<DataTransformation>;
                 /**
                  * Replaces the current data flow with the supplied {@link Spotfire.Dxp.Data.DataFlow}.
+                 * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.DataOperations.DataSourceOperation.CanReplaceDataFlow} returns true.
+                 * 
+                 * 
+                 * Note that replacing the data flow resets the data loading
+                 * behavior. The reason is that not all {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior}
+                 * settings are applicable to all types of data flows.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously.
+                 * 
+                 * 
+                 * If only transformations are to be replaced, use {@link Spotfire.Dxp.Data.DataOperations.DataSourceOperation.ReplaceTransformations|ReplaceTransformations(transformations)} instead,
+                 * since that method doesn't reset the data loading behavior.
+                 * 
+                 * 
+                 * It is not possible to replace with a data flow where the supplied {@link Spotfire.Dxp.Data.DataSource} is a {@link Spotfire.Dxp.Data.Import.DataTableDataSource}.
                  * @param dataFlow The new data flow.
                  * 
                  * @since 2.0
@@ -38620,6 +41431,13 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Replaces the current (if any) {@link Spotfire.Dxp.Data.DataTransformation}s contained in the {@link Spotfire.Dxp.Data.DataFlow},
                  * with the supplied transformations.
+                 * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.DataOperations.DataSourceOperation.CanReplaceTransformations} returns true.
+                 * 
+                 * 
+                 * To remove all transformations, supply an empty transformations parameter.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously, which includes reading data from the data flow's data source.
                  * @param transformations The new transformations.
                  * 
                  * @since 2.0
@@ -38639,6 +41457,7 @@ declare namespace Spotfire.Dxp {
             /**
              * This source operation represents data read from another
              * {@link Spotfire.Dxp.Data.DataTable} in the analysis.
+             * @remark See {@link Spotfire.Dxp.Data.DataOperations.DataSourceOperation} for data loaded from other {@link Spotfire.Dxp.Data.DataSource}s.
              * 
              * @since 2.0
              * 
@@ -38647,6 +41466,7 @@ declare namespace Spotfire.Dxp {
             class DataTableDataSourceOperation extends DataOperation {
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior} for this operation.
+                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataOperation.CanSetDataLoadingBehavior|CanSetDataLoadingBehavior(behavior)} is true.
                  * 
                  * @since 2.0
                  * 
@@ -38656,6 +41476,7 @@ declare namespace Spotfire.Dxp {
                 set DataLoadingBehavior(value: DataLoadingBehavior);
                 /**
                  * Gets the {@link Spotfire.Dxp.Data.DataTable} that data is read from.
+                 * @remark The returned value may be null, typically if the DataTable has been removed from the analysis.
                  * 
                  * @since 2.0
                  * 
@@ -38665,6 +41486,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38681,6 +41507,15 @@ declare namespace Spotfire.Dxp {
                 get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.Import.DataTableDataSourceUpdateBehavior}.
+                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation.CanSetUpdateBehavior|CanSetUpdateBehavior(behavior)} returns true.
+                 * 
+                 * 
+                 * If the behavior is changed to {@link Spotfire.Dxp.Data.Import.DataTableDataSourceUpdateBehavior.Automatic},
+                 * the data operation will be refreshed synchronously.
+                 * 
+                 * 
+                 * Note that if {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation.DataLoadingBehavior} is {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior.StoredData},
+                 * then {@link Spotfire.Dxp.Data.Import.DataTableDataSourceUpdateBehavior.Automatic} update behavior won't have any affect and thus cannot be set.
                  * 
                  * @since 2.0
                  * 
@@ -38714,6 +41549,10 @@ declare namespace Spotfire.Dxp {
                 CanSetUpdateBehavior(behavior: Import.DataTableDataSourceUpdateBehavior): JsType<System.Boolean>;
                 /**
                  * Gets a copy of the {@link Spotfire.Dxp.Data.DataTransformation}s performed on the data read from the {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation.DataTable}.
+                 * @remark The list may be empty if no transformations exist.
+                 * 
+                 * 
+                 * After modifying the list, use {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation.ReplaceTransformations|ReplaceTransformations(transformations)} to apply changes.
                  * @returns A list of data transformations.
                  * 
                  * @since 2.0
@@ -38724,6 +41563,13 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Replaces the current (if any) {@link Spotfire.Dxp.Data.DataTransformation}s performed on the data read from the {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation.DataTable},
                  * with the supplied transformations.
+                 * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation.CanReplaceTransformations} returns true.
+                 * 
+                 * 
+                 * To remove all transformations, supply an empty transformations parameter.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously.
                  * @param transformations The new transformations.
                  * 
                  * @since 2.0
@@ -38753,6 +41599,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38782,6 +41633,8 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 /**
                  * Checks whether it is possible to replace transformations.
+                 * @remark Note that regardless of whether this method returns true, it is never possible to replace the
+                 * current transformations with an empty list.
                  * @returns true if replacing transformations is possible; otherwise false
                  * 
                  * @since 2.0
@@ -38791,6 +41644,7 @@ declare namespace Spotfire.Dxp {
                 CanReplaceTransformations(): JsType<System.Boolean>;
                 /**
                  * Gets a copy of the {@link Spotfire.Dxp.Data.DataTransformation}s performed by this operation.
+                 * @remark After modifying the list, use {@link Spotfire.Dxp.Data.DataOperations.DataTransformationsOperation.ReplaceTransformations|ReplaceTransformations(transformations)} to apply changes.
                  * @returns A list of data transformations.
                  * 
                  * @since 2.0
@@ -38801,6 +41655,13 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Replaces the current {@link Spotfire.Dxp.Data.DataTransformation}s performed by this operation,
                  * with the supplied transformations.
+                 * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.DataOperations.DataTransformationsOperation.CanReplaceTransformations} returns true.
+                 * 
+                 * 
+                 * Note that it is not possible to replace with no elements.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously.
                  * @param transformations The new transformations.
                  * 
                  * @since 2.0
@@ -38828,6 +41689,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38875,6 +41741,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38913,6 +41784,10 @@ declare namespace Spotfire.Dxp {
                 CanReplaceTransformations(): JsType<System.Boolean>;
                 /**
                  * Gets a copy of the {@link Spotfire.Dxp.Data.DataTransformation}s performed on the loaded data.
+                 * @remark The list may be empty if no transformations exist.
+                 * 
+                 * 
+                 * After modifying the list, use {@link Spotfire.Dxp.Data.DataOperations.InformationLinkOnDemandOperation.ReplaceTransformations|ReplaceTransformations(transformations)} to apply changes.
                  * @returns A list of data transformations.
                  * 
                  * @since 2.0
@@ -38923,6 +41798,13 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Replaces the current (if any) {@link Spotfire.Dxp.Data.DataTransformation}s performed when data is loaded,
                  * with the supplied transformations.
+                 * @remark Before calling this method, validate that {@link Spotfire.Dxp.Data.DataOperations.InformationLinkOnDemandOperation.CanReplaceTransformations} returns true.
+                 * 
+                 * 
+                 * To remove all transformations, supply an empty transformations parameter.
+                 * 
+                 * 
+                 * The data operation will be refreshed synchronously, which includes reading data from the Information Link.
                  * @param transformations The new transformations.
                  * 
                  * @since 2.0
@@ -38951,6 +41833,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -38980,6 +41867,7 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 /**
                  * Gets a copy of the {@link Spotfire.Dxp.Data.DataColumnSignature}s representing the columns that are removed by this operation.
+                 * @remark Due to linked data, some columns in the returned list may not exist in {@link Spotfire.Dxp.Data.DataOperations.RemoveColumnsOperation.OriginalData} anymore.
                  * @returns A list of {@link Spotfire.Dxp.Data.DataColumnSignature}s.
                  * 
                  * @since 2.0
@@ -38999,6 +41887,11 @@ declare namespace Spotfire.Dxp {
             /**
              * This operation represents removal of rows from the output of another {@link Spotfire.Dxp.Data.DataOperations.DataOperation},
              * for example created by {@link Spotfire.Dxp.Data.DataTable.RemoveRows|RemoveRows(rowMask)}.
+             * @remark Note that even though a Remove rows operation was performed at some specific
+             * time, it is, in general, not possible to know which rows were removed nor to
+             * guarantee that they are still removed. If data is refreshed for this operation
+             * (for example when opening an analysis where the DataTable is linked), then this
+             * operation is a no-op and the rows will not have been removed.
              * 
              * @since 2.0
              * 
@@ -39008,6 +41901,11 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a localized display name for the operation.
                  * This string is for display purposes only.
+                 * @remark Note: This string should not be used to programmatically check for
+                 * the presence of any particular setting.
+                 * The format and content of this string may change between releases.
+                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
+                 * details on how to read specific settings.
                  * 
                  * @since 2.0
                  * 
@@ -39174,14 +42072,6 @@ declare namespace Spotfire.Dxp {
                  */
                 constructor();
                 /**
-                 * Identifies the ExcelXlsDataWriter, a data writer for writing data as Excel workbooks.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                static readonly ExcelXlsDataWriter: Framework.DocumentModel.TypeIdentifier;
-                /**
                  * Identifies the ExcelXlsxDataWriter, a data writer for writing data as Excel workbooks.
                  * 
                  * @since 2.0
@@ -39189,6 +42079,14 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 static readonly ExcelXlsxDataWriter: Framework.DocumentModel.TypeIdentifier;
+                /**
+                 * Identifies the ParquetDataWriter, a data writer for writing data in parquet format.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly ParquetDataWriter: Framework.DocumentModel.TypeIdentifier;
                 /**
                  * Identifies the SbdfDataWriter, a data writer for writing data to the SBDF format.
                  * 
@@ -39525,6 +42423,8 @@ declare namespace Spotfire.Dxp {
                  * Removes the '[' and ']' characters at the beginning and end of
                  * the string and replaces all occurrences of ']]' with a single ']'
                  * character.
+                 * @remark The identifier must start with the '[' character and end with the
+                 * ']' character.
                  * @param identifier The escaped identifier.
                  * @returns The unescaped identifier.
                  * 
@@ -39564,6 +42464,942 @@ declare namespace Spotfire.Dxp {
                 _interfaces: {
                 };
                 private __type_1525883113: null;
+            }
+        }
+        
+        namespace Formats.Stdf {
+            /**
+             * Represents column-level metadata in STDF.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfColumnMetadata extends StdfMetadataCollection implements Explicit<System.Collections.Generic.IEnumerable<StdfMetadataProperty>>, Explicit<System.Collections.IEnumerable> {
+                /**
+                 * Gets an enumerable over all non-mandatory metadata properties of the column.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get AssignedProperties(): System.Collections.Generic.IList<StdfMetadataProperty>;
+                /**
+                 * Gets the data type of the column.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataType(): StdfValueType;
+                /**
+                 * Gets the name of the column.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Name(): JsType<System.String>;
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfColumnMetadata} class.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor();
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfColumnMetadata} class.
+                 * @param columnName The column name.
+                 * @param dataType The column data type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(columnName: (JsType<System.String> | System.String), dataType: StdfValueType);
+                [Symbol.iterator](): Iterator<StdfMetadataProperty>;
+                /**
+                 * Returns an immutable copy of this instance.
+                 * @returns An immutable copy of this instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                ImmutableCopy(): StdfColumnMetadata;
+                /**
+                 * Returns a mutable copy of this instance.
+                 * @returns A mutable copy of this instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                MutableCopy(): StdfColumnMetadata;
+                /**
+                 * Validates that the properties 'Name' and 'DateType' are correctly set. Throws an {@link System.ArgumentException} if they are not valid.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                ValidateComplete(): void;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_Collections_Generic_IEnumerable: Implementation<System.Collections.Generic.IEnumerable<StdfMetadataProperty>>,
+                    System_Collections_IEnumerable: Implementation<System.Collections.IEnumerable>,
+                };
+                private __type_2189130493: null;
+            }
+            
+            /**
+             * Represents metadata for a table or column in STDF.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfMetadataCollection extends Object implements Explicit<System.Collections.Generic.IEnumerable<StdfMetadataProperty>>, Explicit<System.Collections.IEnumerable> {
+                /**
+                 * Gets the number of properties in the collection.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Count(): JsType<System.Int32>;
+                /**
+                 * Gets a value indicating whether this instance is immutable or not.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IsImmutable(): JsType<System.Boolean>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                [Symbol.iterator](): Iterator<StdfMetadataProperty>;
+                /**
+                 * Adds or replaces a metadata property to the collection.
+                 * @param property The new or modified metadata property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddOrReplaceProperty(property: StdfMetadataProperty): void;
+                /**
+                 * Adds a new metadata property to the collection.
+                 * @param property The new metadata property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddProperty(property: StdfMetadataProperty): void;
+                /**
+                 * Adds a new metadata property to the collection.
+                 * @param name The name of the property.
+                 * @param value The value of the property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddProperty(name: (JsType<System.String> | System.String), value: (JsType<System.String> | System.String)): void;
+                /**
+                 * Adds a new metadata property to the collection.
+                 * @param name The name of the property.
+                 * @param value The value of the property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddProperty(name: (JsType<System.String> | System.String), value: (JsType<System.Int32> | System.Int32)): void;
+                /**
+                 * Gets an enumerator with all metadata properties in the collection.
+                 * @returns An enumerator instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                GetEnumerator(): System.Collections.Generic.IEnumerator<StdfMetadataProperty>;
+                /**
+                 * Gets the value of a metadata property.
+                 * @param name The name of the property.
+                 * @returns The value of the metadata property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 * @param typeT - Generic type argument
+                 */
+                GetProperty<T>(typeT: TypeRefParam<T>, name: (JsType<System.String> | System.String)): JsType<T>;
+                /**
+                 * Removes the property with the specified name from the collection.
+                 * @param name The property name.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                RemoveProperty(name: (JsType<System.String> | System.String)): void;
+                /**
+                 * Looks up a metadata property by name.
+                 * @param name The name of the property.
+                 * @param property The metadata property.
+                 * @returns True if the name was found; otherwise, false.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                TryGetProperty(name: (JsType<System.String> | System.String), property: OutParam<StdfMetadataProperty>): JsType<System.Boolean>;
+                /**
+                 * Gets the value of a metadata property.
+                 * @param name The name of the property.
+                 * @param value The value of the property if found; otherwise, null.
+                 * @returns True if the name was found; otherwise, false.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 * @param typeT - Generic type argument
+                 */
+                TryGetProperty<T>(typeT: TypeRefParam<T>, name: (JsType<System.String> | System.String), value: OutParam<T>): JsType<System.Boolean>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_Collections_Generic_IEnumerable: Implementation<System.Collections.Generic.IEnumerable<StdfMetadataProperty>>,
+                    System_Collections_IEnumerable: Implementation<System.Collections.IEnumerable>,
+                };
+                private __type_1435082757: null;
+            }
+            
+            /**
+             * Represents a metadata property for a data table or column in STDF.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfMetadataProperty extends Object {
+                /**
+                 * Gets the name of the metadata property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Name(): JsType<System.String>;
+                /**
+                 * Gets the value of the metadata property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Value(): unknown;
+                /**
+                 * Gets the value type of the metadata property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ValueType(): StdfValueType;
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfMetadataProperty} class.
+                 * @param name The name of the property.
+                 * @param value The value of the property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(name: (JsType<System.String> | System.String), value: (JsType<System.String> | System.String));
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfMetadataProperty} class.
+                 * @param name The name of the property.
+                 * @param value The value of the property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(name: (JsType<System.String> | System.String), value: (JsType<System.Int32> | System.Int32));
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfMetadataProperty} class.
+                 * @param name The name of the property.
+                 * @param valueType The value type of the property.
+                 * @param value The value of the property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(name: (JsType<System.String> | System.String), valueType: StdfValueType, value: any);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_151951494: null;
+            }
+            
+            /**
+             * Represents immutable table and column metadata in STDF. Created using the corresponding builder class.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfTableMetadata extends StdfMetadataCollection implements Explicit<System.Collections.Generic.IEnumerable<StdfMetadataProperty>>, Explicit<System.Collections.IEnumerable> {
+                /**
+                 * Gets the metadata for the columns of this table.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Columns(): System.Collections.Generic.IList<StdfColumnMetadata>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                [Symbol.iterator](): Iterator<StdfMetadataProperty>;
+                /**
+                 * Gets all the column properties with default values, without duplicates and in
+                 * the order used in the file header.
+                 * @returns A ColumnMetadata instance containing all unique properties, with null values.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                GetAllColumnProperties(): StdfColumnMetadata;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_Collections_Generic_IEnumerable: Implementation<System.Collections.Generic.IEnumerable<StdfMetadataProperty>>,
+                    System_Collections_IEnumerable: Implementation<System.Collections.IEnumerable>,
+                };
+                private __type_988146781: null;
+            }
+            
+            /**
+             * Represents table and column metadata in STDF.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfTableMetadataBuilder extends StdfMetadataCollection implements Explicit<System.Collections.Generic.IEnumerable<StdfMetadataProperty>>, Explicit<System.Collections.IEnumerable> {
+                /**
+                 * Gets the metadata for the columns of this table.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Columns(): System.Collections.Generic.IList<StdfColumnMetadata>;
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfTableMetadataBuilder} class.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor();
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfTableMetadataBuilder} class.
+                 * @param other The source {@link Spotfire.Dxp.Data.Formats.Stdf.StdfTableMetadata} object to fill the contents of this instance with.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(other: StdfTableMetadata);
+                [Symbol.iterator](): Iterator<StdfMetadataProperty>;
+                /**
+                 * Adds metadata for the next column in the table.
+                 * @param columnMetadata The column metadata.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                AddColumn(columnMetadata: StdfColumnMetadata): void;
+                /**
+                 * Builds a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfTableMetadata} class, filled with the contents of this instance.
+                 * @returns A new {@link Spotfire.Dxp.Data.Formats.Stdf.StdfTableMetadata} instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Build(): StdfTableMetadata;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_Collections_Generic_IEnumerable: Implementation<System.Collections.Generic.IEnumerable<StdfMetadataProperty>>,
+                    System_Collections_IEnumerable: Implementation<System.Collections.IEnumerable>,
+                };
+                private __type_878101174: null;
+            }
+            
+            /**
+             * This class provides a simple interface for reading data on the STDF format.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfTableReader extends Object {
+                /**
+                 * Gets the column count.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ColumnCount(): JsType<System.Int32>;
+                /**
+                 * Gets the table metadata.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get TableMetadata(): StdfTableMetadata;
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfTableReader} class.
+                 * @param inputStream The input stream. The StdfTableReader takes ownership of the stream and will
+                 * close it when the StdfTableReader is closed or disposed.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(inputStream: (JsType<System.IO.Stream> | System.IO.Stream));
+                /**
+                 * Given an input stream, this method tries to parse the first line as an STDF file header.
+                 * @remark The method throws exception only in case of I/O problems, and never when there are
+                 * format issues. The reason is to avoid inconvenient hangs in debugger sessions, when trap on
+                 * exception is turned on and the application searches for a matching file type.
+                 * @param reader The input provider.
+                 * @returns True if the file starts with an STDF header; otherwise, false.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static TryParseFormatHeader(reader: (JsType<System.IO.TextReader> | System.IO.TextReader)): JsType<System.Boolean>;
+                /**
+                 * Closes this StdfTableReader instance. Will close the input stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Close(): void;
+                /**
+                 * Disposes of this StdfTableReader instance. Will close the input stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Dispose(): void;
+                /**
+                 * Reads the end of line marker on the current row. Must be invoked after ReadValue has been called
+                 * for all the columns on the row, and before the first value on the next row can be read.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                ReadLine(): void;
+                /**
+                 * Reads and parses the next value from the input.
+                 * @returns An object representing the next value on the current row.
+                 * A null value is returned to mark the end of the input.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                ReadValue(): unknown;
+                /**
+                 * Resets the input stream and starts reading from the beginning.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Reset(): void;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_1757282725: null;
+            }
+            
+            /**
+             * This class provides a simple interface for writing data to the STDF format.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfTableWriter extends Object {
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfTableWriter} class.
+                 * @param outputStream The output stream. The StdfTableWriter will close the stream
+                 * when it is disposed. By default, an UTF8 encoding with a BOM will be used.
+                 * @param metadata The table metadata, which must include metadata for all columns.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(outputStream: (JsType<System.IO.Stream> | System.IO.Stream), metadata: StdfTableMetadata);
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Formats.Stdf.StdfTableWriter} class.
+                 * @param outputStream The output stream. The StdfTableWriter will close the stream
+                 * when it is disposed.
+                 * @param metadata The table metadata, which must include metadata for all columns.
+                 * @param encoding The character encoding, which must be UTF8 with or without a byte order mark.
+                 * @param formatVersion The STDF version to be used, either "1.0" or "2.0".
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(outputStream: (JsType<System.IO.Stream> | System.IO.Stream), metadata: StdfTableMetadata, encoding: (JsType<System.Text.Encoding> | System.Text.Encoding), formatVersion: (JsType<System.String> | System.String));
+                /**
+                 * Closes this TableWrite instance and the underlying stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Close(): void;
+                /**
+                 * Disposes of this StdfTableWriter instance. Will flush and close the output stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Dispose(): void;
+                /**
+                 * Flushes all buffered output to the underlying output stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Flush(): void;
+                /**
+                 * Writes the STDF end-of-line character sequence to the output stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                WriteLine(): void;
+                /**
+                 * Adds a value to the table. Values are added in a row-based manner, round-robin.
+                 * For each row values must be provided for all columns.
+                 * A null argument is interpreted as a null/missing value.
+                 * @param value The new value. The object's type has to match the current column.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                WriteValue(value: any): void;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_259038111: null;
+            }
+            
+            /**
+             * Represents the type of a data value or metadata property in STDF.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfValueType extends Object {
+                /**
+                 * Gets the default value for this type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DefaultValue(): unknown;
+                /**
+                 * Gets a value indicating whether this is an array type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IsArrayType(): JsType<System.Boolean>;
+                /**
+                 * Gets a value indicating whether this is a simple value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IsSimpleType(): JsType<System.Boolean>;
+                /**
+                 * Gets a value indicating whether this value type was supported in STDF 1.0.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IsSupportedInStdfVersionOne(): JsType<System.Boolean>;
+                /**
+                 * Gets an object representing a null value.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get NullValue(): unknown;
+                /**
+                 * Gets the runtime type corresponding to this StdfValueType instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get RuntimeType(): JsType<System.Type>;
+                /**
+                 * Gets the type identifier of this value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get TypeId(): StdfValueTypeId;
+                /**
+                 * Gets the name of this value type in the latest version of the format.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get TypeName(): JsType<System.String>;
+                /**
+                 * Gets the name of this value type used in version 1.0 of the format.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get TypeNameInStdfVersionOne(): JsType<System.String>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Constructs a StdfValueType from a {@link System.Type}.
+                 * @remark An StdfValueType with {@link Spotfire.Dxp.Data.Formats.Stdf.StdfValueTypeId.UnknownType} is returned for unknown types.
+                 * @param type The type object.
+                 * @returns A corresponding StdfValueType instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static FromRuntimeType(type: (JsType<System.Type> | System.Type)): StdfValueType;
+                /**
+                 * Gets a StdfValueType from a string representation.
+                 * @param typeName The name of the value type.
+                 * @returns An StdfValueType instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static GetValueType(typeName: (JsType<System.String> | System.String)): StdfValueType;
+                /**
+                 * Gets a value type instance for a given type identifier.
+                 * @param typeId The type identifier.
+                 * @returns A StdfValueType instance.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static GetValueTypeFromId(typeId: StdfValueTypeId): StdfValueType;
+                /**
+                 * Gets a value indicating whether a given type identifier corresponds to an array type.
+                 * @param typeId The type identifier.
+                 * @returns True for an array type; otherwise, false.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static IsArrayTypeId(typeId: StdfValueTypeId): JsType<System.Boolean>;
+                /**
+                 * Gets a value indicating whether a given type identifier corresponds to a simple type.
+                 * @param typeId The type identifier.
+                 * @returns True for a simple type; otherwise, false.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static IsSimpleTypeId(typeId: StdfValueTypeId): JsType<System.Boolean>;
+                /**
+                 * Returns an object representing an error value.
+                 * @param error The specific error string.
+                 * @returns An object representing an error value.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                ErrorValue(error: (JsType<System.String> | System.String)): unknown;
+                /**
+                 * Returns the STDF string encoding of a given value.
+                 * @param value The value to be formatted.
+                 * @returns A formatted string, not including the terminating semicolon.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                FormatValue(value: any): JsType<System.String>;
+                /**
+                 * Gets the error string from the error value held in value.
+                 * @param value The error value.
+                 * @returns The error string.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                GetErrorString(value: any): JsType<System.String>;
+                /**
+                 * Determines if value is an error value.
+                 * @param value The object to examine.
+                 * @returns true if the object is an error value, false otherwise.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                IsErrorValue(value: any): JsType<System.Boolean>;
+                /**
+                 * Determines if value is an invalid value (null or error).
+                 * @param value The object to examine.
+                 * @returns true if the object is a null value or an error value; otherwise, false.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                IsInvalidValue(value: any): JsType<System.Boolean>;
+                /**
+                 * Determines if value is an null/missing value.
+                 * @param value The object to examine.
+                 * @returns true if the object is a null value; otherwise, false.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                IsNullValue(value: any): JsType<System.Boolean>;
+                /**
+                 * Tries to create a value of this type from a text string.
+                 * @param s The text string.
+                 * @param value The parsed value.
+                 * @returns True if the value was successfully parsed; otherwise, false.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                TryParseValue(s: (JsType<System.String> | System.String), value: OutParam<System.Object>): JsType<System.Boolean>;
+                /**
+                 * The Binary value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Binary: StdfValueType;
+                /**
+                 * The Boolean value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Bool: StdfValueType;
+                /**
+                 * The Date value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Date: StdfValueType;
+                /**
+                 * The DateTime value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly DateTime: StdfValueType;
+                /**
+                 * The Decimal value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Decimal: StdfValueType;
+                /**
+                 * The Double value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Double: StdfValueType;
+                /**
+                 * The Float value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Float: StdfValueType;
+                /**
+                 * The Integer value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Int: StdfValueType;
+                /**
+                 * The Long integer value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Long: StdfValueType;
+                /**
+                 * The String value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly String: StdfValueType;
+                /**
+                 * The Time value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly Time: StdfValueType;
+                /**
+                 * The TimeSpan value type.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static readonly TimeSpan: StdfValueType;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_844500037: null;
+            }
+            
+            /**
+             * Type identifiers for value types in STDF.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfValueTypeId extends System.Enum {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /** The Binary value type. */
+                static readonly BinaryType: StdfValueTypeId;
+                /** The Boolean value type. */
+                static readonly BoolType: StdfValueTypeId;
+                /** The DateTime value type. */
+                static readonly DateTimeType: StdfValueTypeId;
+                /** The Date value type. */
+                static readonly DateType: StdfValueTypeId;
+                /** The Decimal value type. */
+                static readonly DecimalType: StdfValueTypeId;
+                /** The Double value type. */
+                static readonly DoubleType: StdfValueTypeId;
+                /** The Float value type. */
+                static readonly FloatType: StdfValueTypeId;
+                /** The Integer value type. */
+                static readonly IntType: StdfValueTypeId;
+                /** The Long integer value type. */
+                static readonly LongType: StdfValueTypeId;
+                /** The String value type. */
+                static readonly StringType: StdfValueTypeId;
+                /** The TimeSpan value type. */
+                static readonly TimeSpanType: StdfValueTypeId;
+                /** The Time value type. */
+                static readonly TimeType: StdfValueTypeId;
+                /** An unknown value type. */
+                static readonly UnknownType: StdfValueTypeId;
+                private __type_4088268946: null;
             }
         }
         
@@ -39671,13 +43507,16 @@ declare namespace Spotfire.Dxp {
             class DataFormatterBase extends Object implements IDataFormatter {
                 /**
                  * Gets or sets the name of the culture that defines the default formatting.
+                 * @remark If a specific culture is set, this will always be used, regardless of locale.
+                 * Assigning this property to null (which is the default) means that the formatter will always be localized.
+                 * Assigning this property to string.Empty means invariant formatting.
                  * 
                  * @since 2.0
                  * 
                  * @group Default capability
                  */
-                get CultureName(): JsType<System.String>;
-                set CultureName(value: JsType<System.String>);
+                get CultureName(): (JsType<System.String> | null);
+                set CultureName(value: (JsType<System.String> | null));
                 /**
                  * Gets or sets the string used to indicate empty values.
                  * ({@link Spotfire.Dxp.Data.Formatters.DataFormatterBase.FormatInvalid|FormatInvalid(error)}).
@@ -39686,8 +43525,8 @@ declare namespace Spotfire.Dxp {
                  * 
                  * @group Default capability
                  */
-                get EmptyString(): JsType<System.String>;
-                set EmptyString(value: JsType<System.String>);
+                get EmptyString(): (JsType<System.String> | null);
+                set EmptyString(value: (JsType<System.String> | null));
                 /**
                  * Gets or sets a value indicating whether
                  * the format of the string representation must match the
@@ -39734,6 +43573,8 @@ declare namespace Spotfire.Dxp {
                 static AsReadOnly(formatter: DataFormatterBase): DataFormatterBase;
                 /**
                  * Returns a writable copy of this formatter.
+                 * @remark The clone is writable even if the original formatter is
+                 * read-only
                  * @returns A new formatter copied from the original
                  * formatter
                  * 
@@ -39954,6 +43795,9 @@ declare namespace Spotfire.Dxp {
                 set Category(value: NumberFormatCategory);
                 /**
                  * Gets or sets the name of the culture that defines the currency formatting.
+                 * @remark If a specific culture is set, this will always be used, regardless of locale.
+                 * Assigning this property to null (which is the default) means that the formatter will always be localized.
+                 * Assigning this property to string.Empty means invariant formatting.
                  * 
                  * @since 2.0
                  * 
@@ -39969,6 +43813,8 @@ declare namespace Spotfire.Dxp {
                  * CultureInfo.NumberFormat.NumberDecimalDigits</item><item>Currency:
                  * CultureInfo.NumberFormat.CurrencyDecimalDigits</item><item>Percentage:
                  * CultureInfo.NumberFormat.PercentDecimalDigits</item><item>Scientific: 6 </item><item>Custom: -1 (not applicable)</item></list>
+                 * @remark This property does not have any effect on the
+                 * General and Custom categories.
                  * 
                  * @since 2.0
                  * 
@@ -39988,6 +43834,9 @@ declare namespace Spotfire.Dxp {
                 set DecimalDigitsMode(value: DecimalDigitsMode);
                 /**
                  * Gets or sets a format string that defines how values are formatted.
+                 * @remark The FormatString is automatically updated whenever
+                 * a property is changed. Setting the FormatString explicitly
+                 * will change the {@link Spotfire.Dxp.Data.Formatters.NumberFormatter.Category} to Custom.
                  * 
                  * @since 2.0
                  * 
@@ -39997,6 +43846,8 @@ declare namespace Spotfire.Dxp {
                 set FormatString(value: JsType<System.String>);
                 /**
                  * Gets or sets a value indicating whether the group separator is enabled or not.
+                 * @remark This property does not have any effect on the
+                 * General, Scientific and Custom categories.
                  * 
                  * @since 2.0
                  * 
@@ -40006,6 +43857,8 @@ declare namespace Spotfire.Dxp {
                 set GroupSeparatorEnabled(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.Formatters.NumberFormatNegativePattern}.
+                 * @remark This property does not have any effect on the
+                 * General, Scientific and Custom categories.
                  * 
                  * @since 2.0
                  * 
@@ -40025,6 +43878,7 @@ declare namespace Spotfire.Dxp {
                 set NumberStyles(value: JsType<System.Globalization.NumberStyles>);
                 /**
                  * Gets or sets a value indicating whether or not short number formatting should be used.
+                 * @remark This property only applies to categories Currency and Number.
                  * 
                  * @since 2.0
                  * 
@@ -40034,6 +43888,7 @@ declare namespace Spotfire.Dxp {
                 set ShortFormattingEnabled(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the symbol scheme to use for short number formatting.
+                 * @remark This property only applies to categories Currency and Number.
                  * 
                  * @since 2.0
                  * 
@@ -40046,6 +43901,8 @@ declare namespace Spotfire.Dxp {
                  * should be used, which rounds the exponent in scientific formatting
                  * to a multiple of 3.
                  * The default value is false.
+                 * @remark This property only applies when {@link Spotfire.Dxp.Data.Formatters.NumberFormatter.Category} is
+                 * set to  {@link Spotfire.Dxp.Data.Formatters.NumberFormatCategory.Scientific}.
                  * 
                  * @since 2.0
                  * 
@@ -40140,6 +43997,7 @@ declare namespace Spotfire.Dxp {
                 get Name(): JsType<System.String>;
                 /**
                  * Gets the {@link Spotfire.Dxp.Data.Formatters.ShortFormattingSymbol} list of this {@link Spotfire.Dxp.Data.Formatters.ShortFormattingSymbolScheme}.
+                 * @remark The list is read-only.
                  * 
                  * @since 2.0
                  * 
@@ -40251,6 +44109,7 @@ declare namespace Spotfire.Dxp {
                 constructor(dataTable: DataTable);
                 /**
                  * Initializes a new instance of the {@link Spotfire.Dxp.Data.Import.DataTableDataSource} class.
+                 * @remark If dataSelection is not null this {@link Spotfire.Dxp.Data.DataSource} will not be linkable.
                  * @param dataTable The {@link Spotfire.Dxp.Data.DataTable} to use as source.
                  * @param dataSelection The data selection to limit the rows by.
                  * 
@@ -40296,6 +44155,47 @@ declare namespace Spotfire.Dxp {
                 /** Only updates on load or reload. */
                 static readonly Manual: DataTableDataSourceUpdateBehavior;
                 private __type_3735356003: null;
+            }
+            
+            /**
+             * Abstract base class for file data sources.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class FileDataSource extends DataSource {
+                /**
+                 * Gets a value indicating whether the data origin is a stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get DataOriginIsStream(): JsType<System.Boolean>;
+                /** Gets a document title for the data returned from this data source with the current configuration. */
+                get DocumentTitle(): JsType<System.String>;
+                /**
+                 * Gets a value indicating whether this instance supports linked data mode.
+                 * @remark A file data source is linkable if the origin is a file, not a stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get IsLinkable(): JsType<System.Boolean>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_1661628746: null;
             }
             
             /**
@@ -40609,6 +44509,39 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Defines a runtime parameter in an information link execution.
+             * @remark There are three kinds of parameters that may be defined by this class; named parameters, filter parameters and referenced (procedure) parameters.
+             * 
+             * 
+             * 
+             * A <b>named parameter</b> points to a predefined named parameter in an information link. The parameter name is identified by the {@link Spotfire.Dxp.Data.Import.InformationLinkParameter.ParameterId} property.
+             * Named parameters may also be passed in a configuration block when opening an analysis. Including a named parameter in the
+             * InformationLinkDataSource constructor will override any parameter with the same name passed in a configuration block.
+             * For information on how to set up named parameters in an information link see the 'Parameterized Information Link' topic in
+             * Spotfire - User's Manual.
+             * 
+             * A <b>filter parameter</b> adds a filter to a column in an information link. The column is identified by the {@link Spotfire.Dxp.Data.Import.InformationLinkParameter.ElementId} property.
+             * The filter is defined by the {@link Spotfire.Dxp.Data.Import.InformationLinkParameter.Expression} property, which is essentially a SQL expression with placeholders for the column
+             * identifier and parameter values:
+             * <list type="bullet"><item><term>%Column%</term><description>Placeholder for a source column identifier. The placeholder may occur one or several times in the expression, for example
+             * "%Column% in ... or %Column% = ...".
+             *     </description></item><item><term>%Values%</term><description>Placeholder for the parameter values as a list, for example "%Column% in (%Values%)".
+             *     </description></item><item><term>%Value[n]%, where n=0,1,..</term><description>Placeholder for one of the parameter values, for example "%Column% between %Values[0]% and %Values[1]%".
+             *     </description></item><item><term>%Value%</term><description>Short for %Value[0]%. Placeholder for a single parameter value, for example "%Column% &lt;= %Value%".
+             *     </description></item></list>
+             * 
+             * A <b>referenced parameter</b> represents a procedure parameter. The procedure is identified by the {@link Spotfire.Dxp.Data.Import.InformationLinkParameter.ElementId} property and the
+             * parameter name is identified by the {@link Spotfire.Dxp.Data.Import.InformationLinkParameter.ParameterId} property.
+             * <br /><br />
+             * The following data types are supported:
+             * <list type="bullet"><item><term>String</term><description>Representation type: System.String
+             *     </description></item><item><term>Integer</term><description>Representation type: System.Int32
+             *     </description></item><item><term>Real</term><description>Representation type: System.Double
+             *     </description></item><item><term>Date</term><description>Representation type: System.DateTime
+             *     </description></item><item><term>Time</term><description>Representation type: System.DateTime
+             *     </description></item><item><term>DateTime</term><description>Representation type: System.DateTime
+             *     </description></item><item><term>Clob</term><description>Representation type: System.String
+             *     </description></item><item><term>Blob</term><description>Representation type: System.byte[]
+             *     </description></item></list>
              * 
              * @since 2.0
              * 
@@ -40617,6 +44550,7 @@ declare namespace Spotfire.Dxp {
             class InformationLinkParameter extends Object {
                 /**
                  * Gets the identifier for the element (column or procedure) in the information link that this parameter applies to.
+                 * @remark This property is always Guid.Empty for named parameters.
                  * 
                  * @since 2.0
                  * 
@@ -40625,6 +44559,8 @@ declare namespace Spotfire.Dxp {
                 get ElementIdentifier(): JsType<System.Guid>;
                 /**
                  * Gets the expression for a filter parameter.
+                 * @remark Applicable for filter parameters only. This property is always null for
+                 * named and referenced parameters.
                  * 
                  * @since 2.0
                  * 
@@ -40641,6 +44577,8 @@ declare namespace Spotfire.Dxp {
                 get ExternalDataType(): InformationModel.ExternalDataType;
                 /**
                  * Gets a parameter identifier local for the current element (see {@link Spotfire.Dxp.Data.Import.InformationLinkParameter.ElementIdentifier}).
+                 * @remark ParameterId denotes the parameter name for a named parameter or procedure parameter name for a referenced parameter.
+                 * This property is always null for filter parameters.
                  * 
                  * @since 2.0
                  * 
@@ -40698,6 +44636,7 @@ declare namespace Spotfire.Dxp {
                 static CreateNamedParameter(parameterName: (JsType<System.String> | System.String), values: (TypedArray<any> | TypedArray<System.Object>)): InformationLinkParameter;
                 /**
                  * Creates a new InformationLinkParameter that represents a local parameter defined in the specified procedure element.
+                 * @remark The data type is derived from the values type of values.
                  * @param elementId The element id.
                  * @param parameterId The parameter id.
                  * @param values The values.
@@ -40780,6 +44719,34 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Data Source for SBDF files and streams.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class SbdfFileDataSource extends FileDataSource {
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Import.SbdfFileDataSource} class, taking.
+                 * the input from a stream. The datasource will not be linkable. Useful when,
+                 * for instance, using data from the clipboard.
+                 * @param stream The input stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(stream: (JsType<System.IO.Stream> | System.IO.Stream));
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_3235933565: null;
+            }
+            
+            /**
              * A SBDF data source that loads data from the library.
              * 
              * @since 2.0
@@ -40787,7 +44754,10 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class SbdfLibraryDataSource extends DataSource {
-                /** Gets a document title for the data returned from this data source with the current configuration. */
+                /**
+                 * Gets a document title for the data returned from this data source with the current configuration.
+                 * @remark The default implementation returns string.Empty.
+                 */
                 get DocumentTitle(): JsType<System.String>;
                 /** Gets a value indicating whether this instance supports linked data mode. */
                 get IsLinkable(): JsType<System.Boolean>;
@@ -40807,6 +44777,34 @@ declare namespace Spotfire.Dxp {
                 _interfaces: {
                 };
                 private __type_3680053072: null;
+            }
+            
+            /**
+             * Data Source for STDF files and streams.
+             * 
+             * @since 2.1
+             * 
+             * @group Default capability
+             */
+            class StdfFileDataSource extends FileDataSource {
+                /**
+                 * Initializes a new instance of the {@link Spotfire.Dxp.Data.Import.StdfFileDataSource} class, taking
+                 * the input from a stream. The datasource will not be linkable. Used when importing
+                 * for instance, using data from the clipboard.
+                 * @param stream The input stream.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                constructor(stream: (JsType<System.IO.Stream> | System.IO.Stream));
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                };
+                private __type_2021351827: null;
             }
             
             /**
@@ -40859,6 +44857,8 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the string used to replace empty fields when
                  * concatenation column names.
+                 * @remark This will be used if {@link Spotfire.Dxp.Data.Import.TextDataReaderSettings.ColumnNameNullValueReplacement}
+                 * is set to {@link Spotfire.Dxp.Data.Import.TextDataReaderSettings.ColumnNameNullValueReplacementType.ReplacementString}.
                  * 
                  * @since 2.0
                  * 
@@ -40876,6 +44876,16 @@ declare namespace Spotfire.Dxp {
                 get ColumnNameRows(): System.Collections.ObjectModel.ReadOnlyCollection<JsType<System.Int32>>;
                 /**
                  * Gets or sets the string describing how a commented line starts.
+                 * @remark If this is left empty, the parser will not look for comments at all.
+                 * Example:
+                 * //comment line
+                 * name,name2,name3
+                 * 1,2,3
+                 * 4,5,6
+                 * //another comment line.
+                 * 7,8,9
+                 * 
+                 * Here "//" will be good to set as CommentPrefix.
                  * 
                  * @since 2.0
                  * 
@@ -40914,6 +44924,8 @@ declare namespace Spotfire.Dxp {
                  * Gets or sets the default column name. Add a "{0}" to get a 1-based index
                  * applied to the column name.
                  * If no "{0}" is added, one will be automatically appended to the end.
+                 * @remark This string may not include any strings like
+                 * "{&lt;any characters&gt;}", other than "{0}".
                  * 
                  * @since 2.0
                  * 
@@ -40933,6 +44945,7 @@ declare namespace Spotfire.Dxp {
                 set HasQuoteChar(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets a value indicating whether the data has trailing separator.
+                 * @remark For example, the Spotfire Text Data Format always ends with a ";".
                  * 
                  * @since 2.0
                  * 
@@ -40958,6 +44971,8 @@ declare namespace Spotfire.Dxp {
                 get IgnoreRows(): System.Collections.ObjectModel.ReadOnlyCollection<JsType<System.Int32>>;
                 /**
                  * Gets or sets the minimum number of columns in the data set.
+                 * @remark If there are rows with less fields these will be ignored.
+                 * Name and Type rows will not be ignored even if they have less fields.
                  * 
                  * @since 2.0
                  * 
@@ -40968,6 +44983,8 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets or sets the string describing how a null value will be
                  * described in the data set.
+                 * @remark Leave this empty if there are no strings that describe null values
+                 * in the data.
                  * 
                  * @since 2.0
                  * 
@@ -40977,6 +44994,7 @@ declare namespace Spotfire.Dxp {
                 set NullValueDescriptor(value: JsType<System.String>);
                 /**
                  * Gets or sets the quote character.
+                 * @remark This is only used if {@link Spotfire.Dxp.Data.Import.TextDataReaderSettings.HasQuoteChar} is true.
                  * 
                  * @since 2.0
                  * 
@@ -40986,6 +45004,7 @@ declare namespace Spotfire.Dxp {
                 set QuoteChar(value: JsType<System.Char>);
                 /**
                  * Gets or sets the quote character escape sequence.
+                 * @remark For example the quote character could be "" or &amp; for the quote character ".
                  * 
                  * @since 2.0
                  * 
@@ -41014,6 +45033,7 @@ declare namespace Spotfire.Dxp {
                 set Separator(value: JsType<System.String>);
                 /**
                  * Gets or sets the row to start reading from.
+                 * @remark Note that all rows before this will be completely ignored.
                  * 
                  * @since 2.0
                  * 
@@ -41023,6 +45043,7 @@ declare namespace Spotfire.Dxp {
                 set StartReadingRow(value: JsType<System.Int32>);
                 /**
                  * Gets or sets the types row.
+                 * @remark If no types row exists, this will return -1.
                  * 
                  * @since 2.0
                  * 
@@ -41463,7 +45484,7 @@ declare namespace Spotfire.Dxp {
              * 
              * @group Default capability
              */
-            class TextFileDataSource extends DataSource {
+            class TextFileDataSource extends FileDataSource {
                 /**
                  * Gets or sets the settings.
                  * 
@@ -41684,6 +45705,11 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 /**
                  * Creates a default model for the specified meta data items in a data source.
+                 * @remark The method will recursively create a folder structure matching catalogs, schemas etc. it
+                 * is given. When it finds tables it will create information links containing all the columns
+                 * in those. Procedures will also get an information link each if they return data.
+                 * If the operation is aborted either by the user or by an error, anything created so far will
+                 * remain on the server.
                  * @param destinationFolder The library folder to save the result in.
                  * @param dataSource The data source in which the itemPaths live.
                  * @param itemPaths The items in the dataSource for which to create a default model.
@@ -41752,6 +45778,8 @@ declare namespace Spotfire.Dxp {
                 set Expression(value: JsType<System.String>);
                 /**
                  * Gets or sets the formatter.
+                 * @remark Can be null, indicating  that the default formatter for the {@link Spotfire.Dxp.Data.DataType}
+                 * of the {@link Spotfire.Dxp.Data.Transformations.AddCalculatedColumnTransformation.Expression} result will be used.
                  * 
                  * @since 2.0
                  * 
@@ -41761,6 +45789,7 @@ declare namespace Spotfire.Dxp {
                 set Formatter(value: Formatters.IDataFormatter);
                 /**
                  * Gets or sets the name of the column to add.
+                 * @remark Can be null or empty, in which case the {@link Spotfire.Dxp.Data.Transformations.AddCalculatedColumnTransformation.Expression} is used as name.
                  * 
                  * @since 2.0
                  * 
@@ -41892,6 +45921,7 @@ declare namespace Spotfire.Dxp {
             class ColumnAddition extends Object {
                 /**
                  * The name of the column to add.
+                 * @remark Might be null or empty, in which case the expression is used as name.
                  * 
                  * @since 2.0
                  * 
@@ -41961,6 +45991,8 @@ declare namespace Spotfire.Dxp {
                 [Symbol.iterator](): Iterator<ColumnAddition>;
                 /**
                  * Adds a column computed from the expression.
+                 * @remark If the expression does not contain an as-clause, the expression itself
+                 * will be used as the column name.
                  * @param expression The expression that defines the column.
                  * @returns The newly created {@link Spotfire.Dxp.Data.Transformations.ColumnAddition}.
                  * 
@@ -41971,6 +46003,8 @@ declare namespace Spotfire.Dxp {
                 Add(expression: (JsType<System.String> | System.String)): ColumnAddition;
                 /**
                  * Adds a column computed from the expression.
+                 * @remark If the expression also contains an as-clause, this will be ignored in favor of
+                 * columnNameExpression.
                  * @param columnNameExpression The name of the resulting column.
                  * @param expression The expression used to compute the column.
                  * @returns The newly created {@link Spotfire.Dxp.Data.Transformations.ColumnAddition}.
@@ -41982,6 +46016,8 @@ declare namespace Spotfire.Dxp {
                 Add(columnNameExpression: (JsType<System.String> | System.String), expression: (JsType<System.String> | System.String)): ColumnAddition;
                 /**
                  * Adds a column computed from the expression.
+                 * @remark If the expression contains an as-clause, then that will be used as the name of the
+                 * column. Otherwise, the expression itself will be used as the name.
                  * @param expression The expression that defines the column.
                  * @param formatter The formatter to use for the resulting column.
                  * @returns The newly created {@link Spotfire.Dxp.Data.Transformations.ColumnAddition}.
@@ -41993,6 +46029,8 @@ declare namespace Spotfire.Dxp {
                 Add(expression: (JsType<System.String> | System.String), formatter: Formatters.IDataFormatter): ColumnAddition;
                 /**
                  * Adds a column computed from the expression.
+                 * @remark If the expression also contains an as-clause, this will be ignored in favor of
+                 * columnNameExpression.
                  * @param columnNameExpression The name of the resulting column.
                  * @param expression The expression used to compute the column.
                  * @param formatter The formatter used by the resulting column.
@@ -42407,6 +46445,11 @@ declare namespace Spotfire.Dxp {
                 [Symbol.iterator](): Iterator<ColumnReplacement>;
                 /**
                  * Replace the columns in selection with one created from expression.
+                 * @remark Use {@link Spotfire.Dxp.Data.Transformations.ExpressionTransformation.ColumnNameSymbol} in
+                 * the expression if you wish to refer to the current
+                 * column in selection. If expression does not contain an
+                 * as-clause, then the old column name will be used. If selection contains
+                 * more than one column, the resulting names will be uniquified.
                  * @param expression The expression used to compute the column.
                  * @param selection The columns to replace.
                  * 
@@ -42417,6 +46460,10 @@ declare namespace Spotfire.Dxp {
                 Add(expression: (JsType<System.String> | System.String), selection: ColumnSelection): ColumnReplacement;
                 /**
                  * Replace the columns in selection with one created from expression.
+                 * @remark Use {@link Spotfire.Dxp.Data.Transformations.ExpressionTransformation.ColumnNameSymbol} in the expression if you wish to refer to the current
+                 * column in selection. If expression does not contain an as-clause,
+                 * then the old column name will be used. If selection contains
+                 * more than one column, the resulting names will be uniquified.
                  * @param expression The expression used to compute the column.
                  * @param selection The columns to replace.
                  * @param formatter The formatter to use for the resulting column.
@@ -42428,6 +46475,9 @@ declare namespace Spotfire.Dxp {
                 Add(expression: (JsType<System.String> | System.String), selection: ColumnSelection, formatter: Formatters.IDataFormatter): ColumnReplacement;
                 /**
                  * Replace the columns in selection with one created from expression.
+                 * @remark Use {@link Spotfire.Dxp.Data.Transformations.ExpressionTransformation.ColumnNameSymbol} in the name or expression if you wish to refer to the current
+                 * column in selection. If selection contains
+                 * more than one column the resulting names will be uniquified.
                  * @param nameExpression The name of the column.
                  * @param expression The expression used to compute the column.
                  * @param selection The columns to replace.
@@ -42439,6 +46489,9 @@ declare namespace Spotfire.Dxp {
                 Add(nameExpression: (JsType<System.String> | System.String), expression: (JsType<System.String> | System.String), selection: ColumnSelection): ColumnReplacement;
                 /**
                  * Replace the columns in selection with one created from expression.
+                 * @remark Use {@link Spotfire.Dxp.Data.Transformations.ExpressionTransformation.ColumnNameSymbol} in the name or expression if you wish to refer to the current
+                 * column in selection. If selection contains
+                 * more than one column the resulting names will be uniquified.
                  * @param nameExpression The name of the column.
                  * @param expression The expression used to compute the column.
                  * @param selection The columns to replace.
@@ -42863,6 +46916,11 @@ declare namespace Spotfire.Dxp {
              * denotes a column, in a result matrix of data cells.
              * Each cell is the aggregated result of all data values having the same identity and category.
              * Additional transfer columns may exist, holding values aggregated by identity only, and not by category.
+             * @remark If nothing but identity columns are specified, the result of this Pivot transformation
+             * will be the distinct values of the identity columns.
+             * 
+             * If nothing but identity and transfer columns are specified, the result of this Pivot transformation
+             * will be an aggregation of the transfer columns over the identity columns.
              * 
              * @since 2.0
              * 
@@ -42938,6 +46996,7 @@ declare namespace Spotfire.Dxp {
                  * Each value column data is aggregated over identity columns and category columns
                  * and stored into the result data columns.
                  * See {@link Spotfire.Dxp.Data.Transformations.ColumnAggregation}.
+                 * @remark This property is ignored if CategoryColumns property is null or empty
                  * 
                  * @since 2.0
                  * 
@@ -42991,6 +47050,8 @@ declare namespace Spotfire.Dxp {
                 set Expression(value: JsType<System.String>);
                 /**
                  * Gets or sets the formatter.
+                 * @remark Can be null, indicating  that the default formatter for the {@link Spotfire.Dxp.Data.DataType}
+                 * of the {@link Spotfire.Dxp.Data.Transformations.ReplaceColumnTransformation.Expression} result will be used.
                  * 
                  * @since 2.0
                  * 
@@ -43000,6 +47061,7 @@ declare namespace Spotfire.Dxp {
                 set Formatter(value: Formatters.IDataFormatter);
                 /**
                  * Gets or sets the name of the resulting column.
+                 * @remark Can be null or empty, in which case the original name is kept.
                  * 
                  * @since 2.0
                  * 
@@ -43400,6 +47462,9 @@ declare namespace Spotfire.Dxp {
             /**
              * Provides information about the Spotfire Server, such as its
              * URL, whether or not it is currently available, etc.
+             * @remark An instance of this class is always available as an application level
+             * service and can be accessed using one of the GetService methods
+             * available in the caller context.
              * 
              * @since 2.0
              * 
@@ -43419,6 +47484,11 @@ declare namespace Spotfire.Dxp {
                  * Gets the public Uri of the Spotfire Server currently connected to.
                  * This will be the Uri configured as "Public Address" in the Spotfire server configuration.
                  * This Uri should always be used when displaying links to the server, to library files or to the Web Player.
+                 * @remark The Uri might not be the same as the Uri used in the client because in a clustered environment a client can connect directly to the server
+                 * instead of using the load balancer address.
+                 * 
+                 * 
+                 * Always check if the client is online, using {@link Spotfire.Dxp.Framework.ApplicationModel.ConnectivityService.IsOnline}, before using this function.
                  * 
                  * @since 2.0
                  * 
@@ -43441,6 +47511,7 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Represents an operation on a document.
+             * @remark This class cannot be publicly extended through inheritance.
              * 
              * @since 2.0
              * 
@@ -43449,6 +47520,8 @@ declare namespace Spotfire.Dxp {
             class DocumentOperation extends DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<DocumentModel.ITransactions>, Explicit<DocumentModel.INodeContext> {
                 /**
                  * Gets whether or not the operation is partially or entirely broken.
+                 * @remark This property is used in action links to mark the action link as broken if
+                 * any of the repositories are partially broken.
                  * 
                  * @since 2.0
                  * 
@@ -43482,6 +47555,7 @@ declare namespace Spotfire.Dxp {
             
             /**
              * This service contains a list of notifications that contains information that the user might want to know.
+             * @remark The notifications will show up in the status bar of the application.
              * 
              * @since 2.0
              * 
@@ -43634,6 +47708,22 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Starts an invisible transaction on the document model by executing
                  * action.
+                 * @remark This method starts an invisible transaction on the document model by executing
+                 * action.
+                 * If there is already an ongoing transaction then the transaction is included in the current
+                 * transaction.
+                 * 
+                 * 
+                 * All modifications of the document that are performed as a result of the operations
+                 * performed by action will be recorded in
+                 * the transaction so that the transaction can be unexecuted if the user
+                 * requests an undo.
+                 * 
+                 * 
+                 * The transaction is invisible in the sense
+                 * that the user will not see the transaction as an entry on the undo stack.
+                 * If the user makes an undo then the transaction will be silently unexecuted
+                 * together with the enclosing visible transaction.
                  * @param action The delegate to execute.
                  * 
                  * @remark This API expects that the script is declared with 'wrapInTransaction' set to 'false' to work as documented.
@@ -43646,6 +47736,39 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Starts a sticky transaction on the document model by executing
                  * action.
+                 * @remark This method starts a sticky transaction on the document model by executing
+                 * action.
+                 * If there is already an ongoing transaction then the transaction is included in the current
+                 * transaction.
+                 * 
+                 * 
+                 * All modifications of the document that are performed as a result of the operations
+                 * performed by action will be recorded in
+                 * the transaction so that the transaction can be unexecuted if the user
+                 * requests an undo.
+                 * 
+                 * 
+                 * Sticky transactions should be used to implement undo of for example sliders. When you move
+                 * a slider such as the range slider in the filter panel it makes a modification of the document
+                 * and this modification should immediately be reflected in the user interface. However there
+                 * should only be one entry on the undo stack so that the entire drag of the slider can be undone
+                 * by pressing undo once.
+                 * 
+                 * 
+                 * To implement this behaviour the slider should generate a {@link System.Guid} and use it as a parameter to
+                 * one sticky transactions for each modification.
+                 * 
+                 * 
+                 * The transactions are sticky in the sense that consecutive sticky transactions with the same {@link System.Guid}
+                 * will yield a common entry on the undo stack.
+                 * If any other transaction is executed it will create
+                 * an independent entry which will break up the sequence of sticky transactions.
+                 * 
+                 * 
+                 * A sequence of sticky transactions is similar to an aggregated transaction in
+                 * the sense that both will yield only one entry on the undo stack.
+                 * However it is more robust to use sticky transactions if it is difficult to decide when
+                 * an aggregated transaction should be committed.
                  * @param guid The id which identifies the transactions which should stick together.
                  * @param action The delegate to execute.
                  * 
@@ -43659,6 +47782,16 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Starts a transaction on the document model by executing
                  * action.
+                 * @remark This method starts a transaction on the document model by executing
+                 * action. If there is already
+                 * an ongoing transaction then the transaction is included in the current
+                 * transaction.
+                 * 
+                 * 
+                 * All modifications of the document that are performed as a result of the operations
+                 * performed by action will be recorded in
+                 * the transaction so that the transaction can be unexecuted if the user
+                 * requests an undo.
                  * @param action The delegate to execute.
                  * 
                  * @remark This API expects that the script is declared with 'wrapInTransaction' set to 'false' to work as documented.
@@ -43679,6 +47812,27 @@ declare namespace Spotfire.Dxp {
             
             /**
              * Abstract base class for all Document Nodes.
+             * @remark Each class that inherits from {@link Spotfire.Dxp.Framework.DocumentModel.DocumentNode} must follow the design pattern for document nodes.
+             * This includes:
+             * <list type="bullet"><item><description>The class must be marked with the {@link System.SerializableAttribute} attribute.</description></item><item><description>If objects of the class are intended to be persisted when the Spotfire document is saved, the class
+             * must be marked with the {@link Spotfire.Dxp.Framework.Persistence.PersistenceVersionAttribute} attribute.</description></item><item><description>The class must not implement any of the {@link System.IDisposable} or
+             * {@link System.Runtime.Serialization.IDeserializationCallback} interfaces.</description></item><item><description>The class must not declare any events.</description></item><item><description>All fields declared in the class must be marked readonly.</description></item><item><description>The type of each field declared in the class must be one of the following:
+             *     <list type="bullet"><item><description>A primitive type (string, bool, float, etc.).
+             *         </description></item><item><description>An immutable type.
+             *         </description></item><item><description>A type that derives from {@link Spotfire.Dxp.Framework.DocumentModel.DocumentNode}.
+             *         </description></item><item><description>One of the Undoable building blocks of the document model ({@link Spotfire.Dxp.Framework.DocumentModel.UndoableProperty},
+             *         {@link Spotfire.Dxp.Framework.DocumentModel.UndoableList}, {@link Spotfire.Dxp.Framework.DocumentModel.UndoableDictionary}, etc.).
+             *         </description></item><item><description>An instance of the {@link Spotfire.Dxp.Framework.DocumentModel.RuntimeProperty} type.
+             *         </description></item><item><description>An instance of the {@link Spotfire.Dxp.Framework.DocumentModel.RuntimeConstant} type.
+             *         </description></item></list></description></item><item><description>The class must declare a nested class called PropertyNames that derives from the
+             * PropertyNames class declared by the inherited document node class. The PropertyNames class
+             * declared in this class shall shadow the inherited PropertyNames class, which is accomplished using the
+             * new keyword.</description></item><item><description>The class must declare a protected (or private if this class is sealed) deserialization constructor
+             * in which <see cref="M:Spotfire.Dxp.Framework.DocumentModel.DocumentNode.DeserializeProperty``1(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,Spotfire.Dxp.Framework.DocumentModel.PropertyName,Spotfire.Dxp.Framework.DocumentModel.UndoableProperty{``0}@)" />
+             * or <see cref="M:Spotfire.Dxp.Framework.DocumentModel.DocumentNode.DeserializeReadOnlyProperty``1(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,Spotfire.Dxp.Framework.DocumentModel.PropertyName,``0@)" /> are called to deserialize
+             * persisted state and initialize the fields of this class.</description></item><item><description>The class must override {@link Spotfire.Dxp.Framework.DocumentModel.DocumentNode.GetObjectData|GetObjectData(info, context)} in
+             * which <see cref="M:Spotfire.Dxp.Framework.DocumentModel.DocumentNode.SerializeProperty``1(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,Spotfire.Dxp.Framework.DocumentModel.UndoableProperty{``0})" /> or <see cref="M:Spotfire.Dxp.Framework.DocumentModel.DocumentNode.SerializeReadOnlyProperty``1(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext,Spotfire.Dxp.Framework.DocumentModel.PropertyName,``0)" /> are called to serialize
+             * the state held by the fields of this class.</description></item></list>
              * 
              * @since 2.0
              * 
@@ -43714,6 +47868,17 @@ declare namespace Spotfire.Dxp {
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
                 constructor();
+                /**
+                 * Applies the specified action to all nodes of the specified type in the subtree spanned
+                 * from this node, including this node.
+                 * @param action The action to apply.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 * @param typeTNode - Generic type argument
+                 */
+                ForEachNodeInSubTree<TNode>(typeTNode: TypeRefParam<TNode>, action: System.Action<TNode>): void;
                 /**
                  * @ignore
                  * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
@@ -44360,6 +48525,7 @@ declare namespace Spotfire.Dxp {
                  * By default the keywords are not changed.
                  * The keywords set with this method will override any keywords specified by document properties when the document
                  * is saved to the library.
+                 * @remark Calling this methods without any arguments will clear the keywords of a library item.
                  * 
                  * @since 2.0
                  * 
@@ -44369,6 +48535,9 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Adds a custom property that shall be set on the library item. The property value will be updated
                  * if it is already set on the library item.
+                 * @remark Custom properties in the Library must have the same form as DataProperties. That is, they
+                 * must have a prefix followed by a dot and then a name. The prefix "Spotfire"
+                 * is reserved and such properties cannot be explicitly set through the API.
                  * @param propertyName The name of the custom property that should be set.
                  * @param values The values that shall be associated with the custom property.
                  * 
@@ -44581,6 +48750,8 @@ declare namespace Spotfire.Dxp {
              * Identifies an item in the library. Provides access to the subset of the
              * metadata associated with the item that can be used to find the item in the
              * library.
+             * @remark Instances of this class are immutable and serializable, making it possible to use them as
+             * values in the document.
              * 
              * @since 2.0
              * 
@@ -44797,6 +48968,14 @@ declare namespace Spotfire.Dxp {
                  */
                 static get SbdfDataFile(): LibraryItemType;
                 /**
+                 * Gets the library type for a shape collection.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                static get Shapes(): LibraryItemType;
+                /**
                  * Gets the library type for a visualization mod.
                  * 
                  * @since 2.0
@@ -44839,6 +49018,8 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Tries to get a uri for a Spotfire Server redirect page of the specified library item, which
                  * should be accessed through http or https.
+                 * @remark Use Uri.AbsoluteUri on the resulting uri for a correct string representation if
+                 * {@link Spotfire.Dxp.Framework.Library.LibraryLinksOption.Path} is used.
                  * @param item The library item to retrieve the Spotfire Server redirect page uri for.
                  * @param option The option for generating the resulting uri.
                  * @param uri The Spotfire Server redirect page uri for the specified library item.
@@ -44865,6 +49046,8 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Tries to get a uri for a Spotfire Web Player Server redirect page of the specified library item, which
                  * should be accessed through http or https.
+                 * @remark Use Uri.AbsoluteUri on the resulting uri for a correct string representation if
+                 * {@link Spotfire.Dxp.Framework.Library.LibraryLinksOption.Path} is used.
                  * @param item The library item to retrieve the Spotfire Web Player Server redirect page uri for.
                  * @param option The option for generating the resulting uri.
                  * @param uri The Spotfire Web Player Server redirect page uri for the specified library item.
@@ -44878,6 +49061,8 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Tries to get a uri for a Spotfire Web Player analysis with the specified library item, which
                  * should be accessed through http or https.
+                 * @remark Use Uri.AbsoluteUri on the resulting uri for a correct string representation if
+                 * {@link Spotfire.Dxp.Framework.Library.LibraryLinksOption.Path} is used.
                  * @param item The library item to retrieve the Spotfire Web Player Player analysis uri for.
                  * @param option The option for generating the resulting uri.
                  * @param uri The Spotfire Web Player analysis uri with the specified library item.
@@ -45141,6 +49326,7 @@ declare namespace Spotfire.Dxp {
              * 
              * A license is defined by its {@link Spotfire.Dxp.Framework.License.License.Id} which must be globally
              * unique, a {@link Spotfire.Dxp.Framework.License.License.Name}, and a {@link Spotfire.Dxp.Framework.License.License.Description}.
+             * @remark This class cannot be extended through inheritance.
              * 
              * @since 2.0
              * 
@@ -45189,6 +49375,7 @@ declare namespace Spotfire.Dxp {
                  * @param lf1 The license function to be compared to lf2.
                  * @param lf2 The license function to be compared to lf1.
                  * @returns -1 if lf1 is smaller than lf2, 0 if lf1=lf2, 1 if lf1 is larger than lf2.
+                 * @deprecated This method is no longer called by Spotfire.
                  * 
                  * @since 2.0
                  * 
@@ -45359,6 +49546,10 @@ declare namespace Spotfire.Dxp {
                 Reset(): void;
                 /**
                  * Persists all changes to the properties of this preference object.
+                 * @remark If the value type of a property is mutable, internal changes made to
+                 * the property must be manually reported through calls to
+                 * {@link Spotfire.Dxp.Framework.Preferences.PreferenceProperty} for the property value to be
+                 * persisted.
                  * 
                  * @since 2.0
                  * 
@@ -45486,6 +49677,10 @@ declare namespace Spotfire.Dxp {
                  * After setting or resetting the value of a preference property, Save()
                  * must be called on the owning preference to cause the property
                  * to be persisted.
+                 * @remark If the value type of this property implements
+                 * {@link System.IComparable} and minimum and maximum values were
+                 * defined for this property when it was created, a check will
+                 * be performed against these values.
                  * 
                  * @since 2.0
                  * 
@@ -45502,6 +49697,9 @@ declare namespace Spotfire.Dxp {
                  * Use this method to report changes that may have occurred inside of
                  * an mutable property value. The {@link Spotfire.Dxp.Framework.Preferences.PreferenceBase.Save}
                  * must be used to persist the changes.
+                 * @remark Not reporting changes for mutable value types will leave the
+                 * Preferences Framework unaware of the changes and results in the new
+                 * value not being persisted.
                  * 
                  * @since 2.0
                  * 
@@ -45520,6 +49718,8 @@ declare namespace Spotfire.Dxp {
             /**
              * Base class for a preference property.
              * For more information, refer to {@link Spotfire.Dxp.Framework.Preferences.PreferenceProperty}.
+             * @remark It is not possible to extend this class through inheritance. Instead,
+             * use the class {@link Spotfire.Dxp.Framework.Preferences.PreferenceProperty}.
              * 
              * @since 2.0
              * 
@@ -45600,7 +49800,11 @@ declare namespace Spotfire.Dxp {
                 constructor();
                 /** The preference value is only defined for a single user. */
                 static readonly SingleUser: PreferenceUsage;
-                /** The preference may be defined for user groups. */
+                /**
+                 * The preference may be defined for user groups.
+                 * @remark User group defined preferences will be used whenever there
+                 * is no value defined for the single user.
+                 */
                 static readonly UserGroup: PreferenceUsage;
                 private __type_573242220: null;
             }
@@ -47361,6 +51565,117 @@ declare namespace System {
         private __type_1362886457: null;
     }
     
+    /**
+     * Represents the version number of an assembly, operating system, or the common language runtime. This class cannot be inherited.
+     */
+    class Version extends Object {
+        /**
+         * Gets the value of the build component of the version number for the current {@link System.Version} object.
+         * @returns The build number, or -1 if the build number is undefined.
+         */
+        get Build(): JsType<Int32>;
+        /**
+         * Gets the value of the major component of the version number for the current {@link System.Version} object.
+         * @returns The major version number.
+         */
+        get Major(): JsType<Int32>;
+        /**
+         * Gets the high 16 bits of the revision number.
+         * @returns A 16-bit signed integer.
+         */
+        get MajorRevision(): JsType<Int16>;
+        /**
+         * Gets the value of the minor component of the version number for the current {@link System.Version} object.
+         * @returns The minor version number.
+         */
+        get Minor(): JsType<Int32>;
+        /**
+         * Gets the low 16 bits of the revision number.
+         * @returns A 16-bit signed integer.
+         */
+        get MinorRevision(): JsType<Int16>;
+        /**
+         * Gets the value of the revision component of the version number for the current {@link System.Version} object.
+         * @returns The revision number, or -1 if the revision number is undefined.
+         */
+        get Revision(): JsType<Int32>;
+        /**
+         * Initializes a new instance of the {@link System.Version} class.
+         */
+        constructor();
+        /**
+         * Initializes a new instance of the {@link System.Version} class using the specified string.
+         * @param version A string containing the major, minor, build, and revision numbers, where each number is delimited with a period character ('.').
+         */
+        constructor(version: (JsType<String> | String));
+        /**
+         * Initializes a new instance of the {@link System.Version} class using the specified major and minor values.
+         * @param major The major version number.
+         * @param minor The minor version number.
+         */
+        constructor(major: (JsType<Int32> | Int32), minor: (JsType<Int32> | Int32));
+        /**
+         * Initializes a new instance of the {@link System.Version} class using the specified major, minor, and build values.
+         * @param major The major version number.
+         * @param minor The minor version number.
+         * @param build The build number.
+         */
+        constructor(major: (JsType<Int32> | Int32), minor: (JsType<Int32> | Int32), build: (JsType<Int32> | Int32));
+        /**
+         * Initializes a new instance of the {@link System.Version} class with the specified major, minor, build, and revision numbers.
+         * @param major The major version number.
+         * @param minor The minor version number.
+         * @param build The build number.
+         * @param revision The revision number.
+         */
+        constructor(major: (JsType<Int32> | Int32), minor: (JsType<Int32> | Int32), build: (JsType<Int32> | Int32), revision: (JsType<Int32> | Int32));
+        /**
+         * Converts the string representation of a version number to an equivalent {@link System.Version} object.
+         * @param input A string that contains a version number to convert.
+         * @returns An object that is equivalent to the version number specified in the input parameter.
+         */
+        static Parse(input: (JsType<String> | String)): JsType<Version>;
+        /**
+         * Tries to convert the string representation of a version number to an equivalent {@link System.Version} object, and returns a value that indicates whether the conversion succeeded.
+         * @param input A string that contains a version number to convert.
+         * @param result When this method returns, contains the {@link System.Version} equivalent of the number that is contained in input, if the conversion succeeded. If input is null, {@link System.String.Empty}, or if the conversion fails, result is null when the method returns.
+         * @returns true if the input parameter was converted successfully; otherwise, false.
+         */
+        static TryParse(input: (JsType<String> | String), result: OutParam<Version>): JsType<Boolean>;
+        /**
+         * Compares the current {@link System.Version} object to a specified {@link System.Version} object and returns an indication of their relative values.
+         * @param value A {@link System.Version} object to compare to the current {@link System.Version} object, or null.
+         * @returns A signed integer that indicates the relative values of the two objects, as shown in the following table.
+         *   Return value
+         * 
+         *   Meaning
+         * 
+         *   Less than zero
+         * 
+         *   The current {@link System.Version} object is a version before value.
+         * 
+         *   Zero
+         * 
+         *   The current {@link System.Version} object is the same version as value.
+         * 
+         *   Greater than zero
+         * 
+         *   The current {@link System.Version} object is a version subsequent to value.
+         * 
+         *  -or-
+         * 
+         *  value is null.
+         */
+        CompareTo(value: (JsType<Version> | Version)): JsType<Int32>;
+        /**
+         * @ignore
+         * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+         */
+        _interfaces: {
+        };
+        private __type_3099190229: null;
+    }
+    
     namespace Collections {
         /**
          * Defines size, enumerators, and synchronization methods for all nongeneric collections.
@@ -47893,6 +52208,12 @@ declare namespace System {
                     System_Collections_Generic_IEnumerable: Implementation<IEnumerable<T>>,
                     System_Collections_IEnumerable: Implementation<Collections.IEnumerable>,
                 };
+                /**
+                 * Gets the element at the specified index in the read-only list.
+                 * @param index The zero-based index of the element to get.
+                 * @returns The element at the specified index in the read-only list.
+                 */
+                readonly Item: PropertyGet<(JsType<Int32> | Int32), JsType<T>>;
             }
             
             /**
@@ -48392,6 +52713,38 @@ declare namespace System {
              */
             constructor(x: (JsType<Int32> | Int32), y: (JsType<Int32> | Int32));
             /**
+             * Adds the specified {@link System.Drawing.Size} to the specified {@link System.Drawing.Point}.
+             * @param pt The {@link System.Drawing.Point} to add.
+             * @param sz The {@link System.Drawing.Size} to add
+             * @returns The {@link System.Drawing.Point} that is the result of the addition operation.
+             */
+            static Add(pt: (JsType<Point> | Point), sz: (JsType<Size> | Size)): JsType<Point>;
+            /**
+             * Converts the specified {@link System.Drawing.PointF} to a {@link System.Drawing.Point} by rounding the values of the {@link System.Drawing.PointF} to the next higher integer values.
+             * @param value The {@link System.Drawing.PointF} to convert.
+             * @returns The {@link System.Drawing.Point} this method converts to.
+             */
+            static Ceiling(value: (JsType<PointF> | PointF)): JsType<Point>;
+            /**
+             * Converts the specified {@link System.Drawing.PointF} to a {@link System.Drawing.Point} object by rounding the {@link System.Drawing.Point} values to the nearest integer.
+             * @param value The {@link System.Drawing.PointF} to convert.
+             * @returns The {@link System.Drawing.Point} this method converts to.
+             */
+            static Round(value: (JsType<PointF> | PointF)): JsType<Point>;
+            /**
+             * Returns the result of subtracting specified {@link System.Drawing.Size} from the specified {@link System.Drawing.Point}.
+             * @param pt The {@link System.Drawing.Point} to be subtracted from.
+             * @param sz The {@link System.Drawing.Size} to subtract from the {@link System.Drawing.Point}.
+             * @returns The {@link System.Drawing.Point} that is the result of the subtraction operation.
+             */
+            static Subtract(pt: (JsType<Point> | Point), sz: (JsType<Size> | Size)): JsType<Point>;
+            /**
+             * Converts the specified {@link System.Drawing.PointF} to a {@link System.Drawing.Point} by truncating the values of the {@link System.Drawing.Point}.
+             * @param value The {@link System.Drawing.PointF} to convert.
+             * @returns The {@link System.Drawing.Point} this method converts to.
+             */
+            static Truncate(value: (JsType<PointF> | PointF)): JsType<Point>;
+            /**
              * Translates this {@link System.Drawing.Point} by the specified {@link System.Drawing.Point}.
              * @param p The {@link System.Drawing.Point} used offset this {@link System.Drawing.Point}.
              */
@@ -48440,6 +52793,34 @@ declare namespace System {
              * @param y The vertical position of the point.
              */
             constructor(x: (JsType<Single> | Single), y: (JsType<Single> | Single));
+            /**
+             * Translates a given {@link System.Drawing.PointF} by the specified {@link System.Drawing.Size}.
+             * @param pt The {@link System.Drawing.PointF} to translate.
+             * @param sz The {@link System.Drawing.Size} that specifies the numbers to add to the coordinates of pt.
+             * @returns The translated {@link System.Drawing.PointF}.
+             */
+            static Add(pt: (JsType<PointF> | PointF), sz: (JsType<Size> | Size)): JsType<PointF>;
+            /**
+             * Translates a given {@link System.Drawing.PointF} by a specified {@link System.Drawing.SizeF}.
+             * @param pt The {@link System.Drawing.PointF} to translate.
+             * @param sz The {@link System.Drawing.SizeF} that specifies the numbers to add to the coordinates of pt.
+             * @returns The translated {@link System.Drawing.PointF}.
+             */
+            static Add(pt: (JsType<PointF> | PointF), sz: (JsType<SizeF> | SizeF)): JsType<PointF>;
+            /**
+             * Translates a {@link System.Drawing.PointF} by the negative of a specified size.
+             * @param pt The {@link System.Drawing.PointF} to translate.
+             * @param sz The {@link System.Drawing.Size} that specifies the numbers to subtract from the coordinates of pt.
+             * @returns The translated {@link System.Drawing.PointF}.
+             */
+            static Subtract(pt: (JsType<PointF> | PointF), sz: (JsType<Size> | Size)): JsType<PointF>;
+            /**
+             * Translates a {@link System.Drawing.PointF} by the negative of a specified size.
+             * @param pt The {@link System.Drawing.PointF} to translate.
+             * @param sz The {@link System.Drawing.SizeF} that specifies the numbers to subtract from the coordinates of pt.
+             * @returns The translated {@link System.Drawing.PointF}.
+             */
+            static Subtract(pt: (JsType<PointF> | PointF), sz: (JsType<SizeF> | SizeF)): JsType<PointF>;
             /** Represents a new instance of the {@link System.Drawing.PointF} class with member data left uninitialized. */
             static readonly Empty: PointF;
             /**
@@ -48553,11 +52934,52 @@ declare namespace System {
          */
         class Size extends Object {
             /**
+             * Gets or sets the vertical component of this {@link System.Drawing.Size} structure.
+             * @returns The vertical component of this {@link System.Drawing.Size} structure, typically measured in pixels.
+             */
+            get Height(): JsType<Int32>;
+            /**
+             * Tests whether this {@link System.Drawing.Size} structure has width and height of 0.
+             * @returns This property returns true when this {@link System.Drawing.Size} structure has both a width and height of 0; otherwise, false.
+             */
+            get IsEmpty(): JsType<Boolean>;
+            /**
+             * Gets or sets the horizontal component of this {@link System.Drawing.Size} structure.
+             * @returns The horizontal component of this {@link System.Drawing.Size} structure, typically measured in pixels.
+             */
+            get Width(): JsType<Int32>;
+            /**
              * Initializes a new instance of the {@link System.Drawing.Size} structure from the specified dimensions.
              * @param width The width component of the new {@link System.Drawing.Size}.
              * @param height The height component of the new {@link System.Drawing.Size}.
              */
             constructor(width: (JsType<Int32> | Int32), height: (JsType<Int32> | Int32));
+            /**
+             * Adds the width and height of one {@link System.Drawing.Size} structure to the width and height of another {@link System.Drawing.Size} structure.
+             * @param sz1 The first {@link System.Drawing.Size} structure to add.
+             * @param sz2 The second {@link System.Drawing.Size} structure to add.
+             * @returns A {@link System.Drawing.Size} structure that is the result of the addition operation.
+             */
+            static Add(sz1: (JsType<Size> | Size), sz2: (JsType<Size> | Size)): JsType<Size>;
+            /**
+             * Converts the specified {@link System.Drawing.SizeF} structure to a {@link System.Drawing.Size} structure by rounding the values of the {@link System.Drawing.Size} structure to the next higher integer values.
+             * @param value The {@link System.Drawing.SizeF} structure to convert.
+             * @returns The {@link System.Drawing.Size} structure this method converts to.
+             */
+            static Ceiling(value: (JsType<SizeF> | SizeF)): JsType<Size>;
+            /**
+             * Converts the specified {@link System.Drawing.SizeF} structure to a {@link System.Drawing.Size} structure by rounding the values of the {@link System.Drawing.SizeF} structure to the nearest integer values.
+             * @param value The {@link System.Drawing.SizeF} structure to convert.
+             * @returns The {@link System.Drawing.Size} structure this method converts to.
+             */
+            static Round(value: (JsType<SizeF> | SizeF)): JsType<Size>;
+            /**
+             * Subtracts the width and height of one {@link System.Drawing.Size} structure from the width and height of another {@link System.Drawing.Size} structure.
+             * @param sz1 The {@link System.Drawing.Size} structure on the left side of the subtraction operator.
+             * @param sz2 The {@link System.Drawing.Size} structure on the right side of the subtraction operator.
+             * @returns A {@link System.Drawing.Size} structure that is a result of the subtraction operation.
+             */
+            static Subtract(sz1: (JsType<Size> | Size), sz2: (JsType<Size> | Size)): JsType<Size>;
             /**
              * @ignore
              * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
@@ -48565,6 +52987,69 @@ declare namespace System {
             _interfaces: {
             };
             private __type_1332070666: null;
+        }
+        
+        /**
+         * Stores an ordered pair of floating-point numbers, typically the width and height of a rectangle.
+         */
+        class SizeF extends Object {
+            /**
+             * Gets or sets the vertical component of this {@link System.Drawing.SizeF} structure.
+             * @returns The vertical component of this {@link System.Drawing.SizeF} structure, typically measured in pixels.
+             */
+            get Height(): JsType<Single>;
+            /**
+             * Gets a value that indicates whether this {@link System.Drawing.SizeF} structure has zero width and height.
+             * @returns true when this {@link System.Drawing.SizeF} structure has both a width and height of zero; otherwise, false.
+             */
+            get IsEmpty(): JsType<Boolean>;
+            /**
+             * Gets or sets the horizontal component of this {@link System.Drawing.SizeF} structure.
+             * @returns The horizontal component of this {@link System.Drawing.SizeF} structure, typically measured in pixels.
+             */
+            get Width(): JsType<Single>;
+            /**
+             * Initializes a new instance of the {@link System.Drawing.SizeF} structure from the specified {@link System.Drawing.PointF} structure.
+             * @param pt The {@link System.Drawing.PointF} structure from which to initialize this {@link System.Drawing.SizeF} structure.
+             */
+            constructor(pt: (JsType<PointF> | PointF));
+            /**
+             * Initializes a new instance of the {@link System.Drawing.SizeF} structure from the specified existing {@link System.Drawing.SizeF} structure.
+             * @param size The {@link System.Drawing.SizeF} structure from which to create the new {@link System.Drawing.SizeF} structure.
+             */
+            constructor(size: (JsType<SizeF> | SizeF));
+            /**
+             * Initializes a new instance of the {@link System.Drawing.SizeF} structure from the specified dimensions.
+             * @param width The width component of the new {@link System.Drawing.SizeF} structure.
+             * @param height The height component of the new {@link System.Drawing.SizeF} structure.
+             */
+            constructor(width: (JsType<Single> | Single), height: (JsType<Single> | Single));
+            /**
+             * Adds the width and height of one {@link System.Drawing.SizeF} structure to the width and height of another {@link System.Drawing.SizeF} structure.
+             * @param sz1 The first {@link System.Drawing.SizeF} structure to add.
+             * @param sz2 The second {@link System.Drawing.SizeF} structure to add.
+             * @returns A {@link System.Drawing.SizeF} structure that is the result of the addition operation.
+             */
+            static Add(sz1: (JsType<SizeF> | SizeF), sz2: (JsType<SizeF> | SizeF)): JsType<SizeF>;
+            /**
+             * Subtracts the width and height of one {@link System.Drawing.SizeF} structure from the width and height of another {@link System.Drawing.SizeF} structure.
+             * @param sz1 The {@link System.Drawing.SizeF} structure on the left side of the subtraction operator.
+             * @param sz2 The {@link System.Drawing.SizeF} structure on the right side of the subtraction operator.
+             * @returns A {@link System.Drawing.SizeF} structure that is a result of the subtraction operation.
+             */
+            static Subtract(sz1: (JsType<SizeF> | SizeF), sz2: (JsType<SizeF> | SizeF)): JsType<SizeF>;
+            /**
+             * Converts a {@link System.Drawing.SizeF} structure to a {@link System.Drawing.Size} structure.
+             * @returns A {@link System.Drawing.Size} structure.
+             */
+            ToSize(): JsType<Size>;
+            /**
+             * @ignore
+             * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+             */
+            _interfaces: {
+            };
+            private __type_2971225676: null;
         }
     }
     
@@ -48650,14 +53135,95 @@ declare namespace System {
     
     namespace IO {
         /**
+         * Reads primitive data types as binary values in a specific encoding.
+         */
+        class BinaryReader extends Object {
+            /**
+             * Initializes a new instance of the {@link System.IO.BinaryReader} class based on the specified stream and using UTF-8 encoding.
+             * @param input The input stream.
+             */
+            constructor(input: (JsType<Stream> | Stream));
+            /**
+             * Reads the specified number of bytes from the stream, starting from a specified point in the byte array.
+             * @param buffer The buffer to read data into.
+             * @param index The starting point in the buffer at which to begin reading into the buffer.
+             * @param count The number of bytes to read.
+             * @returns The number of bytes read into buffer. This might be less than the number of bytes requested if that many bytes are not available, or it might be zero if the end of the stream is reached.
+             */
+            Read(buffer: (TypedArray<JsType<Byte>> | TypedArray<Byte>), index: (JsType<Int32> | Int32), count: (JsType<Int32> | Int32)): JsType<Int32>;
+            /**
+             * @ignore
+             * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+             */
+            _interfaces: {
+            };
+            private __type_3632091081: null;
+        }
+        
+        /**
+         * Writes primitive types in binary to a stream and supports writing strings in a specific encoding.
+         */
+        class BinaryWriter extends Object {
+            /**
+             * Initializes a new instance of the {@link System.IO.BinaryWriter} class based on the specified stream and using UTF-8 encoding.
+             * @param output The output stream.
+             */
+            constructor(output: (JsType<Stream> | Stream));
+            /**
+             * Clears all buffers for the current writer and causes any buffered data to be written to the underlying device.
+             */
+            Flush(): void;
+            /**
+             * Sets the position within the current stream.
+             * @param offset A byte offset relative to origin.
+             * @param origin A field of {@link System.IO.SeekOrigin} indicating the reference point from which the new position is to be obtained.
+             * @returns The position with the current stream.
+             */
+            Seek(offset: (JsType<Int32> | Int32), origin: (JsType<SeekOrigin> | SeekOrigin)): JsType<Int64>;
+            /**
+             * Writes a byte array to the underlying stream.
+             * @param buffer A byte array containing the data to write.
+             */
+            Write(buffer: (TypedArray<JsType<Byte>> | TypedArray<Byte>)): void;
+            /**
+             * @ignore
+             * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+             */
+            _interfaces: {
+            };
+            private __type_24651335: null;
+        }
+        
+        /**
          * Creates a stream whose backing store is memory.
          */
         class MemoryStream extends Stream {
+            /**
+             * Gets a value indicating whether the current stream supports reading.
+             * @returns true if the stream is open.
+             */
+            get CanRead(): JsType<Boolean>;
+            /**
+             * Gets a value indicating whether the current stream supports seeking.
+             * @returns true if the stream is open.
+             */
+            get CanSeek(): JsType<Boolean>;
+            /**
+             * Gets a value indicating whether the current stream supports writing.
+             * @returns true if the stream supports writing; otherwise, false.
+             */
+            get CanWrite(): JsType<Boolean>;
             /**
              * Gets the length of the stream in bytes.
              * @returns The length of the stream in bytes.
              */
             get Length(): JsType<Int64>;
+            /**
+             * Gets or sets the current position within the stream.
+             * @returns The current position within the stream.
+             */
+            get Position(): JsType<Int64>;
+            set Position(value: JsType<Int64>);
             /**
              * Initializes a new instance of the {@link System.IO.MemoryStream} class with an expandable capacity initialized to zero.
              */
@@ -48699,10 +53265,31 @@ declare namespace System {
          */
         class Stream extends Object {
             /**
+             * When overridden in a derived class, gets a value indicating whether the current stream supports reading.
+             * @returns true if the stream supports reading; otherwise, false.
+             */
+            get CanRead(): JsType<Boolean>;
+            /**
+             * When overridden in a derived class, gets a value indicating whether the current stream supports seeking.
+             * @returns true if the stream supports seeking; otherwise, false.
+             */
+            get CanSeek(): JsType<Boolean>;
+            /**
+             * When overridden in a derived class, gets a value indicating whether the current stream supports writing.
+             * @returns true if the stream supports writing; otherwise, false.
+             */
+            get CanWrite(): JsType<Boolean>;
+            /**
              * When overridden in a derived class, gets the length in bytes of the stream.
              * @returns A long value representing the length of the stream in bytes.
              */
             get Length(): JsType<Int64>;
+            /**
+             * When overridden in a derived class, gets or sets the position within the current stream.
+             * @returns The current position within the stream.
+             */
+            get Position(): JsType<Int64>;
+            set Position(value: JsType<Int64>);
             /**
              * @ignore
              * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -48788,6 +53375,16 @@ declare namespace System {
              * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
              */
             constructor();
+            /**
+             * Reads the next character without changing the state of the reader or the character source. Returns the next available character without actually reading it from the reader.
+             * @returns An integer representing the next character to be read, or -1 if no more characters are available or the reader does not support seeking.
+             */
+            Peek(): JsType<Int32>;
+            /**
+             * Reads the next character from the text reader and advances the character position by one character.
+             * @returns The next character from the text reader, or -1 if no more characters are available. The default implementation returns -1.
+             */
+            Read(): JsType<Int32>;
             /**
              * Reads a line of characters from the text reader and returns the data as a string.
              * @returns The next line from the reader, or null if all characters have been read.
@@ -49010,7 +53607,7 @@ declare abstract class System {
 declare abstract class NetClass {
     /**
      * @ignore
-     * @deprecated For internal use only 
+     * @deprecated For internal use only
      */
     _class: never;
 
@@ -49036,7 +53633,7 @@ declare abstract class NetClass {
  * Base interface for all .NET interfaces.
  */
 interface IInterfaceBase {
-    /** 
+    /**
      * @ignore
      * @deprecated For internal use only
      */
@@ -49109,7 +53706,7 @@ declare abstract class RefParam<T> {
     };
 }
 
-/** 
+/**
  * A strongly typed C# array.
  * @typeParam T The type of the array.
  */
@@ -49145,6 +53742,7 @@ declare abstract class TypedArray<T> implements
 }
 
 type TypedArrayCreateParam<T> =
+    T extends System.Byte ? Uint8Array :
     T extends System.UInt16 ? Uint16Array :
     T extends System.UInt32 ? Uint32Array :
     T extends System.UInt64 ? BigUint64Array :
@@ -49156,10 +53754,15 @@ type TypedArrayCreateParam<T> =
     (JsType<T> | T)[];
 
 /**
- * Registers the entry point in the global scope so it can be reached by Spotfire.
- * @param f The entry point function.
+ * A synchronous function (does not return a Promise) to be used as an entry point of an action.
  */
-declare function RegisterEntryPoint(f: Function): void;
+type EntryPointSynchronousFunction<T> = T extends ((...args: unknown[]) => Promise<unknown>) ? never : T;
+
+/**
+ * Registers the entry point in the global scope so it can be reached by Spotfire.
+ * @param f The entry point function (has to be synchronous, i.e. cannot return a Promise).
+ */
+declare function RegisterEntryPoint<F>(f: EntryPointSynchronousFunction<F>): void;
 
 declare const console: {
     /**
@@ -49193,19 +53796,35 @@ declare namespace Spotfire {
      * @deprecated For internal use only. This type is used only for the TypeScript type system and has no implementation.
     */
     class Object extends System.Object {
-        private __type_spotfire_object: null
+        private __type_spotfire_object: null;
+    }
+
+    namespace Dxp.Application.Mods {
+        class ActionModResource<TResources extends string = never> extends System.Object {
+            private __type_spotfire_resource: null;
+
+            /**
+             * Loads a resource bundled with the mod via the 'files' field in the manifest.
+             * @param path The path to the resource.
+             */
+            LoadResource(path: TResources): System.IO.Stream;
+        }
     }
 }
 declare namespace System {
 
-    class Action {
-        private __type_action: null;
+    /**
+     * Encapsulates a method that has zero or one parameter and does not return a value.
+     */
+    class Action<T = undefined> {
+        private __type_action: T;
 
         /**
-         * Construct an action.
+         * Constructor for actions.
          *  @param callback The callback function.
          **/
         constructor(callback: () => void);
+        constructor(argType: TypeRef<CsType<T>>, callback: (arg: JsType<T>) => void);
     }
 
     /**
@@ -49257,7 +53876,7 @@ type TypeRefParam<T> = ClassRef<T>;
  * @typeParam TValue The type of the property value.
  */
 interface PropertyGet<TKey, TValue> {
-    /** 
+    /**
      * Gets an indexed property.
      * @param key The key of the property.
      */
@@ -49270,7 +53889,7 @@ interface PropertyGet<TKey, TValue> {
  * @typeParam TValue The type of the property value.
  */
 interface PropertySet<TKey, TValue> {
-    /** 
+    /**
      * Sets an indexed property.
      * @param key The key of the property.
      * @param value The value of the property.
@@ -49304,3 +53923,7 @@ type Page = Spotfire.Dxp.Application.Page;
 type Visualization = Spotfire.Dxp.Application.Visual;
 /** @ignore */
 type DataTable = Spotfire.Dxp.Data.DataTable;
+/** @ignore */
+type DataColumn = Spotfire.Dxp.Data.DataColumn;
+/** @ignore */
+type ActionDataViewDefinition = Spotfire.Dxp.Data.DataFunctions.ActionDataViewDefinition;

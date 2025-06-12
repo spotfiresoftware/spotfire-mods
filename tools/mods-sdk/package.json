@@ -1,6 +1,6 @@
 {
     "name": "@spotfire/mods-sdk",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
@@ -18,25 +18,23 @@
     "type": "module",
     "devDependencies": {
         "@jest/globals": "^29.5.0",
-        "@types/fs-extra": "^11.0.4",
-        "@types/node": "^20.14.1",
+        "@types/node": "^22.13.10",
         "@types/prettier": "^2.7.3",
         "jest": "^29.5.0",
         "prettier": "^2.8.8",
-        "ts-jest": "^29.1.0",
-        "typescript": "^5.4.5"
+        "ts-jest": "^29.2.6",
+        "typescript": "^5.8.2"
     },
     "dependencies": {
-        "chokidar": "^3.6.0",
+        "chokidar": "^4.0.3",
         "colors": "^1.4.0",
-        "commander": "^12.1.0",
-        "fs-extra": "^11.2.0"
+        "commander": "^13.1.0"
     },
     "peerDependencies": {
-        "@spotfire/mods-api": ">=1.0.0",
-        "esbuild": "^0.21.4"
+        "@spotfire/mods-api": "*",
+        "esbuild": "^0.21.4 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0"
     },
     "engines": {
-        "node": ">=20.0.0"
+        "node": ">=22.0.0"
     }
 }

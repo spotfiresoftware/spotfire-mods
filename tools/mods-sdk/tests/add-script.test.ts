@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import { readFile } from "fs/promises";
 import path from "path";
 import prettier from "prettier";
-import { addScript } from "../src/add-script";
+import { addScript, createScriptSkeleton } from "../src/add-script";
 import { ModType } from "../src/utils";
 import { setupProject } from "./test-utils";
 
@@ -48,5 +48,27 @@ describe("add-script.test.ts", () => {
         expect(
             prettier.check(json, { filepath: manifest, ...config })
         ).toBeTruthy();
+    });
+
+    test("has correct default parameters in verion 2.0", () => {
+        const scriptSrc = createScriptSkeleton({
+            manifest: {
+                apiVersion: "2.0",
+            },
+            scriptId: "my-script",
+            entryPoint: "myScript",
+        });
+        expect(scriptSrc).toContain("{ document, application }");
+    });
+
+    test("adds resources parameter if apiVersion is above 2.1", () => {
+        const scriptSrc = createScriptSkeleton({
+            manifest: {
+                apiVersion: "2.1",
+            },
+            scriptId: "my-script",
+            entryPoint: "myScript",
+        });
+        expect(scriptSrc).toContain("{ document, application, resources }");
     });
 });

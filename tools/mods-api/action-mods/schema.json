@@ -1,202 +1,569 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "The Spotfire Action Mod manifest schema",
-    "type": "object",
-    "required": ["apiVersion", "version", "name", "id", "scripts", "icon", "type"],
-    "additionalProperties": false,
-    "properties": {
-        "version": {
-            "type": "string",
-            "title": "Mod version.",
-            "description": "Specifies the version of this Mod.",
-            "default": "",
-            "examples": ["1.0"],
-            "pattern": "^(.*)$"
-        },
-        "apiVersion": {
-            "type": "string",
-            "title": "Mod API version.",
-            "description": "Specifies the version of the Mod JavaScript API used by the code of this Mod. Set the lowest possible version number that the Mod requires to ensure best possible backward compatibility with older Spotfire systems. Using a newer API version than specified will result in runtime errors, even if the current Spotfire system includes that API.",
-            "default": "2.0",
-            "examples": ["2.0"],
-            "pattern": "^(.*)$"
-        },
-        "name": {
-            "type": "string",
-            "title": "Name of the mod",
-            "description": "Specifies the name of this Mod. The name will be shown to the user when this Mod is handled in Spotfire.",
-            "default": "",
-            "examples": ["Spotfire mod boilerplate"],
-            "pattern": "^(.*)$"
-        },
-        "description": {
-            "type": "string",
-            "title": "Description of the mod",
-            "description": "Specifies the description of this Mod. The description will be shown to the user of the mod.",
-            "default": "",
-            "examples": ["Contains scripts related to ..."],
-            "pattern": "^(.*)$"
-        },
-        "icon": {
-            "type": "string",
-            "title": "Specifies the name of the file containing the svg icon to be used for this Mod.",
-            "default": "icon.svg"
-        },
-        "id": {
-            "type": "string",
-            "title": "Mod ID. A unique string.",
-            "default": "",
-            "examples": ["spotfire-boilerplate-id"],
-            "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
-        },
-        "type": {
-            "type": "string",
-            "title": "The type of mod.",
-            "default": "action",
-            "enum": ["action"],
-            "pattern": "^(.*)$"
-        },
-        "capabilities": {
-            "type": "array",
-            "title": "Extended capabilities.",
-            "description": "Any extended capabilities required by the scripts in the mod. The API documentation indicates if an API requires an extended capability.",
-            "items": {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "The Spotfire Action Mod manifest schema",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "version",
+    "name",
+    "id",
+    "scripts",
+    "icon",
+    "type"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "title": "Mod version.",
+      "description": "Specifies the version of this Mod.",
+      "default": "",
+      "examples": ["1.0"],
+      "pattern": "^(.*)$"
+    },
+    "apiVersion": {
+      "type": "string",
+      "title": "Mod API version.",
+      "description": "Specifies the version of the Mod JavaScript API used by the code of this Mod. Set the lowest possible version number that the Mod requires to ensure best possible backward compatibility with older Spotfire systems. Using a newer API version than specified will result in runtime errors, even if the current Spotfire system includes that API.",
+      "default": "2.1",
+      "examples": ["2.1"],
+      "pattern": "^(.*)$"
+    },
+    "name": {
+      "type": "string",
+      "title": "Name of the mod",
+      "description": "Specifies the name of this Mod. The name will be shown to the user when this Mod is handled in Spotfire.",
+      "default": "",
+      "examples": ["Spotfire mod boilerplate"],
+      "pattern": "^(.*)$"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description of the mod",
+      "description": "Specifies the description of this Mod. The description will be shown to the user of the mod.",
+      "default": "",
+      "examples": ["Contains scripts related to ..."],
+      "pattern": "^(.*)$"
+    },
+    "icon": {
+      "type": "string",
+      "title": "Specifies the name of the file containing the svg icon to be used for this Mod.",
+      "default": "icon.svg"
+    },
+    "id": {
+      "type": "string",
+      "title": "Mod ID. A unique string.",
+      "default": "",
+      "examples": ["spotfire-boilerplate-id"],
+      "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
+    },
+    "type": {
+      "type": "string",
+      "title": "The type of mod.",
+      "default": "action",
+      "enum": ["action"],
+      "pattern": "^(.*)$"
+    },
+    "capabilities": {
+      "type": "array",
+      "title": "Extended capabilities.",
+      "description": "Any extended capabilities required by the scripts in the mod. The API documentation indicates if an API requires an extended capability.",
+      "items": {
+        "type": "string",
+        "title": "The exended capability.",
+        "default": [],
+        "enum": ["LibraryRead", "LibraryWrite"],
+        "examples": ["LibraryRead"],
+        "pattern": "^(.*)$"
+      }
+    },
+    "files": {
+      "type": "array",
+      "title": "The files stored in the mod",
+      "description": "All files of a mod will be saved into Spotfire. The files array lists all files so that Spotfire can save them.",
+      "items": {
+        "type": "string",
+        "title": "The Items Schema",
+        "default": "",
+        "examples": ["index.html", "main.css", "main.js"],
+        "pattern": "^(.*)$"
+      }
+    },
+    "scripts": {
+      "type": "array",
+      "title": "The scripts stored in the mod",
+      "description": "All scripts which can be executed inside of Spotfire.",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "title": "Script",
+            "required": ["id", "name", "file", "entryPoint"],
+            "properties": {
+              "id": {
                 "type": "string",
-                "title": "The exended capability.",
-                "default": [],
-                "enum": ["LibraryRead", "LibraryWrite"],
-                "examples": ["LibraryRead"],
-                "pattern": "^(.*)$"
-            }
-        },
-        "files": {
-            "type": "array",
-            "title": "The files stored in the mod",
-            "description": "All files of a mod will be saved into Spotfire. The files array lists all files so that Spotfire can save them.",
-            "items": {
+                "title": "Id",
+                "default": "script-id",
+                "description": "The identifier of the script. This needs to be unique within the mod has must not change between versions of the mod.",
+                "examples": ["script-id", "1"],
+                "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
+              },
+              "name": {
                 "type": "string",
-                "title": "The Items Schema",
-                "default": "",
-                "examples": ["index.html", "main.css", "main.js"],
+                "title": "Name",
+                "default": "script-name",
+                "description": "Specifies the display name of the script.",
+                "examples": ["script-name"],
                 "pattern": "^(.*)$"
-            }
-        },
-        "scripts": {
-            "type": "array",
-            "title": "The scripts stored in the mod",
-            "description": "All scripts which can be executed inside of Spotfire.",
-            "items": {
-                "allOf": [{
-                    "type": "object",
-                    "title": "Script",
-                    "required": ["id", "name", "file", "entryPoint"],
-                    "properties": {
-                        "id": {
-                            "type": "string",
-                            "title": "Id",
-                            "default": "script-id",
-                            "description": "The identifier of the script. This needs to be unique within the mod has must not change between versions of the mod.",
-                            "examples": ["script-id", "1"],
-                            "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
-                        },
+              },
+              "file": {
+                "type": "string",
+                "title": "File",
+                "default": "script.js",
+                "description": "Specifies the path of the script file relative to the mod manifest.",
+                "examples": ["script.js", "build/script.js"],
+                "pattern": "^(.*)$"
+              },
+              "entryPoint": {
+                "type": "string",
+                "title": "Entry point",
+                "default": "scriptFunction",
+                "description": "Specifies the unique entry point of the script. The entry point has to be unique across all scripts included in the mod.",
+                "examples": ["scriptFunction"],
+                "pattern": "^[$A-Za-z_][0-9A-Za-z_$]*$"
+              },
+              "description": {
+                "type": "string",
+                "title": "Description",
+                "description": "A description of what this script does.",
+                "default": "Description of the script",
+                "pattern": "^(.*)$"
+              },
+              "wrapInTransaction": {
+                "type": "boolean",
+                "title": "Wrap the script in a transaction",
+                "description": "Flag indicating if the script should be wrapped in a transaction.",
+                "default": true,
+                "pattern": "^(true)(false)$"
+              },
+              "icon": {
+                "type": "string",
+                "title": "Specifies the name of the file containing the svg icon to be used for this script.",
+                "default": "script-icon.svg",
+                "pattern": "^.*\\.svg$"
+              },
+              "parameters": {
+                "type": "array",
+                "title": "Script parameters",
+                "description": "All parameters of the entry point function.",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "title": "Parameter",
+                      "required": ["name", "type"],
+                      "properties": {
                         "name": {
-                            "type": "string",
-                            "title": "Name",
-                            "default": "script-name",
-                            "description": "Specifies the display name of the script.",
-                            "examples": ["script-name"],
-                            "pattern": "^(.*)$"
+                          "type": "string",
+                          "title": "Name",
+                          "default": "myParam",
+                          "description": "The JavaScript identifier for the parameter.",
+                          "examples": ["myParam", "table", "visual"],
+                          "allOf": [
+                            {
+                              "not": {
+                                "title": "'document' is a reserved parameter name",
+                                "pattern": "^(D|d)(O|o)(C|c)(U|u)(M|m)(E|e)(N|n)(T|t)$"
+                              }
+                            },
+                            {
+                              "not": {
+                                "title": "'application' is a reserved parameter name",
+                                "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
+                              }
+                            },
+                            {
+                              "not": {
+                                "title": "'resources' is a reserved parameter name",
+                                "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
+                              }
+                            },
+                            {
+                              "title": "Parameter names can only contain letters, numbers, and underscores",
+                              "pattern": "^[0-9A-Za-z_]*$"
+                            },
+                            {
+                              "title": "Parameter names must start with a letter or an underscore",
+                              "pattern": "^[A-Za-z_]"
+                            }
+                          ]
                         },
-                        "file": {
-                            "type": "string",
-                            "title": "File",
-                            "default": "script.js",
-                            "description": "Specifies the path of the script file relative to the mod manifest.",
-                            "examples": ["script.js", "build/script.js"],
-                            "pattern": "^(.*)$"
+                        "type": {
+                          "type": "string",
+                          "title": "Type",
+                          "description": "The Spotfire type of the parameter.",
+                          "enum": [
+                            "Boolean",
+                            "Currency",
+                            "DataTable",
+                            "DataColumn",
+                            "Date",
+                            "DateTime",
+                            "Integer",
+                            "LongInteger",
+                            "Real",
+                            "SingleReal",
+                            "String",
+                            "Time",
+                            "TimeSpan",
+                            "Page",
+                            "Visualization",
+                            "DataViewDefinition"
+                          ],
+                          "examples": ["String", "DataTable", "Page"]
                         },
-                        "entryPoint": {
-                            "type": "string",
-                            "title": "Entry point",
-                            "default": "scriptFunction",
-                            "description": "Specifies the unique entry point of the script. The entry point has to be unique across all scripts included in the mod.",
-                            "examples": ["scriptFunction"],
-                            "pattern": "^[$A-Za-z_][0-9A-Za-z_$]*$"
+                        "displayName": {
+                          "type": "string",
+                          "title": "Display name",
+                          "description": "A description of this parameter.",
+                          "default": "Display name of the parameter.",
+                          "pattern": "^(.*)$"
                         },
                         "description": {
+                          "type": "string",
+                          "title": "Description",
+                          "description": "A description of this parameter.",
+                          "default": "Description of the parameter",
+                          "pattern": "^(.*)$"
+                        },
+                        "optional": {
+                          "type": "boolean",
+                          "title": "Optional parameter",
+                          "description": "If the parameter is optional.",
+                          "default": true
+                        },
+                        "enum": {
+                          "type": "array",
+                          "title": "Enumerated values",
+                          "description": "Array of allowed values for this parameter.",
+                          "minItems": 1,
+                          "items": {
                             "type": "string",
-                            "title": "Description",
-                            "description": "A description of what this script does.",
-                            "default": "Description of the script",
-                            "pattern": "^(.*)$"
+                            "minLength": 0
+                          }
                         },
-                        "wrapInTransaction": {
-                            "type": "boolean",
-                            "title": "Wrap the script in a transaction",
-                            "description": "Flag indicating if the script should be wrapped in a transaction.",
-                            "default": true,
-                            "pattern": "^(true)(false)$"
+                        "allowedDataTypes": {
+                          "type": "array",
+                          "title": "Enumerated values",
+                          "description": "Array of allowed values for this parameter.",
+                          "minItems": 1,
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "All",
+                              "AllNumeric",
+                              "Integer",
+                              "Real",
+                              "SingleReal",
+                              "Currency",
+                              "String",
+                              "Date",
+                              "Time",
+                              "DateTime",
+                              "Boolean",
+                              "Binary",
+                              "LongInteger"
+                            ]
+                          }
                         },
-                        "parameters": {
-                            "type": "array",
-                            "title": "Script parameters",
-                            "description": "All parameters of the entry point function.",
-                            "items": {
-                                "allOf": [{
-                                    "type": "object",
-                                    "title": "Parameter",
-                                    "required": ["name", "type"],
-                                    "properties": {
-                                        "name": {
-                                            "type": "string",
-                                            "title": "Name",
-                                            "default": "myParam",
-                                            "description": "The JavaScript identifier for the parameter.",
-                                            "examples": ["myParam", "table", "visual"],
-                                            "allOf": [
-                                                {
-                                                    "not": {
-                                                        "title": "Document is a reserved parameter name",
-                                                        "pattern": "^(D|d)(O|o)(C|c)(U|u)(M|m)(E|e)(N|n)(T|t)$"
-                                                    }
-                                                },
-                                                {
-                                                    "not": {
-                                                        "title": "Application is a reserved parameter name",
-                                                        "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
-                                                    }
-                                                },
-                                                {
-                                                    "title": "Parameter names can only contain letters, numbers, and underscores",
-                                                    "pattern": "^[0-9A-Za-z_]*$"
-                                                },
-                                                {
-                                                    "title": "Parameter names must start with a letter or an underscore",
-                                                    "pattern": "^[A-Za-z_]"
-                                                }
-                                            ]
-                                        },
-                                        "type": {
-                                            "type": "string",
-                                            "title": "Type",
-                                            "description": "The Spotfire type of the parameter.",
-                                            "enum": ["Boolean", "Currency", "DataTable", "Date", "DateTime", "Integer", "LongInteger", "Real", "SingleReal", "String", "Time", "TimeSpan", "Page", "Visualization"],
-                                            "examples": ["String", "DataTable", "Page"]
-                                        },
-                                        "description": {
-                                            "type": "string",
-                                            "title": "Description",
-                                            "description": "A description of this parameter.",
-                                            "default": "Description of the parameter",
-                                            "pattern": "^(.*)$"
-                                        }
-                                    }
-                                }]
-                            }
+                        "singleColumn": {
+                          "type": "boolean",
+                          "title": "Single column data view",
+                          "description": "If the data view should only allow single columns.",
+                          "default": true
+                        },
+                        "disableLimitations": {
+                          "type": "boolean",
+                          "title": "Disable limitations",
+                          "description": "If the data view should not allow limitations to be configured.",
+                          "default": true
+                        },
+                        "array": {
+                          "type": "boolean",
+                          "title": "Array parameter",
+                          "description": "If the parameter is an array.",
+                          "default": true
                         }
+                      },
+                      "allOf": [
+                        {
+                          "if": {
+                            "title": "Strings can be enums.",
+                            "properties": {
+                              "type": {
+                                "enum": ["String"]
+                              }
+                            },
+                            "required": ["type", "enum"]
+                          },
+                          "then": {
+                            "not": {
+                              "title": "Enums can't be optional.",
+                              "properties": {
+                                "optional": {
+                                  "enum": [true]
+                                }
+                              },
+                              "required": ["optional"]
+                            }
+                          },
+                          "else": {
+                            "not": {
+                              "title": "Only strings can be enums.",
+                              "required": ["enum"]
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "title": "Booleans can't be optional.",
+                            "properties": {
+                              "type": {
+                                "enum": ["Boolean"]
+                              },
+                              "optional": {
+                                "enum": [true]
+                              }
+                            },
+                            "required": ["type", "optional"]
+                          }
+                        },
+                        {
+                          "if": {
+                            "required": ["allowedDataTypes"]
+                          },
+                          "then": {
+                            "title": "Only DataViewDefinition and DataColumn can have allowedDataTypes",
+                            "properties": {
+                              "type": {
+                                "enum": ["DataViewDefinition", "DataColumn"]
+                              }
+                            },
+                            "required": ["type"]
+                          }
+                        },
+                        {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "enum": ["DataColumn"]
+                              }
+                            },
+                            "required": ["type"]
+                          },
+                          "then": {},
+                          "else": {
+                            "not": {
+                              "title": "Only data columns can be arrays.",
+                              "properties": {
+                                "array": { "enum": [true] }
+                              },
+                              "required": ["array"]
+                            }
+                          }
+                        },
+                        {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "enum": ["DataViewDefinition"]
+                              }
+                            },
+                            "required": ["type"]
+                          },
+                          "then": {
+                            "title": "Data views have to define allowed data types.",
+                            "required": ["allowedDataTypes"]
+                          },
+                          "else": {
+                            "allOf": [
+                              {
+                                "not": {
+                                  "title": "Only data views can be single column.",
+                                  "properties": {
+                                    "singleColumn": { "enum": [true] }
+                                  },
+                                  "required": ["singleColumn"]
+                                }
+                              },
+                              {
+                                "not": {
+                                  "title": "Only data views can disable limitations.",
+                                  "properties": {
+                                    "disableLimitations": { "enum": [true] }
+                                  },
+                                  "required": ["disableLimitations"]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "if": {
+                            "oneOf": [
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Integer"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["LongInteger"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["SingleReal"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Real"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Currency"]
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "then": {
+                            "properties": {
+                              "range": {
+                                "type": "object",
+                                "title": "Range parameter",
+                                "description": "The valid range of a numeric parameter.",
+                                "properties": {
+                                  "min": {
+                                    "title": "Min value",
+                                    "description": "The minimum value of the valid parameter range."
+                                  },
+                                  "max": {
+                                    "title": "Max value",
+                                    "description": "The maximum value of the valid parameter range."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "if": {
+                            "oneOf": [
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Integer"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["LongInteger"]
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "then": {
+                            "properties": {
+                              "range": {
+                                "properties": {
+                                  "min": {
+                                    "type": "integer"
+                                  },
+                                  "max": {
+                                    "type": "integer"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "if": {
+                            "oneOf": [
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["SingleReal"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Real"]
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "type": {
+                                    "enum": ["Currency"]
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "then": {
+                            "properties": {
+                              "range": {
+                                "properties": {
+                                  "min": {
+                                    "type": "number"
+                                  },
+                                  "max": {
+                                    "type": "number"
+                                  },
+                                  "minExcluded": {
+                                    "type": "boolean",
+                                    "title": "Exclude the min value",
+                                    "description": "If the min value is excluded from the range.",
+                                    "default": false
+                                  },
+                                  "maxExcluded": {
+                                    "type": "boolean",
+                                    "title": "Exclude the max value",
+                                    "description": "If the max value is excluded from the range.",
+                                    "default": false
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
                     }
-                }]
+                  ]
+                }
+              }
             }
-        }
+          }
+        ]
+      }
     }
+  }
 }

@@ -1,29 +1,42 @@
 import { existsSync } from "fs";
 import path from "path";
 import {
+    deepCopy,
+    features,
+    formatVersion,
+    Manifest,
+    ManifestParameter,
+    mkStdout,
     parameterTypes,
     parseSpotfireType,
+    QuietOtions,
+    readApiVersion,
     readManifest,
     writeManifest,
 } from "./utils.js";
 
 interface AddParameterOptions {
     manifestPath: string;
-    quiet: boolean;
+    optional: boolean;
 }
 
-export async function addParameter(
-    scriptId: string,
-    name: string,
-    type: string,
-    { manifestPath, quiet }: AddParameterOptions
-) {
-    const absManifestPath = path.resolve(manifestPath);
+export function addParameterToManifest({
+    manifest: _manifest,
+    scriptId,
+    name,
+    type,
+    optional,
+    ...quiet
+}: {
+    manifest: Manifest;
+    scriptId: string;
+    name: string;
+    type: string;
+    optional: boolean;
+} & QuietOtions) {
+    const stdout = mkStdout(quiet);
 
-    if (!existsSync(absManifestPath)) {
-        throw new Error(`Cannot find ${absManifestPath}.`);
-    }
-
+    const manifest = deepCopy(_manifest);
     const spotfireType = parseSpotfireType(type);
     if (!spotfireType) {
         throw new Error(
@@ -33,7 +46,43 @@ export async function addParameter(
         );
     }
 
-    const manifest = await readManifest(absManifestPath);
+    if (spotfireType === "DataColumn" || optional) {
+        const apiVersion = readApiVersion(manifest);
+        if (apiVersion.status !== "success") {
+            stdout(
+                `Failed to read apiVersion, cannot verify if parameter type 'DataColumn' is allowed.`
+            );
+            stdout(`Error: ${apiVersion.error}`);
+        } else {
+            const errs: string[] = [];
+            if (
+                spotfireType === "DataColumn" &&
+                !apiVersion.result.supportsFeature("DataColumnParameter")
+            ) {
+                errs.push(
+                    `Parameter with type 'DataColumn' requires apiVersion at least ${formatVersion(
+                        features.DataColumnParameter
+                    )}.`
+                );
+            }
+
+            if (
+                optional &&
+                !apiVersion.result.supportsFeature("OptionalParameter")
+            ) {
+                errs.push(
+                    `Optional parameters require apiVersion at least ${formatVersion(
+                        features.OptionalParameter
+                    )}.`
+                );
+            }
+
+            if (errs.length > 0) {
+                throw new Error(errs.join("\n"));
+            }
+        }
+    }
+
     const script = manifest.scripts?.find((s) => s.id === scriptId);
     if (!script) {
         const foundScripts = (manifest.scripts ?? [])
@@ -48,7 +97,36 @@ export async function addParameter(
         script.parameters = [];
     }
 
-    script.parameters.push({ name: name, type: spotfireType });
+    const parameter: ManifestParameter = { name: name, type: spotfireType };
+    if (optional) {
+        parameter.optional = true;
+    }
 
-    await writeManifest(absManifestPath, manifest, quiet);
+    script.parameters.push(parameter);
+
+    return manifest;
+}
+
+export async function addParameter(
+    scriptId: string,
+    name: string,
+    type: string,
+    { manifestPath, ...quiet }: AddParameterOptions & QuietOtions
+) {
+    const absManifestPath = path.resolve(manifestPath);
+
+    if (!existsSync(absManifestPath)) {
+        throw new Error(`Cannot find ${absManifestPath}.`);
+    }
+
+    const manifest = await readManifest(absManifestPath);
+    const manifestWithParameter = addParameterToManifest({
+        manifest,
+        scriptId,
+        name,
+        type,
+        ...quiet,
+    });
+
+    await writeManifest(absManifestPath, manifestWithParameter, quiet.quiet);
 }

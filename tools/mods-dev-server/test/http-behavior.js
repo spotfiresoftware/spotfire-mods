@@ -6,7 +6,7 @@ const fs = require("fs");
 const mainCss = fs.readFileSync(path.join(__dirname, "test-files", "main.css"), { encoding: "utf8" });
 const indexHtml = fs.readFileSync(path.join(__dirname, "test-files", "index.html"), { encoding: "utf8" });
 
-const devServer = require("..").start({
+const devServer = require("../server").start({
     root: path.join(__dirname, "test-files"),
     open: false
 });
@@ -55,7 +55,7 @@ describe("basic get requests", function () {
     it("should respond with manifest with json type", function (done) {
         test(devServer)
             .get("/mod-manifest.json")
-            .expect("Content-Type", "application/json; charset=UTF-8")
+            .expect("Content-Type", "application/json; charset=utf-8")
             .expect(/1.0/i)
             .expect(200, done);
     });
@@ -63,7 +63,7 @@ describe("basic get requests", function () {
     it("should respond with css with CSS type", function (done) {
         test(devServer)
             .get("/main.css")
-            .expect("Content-Type", "text/css; charset=UTF-8")
+            .expect("Content-Type", "text/css; charset=utf-8")
             .expect(/margin: 0/i)
             .expect(200, done);
     });
@@ -166,7 +166,7 @@ describe("CSP headers", function () {
 
 describe("multiple instances", function () {
     it("should add external resources to CSP header", function (done) {
-        const devServer2 = require("..").start({
+        const devServer2 = require("../server").start({
             root: path.join(__dirname, "test-files"),
             open: false
         });
