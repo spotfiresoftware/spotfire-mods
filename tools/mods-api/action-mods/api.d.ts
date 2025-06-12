@@ -1,5 +1,5 @@
 /**
- * Copyright © 2024 Cloud Software Group, Inc.
+ * Copyright © 2006 - 2025 Cloud Software Group, Inc.
  * This file is subject to the license terms contained
  * in the license file that is distributed with this file.
  * 
@@ -6514,6 +6514,14 @@ declare namespace Spotfire.Dxp {
                  */
                 get HasTooltips(): JsType<System.Boolean>;
                 /**
+                 * Gets the static mod identifier, as specified in the mod manifest, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ModIdentifier(): (ModIdentifier | null);
+                /**
                  * Gets the properties of this Mod Visualization, as defined in the mod-manifest.json.
                  * 
                  * @since 2.1
@@ -7923,6 +7931,7 @@ declare namespace Spotfire.Dxp {
                 set FontMetadata(value: Framework.Styles.FontMetadata);
                 /**
                  * Gets the measures in the table.
+                 * @deprecated Use BoxPlot.Statistics instead.
                  * 
                  * @since 2.0
                  * 
@@ -7940,6 +7949,7 @@ declare namespace Spotfire.Dxp {
                 set ShowGridlines(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets the measure to sort by.
+                 * @deprecated Use BoxPlot.SortStatistic instead
                  * 
                  * @since 2.0
                  * 
@@ -21136,6 +21146,7 @@ declare namespace Spotfire.Dxp {
             namespace BoxPlotStatisticsTable {
                 /**
                  * MeasureCollection class.
+                 * @deprecated Use the BoxPlotStatisticCollection returned by the property BoxPlot.Statistics instead.
                  * 
                  * @since 2.0
                  * 
@@ -38196,7 +38207,24 @@ declare namespace Spotfire.Dxp {
                  */
                 constructor();
                 /**
-                 * TODO: Describe CRS Transformation for Coordinates
+                 * A built-in data function for transforming coordinates between different Coordinate Reference Systems (CRS).
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>first_coordinate</term><description>A column containing the first coordinate value to transform. If the CRS is projected, this will be
+                 *  the X (easting) coordinate. If the CRS is geographic, this will be the latitude of the point.</description></item><item><term>second_coordinate</term><description>A column containing the second coordinate value to transform. If the CRS is projected, this will be
+                 *  the Y (northing) coordinate. If the CRS is geographic, this will be the longitude of the point.</description></item><item><term>source_crs</term><description>The coordinate reference system (CRS) of the input coordinates. A string or integer value containing
+                 *  a valid EPSG code (a value between 2000 and 32766), or a known projection for the coordinate reference system of
+                 *  the input data.</description></item><item><term>target_crs</term><description>The target coordinate reference system (CRS), that is, the CRS you want to project the coordinate
+                 *  columns to. A string or integer value containing a valid EPSG code (a value between 2000 and 32766), or a known
+                 *  projection for the coordinate reference system of the resulting data.</description></item></list>
+                 * 
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>projected_coords_df</term><description>A data table containing the projected coordinates.</description></list>
                  * 
                  * @since 2.1
                  * 
@@ -38204,7 +38232,22 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly CrsTransformationForCoordinates: BuiltInDataFunction;
                 /**
-                 * TODO: Describe CRS Transformation for Geometries
+                 * A built-in data function for transforming geometries between different Coordinate Reference Systems (CRS).
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>geo_data</term><description>A binary column containing the input geometry in a Well Known Binary (WKB) format.</description></item><item><term>source_crs</term><description>The coordinate reference system (CRS) of the input geometry column. A string or integer value
+                 *  containing a valid EPSG code (a value between 2000 and 32766), or a known projection for the coordinate
+                 *  reference system of the input data.</description></item><item><term>target_crs</term><description>The target coordinate reference system (CRS), that is, the CRS you want to project the geometry
+                 *  column to. A string or integer value containing a valid EPSG code (a value between 2000 and 32766), or a known
+                 *  projection for the coordinate reference system of the resulting data.</description></item></list>
+                 * 
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>projected_geoms_df</term><description>A data table containing the projected geometry along with its geometric bounds and centroid.</description></list>
                  * 
                  * @since 2.1
                  * 
@@ -38212,7 +38255,41 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly CrsTransformationForGeometries: BuiltInDataFunction;
                 /**
-                 * TODO PMods: Describe Dynamic Time Warping
+                 * A built-in data function for applying dynamic time warping (DTW) on a set of sequences.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>sequence_data</term><description>A data table containing numeric data to be used to measure similarities between sequences.
+                 *  For a given sequence, the order of the rows in the data table must correspond to the order of the data
+                 *  points in the sequence. </description></item><item><term>sequence_id</term><description>An ID column identifying the sequence that each row in sequence_data belongs to.
+                 *  The column must contain at least two distinct values (one reference value and at least one other value to
+                 *  compare against the reference).</description></item><item><term>reference_id</term><description>The ID of the reference sequence to compare all other sequences against. The reference ID
+                 *  must be a value included in sequence_id and is case-sensitive.</description></item><item><term>extrapolation</term><description>(Optional) A boolean indicating whether to extrapolate (in addition to interpolating) missing
+                 *  values. Used when there are leading or trailing missing values. If set to False, and leading or
+                 *  trailing missing data are found, the rows will be removed. Default is False.</description></item><item><term>normalization</term><description>(Optional) An optional string parameter indicating a method to use for normalization.
+                 *  Default is None.
+                 *  <para>
+                 *  Allowed values (case-insensitive):
+                 *  <list type="bullet"><item>mean</item><item>z-score</item><item>min-max</item><item>standard-deviation</item></list></description></item><item><term>detrending</term><description>(Optional) A boolean indicating whether detrending (adjusting data to get rid of long-term
+                 *  trends) should be applied. If set to True, linear detrending is applied as a preprocessing step. Default is
+                 *  False.</description></item><item><term>smoothing</term><description>(Optional) An integer indicating the size window to use for smoothing. If a valid value is provided,
+                 *  a moving average smoothing is applied as a preprocessing step. Valid values are integers greater than one and less
+                 *  than or equal to the number of rows for the smallest sequence. Default is None.</description></item><item><term>result_type</term><description>(Optional) A string indicating the level of detail returned in the results. Default is minimal.
+                 * 
+                 * 
+                 *  Allowed values (case-insensitive):
+                 *  <list type="bullet"><item>minimal</item><item>detailed</item><item>complete</item></list></description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><item><term>warp_distance</term><description>A data table containing the warping distance for each feature and comparison sequence pair. This is the
+                 *  only output returned when result_type is minimal.</description></item><item><term>warp_metrics</term><description>A data table containing the warping distance, path length and additional metrics for each feature and
+                 *  comparison sequence pair. This output is returned when result_type is detailed or complete.
+                 *  </description></item><item><term>warp_paths</term><description>A data table containing the dynamic time warping paths. For each comparison sequence and feature, the
+                 *  (Reference, Comparison) pair indicates the mapping of the corresponding sequence to the warped sequence. This output
+                 *  is returned when result_type is detailed or complete.</description></item><item><term>processed_sequence_data</term><description>A data table containing the intermediate sequence data after any specified preprocessing was applied to
+                 *  the first input data. This is the actual data that was used as the input to the dynamic time warping calculation.
+                 *  This output is returned when result_type is complete.</description></item></list>
                  * 
                  * @since 2.1
                  * 
@@ -38220,7 +38297,30 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly DynamicTimeWarping: BuiltInDataFunction;
                 /**
-                 * TODO PMods: Describe Geographic Area of Polygons
+                 * A built-in data function for calculating the area of polygons.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>geo_data</term><description>A binary column containing the input geometry in a Well Known Binary (WKB) format.</description></item><item><term>unit</term><description>A string containing the value of the unit for the area calculation. The area will be expressed
+                 *  in unit squared.
+                 *  <para>
+                 *  Allowed units (case-insensitive and including different spelling and abbreviations):
+                 *  <list type="bullet"><item>m</item><item>meter</item><item>km</item><item>kilometer</item><item>mi</item><item>miles</item><item>ft</item><item>feet</item></list></description></item><item><term>crs</term><description>A string or integer value containing a valid EPSG code (a value between 2000 and 32766), or a
+                 *  known projection for the coordinate reference system of the input data.
+                 * 
+                 * 
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list></description></item><item><term>method</term><description>A string value containing the method to use for the area calculation.
+                 * 
+                 * 
+                 *  Allowed methods (case-insensitive):
+                 *  <list type="bullet"><item>geodesic</item><item>planar</item></list></description></item><item><term>planar_projection_crs</term><description>(Optional) A string or integer value parameter for specifying the projection CRS to use together
+                 *  with planar area calculation. Default is 6933.</description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>area</term><description>A numeric column which contains the calculated surface area for each row of the geometry input,
+                 *  expressed using the specified unit.</description></list>
                  * 
                  * @since 2.1
                  * 
@@ -38228,7 +38328,55 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly GeographicAreaOfPolygons: BuiltInDataFunction;
                 /**
-                 * TODO PMods: Describe Geographic Distance Matrix
+                 * A built-in data function for calculating a (spatial) distance matrix within a set of point coordinates,
+                 *  or between two sets of point coordinates.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>crs</term><description>A string or integer value containing a valid EPSG code (a value between 2000 and 32766),
+                 *  or a known projection for the coordinate reference system of the input data.
+                 *  <para>
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list></description></item><item><term>distance_metric</term><description>The method to use for calculating distances.
+                 * 
+                 * 
+                 *  For the CRS WGS84 (standard latitude/longitude) the metric can have the following values:
+                 *  <list type="bullet"><item>haversine (the great circle distance)</item><item>haversine_r (modified with variable radius)</item><item>geodesic (most accurate but slowest)</item></list>
+                 * 
+                 *  For a projected CRS (for example, web mercator) the only available metric is cartesian.
+                 *  </description></item><item><term>point1_first_coordinate</term><description>A numeric column representing the first coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the X (easting) coordinate. If the CRS is geographic, this will be
+                 *  the latitude of the point.</description></item><item><term>point1_second_coordinate</term><description>A numeric column representing the second coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the Y (northing) coordinate. If the CRS is geographic, this will be
+                 *  the longitude of the point.</description></item><item><term>point1_id</term><description>An integer or string column identifying each point in the first set of coordinates.</description></item><item><term>distance_unit</term><description>The unit to specify the calculated distances and buffer.
+                 * 
+                 * 
+                 *  Allowed units (case-insensitive and including different spelling and abbreviations):
+                 *  <list type="bullet"><item>meters</item><item>km</item><item>miles</item></list></description></item><item><term>distance_buffer</term><description>(Optional) A number indicating the maximum distance to return. It will be expressed in the selected
+                 *  distance unit. Default is None. If less than or equal to zero, it will be changed to None
+                 *  (that is, all distances will be returned).</description></item><item><term>point2_first_coordinate</term><description>(Optional) A numeric column representing the first coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the X (easting) coordinate. If the CRS is geographic, this will be
+                 *  the latitude of the point. Default is None. Only specify this parameter if distances should be calculated
+                 *  between two distinct data sets.</description></item><item><term>point2_second_coordinate</term><description>(Optional) A numeric column representing the second coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the Y (northing) coordinate. If the CRS is geographic, this will be
+                 *  the longitude of the point. Default is None. Only specify this parameter if distances should be calculated
+                 *  between two distinct data sets.</description></item><item><term>point2_id</term><description>(Optional) An integer or string column identifying each point in the first set of coordinates. Default
+                 *  is None. Only specify this parameter if distances should be calculated between two distinct data sets.
+                 *  </description></item><item><term>output_format</term><description>(Optional) The format of the output distance matrix. Can be either tall-minimal, tall
+                 *  (default), or wide. If values for point 2 are provided, tall and tall-minimal are equivalent.
+                 * 
+                 * 
+                 *  Formats:
+                 *  <list type="table"><item><term>tall-minimal</term><description>A tall table with three columns: From, To, and Distance. This option does not
+                 *  include any redundant pairs (for example, a row representing A to B is included but not B to A). It does not include
+                 *  the distance of a point to itself (always zero).</description></item><item><term>tall</term><description>A tall table with three columns: From, To, and Distance. It includes all possible
+                 *  pairs, including redundant pairs (so that you can find each value in either the To or From column).</description></item><item><term>wide</term><description>A wide table with the first column representing the From points, and the remaining columns
+                 *  representing the To points. The table includes all possible pairs, including redundant pairs and the distance
+                 *  of a point to itself.</description></item></list></description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><item><term>distance_matrix</term><description>A data table representing the calculated distance matrix.</description></item></list>
                  * 
                  * @since 2.1
                  * 
@@ -38236,7 +38384,45 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly GeographicDistanceMatrix: BuiltInDataFunction;
                 /**
-                 * TODO PMods: Describe Geographic Nearest Neighbors
+                 * A built-in data function for calculating nearest neighbors for a given set of points either within
+                 *  the set or with respect to a second set of points.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>crs</term><description>A string or integer value containing a valid EPSG code (a value between 2000 and 32766),
+                 *  or a known projection for the coordinate reference system of the input data.
+                 *  <para>
+                 *  Examples of known projections (case-insensitive):
+                 *  <list type="bullet"><item>robinson</item><item>winkel tripel</item><item>web mercator</item><item>gps</item><item>wgs84</item></list></description></item><item><term>distance_metric</term><description>The method to use for calculating distances.
+                 * 
+                 * 
+                 *  For the CRS WGS84 (standard latitude/longitude) the metric can have the following values:
+                 *  <list type="bullet"><item>haversine (the great circle distance)</item><item>haversine_r (modified with variable radius)</item><item>geodesic (most accurate but slowest)</item></list>
+                 * 
+                 *  For a projected CRS (for example, web mercator) the only available metric is cartesian.
+                 *  </description></item><item><term>point1_first_coordinate</term><description>A numeric column representing the first coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the X (easting) coordinate. If the CRS is geographic, this will be
+                 *  the latitude of the point.</description></item><item><term>point1_second_coordinate</term><description>A numeric column representing the second coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the Y (northing) coordinate. If the CRS is geographic, this will be
+                 *  the longitude of the point.</description></item><item><term>point1_id</term><description>An integer or string column identifying each point in the first set of coordinates.</description></item><item><term>distance_unit</term><description>The unit to specify the calculated distances and buffer.
+                 * 
+                 * 
+                 *  Allowed units (case-insensitive and including different spelling and abbreviations):
+                 *  <list type="bullet"><item>meters</item><item>km</item><item>miles</item></list></description></item><item><term>distance_buffer</term><description>(Optional) A number indicating the maximum distance to return. It will be expressed in the selected
+                 *  distance unit. Default is None. If less than or equal to zero, it will be changed to None
+                 *  (that is, all distances will be returned).</description></item><item><term>number_of_neighbors</term><description>(Optional) The number of nearest neighbors to return for each point. Default is 1.</description></item><item><term>point2_first_coordinate</term><description>(Optional) A numeric column representing the first coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the X (easting) coordinate. If the CRS is geographic, this will be
+                 *  the latitude of the point. Default is None. Only specify this parameter if distances should be calculated
+                 *  between two distinct data sets.</description></item><item><term>point2_second_coordinate</term><description>(Optional) A numeric column representing the second coordinate to express the point's location.
+                 *  If the CRS is projected, this will be the Y (northing) coordinate. If the CRS is geographic, this will be
+                 *  the longitude of the point. Default is None. Only specify this parameter if distances should be<br />calculated
+                 *  between two distinct data sets.</description></item><item><term>point2_id</term><description>(Optional) An integer or string column identifying each point in the first set of coordinates. Default
+                 *  is None. Only specify this parameter if distances should be calculated between two distinct data sets.
+                 *  </description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><item><term>nearest_neighbors</term><description>A data table representing the nearest neighbor information.</description></item></list>
                  * 
                  * @since 2.1
                  * 
@@ -38244,8 +38430,17 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly GeographicNearestNeighbors: BuiltInDataFunction;
                 /**
-                 * TODO PMods: Represents a  ... DataFunction that does x and y.
-                 * It expects x and y as inputs and x and y as outputs....
+                 * A built-in data function for summary of missing data. <br /><b>Note:</b> Empty string values are not included in
+                 *  the count, only empty (null) values. You can use transformations on your data to replace values before running
+                 *  this data function.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>data</term><description>The data table or columns containing missing values.</description></item></list>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><item><term>data_summary</term><description>A table summarizing missing data information across the entire input data table.</description></item><item><term>row_summary</term><description>A table summarizing missing data information across rows.</description></item><item><term>column_summary</term><description>A table summarizing missing data information across columns.</description></item></list>
                  * 
                  * @since 2.1
                  * 
@@ -38253,8 +38448,34 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly MissingDataSummary: BuiltInDataFunction;
                 /**
-                 * TODO PMods: Represents a  ... DataFunction that does x and y.
-                 * It expects x and y as inputs and x and y as outputs....
+                 * A built-in data function for resampling time series data.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>ts</term><description>A data table or columns where at least one column contains a Time, Date, DateTime, or an index,
+                 *  and each of the other columns contains the values of different variables recorded at the corresponding times.
+                 *  The values can be numeric or non-numeric.</description></item><item><term>index_col</term><description>The column containing the timestamps or a numeric index. The index can be a time-related number,
+                 *  for example, elapsed seconds. The index must be unique.</description></item><item><term>rule</term><description>(Optional) The resampling frequency. A frequency string, optionally together with a quantifier.
+                 *  Only applicable if the index column is a Date/Time/DateTime column. You must provide either this parameter or
+                 *  a Number of samples. For example, 12hh (12 hours), 3dd (3 days), or wk (one week).
+                 *  <para>
+                 *  Allowed options are (case-insensitive):
+                 *  <list type="bullet"><item>yy or year</item><item>qq or quarter</item><item>mm or month</item><item>dd or day</item><item>wk or week</item><item>hh or hour</item><item>mi or minute</item><item>ss or second</item><item>ms or millisecond</item></list></description></item><item><term>n_samples</term><description>(Optional) The number of samples in the resulting data table. Must be an integer between 1 and 500000.
+                 *  You must provide either this parameter or a rule. If this input is provided, rule is ignored.
+                 *  </description></item><item><term>fill_method</term><description>(Optional) The method to use to either fill missing values (upsampling) or to aggregate values
+                 *  (downsampling). Default is previous.
+                 * 
+                 * 
+                 *  Allowed options (case-insensitive):
+                 *  <list type="bullet"><item>nearest</item><item>linear</item><item>previous</item><item>next</item><item>mean</item><item>median</item><item>sum</item></list>
+                 *  Note that mean, median, and sum are only available for downsampling. Non-numeric columns will
+                 *  use the nearest fill method instead of linear, mean, median, or sum.
+                 *  </description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>ts_resampled</term><description>The resampled copy of the input data with the desired number of samples or the applied resampling rule.
+                 *  </description></list>
                  * 
                  * @since 2.1
                  * 
@@ -38262,8 +38483,39 @@ declare namespace Spotfire.Dxp {
                  */
                 static readonly TimeSeriesResampling: BuiltInDataFunction;
                 /**
-                 * TODO PMods: Represents a  ... DataFunction that does x and y.
-                 * It expects x and y as inputs and x and y as outputs....
+                 * A built-in data function for smoothing time series data.
+                 * 
+                 * 
+                 * 
+                 *  The function takes the following inputs:
+                 *  <list type="number"><item><term>measurement_col</term><description>The measurement column for which to calculate the smoothing. Any numerical data type can be used.
+                 *  </description></item><item><term>smoother</term><description>(Optional) The smoothing method to apply. Can be either Supersmoother (default), LOESS,
+                 *  or Exponential. The input is case insensitive.
+                 *  <para><list type="table"><item><term>Supersmoother</term><description>
+                 *  Friedman's supersmoother is an extension of the LOESS method, designed to produce a smooth curve that captures
+                 *  both the underlying trend and the fluctuations in the data.</description></item><item><term>LOESS</term><description>
+                 *  Locally Estimated Scatterplot Smoothing (LOESS) is often used when the time series has non-linear patterns or is
+                 *  sensitive to outliers. It can capture these patterns and reduce the impact of outliers on the smoothed line.
+                 *  </description></item><item><term>Exponential</term><description>
+                 *  Simple exponential smoothing is used for smoothing time series data without a clear trend or seasonality,
+                 *  particularly for data with much noise or random fluctuations.</description></item></list></description></item><item><term>smoothing_level</term><description>(Optional) The smoothing level for the selected smoothing method. The smoothing level has different
+                 *  meanings for the various methods.
+                 * 
+                 * <list type="table"><item><term>Supersmoother</term><description>
+                 *  The alpha value. It must be a real value between 0 and 1. A value of 0 corresponds to no smoothing and a value of
+                 *  1 corresponds to the maximum smoothing. If nothing is specified, the alpha is determined automatically.
+                 *  </description></item><item><term>LOESS</term><description>
+                 *  The span value. Either the proportion of data points to use for each local fit (a real number between 0-1), or the
+                 *  explicit number of data points to use (an integer larger than 1). Default is 0.25.
+                 *  </description></item><item><term>Exponential</term><description>
+                 *  The smoothing level. A high value gives more weight to the most recent observation and produces a smoother curve.
+                 *  A low value gives less weight to the most recent observation and produces a curve with more fluctuations.
+                 *  The value should be a real number between 0 and 1. Default is 0.25.</description></item></list></description></item><item><term>index_col</term><description>(Optional) An index column for the input data, for use with the Supersmoother or LOESS
+                 *  smoothing methods. Supports date/time and numeric data types. The index must be unique. If no column is selected,
+                 *  an evenly spaced integer index is created. Not applicable for Exponential.</description></item></list></para>
+                 * 
+                 *  Outputs:
+                 *  <list type="table"><term>smoothed_col</term><description>A column containing the smoothed version of the selected input column.</description></list>
                  * 
                  * @since 2.1
                  * 
@@ -43263,8 +43515,8 @@ declare namespace Spotfire.Dxp {
                  * 
                  * @group Default capability
                  */
-                get CultureName(): JsType<System.String>;
-                set CultureName(value: JsType<System.String>);
+                get CultureName(): (JsType<System.String> | null);
+                set CultureName(value: (JsType<System.String> | null));
                 /**
                  * Gets or sets the string used to indicate empty values.
                  * ({@link Spotfire.Dxp.Data.Formatters.DataFormatterBase.FormatInvalid|FormatInvalid(error)}).
@@ -43273,8 +43525,8 @@ declare namespace Spotfire.Dxp {
                  * 
                  * @group Default capability
                  */
-                get EmptyString(): JsType<System.String>;
-                set EmptyString(value: JsType<System.String>);
+                get EmptyString(): (JsType<System.String> | null);
+                set EmptyString(value: (JsType<System.String> | null));
                 /**
                  * Gets or sets a value indicating whether
                  * the format of the string representation must match the
@@ -53502,10 +53754,15 @@ type TypedArrayCreateParam<T> =
     (JsType<T> | T)[];
 
 /**
- * Registers the entry point in the global scope so it can be reached by Spotfire.
- * @param f The entry point function.
+ * A synchronous function (does not return a Promise) to be used as an entry point of an action.
  */
-declare function RegisterEntryPoint(f: Function): void;
+type EntryPointSynchronousFunction<T> = T extends ((...args: unknown[]) => Promise<unknown>) ? never : T;
+
+/**
+ * Registers the entry point in the global scope so it can be reached by Spotfire.
+ * @param f The entry point function (has to be synchronous, i.e. cannot return a Promise).
+ */
+declare function RegisterEntryPoint<F>(f: EntryPointSynchronousFunction<F>): void;
 
 declare const console: {
     /**
