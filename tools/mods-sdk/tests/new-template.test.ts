@@ -58,7 +58,7 @@ describe("new-template", () => {
             );
             expect(
                 packageJson["devDependencies"]["@spotfire/mods-api"]
-            ).toEqual("~2.1.0-preview.5");
+            ).toEqual("~2.1.0");
         });
 
         test("visualization mod", async () => {
@@ -76,7 +76,7 @@ describe("new-template", () => {
             );
             expect(
                 packageJson["devDependencies"]["@spotfire/mods-api"]
-            ).toEqual("~2.1.0-preview.5");
+            ).toEqual("~2.1.0");
         });
     });
 });

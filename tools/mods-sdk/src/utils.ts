@@ -140,14 +140,7 @@ export class ApiVersion {
     }
 
     toPackage() {
-        let patch = "0";
-
-        // TODO - Remove before release.
-        if (this.major === 2 && this.minor === 1) {
-            patch = "0-preview.5";
-        }
-
-        return `${this.major}.${this.minor}.${patch}`;
+        return `${this.major}.${this.minor}.0`;
     }
 }
 
