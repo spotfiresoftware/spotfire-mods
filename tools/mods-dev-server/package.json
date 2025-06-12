@@ -53,5 +53,8 @@
         "mocha": "^11.1.0",
         "puppeteer": "^24.6.0",
         "supertest": "^6.1.6"
+    },
+    "engines": {
+        "node": ">=22.0.0"
     }
 }
