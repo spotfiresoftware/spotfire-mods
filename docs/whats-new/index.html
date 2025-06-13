@@ -691,7 +691,7 @@ To upgrade your mod, follow these steps:</p>
 <h2 id="action-mods">Action mods</h2>
 <p>Version 2.1 of the API contains a lot of improvements and new features for action mods.</p>
 <h3 id="new-parameter-types">New parameter types</h3>
-<p>This API introduces two new types with two variants each: <a href="/spotfire-mods/docs/whats-new/#datacolumn">DataColumn</a> (array: true/false) and <a href="/spotfire-mods/docs/whats-new/#dataview">DataView</a> (singleColumn: true/false).
+<p>This API introduces two new types with two variants each: <a href="/spotfire-mods/docs/whats-new/#datacolumn">DataColumn</a> (array: true/false) and <a href="/spotfire-mods/docs/whats-new/#dataviewdefinition">DataViewDefinition</a> (singleColumn: true/false).
 Additionally, it is now possible to define parameters as optional (see <a href="/spotfire-mods/docs/whats-new/#optional">Optional</a>), to limit numerics to a range (see <a href="/spotfire-mods/docs/whats-new/#numeric-ranges">Numeric ranges</a>), and to specify a set of allowed values for string parameters (see <a href="/spotfire-mods/docs/whats-new/#enum">Enum</a>).</p>
 <h4 id="datacolumn">DataColumn</h4>
 <p>Scripts can now define <a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#datacolumn">DataColumn</a> as a possible parameter type.
@@ -751,7 +751,7 @@ This API can be used in combination with a mod resource, see <a href="/spotfire-
 <li>Looping through each descendant of a document node with a specified type via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.DocumentModel.DocumentNode.html#ForEachNodeInSubTree">DocumentNode.ForEachNodeInSubTree</a>.
 This is a very powerful API for making large updates to the document, see for instance the <a href="/spotfire-mods/docs/action-mods/snippets/#modify-all-expressions-in-every-visualization">&ldquo;Modify all expressions in every visualization&rdquo;</a> snippet.</li>
 <li>Add data functions to the document and configure them via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionCollection.html">DataFunctionCollection</a>, <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionInputCollection.html">DataFunctionInputCollection</a>, and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionOutputBuilder.html">DataFunctionOutputBuilder</a>.
-Note that the new <a href="/spotfire-mods/docs/whats-new/#dataview">DataView</a> type can be passed to a data function via the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionInputCollection.html#setinput">DataFunctionInputCollection.SetInput</a> API.</li>
+Note that the new <a href="/spotfire-mods/docs/whats-new/#dataviewdefinition">DataViewDefinition</a> type can be passed to a data function via the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionInputCollection.html#setinput">DataFunctionInputCollection.SetInput</a> API.</li>
 <li>Creating and configuring visualizations from the visualization mods maintained by the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ModManager.html">ModManager</a>.
 This includes loading visualizations from the library. See snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-latest-mod-visualization">&ldquo;Add Latest Mod Visualization&rdquo;</a>.</li>
 </ul>
@@ -811,7 +811,7 @@ property of an <a href="/spotfire-mods/visualization-mods-schema/#/definitions/a
 <p>When the default heuristics are used for a continuous axis, the <code>allowNonAggregatingMeasures</code> can be set to <code>&quot;prefer&quot;</code> to control the heuristics to attempt to select
 an expression that is not aggregating.</p>
 <h3 id="more-styling-information">More styling information</h3>
-<p>The <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/StylingInfo.html"><code>StylingInfo</code></a> object has been extended with more information describing the current theme. For instance regarding how zoom sliders and trellis panel headers are styled.</p>
+<p>The <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/StylingInfo.html">StylingInfo</a> object has been extended with more information describing the current theme. For instance regarding how zoom sliders and trellis panel headers are styled.</p>
 
         
 
