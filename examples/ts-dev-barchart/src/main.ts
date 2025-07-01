@@ -1,12 +1,9 @@
 /*
- * Copyright © 2023. Cloud Software Group, Inc.
+ * Copyright © 2025. Cloud Software Group, Inc.
  * This file is subject to the license terms contained
  * in the license file that is distributed with this file.
  */
 
-//@ts-check - Get type warnings from the TypeScript language server. Remove if not wanted.
-
-// Get access to the Spotfire Mod API by providing a callback to the initialize method.
 Spotfire.initialize(async (mod) => {
     const context = mod.getRenderContext();
 
@@ -37,17 +34,17 @@ Spotfire.initialize(async (mod) => {
      * - The bars cannot handle negative values
      * - Naive rendering of y-axis labels
      * - No labels on the x-axis
-     *
-     * @param {Spotfire.DataView} dataView
-     * @param {Spotfire.ModProperty<string>} yAxisMode
-     * @param {Spotfire.ModProperty<boolean>} splitBars
-     * @param {Spotfire.Axis} yAxis
      */
-    async function render(dataView, yAxisMode, splitBars, yAxis) {
+    async function render(
+        dataView: Spotfire.DataView,
+        yAxisMode: Spotfire.ModProperty<string>,
+        splitBars: Spotfire.ModProperty<boolean>,
+        yAxis: Spotfire.Axis
+    ) {
         /**
          * Check for any errors.
          */
-        let errors = await dataView.getErrors();
+        const errors = await dataView.getErrors();
         if (errors.length > 0) {
             mod.controls.errorOverlay.show(errors, "dataView");
             // TODO clear DOM
@@ -58,8 +55,8 @@ Spotfire.initialize(async (mod) => {
 
         // Get the leaf nodes for the x hierarchy. We will iterate over them to
         // render the bars.
-        let xHierarchy = await dataView.hierarchy("X");
-        let xRoot = await xHierarchy.root();
+        const xHierarchy = await dataView.hierarchy("X");
+        const xRoot = await xHierarchy!.root();
         if (xRoot == null) {
             // Return and wait for next call to render when reading data was aborted.
             // Last rendered data view is still valid from a users perspective since
@@ -67,7 +64,7 @@ Spotfire.initialize(async (mod) => {
             return;
         }
 
-        let dataViewYAxis = await dataView.continuousAxis("Y");
+        const dataViewYAxis = await dataView.continuousAxis("Y");
         if (dataViewYAxis == null) {
             mod.controls.errorOverlay.show("No data on y axis.", "y");
             return;
@@ -78,14 +75,14 @@ Spotfire.initialize(async (mod) => {
         // Hide tooltip
         mod.controls.tooltip.hide();
 
-        let xLeaves = xRoot.leaves();
+        const xLeaves = xRoot.leaves();
 
         // Figure out if we use categorical coloring, and if so retrieve the
         // number or colors. We need that to render split bars rather than stacked.
-        let colorHierarchy = await dataView.hierarchy("Color");
-        let categoricalColorCount = colorHierarchy ? colorHierarchy.leafCount : 0;
+        const colorHierarchy = await dataView.hierarchy("Color");
+        const categoricalColorCount = colorHierarchy ? colorHierarchy.leafCount : 0;
 
-        let maxYValue = calculateMaxYValue(xLeaves, splitBars, categoricalColorCount);
+        const maxYValue = calculateMaxYValue(xLeaves, splitBars, categoricalColorCount);
         renderBars(dataView, xLeaves, categoricalColorCount, maxYValue, splitBars);
         renderYScale(maxYValue, yAxis, yAxisMode);
         renderXScale(splitBars);
@@ -95,11 +92,11 @@ Spotfire.initialize(async (mod) => {
 
     /**
      * Render the vertical scale.
-     * @param {number} max Max value on Y scale
-     * @param {Spotfire.Axis} yAxis - The Y axes
-     * @param {Spotfire.ModProperty<string>} yAxisMode - Property used to determine if the scale should be rendered in percent.
+     * @param max Max value on Y scale
+     * @param yAxis The Y axes
+     * @param yAxisMode Property used to determine if the scale should be rendered in percent.
      */
-    function renderYScale(max, yAxis, yAxisMode) {
+    function renderYScale(max: number, yAxis: Spotfire.Axis, yAxisMode: Spotfire.ModProperty<string>) {
         const stroke = context.styling.scales.line.stroke;
 
         yScaleDiv.style.width = yScaleWidth + "px";
@@ -169,9 +166,9 @@ Spotfire.initialize(async (mod) => {
             }
 
             mod.controls.tooltip.hide();
-            let factory = mod.controls.popout.components;
-            let section = mod.controls.popout.section;
-            let box = yScaleDiv.getBoundingClientRect();
+            const factory = mod.controls.popout.components;
+            const section = mod.controls.popout.section;
+            const box = yScaleDiv.getBoundingClientRect();
 
             mod.controls.popout.show(
                 {
@@ -211,11 +208,11 @@ Spotfire.initialize(async (mod) => {
 
         /**
          * Render a scale label
-         * @param {number} value
-         * @param {number} yPosition
+         * @param value The numeric value to display
+         * @param yPosition The Y position as a percentage
          */
-        function createLabel(value, yPosition) {
-            let label = createDiv("scale-label", "" + value);
+        function createLabel(value: number, yPosition: number) {
+            const label = createDiv("scale-label", "" + value);
             label.style.color = context.styling.scales.font.color;
             label.style.fontSize = context.styling.scales.font.fontSize + "px";
             label.style.fontFamily = context.styling.scales.font.fontFamily;
@@ -226,9 +223,9 @@ Spotfire.initialize(async (mod) => {
 
     /**
      * Render the horizontal scale.
-     * @param {Spotfire.ModProperty<boolean>} splitBars - Whether or not bars should be stacked or split into individual bars.
+     * @param splitBars Whether or not bars should be stacked or split into individual bars.
      */
-    function renderXScale(splitBars) {
+    function renderXScale(splitBars: Spotfire.ModProperty<boolean>) {
         const stroke = context.styling.scales.line.stroke;
         xScaleDiv.style.height = xScaleHeight + "px";
         xScaleDiv.style.left = yScaleWidth + "px";
@@ -248,9 +245,9 @@ Spotfire.initialize(async (mod) => {
                 return;
             }
 
-            let factory = mod.controls.popout.components;
-            let section = mod.controls.popout.section;
-            let box = xScaleDiv.getBoundingClientRect();
+            const factory = mod.controls.popout.components;
+            const section = mod.controls.popout.section;
+            const box = xScaleDiv.getBoundingClientRect();
 
             mod.controls.popout.show(
                 {
@@ -263,7 +260,7 @@ Spotfire.initialize(async (mod) => {
                     }
                 },
                 () => {
-                    let content = [
+                    const content = [
                         section({
                             heading: "Split bars",
                             children: [
@@ -291,12 +288,19 @@ Spotfire.initialize(async (mod) => {
 
     /**
      * Render all bars on the canvas div.
-     * @param {Spotfire.DataView} dataView
-     * @param {Spotfire.DataViewHierarchyNode[]} xLeafNodes
-     * @param {number} maxYValue
-     * @param {Spotfire.ModProperty<boolean>} splitBars
+     * @param dataView The data view containing the data to render
+     * @param xLeafNodes The leaf nodes from the X hierarchy
+     * @param categoricalColorCount Number of categorical colors
+     * @param maxYValue Maximum Y value for scaling
+     * @param splitBars Whether bars should be split or stacked
      */
-    function renderBars(dataView, xLeafNodes, categoricalColorCount, maxYValue, splitBars) {
+    function renderBars(
+        dataView: Spotfire.DataView,
+        xLeafNodes: Spotfire.DataViewHierarchyNode[],
+        categoricalColorCount: number,
+        maxYValue: number,
+        splitBars: Spotfire.ModProperty<boolean>
+    ) {
         canvasDiv.innerHTML = "";
         canvasDiv.style.left = yScaleWidth + "px";
         canvasDiv.style.bottom = xScaleHeight + "px";
@@ -314,20 +318,20 @@ Spotfire.initialize(async (mod) => {
 
         /**
          * Renders bars/segments for a single x axis node.
-         * @param {Spotfire.DataViewHierarchyNode} xLeafNode
+         * @param xLeafNode The X axis leaf node to render
          */
-        function renderBar(xLeafNode) {
-            let fragment = document.createDocumentFragment();
-            let rows = xLeafNode.rows();
+        function renderBar(xLeafNode: Spotfire.DataViewHierarchyNode) {
+            const fragment = document.createDocumentFragment();
+            const rows = xLeafNode.rows();
 
             if (splitBars.value() && categoricalColorCount > 1) {
                 // Render bars side by side. We need to add one bar per color to
                 // keep all groups equally wide. So we create a sparse array where
                 // we store the rows per color index, and render a bar for each
                 // element in the array.
-                let bars = new Array(categoricalColorCount).fill(null);
+                const bars = new Array(categoricalColorCount).fill(null);
                 rows.forEach((row) => {
-                    let colorValue = row.categorical("Color");
+                    const colorValue = row.categorical("Color");
                     bars[colorValue.leafIndex] = row;
                 });
 
@@ -343,23 +347,24 @@ Spotfire.initialize(async (mod) => {
 
         /**
          * Render a stacked bar in the bar chart from a set of source rows.
-         * @param {Spotfire.DataViewHierarchyNode} xLeafNode
-         * @param {Spotfire.DataViewRow[]} rows
+         * @param xLeafNode The X axis leaf node
+         * @param rows The data rows to render in this bar
          */
-        function renderStackedBar(xLeafNode, rows) {
-            let bar = createDiv("bar");
+        function renderStackedBar(xLeafNode: Spotfire.DataViewHierarchyNode, rows: Spotfire.DataViewRow[]) {
+            const bar = createDiv("bar");
 
-            let totalBarValue = sumValue(rows, "Y");
+            const totalBarValue = sumValue(rows, "Y");
             bar.style.height = Math.round((totalBarValue / maxYValue) * canvasHeight) + "px";
 
             rows.forEach((row) => {
-                let y = row.continuous("Y");
-                if (y.value() === null) {
+                const y = row.continuous("Y");
+                const yValue = y.value();
+                if (yValue === null) {
                     return;
                 }
 
-                let segment = createDiv("segment");
-                segment.style.height = (+y.value() / maxYValue) * canvasHeight + "px";
+                const segment = createDiv("segment");
+                segment.style.height = (+yValue / maxYValue) * canvasHeight + "px";
                 segment.style.backgroundColor = row.color().hexCode;
 
                 segment.onmouseover = (e) => {
@@ -370,8 +375,7 @@ Spotfire.initialize(async (mod) => {
                 };
 
                 segment.onclick = (e) => {
-                    /** @type{Spotfire.MarkingOperation} */
-                    let mode = e.ctrlKey ? "Toggle" : "Replace";
+                    const mode: Spotfire.MarkingOperation = e.ctrlKey ? "Toggle" : "Replace";
                     if (e.shiftKey) {
                         rows.forEach((m) => m.mark(mode));
                     } else {
@@ -389,11 +393,15 @@ Spotfire.initialize(async (mod) => {
 
 /**
  * Calculate the maximum value from a hierarchy. If split bars is enabled, the single maximum value from all rows will be used.
- * @param {Spotfire.DataViewHierarchyNode[]} xLeaves
- * @param {Spotfire.ModProperty<boolean>} splitBars
- * @param {number} categoricalColorCount
+ * @param xLeaves The leaf nodes from the X hierarchy
+ * @param splitBars Whether bars should be split or stacked
+ * @param categoricalColorCount Number of categorical colors
  */
-function calculateMaxYValue(xLeaves, splitBars, categoricalColorCount) {
+function calculateMaxYValue(
+    xLeaves: Spotfire.DataViewHierarchyNode[],
+    splitBars: Spotfire.ModProperty<boolean>,
+    categoricalColorCount: number
+): number {
     let maxYValue = 0;
     if (splitBars.value() && categoricalColorCount > 0) {
         xLeaves.forEach((node) => {
@@ -401,7 +409,7 @@ function calculateMaxYValue(xLeaves, splitBars, categoricalColorCount) {
         });
     } else {
         xLeaves.forEach((node) => {
-            let sum = sumValue(node.rows(), "Y");
+            const sum = sumValue(node.rows(), "Y");
             maxYValue = Math.max(maxYValue, sum);
         });
     }
@@ -410,35 +418,48 @@ function calculateMaxYValue(xLeaves, splitBars, categoricalColorCount) {
 }
 
 /**
- * Calculate the total value for an axis from a set of rows. Null values are treated a 0.
- * @param {Spotfire.DataViewRow[]} rows Rows to calculate the total value from
- * @param {string} axis Name of Axis to use to calculate the value.
+ * Calculate the total value for an axis from a set of rows. Null values are treated as 0.
+ * @param rows Rows to calculate the total value from
+ * @param axis Name of axis to use to calculate the value
  */
-function sumValue(rows, axis) {
-    return rows.reduce((p, c) => +c.continuous(axis).value() + p, 0);
+function sumValue(rows: Spotfire.DataViewRow[], axis: string): number {
+    return rows.reduce((p, c) => {
+        const value = c.continuous(axis).value();
+        return (value !== null ? +value : 0) + p;
+    }, 0);
 }
 
 /**
- * Calculate the max value for an axis from a set of rows. Null values are treated a 0.
- * @param {Spotfire.DataViewRow[]} rows Rows to calculate the max value from
- * @param {string} axis Name of Axis to use to calculate the value.
+ * Calculate the max value for an axis from a set of rows. Null values are treated as 0.
+ * @param rows Rows to calculate the max value from
+ * @param axis Name of axis to use to calculate the value
  */
-function maxValue(rows, axis) {
-    return rows.reduce((p, c) => Math.max(+c.continuous(axis).value(), p), 0);
+function maxValue(rows: Spotfire.DataViewRow[], axis: string): number {
+    return rows.reduce((p, c) => {
+        const value = c.continuous(axis).value();
+        return Math.max(value !== null ? +value : 0, p);
+    }, 0);
 }
 
-/** @returns {HTMLElement} */
-function findElem(selector) {
-    return document.querySelector(selector);
+/**
+ * Find an element in the DOM.
+ * @param selector CSS selector string
+ */
+function findElem(selector: string): HTMLElement {
+    const element = document.querySelector(selector);
+    if (!element) {
+        throw new Error(`Element not found: ${selector}`);
+    }
+    return element as HTMLElement;
 }
 
 /**
  * Create a div element.
- * @param {string} className class name of the div element.
- * @param {string | HTMLElement} [content] Content inside the div
+ * @param className Class name of the div element
+ * @param content Optional content inside the div (string or HTMLElement)
  */
-function createDiv(className, content) {
-    let elem = document.createElement("div");
+function createDiv(className: string, content?: string | HTMLElement): HTMLDivElement {
+    const elem = document.createElement("div");
     elem.classList.add(className);
     if (typeof content === "string") {
         elem.appendChild(document.createTextNode(content));

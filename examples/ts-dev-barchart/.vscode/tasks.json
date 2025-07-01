@@ -1,0 +1,60 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start watchers",
+            "type": "shell",
+            "command": "ls",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["TypeScript watcher", "Mods build watcher", "Mods dev server"]
+        },
+        {
+            "presentation": {
+                "echo": true,
+                "group": "commonPane",
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "label": "TypeScript watcher",
+            "type": "shell",
+            "isBackground": true,
+            "command": "npm run tsc:dev"
+        },
+        {
+            "presentation": {
+                "echo": true,
+                "group": "commonPane",
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "label": "Mods build watcher",
+            "type": "shell",
+            "isBackground": true,
+            "command": "npm run build:dev"
+        },
+        {
+            "presentation": {
+                "echo": true,
+                "group": "commonPane",
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "label": "Mods dev server",
+            "type": "shell",
+            "isBackground": true,
+            "command": "npm run server"
+        }
+    ]
+}
