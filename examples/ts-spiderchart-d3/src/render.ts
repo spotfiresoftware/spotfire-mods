@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as d3 from "d3";
 import { FontInfo, Size, Tooltip } from "@spotfire/mods-api/visualization-mods/api";
 import { overlap } from "./helper";
@@ -176,8 +175,8 @@ export async function render(
      */
     drawRectangularSelection();
 
-    d3.selectAll(".x-axis-labels").on("click", function () {
-        const mouse = d3.mouse(document.body);
+    d3.selectAll(".x-axis-labels").on("click", function (event) {
+        const mouse = d3.pointer(event, document.body);
         cfg.onLabelClick?.(mouse[0], mouse[1]);
     });
 
@@ -543,10 +542,10 @@ export async function render(
             })
             .style("fill", colorForSerie)
             .style("fill-opacity", cfg.opacityArea)
-            .on("click", function (this: SVGPathElement, d) {
-                mark(d);
+            .on("click", function (this, event, d) {
+                mark(event, d);
                 d3.select(this).attr("mod-Color");
-                d3.event.stopPropagation();
+                event.stopPropagation();
             });
     }
 
@@ -567,10 +566,10 @@ export async function render(
             .style("stroke-width", cfg.strokeWidth + "px")
             .style("stroke", colorForSerie)
             .style("fill", "none")
-            .on("click", function (d) {
-                mark(d);
+            .on("click", function (event, d) {
+                mark(event, d);
                 d3.select(this).attr("mod-Color");
-                d3.event.stopPropagation();
+                event.stopPropagation();
             });
     }
 
@@ -596,7 +595,7 @@ export async function render(
             .style("fill", function (d) {
                 return d.color;
             })
-            .on("mouseover", function (d) {
+            .on("mouseover", function (event, d) {
                 const foo = d.tooltip();
                 // @ts-ignore - Unified overload missing.
                 tooltip.show(foo)
@@ -630,7 +629,7 @@ export async function render(
             .attr("d", hoverLinePath)
             .on("mouseover", handleMouseOver)
             .on("mouseout", handleMouseOut)
-            .on("click", mark);
+            .on("click", (event, d) => mark(event, d));
 
         const g = parent.append("g").attr("visibility", "hidden").attr("class", "line-hover-container");
         g.append("path").attr("class", "line-hover line-hover-casing").attr("d", hoverLinePath);
@@ -669,16 +668,16 @@ export async function render(
             rectangle.attr("d", drawRectangle(start[0], start[1], moved[0] - start[0], moved[1] - start[1]));
         };
 
-        const endSelection = function (start: [number, number], end: [number, number]) {
+        const endSelection = function (start: [number, number], end: [number, number], event: any) {
             rectangle.attr("visibility", "hidden");
 
             // Ignore rectangular markings that were just a click.
             if (Math.abs(start[0] - end[0]) < 2 || Math.abs(start[1] - end[1]) < 2) {
                 if (
-                    d3.select(d3.event.target.parentNode).classed("radar-blobs") ||
-                    d3.select(d3.event.target).classed("line-hover line-hover-bg") ||
-                    d3.select(d3.event.target.parentNode).classed("x-axis-labels") ||
-                    d3.select(d3.event.target).classed("x-axis-labels") ||
+                    d3.select(event.target.parentNode).classed("radar-blobs") ||
+                    d3.select(event.target).classed("line-hover line-hover-bg") ||
+                    d3.select(event.target.parentNode).classed("x-axis-labels") ||
+                    d3.select(event.target).classed("x-axis-labels") ||
                     popoutClosed
                 ) {
                     popoutClosed = false;
@@ -702,23 +701,23 @@ export async function render(
                 return data.clearMarking();
             }
 
-            svgRadarMarkedCircles.each(mark);
+            svgRadarMarkedCircles.each(c => mark(event, c));
         };
 
-        svg.on("mousedown", function (this) {
+        svg.on("mousedown", function (event, d) {
             onSelection(true);
-            if (d3.event.which === 3) {
+            if (event.which === 3) {
                 return;
             }
-            let subject = d3.select(window),
-                start = d3.mouse(this);
+            let subject = d3.select(window);
+            let start = d3.pointer(event);
             startSelection(start);
             subject
-                .on("mousemove.rectangle", function () {
-                    moveSelection(start, d3.mouse(svg.node()!));
+                .on("mousemove.rectangle", function (event) {
+                    moveSelection(start, d3.pointer(event, svg.node()!));
                 })
-                .on("mouseup.rectangle", function () {
-                    endSelection(start, d3.mouse(svg.node()!));
+                .on("mouseup.rectangle", function (event) {
+                    endSelection(start, d3.pointer(event, svg.node()!), event);
                     subject.on("mousemove.rectangle", null).on("mouseup.rectangle", null);
                 });
         });
@@ -732,8 +731,8 @@ export async function render(
     }
 }
 
-function mark(d: Serie | Point) {
-    d3.event.ctrlKey ? d.mark("ToggleOrAdd") : d.mark();
+function mark(event: any, d: Serie | Point) {
+    event.ctrlKey ? d.mark("ToggleOrAdd") : d.mark();
 }
 
 /**
