@@ -1,8 +1,8 @@
 // @ts-ignore
 import * as d3 from "d3";
-import { FontInfo, Size, Tooltip } from "spotfire-api";
+import { FontInfo, Size, Tooltip } from "@spotfire/mods-api/visualization-mods/api";
 import { overlap } from "./helper";
-import { RenderState } from "./index";
+import { RenderState } from "./main";
 import { Serie, Point } from "./series";
 
 type D3_SELECTION = d3.Selection<SVGGElement, unknown, HTMLElement, any>;
@@ -597,7 +597,9 @@ export async function render(
                 return d.color;
             })
             .on("mouseover", function (d) {
-                tooltip.show(d.tooltip());
+                const foo = d.tooltip();
+                // @ts-ignore - Unified overload missing.
+                tooltip.show(foo)
             })
             .on("mouseout", function () {
                 tooltip.hide();

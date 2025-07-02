@@ -1,4 +1,4 @@
-import { DataViewHierarchyNode, DataViewRow, MarkingOperation } from "spotfire-api";
+import { DataViewHierarchyNode, DataViewRow, MarkingOperation } from "@spotfire/mods-api/visualization-mods/api";
 
 export interface Serie {
     index: number;
@@ -8,7 +8,7 @@ export interface Serie {
 }
 
 export interface Point {
-    tooltip(): DataViewRow;
+    tooltip(): DataViewRow | string;
     mark(mode?: MarkingOperation): void;
     xIndex: number;
     index: number;
@@ -23,7 +23,7 @@ export function buildColorSeries(
     colorLeaves: DataViewHierarchyNode[],
     xLeaves: DataViewHierarchyNode[],
     hasX: boolean,
-    getTooltip: (point: Point) => DataViewRow,
+    getTooltip: (point: Point) => DataViewRow | string,
     yMinValue: number
 ): Serie[] {
     const numberOrZero = (val: any) => (typeof val == "number" ? val : 0);

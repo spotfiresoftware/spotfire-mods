@@ -1,4 +1,4 @@
-import { Controls, ModProperty } from "spotfire-api";
+import { Controls, ModProperty } from "@spotfire/mods-api/visualization-mods/api";
 
 export function createLabelPopout(
     controls: Controls,

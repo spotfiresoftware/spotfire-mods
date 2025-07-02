@@ -1,23 +1,12 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "noUnusedLocals": true,
-        "allowJs": false,
-        "allowUnreachableCode": false,
-        "noImplicitAny": true,
+        "outDir": "build",
+        "lib": ["DOM", "ES2022"],
+        "target": "ES2022",
+        "skipLibCheck": true,
         "strict": true,
-        "charset": "utf8",
-        "sourceMap": true,
-        "inlineSources": true,
-        "module": "es2015",
-        "outDir": "./build/",
-        "lib": ["es2019", "dom"],
-        "baseUrl": ".",
-        "paths": {
-            "spotfire-api": ["./spotfire/spotfire-api-1-3"],
-        },
-        "typeRoots": ["./spotfire", "./node_modules/@types"]
-    },
-    "include": ["./src/**/*.ts", "./test/**/*.ts", "./spotfire/**/*.d.ts"],
-    "exclude": ["../node_modules"]
+        "noEmit": true,
+        "allowUmdGlobalAccess": true,
+        "moduleResolution": "Bundler"
+    }
 }

@@ -1,7 +1,7 @@
 import { Data, Options, render } from "./render";
 import { createLabelPopout } from "./popout";
 import { buildColorSeries, Point } from "./series";
-import { DataView, Mod, ModProperty } from "spotfire-api";
+import { DataView, Mod, ModProperty } from "@spotfire/mods-api/visualization-mods/api";
 var events = require("events");
 
 const Spotfire = window.Spotfire;
