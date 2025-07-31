@@ -1,9 +1,8 @@
 import * as d3 from "d3";
-import { DataViewRow, ReadableProxy, Size } from "spotfire-api";
-import { highlight, markingHandler, markRowforAllTimes } from "./modutils";
+import { Size } from "spotfire-api";
+import { highlight, markingHandler } from "./modutils";
 import { Grid } from "./Grid";
-import { animationControl } from "./animationControl";
-import { setIdle } from "./interactionLock";
+import { AnimationControl } from "./animationControl";
 
 /**
  * Constants
@@ -78,7 +77,18 @@ const markingOverlay: any = svg
 // Layer 6: Message overlay
 const messageLayer: any = svg.append("g").attr("id", "messageOverlay");
 
-let animationControlInstance: ReturnType<typeof animationControl>;
+const playButtonSvg = document.querySelector("#play_button")?.lastChild!;
+const pauseButtonSvg = document.querySelector("#pause_button")?.lastChild!;
+const animationSpeedButtonSvg = document.querySelector(
+    "#animation_speed_button g"
+)!;
+
+const speedButtonSize = 24,
+    playButtonSize = 16,
+    padding = 8,
+    progressHeight = 6,
+    progressX =
+        (Math.max(speedButtonSize, playButtonSize) - progressHeight) / 2;
 
 type FIX_TYPE = any;
 
@@ -86,20 +96,49 @@ export function clearCanvas() {
     markerLayer.selectAll("*").remove(); // clear graph display area
 }
 
-export async function render(
+export interface Bubble {
+    x: number;
+    y: number;
+    size: number;
+    color: string;
+    id: string;
+    label: string;
+    tooltip: string;
+    isMarked: boolean;
+    mark(toggle?: boolean): void;
+}
+
+export interface FrameFactory {
+    name: string;
+    bubbleFactory(): Bubble[];
+    bubbles?: Bubble[];
+}
+
+export interface Frame {
+    name: string;
+    bubbles: Bubble[];
+}
+
+export interface NumericScale {
+    min: number;
+    max: number;
+}
+
+export function render(
     dataView: Spotfire.DataView,
+    scales: {
+        Y: NumericScale;
+        X: NumericScale;
+        Size: NumericScale;
+    },
+    animationControl: AnimationControl,
     windowSize: Size,
-    toolTipDisplayAxes: Spotfire.Axis[],
     mod: Spotfire.Mod,
     showLabels: boolean,
     xLogScale: boolean,
     yLogScale: boolean,
-    animationSpeedProperty: ReadableProxy<Spotfire.ModProperty<number>>,
-    animationSpeed: number,
     onScaleClick: (x: number, y: number, axis: "X" | "Y") => void
 ) {
-    animationControlInstance =
-        animationControlInstance || animationControl(animationSpeedProperty);
     let context = mod.getRenderContext();
     document.querySelector("#extra_styling")!.innerHTML = `
     .tick { color: ${context.styling.scales.tick.stroke} }
@@ -115,27 +154,6 @@ export async function render(
     #animationSpeedLabel { color: ${context.styling.general.font.color}; font-size: ${context.styling.general.font.fontSize}px; font-weight: ${context.styling.general.font.fontWeight}; font-style: ${context.styling.general.font.fontStyle};}
     `;
 
-    const hasSize = !!(await dataView.continuousAxis("Size"));
-    const hasX = !!(await dataView.continuousAxis("X"));
-    const hasY = !!(await dataView.continuousAxis("Y"));
-
-    //Read the data and meta data
-    const rows = (await dataView.allRows())?.filter(rowFilter);
-    if (!rows || rows.length < 1) {
-        clearCanvas();
-        return;
-    }
-
-    rows.forEach((r) => ((r as any).key = r.elementId(true, ["AnimateBy"])));
-
-    let animateLeaves = (
-        await (await dataView.hierarchy("AnimateBy"))?.root()
-    )?.leaves();
-    if (!animateLeaves || animateLeaves.length == 0) {
-        clearCanvas();
-        return;
-    }
-
     //Calculate positions for all elements of the visualization
     let modHeight = windowSize.height;
     let modWidth = windowSize.width;
@@ -143,12 +161,9 @@ export async function render(
         (relativeMarkerSize * Math.min(modHeight, modWidth)) / 2;
     let innerMargin = maxMarkerSize;
 
-    let animationControlHeight = 0;
-    if (animateLeaves.length > 1) {
-        animationControlHeight = defaultAnimationControlHeight;
-    } else {
-        animationControlHeight = 0;
-    }
+    let animationControlHeight = animationControl.visible()
+        ? defaultAnimationControlHeight
+        : 0;
 
     let grid = new Grid(
         modWidth,
@@ -165,34 +180,15 @@ export async function render(
 
     // set the viewbox of the svg element to match the available drawing area
     svg.attr("viewBox", "0 0 " + modWidth + " " + modHeight);
-    async function minValue(axis: string) {
-        if (!(await dataView.continuousAxis(axis))) {
-            return 0;
-        }
 
-        return rows!
-            .map((r) => r.continuous<number>(axis).value() || 0)
-            .reduce((p, c) => (c < p ? c : p), Infinity);
-    }
-
-    async function maxValue(axis: string) {
-        if (!(await dataView.continuousAxis(axis))) {
-            return 0;
-        }
-
-        return rows!
-            .map((r) => r.continuous<number>(axis).value() || 0)
-            .reduce((p, c) => (c > p ? c : p), -Infinity);
-    }
-
-    // Calculate x-axis scale
-    var xmin = await minValue("X");
-    var xmax = await maxValue("X");
     var xScale = xLogScale
-        ? d3.scaleLog().domain([xmin, xmax]).range([0, xAxesArea.width])
+        ? d3
+              .scaleLog()
+              .domain([scales.X.min, scales.X.max])
+              .range([0, xAxesArea.width])
         : d3
               .scaleLinear()
-              .domain([xmin, xmax])
+              .domain([scales.X.min, scales.X.max])
               .range([0, xAxesArea.width])
               .nice();
 
@@ -237,14 +233,14 @@ export async function render(
             ]) as FIX_TYPE
         );
 
-    // Calculate y-axis scale
-    var ymin = await minValue("Y");
-    var ymax = await maxValue("Y");
     var yScale = yLogScale
-        ? d3.scaleLog().domain([ymin, ymax]).range([yAxisArea.height, 0])
+        ? d3
+              .scaleLog()
+              .domain([scales.Y.min, scales.Y.max])
+              .range([yAxisArea.height, 0])
         : d3
               .scaleLinear()
-              .domain([ymin, ymax])
+              .domain([scales.Y.min, scales.Y.max])
               .range([yAxisArea.height, 0])
               .nice();
 
@@ -312,92 +308,30 @@ export async function render(
         );
 
     // Calculate markersize scale
-    var smin = await minValue("Size");
-    var smax = await maxValue("Size");
     var sizeScale = d3
         .scaleSqrt()
-        .domain([smin, smax])
+        .domain([scales.Size.min, scales.Size.max])
         .range([2, maxMarkerSize]);
 
-    let animationEnabled = animateLeaves.length > 1;
-    let animationIndex = 0;
+    let animationEnabled = animationControl.visible();
 
     if (animationEnabled) {
         animationControlGroup.attr("class", "enabled");
 
-        // render animation scale
-        let animationScale = d3
-            .scaleLinear()
-            .domain([0, animateLeaves.length - 1])
-            .range([0, animationControlArea.width])
-            .clamp(true);
-
-        // TODO: When can we keep the instance and when do we need to cleanup and replace?
-        animationControlInstance.update(
-            animationScale,
-            AnimationValueChanged,
-            animationSpeed
+        // render animation controls
+        let c = animationControlGroup.attr(
+            "transform",
+            `translate (${animationControlArea.x1} ${animationControlArea.y1})`
         );
 
-        animationIndex = animationControlInstance?.getIndex() || 0;
-
-        // render animation controls
-        animationControlGroup
-            .attr(
-                "transform",
-                `translate (${animationControlArea.x1} ${animationControlArea.y1})`
-            )
-            .call(animationControlInstance.render);
-
+        renderAnimationControl(animationControl, animationControlArea, c);
         d3.scaleLinear().tickFormat(5);
     } else {
         animationControlGroup.attr("class", "disabled");
     }
 
-    await updateBubbleChart(
-        animationControlInstance.isPlaying() ? animationSpeed : 0
-    );
-
-    async function AnimationValueChanged(
-        value: number,
-        changedByUser: boolean
-    ) {
-        animationIndex = value;
-        try {
-            if (changedByUser) {
-                await updateBubbleChart();
-            } else {
-                await updateBubbleChart(animationSpeed);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     function getKey(row: any): string {
-        return row.key;
-    }
-
-    /** Filter out rows that can't be visualized.
-     * This includes null values and 0 for log scales */
-    function rowFilter(row: Spotfire.DataViewRow) {
-        if (
-            !hasX ||
-            (xLogScale && !row.continuous("X").value()) ||
-            row.continuous("X").value() == null
-        ) {
-            return false;
-        }
-
-        if (
-            !hasY ||
-            (yLogScale && !row.continuous("Y").value()) ||
-            row.continuous("Y").value() == null
-        ) {
-            return false;
-        }
-
-        return true;
+        return row.id;
     }
 
     function showMessage(message: String) {
@@ -415,17 +349,16 @@ export async function render(
         messageLayer.selectAll("*").remove();
     }
 
-    function updateBubbleChart(transitionDuration = defaultTransitionSpeed) {
-        // Add dots
-        // sort the rows by size if sizeByAxis is used
-        // to make small dots draw on top of larger ones
-        if ((animateLeaves?.length || 0) <= animationIndex) {
-            return Promise.resolve();
-        }
+    return function updateBubbleChart(
+        frame: Frame,
+        transitionDuration = defaultTransitionSpeed
+    ) {
+        let displayRows = frame.bubbles;
 
-        let displayRows = animateLeaves![animationIndex]
-            .rows()
-            .filter(rowFilter);
+        if (!frame.bubbles.length) {
+            clearCanvas();
+            return;
+        }
 
         let rowCount = displayRows.length;
         if (rowCount > displayedRowsLimit) {
@@ -435,20 +368,17 @@ export async function render(
             );
             return Promise.resolve();
         }
+
         hideMessage();
 
-        if (hasSize) {
-            displayRows.sort(sortContinuousAxis("Size"));
-        }
-
         let allOrNoneMarked = !(
-            displayRows.find((r) => r.isMarked()) &&
-            displayRows.find((r) => !r.isMarked())
+            displayRows.find((r) => r.isMarked) &&
+            displayRows.find((r) => !r.isMarked)
         );
         let opacity = allOrNoneMarked ? defaultOpacity : markingOpacity;
 
         // prepare the tooltip
-        let hl = highlight(mod, toolTipDisplayAxes);
+        let hl = highlight(mod);
 
         markerLayer.attr(
             "transform",
@@ -457,14 +387,15 @@ export async function render(
 
         updateLabels();
         updateBackground();
-
-        return updateDots();
+        updateDots();
+        renderAnimationControl(
+            animationControl,
+            animationControlArea,
+            animationControlGroup
+        );
 
         function updateBackground() {
-            let bgText =
-                animateLeaves!.length > 1
-                    ? animateLeaves![animationIndex].formattedPath()
-                    : "";
+            let bgText = frame.name;
 
             backgroundLayer
                 .selectAll(".backgroundText")
@@ -491,23 +422,15 @@ export async function render(
 
         function updateDots() {
             let dots = markerLayer
-                .selectAll<SVGCircleElement, DataViewRow>(".dot")
+                .selectAll<SVGCircleElement, Bubble>(".dot")
                 .data(displayRows, getKey);
 
             // add new dots if needed
             let newdots = dots
                 .enter()
                 .append("circle")
-                .attr(
-                    "cx",
-                    (row: DataViewRow) =>
-                        xScale(row.continuous("X").value<number>() || 0) || 0
-                )
-                .attr(
-                    "cy",
-                    (row: DataViewRow) =>
-                        yScale(row.continuous("Y").value<number>() || 0) || 0
-                )
+                .attr("cx", (row: Bubble) => xScale(row.x) || 0)
+                .attr("cy", (row: Bubble) => yScale(row.y) || 0)
                 .attr("r", 0)
                 .attr("fill", "transparent");
 
@@ -515,9 +438,9 @@ export async function render(
             let allDots = dots.merge(newdots);
 
             // update attributes on all dots
-            let transitionEnd = allDots
+            allDots
                 .attr("id", getKey)
-                .attr("class", (r) => `dot ${r.isMarked() ? "marked" : ""}`)
+                .attr("class", (r) => `dot ${r.isMarked ? "marked" : ""}`)
                 .call(
                     markingHandler(
                         svg,
@@ -530,38 +453,24 @@ export async function render(
                 .transition()
                 .ease(d3.easeLinear)
                 .duration(transitionDuration)
-                .attr(
-                    "cx",
-                    (row: DataViewRow) =>
-                        xScale(Number(row.continuous<number>("X").value())) || 0
-                )
-                .attr(
-                    "cy",
-                    (row: DataViewRow) =>
-                        yScale(Number(row.continuous<number>("Y").value())) || 0
-                )
+                .attr("cx", (row: Bubble) => xScale(row.x) || 0)
+                .attr("cy", (row: Bubble) => yScale(row.y) || 0)
                 .attr("r", radius)
-                .style("fill", (row: DataViewRow) => row.color().hexCode)
+                .style("fill", (row: Bubble) => row.color)
                 .end()
                 .catch(() => {
                     // Interrupted transitions lead to a rejected promise.
                 });
 
             allDots
-                .on("click", function (row: DataViewRow) {
-                    setIdle();
-                    markRowforAllTimes(
-                        row,
-                        dataView,
-                        d3.event.ctrlKey || d3.event.metaKey
-                    );
-
+                .on("click", function (row: Bubble) {
+                    row.mark(d3.event.ctrlKey || d3.event.metaKey);
                     d3.event.preventDefault();
                 })
                 .call(hl);
 
             // move marked elements to the top
-            allDots.filter((row: DataViewRow) => row.isMarked()).raise();
+            allDots.filter((row: Bubble) => row.isMarked).raise();
 
             // remove any dots no longer needed.
             dots.exit()
@@ -570,33 +479,24 @@ export async function render(
                 .style("fill-opacity", 0)
                 .attr("r", 0)
                 .remove();
-            return transitionEnd;
         }
 
-        function radius(row: DataViewRow) {
-            return hasSize
-                ? sizeScale(Number(row.continuous<number>("Size").value())) || 0
-                : 8;
+        function radius(row: Bubble) {
+            return sizeScale(row.size) || 0;
         }
 
         function updateLabels() {
-            const labelDX = (row: DataViewRow) =>
-                radius(row) +
-                (xScale(row.continuous("X").value<number>() || 0) || 0);
+            const labelDX = (row: Bubble) => radius(row) + (xScale(row.x) || 0);
 
-            const labelDY = (row: DataViewRow) =>
-                (yScale(Number(row.continuous<number>("Y").value())) || 0) -
-                radius(row);
+            const labelDY = (row: Bubble) => (yScale(row.y) || 0) - radius(row);
 
-            const labelText = (row: DataViewRow) => {
-                return showLabels && row.isMarked()
-                    ? row.leafNode("MarkerBy")!.formattedPath()
-                    : "";
+            const labelText = (row: Bubble) => {
+                return showLabels && row.isMarked ? row.label : "";
             };
 
             //re-use current labels
             let labels = markerLayer
-                .selectAll<SVGTextElement, DataViewRow>(".label")
+                .selectAll<SVGTextElement, Bubble>(".label")
                 .data(displayRows, (d) => getKey(d) + "_label");
 
             // add new dots if needed
@@ -613,7 +513,7 @@ export async function render(
             // update attributes on all labels
             allLabels
                 .attr("id", (d) => getKey(d) + "_label")
-                .attr("class", (r) => `label ${r.isMarked() ? "marked" : ""}`)
+                .attr("class", (r) => `label ${r.isMarked ? "marked" : ""}`)
                 .call(
                     markingHandler(
                         svg,
@@ -631,27 +531,256 @@ export async function render(
                 .text(labelText);
 
             allLabels
-                .on("click", function (row: DataViewRow) {
-                    markRowforAllTimes(
-                        row,
-                        dataView,
-                        d3.event.ctrlKey || d3.event.metaKey
-                    );
+                .on("click", function (row: Bubble) {
+                    row.mark();
+                    // markRowforAllTimes(
+                    //     row,
+                    //     dataView,
+                    //     d3.event.ctrlKey || d3.event.metaKey
+                    // );
                 })
                 .call(hl);
 
             // move marked elements to the top
-            allLabels.filter((row: DataViewRow) => row.isMarked()).raise();
+            allLabels.filter((row: Bubble) => row.isMarked).raise();
 
             // remove any labels no longer needed.
             labels.exit().remove();
         }
+    };
+}
+
+function renderAnimationControl(
+    animation: AnimationControl,
+    animationControlArea: { width: number },
+    context: d3.Selection<SVGGElement, unknown, HTMLElement, any>
+) {
+    // render animation scale
+    let animationScale = d3
+        .scaleLinear()
+        .domain(animation.domain())
+        .range([0, animationControlArea.width])
+        .clamp(true);
+
+    animationScale.range([
+        0 + playButtonSize + padding,
+        animationControlArea.width - speedButtonSize - padding,
+    ]);
+
+    let playButton: any = context.select("svg");
+    setPlaying(animation.isPlaying());
+
+    var dispatch = d3.dispatch("sliderChange");
+
+    let animationSpeedButton = context.select<SVGGElement>("#animationSpeed");
+    if (animationSpeedButton.empty()) {
+        animationSpeedButton = context.append("g");
+        animationSpeedButton
+            .attr("id", "animationSpeed")
+            .node()!
+            .append(animationSpeedButtonSvg);
+    }
+
+    animationSpeedButton
+        .attr(
+            "transform",
+            `translate(${animationScale.range()[1] + padding} 0)`
+        )
+        .attr("width", speedButtonSize)
+        .attr("height", speedButtonSize)
+        .attr("class", "animationSpeed")
+        .on("click", () => showSpeedSlider(animation));
+
+    let animationSlider = context.select<SVGRectElement>("#animationSlider");
+
+    if (animationSlider.empty()) {
+        animationSlider = context.append("rect").attr("id", "animationSlider");
+    }
+
+    animationSlider
+        .attr("x", animationScale(0) || 0)
+        .attr("y", progressX)
+        .attr(
+            "width",
+            Math.max(0, animationScale.range()[1] - animationScale.range()[0])
+        )
+        .attr("height", 8)
+        .attr("class", "animation-tray")
+        .on("click", sliderclick)
+        .call(
+            d3
+                .drag<SVGRectElement, any>()
+                .on("start", function () {
+                    dispatch.call(
+                        "sliderChange",
+                        this,
+                        Math.round(
+                            animationScale.invert(
+                                d3.mouse(animationSlider.node()!)[0]
+                            )
+                        )
+                    );
+
+                    d3.event.sourceEvent.preventDefault();
+                })
+                .on("drag", function () {
+                    dispatch.call(
+                        "sliderChange",
+                        this,
+                        Math.round(
+                            animationScale.invert(
+                                d3.mouse(animationSlider.node()!)[0]
+                            )
+                        )
+                    );
+                })
+        );
+
+    dispatch.on("sliderChange.slider", function (value) {
+        setSliderValue(value);
+        animation.setIndex(value);
+    });
+
+    let animationIndicator = context.select<SVGRectElement>(
+        "#animationIndicator"
+    );
+    if (animationIndicator.empty()) {
+        animationIndicator = context
+            .append("rect")
+            .attr("id", "animationIndicator");
+    }
+
+    animationIndicator
+        .attr("x", animationScale(0) || 0)
+        .attr("y", progressX)
+        .attr(
+            "width",
+            Math.max(
+                0,
+                animationScale(animation.currentIndex())! - animationScale(0)!
+            )
+        )
+        .attr("height", 8)
+        .attr("class", "animation-indicator");
+
+    let animationHandle = context.select<SVGCircleElement>("#animationHandle");
+    if (animationHandle.empty()) {
+        animationHandle = context
+            .append("circle")
+            .attr("id", "animationHandle");
+    }
+
+    animationHandle
+        .attr("cy", progressX + 4)
+        .attr("cx", animationScale(animation.currentIndex()) || 0)
+        .attr("r", 6)
+        .attr("class", "animation-handle");
+
+    function sliderclick() {
+        let animationIndex = Math.round(
+            animationScale.invert(d3.mouse(animationSlider.node()!)[0])
+        );
+
+        animation.setIndex(animationIndex);
+    }
+
+    function setPlaying(isPlaying: boolean) {
+        let svg = (!isPlaying ? playButtonSvg : pauseButtonSvg)?.cloneNode(
+            true
+        );
+
+        if (playButton.empty()) {
+            context.attr("id", "playButton").node()!.append(svg);
+        } else {
+            context.select<SVGElement>("svg").node()!.replaceWith(svg);
+        }
+
+        playButton = context.select("svg");
+        playButton
+            .attr("x", 0)
+            .attr("y", (speedButtonSize - playButtonSize) / 2)
+            .attr("height", playButtonSize)
+            .attr("width", playButtonSize)
+            .attr("class", "playbutton")
+            .on("click", playClicked);
+    }
+
+    function playClicked() {
+        animation.isPlaying(!animation.isPlaying());
+    }
+
+    function setSliderValue(value: number, transitionduration = 0) {
+        animationIndicator
+            .attr("aria-labelledby", value)
+            .transition()
+            .ease(d3.easeLinear)
+            .duration(transitionduration)
+            .attr(
+                "width",
+                Math.max(
+                    0,
+                    (animationScale(value) || 0) - (animationScale(0) || 0)
+                )
+            );
+        animationHandle
+            .attr("aria-labelledby", value)
+            .transition()
+            .ease(d3.easeLinear)
+            .duration(transitionduration)
+            .attr("cx", animationScale(value) || 0);
     }
 }
-function sortContinuousAxis(
-    axisName: string
-): (a: DataViewRow, b: DataViewRow) => number {
-    return (a, b) =>
-        (b.continuous<number>(axisName).value() || 0) -
-        (a.continuous<number>(axisName).value() || 0);
+
+function showSpeedSlider(animation: AnimationControl) {
+    let times = [0.1, 0.3, 0.5, 1, 3, 5, 10].reverse();
+    function toTime(index: number) {
+        return (
+            1000 *
+            (index >= 0 ? times[index] || times[times.length - 1] : times[0])
+        );
+    }
+    function toIndex(time: number) {
+        for (var i = 0; i < times.length; i++) {
+            if (time / 1000 >= times[i]) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    let current = document.getElementById("animationSpeedSlider");
+    if (current) {
+        document.body.removeChild(current);
+        document.body.removeChild(
+            document.getElementById("animationSpeedLabel")!
+        );
+        return;
+    }
+
+    let input = document.createElement("input");
+    input.id = "animationSpeedSlider";
+    input.type = "range";
+    input.style.bottom = speedButtonSize + padding + "px";
+    input["max"] = "0";
+    input["max"] = String(times.length - 1);
+    input.value = String(toIndex(animation.speed()));
+    document.body.appendChild(input);
+
+    let label = document.createElement("label");
+    label.htmlFor = "animationSpeedSlider";
+    label.id = "animationSpeedLabel";
+    label.style.bottom = speedButtonSize + 2 * padding + 100 + "px";
+    label.textContent = `${toTime(Number(input.value)) / 1000}s`;
+    document.body.appendChild(label);
+
+    input.oninput = function () {
+        label.textContent = `${toTime(Number(input.value)) / 1000}s`;
+    };
+
+    input.onchange = function () {
+        document.body.removeChild(input);
+        document.body.removeChild(label);
+        animation.speed(toTime(Number(input.value)));
+    };
 }
