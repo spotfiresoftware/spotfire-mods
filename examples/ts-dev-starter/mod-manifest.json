@@ -39,6 +39,6 @@
     "files": [
         "index.html",
         "main.css",
-        "main.js"
+        "build/main.js"
     ]
 }

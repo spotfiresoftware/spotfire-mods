@@ -31,7 +31,7 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.Size} windowSize
      * @param {Spotfire.ModProperty<string>} prop
      */
-    async function render(dataView, windowSize, prop) {
+    async function render(dataView: Spotfire.DataView, windowSize: Spotfire.Size, prop: Spotfire.ModProperty) {
         /**
          * Check the data view for errors
          */
@@ -49,7 +49,7 @@ Spotfire.initialize(async (mod) => {
          * Get the hierarchy of the categorical X-axis.
          */
         const xHierarchy = await dataView.hierarchy("X");
-        const xRoot = await xHierarchy.root();
+        const xRoot = await xHierarchy!.root();
 
         if (xRoot == null) {
             // User interaction caused the data view to expire.
@@ -61,9 +61,9 @@ Spotfire.initialize(async (mod) => {
          * Print out to document
          */
         const container = document.querySelector("#mod-container");
-        container.textContent = `windowSize: ${windowSize.width}x${windowSize.height}\r\n`;
-        container.textContent += `should render: ${xRoot.rows().length} rows\r\n`;
-        container.textContent += `${prop.name}: ${prop.value()}`;
+        container!.textContent = `windowSize: ${windowSize.width}x${windowSize.height}\r\n`;
+        container!.textContent += `should render: ${xRoot.rows().length} rows\r\n`;
+        container!.textContent += `${prop.name}: ${prop.value()}`;
 
         /**
          * Signal that the mod is ready for export.
