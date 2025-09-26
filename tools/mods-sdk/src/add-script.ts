@@ -81,6 +81,14 @@ export async function addScript(
     const entryPoint = toAlphaNumWithSeparators(id);
     const filePath = path.join(scriptsFolder, `${id}.ts`);
 
+    if (manifest.type !== "action") {
+        throw new Error(
+            `Mods of type ${
+                manifest.type ?? "visualization"
+            } do not support scripts.`
+        );
+    }
+
     if (manifest.scripts?.find((s) => s.id === id)) {
         throw new Error(`The mod already contains a script with id '${id}'.`);
     }

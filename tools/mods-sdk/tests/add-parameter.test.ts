@@ -120,4 +120,18 @@ describe("add-parameter.test.ts", () => {
             })
         ).toThrow();
     });
+
+    test("throw for visualization mods", async () => {
+        await setupProject(projectFolder, ModType.Visualization);
+        expect(async () => {
+            await addParameter("my-script", "param1", "DateTime", {
+                manifestPath,
+                quiet: true,
+                optional: false,
+            });
+        }).rejects.toMatchObject({
+            message:
+                "Mods of type visualization do not support script parameters.",
+        });
+    });
 });

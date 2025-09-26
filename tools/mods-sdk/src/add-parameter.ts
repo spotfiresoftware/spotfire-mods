@@ -120,6 +120,14 @@ export async function addParameter(
     }
 
     const manifest = await readManifest(absManifestPath);
+    if (manifest.type !== "action") {
+        throw new Error(
+            `Mods of type ${
+                manifest.type ?? "visualization"
+            } do not support script parameters.`
+        );
+    }
+
     const manifestWithParameter = addParameterToManifest({
         manifest,
         scriptId,

@@ -71,4 +71,18 @@ describe("add-script.test.ts", () => {
         });
         expect(scriptSrc).toContain("{ document, application, resources }");
     });
+
+    test("throw for visualization mods", async () => {
+        await setupProject(projectFolder, ModType.Visualization);
+        expect(async () => {
+            await addScript("new-script", {
+                manifestPath: manifest,
+                scripts: scriptsFolder,
+                name: "My New Script",
+                quiet: true,
+            });
+        }).rejects.toMatchObject({
+            message: "Mods of type visualization do not support scripts.",
+        });
+    });
 });
