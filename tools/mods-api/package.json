@@ -1,6 +1,6 @@
 {
     "name": "@spotfire/mods-api",
-    "version": "2.1.0",
+    "version": "2.2.0-preview.0",
     "description": "API typings and schemas for Spotfire® Mods",
     "files": [
         "action-mods/*.d.ts",
