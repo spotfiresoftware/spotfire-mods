@@ -2508,14 +2508,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get CalculationSettings(): JsType<TSettings>;
                 /**
-                 * Gets the unique name of this calculation instance.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Name(): JsType<System.String>;
-                /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
@@ -3348,17 +3340,6 @@ declare namespace Spotfire.Dxp {
                     get DataFilteringSelectionReference(): Data.DataFilteringSelection;
                     set DataFilteringSelectionReference(value: Data.DataFilteringSelection);
                     /**
-                     * Gets the update behavior of the calculation.
-                     * @remark This determines whether the calculation should be reexecuted immediately when dependencies change or just
-                     * indicate their need for manual refresh. Note that columns residing in a normal table will also be asked to recalculate
-                     * themselves when the rowcount of their table changes regardless of their normal UpdateBehavior.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get UpdateBehavior(): Data.CalculationUpdateBehavior;
-                    /**
                      * Represents one of the column sets to compare.
                      * 
                      * @since 2.0
@@ -3732,8 +3713,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get IncludeEmpty(): JsType<System.Boolean>;
                 set IncludeEmpty(value: JsType<System.Boolean>);
-                /** Gets the type id. */
-                get TypeId(): Framework.DocumentModel.TypeIdentifier;
                 /**
                  * Gets a collection of the check box values.
                  * 
@@ -3868,8 +3847,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get SearchLevel(): JsType<System.Int32>;
                 set SearchLevel(value: JsType<System.Int32>);
-                /** Gets the type id. */
-                get TypeId(): Framework.DocumentModel.TypeIdentifier;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -4038,8 +4015,6 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 get DataColumnReference(): (Data.DataColumn | null);
-                /** Gets the filtered rows. */
-                get FilteredRows(): Data.IndexSet;
                 /**
                  * Gets a value indicating whether the referenced column has any invalid rows.
                  * 
@@ -4947,14 +4922,6 @@ declare namespace Spotfire.Dxp {
                 get Expanded(): JsType<System.Boolean>;
                 set Expanded(value: JsType<System.Boolean>);
                 /**
-                 * Gets the group display name, that is, its caption.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Name(): JsType<System.String>;
-                /**
                  * Gets or sets a value indicating whether this group is visible or hidden.
                  * This property defaults to true.
                  * 
@@ -5096,8 +5063,6 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 get DataColumnReference(): Data.DataColumn;
-                /** Gets the filtered rows. */
-                get FilteredRows(): Data.IndexSet;
                 /**
                  * Gets the {@link Spotfire.Dxp.Data.DataHierarchy} instance associated with this filter.
                  * 
@@ -5145,8 +5110,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class ItemFilter extends SingleValueColumnFilter implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /** Gets the type id. */
-                get TypeId(): Framework.DocumentModel.TypeIdentifier;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -5273,8 +5236,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get ShowAll(): JsType<System.Boolean>;
                 set ShowAll(value: JsType<System.Boolean>);
-                /** Gets the type id. */
-                get TypeId(): Framework.DocumentModel.TypeIdentifier;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -5335,8 +5296,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class RadioButtonFilter extends SingleValueColumnFilter implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /** Gets the type id. */
-                get TypeId(): Framework.DocumentModel.TypeIdentifier;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -5380,14 +5339,6 @@ declare namespace Spotfire.Dxp {
              */
             class RangeFilter extends ColumnFilter implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
-                 * Gets a value indicating whether the referenced column has any invalid rows.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get HasEmptyValues(): JsType<System.Boolean>;
-                /**
                  * Gets or sets a value indicating whether or not the filter should
                  * include empty value rows.
                  * @remark Settings this property to true on columns that do
@@ -5399,8 +5350,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get IncludeEmpty(): JsType<System.Boolean>;
                 set IncludeEmpty(value: JsType<System.Boolean>);
-                /** Gets the type id. */
-                get TypeId(): Framework.DocumentModel.TypeIdentifier;
                 /**
                  * Gets a read-only list containing the valid scales that can be set
                  * on this filter.
@@ -5631,14 +5580,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get FilterCollectionReference(): FilterCollection;
                 /**
-                 * Gets the group display name, that is, its caption.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Name(): JsType<System.String>;
-                /**
                  * Gets the subgroups of this root group.
                  * 
                  * @since 2.0
@@ -5779,8 +5720,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class TextFilter extends ColumnFilter implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /** Gets the type id. */
-                get TypeId(): Framework.DocumentModel.TypeIdentifier;
                 /**
                  * Gets or sets the value that this {@link Spotfire.Dxp.Application.Filters.TextFilter} is matching.
                  * 
@@ -6323,8 +6262,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class ModLegendAxisItem extends Visuals.LegendAxisItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /** Gets the title of this legend item. */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -9858,22 +9795,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class DendrogramLegendItem extends LegendTextItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets the text contained in this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Text(): JsType<System.String>;
-                /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -13459,8 +13380,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get ShowAxisSelector(): JsType<System.Boolean>;
                 set ShowAxisSelector(value: JsType<System.Boolean>);
-                /** Gets the title of this legend item. */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -13487,22 +13406,6 @@ declare namespace Spotfire.Dxp {
              */
             class LegendColorItem extends LegendAxisItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
-                 * Gets a value indicating whether this item can be placed in the horizontal legend.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get CanBeHorizontal(): JsType<System.Boolean>;
-                /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
-                /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
@@ -13528,22 +13431,6 @@ declare namespace Spotfire.Dxp {
              */
             class LegendCombinationChartSeriesItem extends LegendAxisItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
-                 * Gets a value indicating whether this item can be placed in the horizontal legend.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get CanBeHorizontal(): JsType<System.Boolean>;
-                /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
-                /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
@@ -13568,8 +13455,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendDataTableItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /** Gets the title of this legend item. */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -13595,14 +13480,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendDescriptionItem extends LegendTextItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets the text contained in this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Text(): JsType<System.String>;
                 /**
                  * Gets the title.
                  * 
@@ -13675,22 +13552,6 @@ declare namespace Spotfire.Dxp {
              */
             class LegendErrorBarsItem extends LegendTextItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
-                 * Gets the text contained in this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Text(): JsType<System.String>;
-                /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
-                /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
@@ -13716,14 +13577,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendFilteringsItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -13751,14 +13604,6 @@ declare namespace Spotfire.Dxp {
              */
             class LegendFilterRuleItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
-                /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
@@ -13783,14 +13628,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendFittingModelCollectionItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -13921,14 +13758,6 @@ declare namespace Spotfire.Dxp {
              */
             class LegendItemStandIn extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
-                /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
@@ -13953,14 +13782,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendLineConnectionItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -14013,14 +13834,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendMarkerShapeItem extends LegendAxisItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets a value indicating whether this item can be placed in the horizontal legend.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get CanBeHorizontal(): JsType<System.Boolean>;
                 /** Gets the title. */
                 get Title(): JsType<System.String>;
                 /**
@@ -14048,14 +13861,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendMarkingItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets the title of this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -14108,14 +13913,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendShape3DItem extends LegendAxisItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets a value indicating whether this item can be placed in the horizontal legend.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get CanBeHorizontal(): JsType<System.Boolean>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -14201,14 +13998,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendTitleItem extends LegendTextItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets the text contained in this legend item.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Text(): JsType<System.String>;
                 /**
                  * Gets the title.
                  * 
@@ -14296,8 +14085,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class LegendTrellisItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /** Gets the title of this legend item. */
-                get Title(): JsType<System.String>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -14849,7 +14636,7 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
-             * Class is responsible for embedding custom markers in the document.
+             * Class responsible for embedding custom marker shapes in the document.
              * 
              * @since 2.1
              * 
@@ -25748,6 +25535,16 @@ declare namespace Spotfire.Dxp {
                      */
                     GetEnumerator(): System.Collections.Generic.IEnumerator<GeocodingTableReference>;
                     /**
+                     * Moves the {@link Spotfire.Dxp.Application.Visuals.Maps.GeocodingTableReference} at the specified index to a new location in the collection.
+                     * @param fromIndex The zero-based index specifying the location of the item to be moved.
+                     * @param toIndex The zero-based index specifying the new location of the item.
+                     * 
+                     * @since 2.2
+                     * 
+                     * @group Default capability
+                     */
+                    Move(fromIndex: (JsType<System.Int32> | System.Int32), toIndex: (JsType<System.Int32> | System.Int32)): void;
+                    /**
                      * Removes the specified data table from this collection.
                      * @param dataTable The data table to remove from this collection.
                      * @returns true if dataTable was successfully removed from this collection, otherwise false.
@@ -25890,14 +25687,6 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 class ImageLayer extends MapChartLayer implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                    /**
-                     * Gets the extent.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get Extent(): GeographicExtent;
                     /**
                      * Gets or sets a value indicating whether the sharp edges of this {@link Spotfire.Dxp.Application.Visuals.Maps.ImageLayer} should be preserved when it is up-scaled.
                      * 
@@ -26058,14 +25847,6 @@ declare namespace Spotfire.Dxp {
                  */
                 class LegendLayerTitleItem extends LegendTextItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                     /**
-                     * Gets the text contained in this legend item.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get Text(): JsType<System.String>;
-                    /**
                      * Gets the title.
                      * 
                      * @since 2.0
@@ -26098,14 +25879,6 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 class LegendWmsStyleItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                    /**
-                     * Gets the title of this legend item.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get Title(): JsType<System.String>;
                     /**
                      * @ignore
                      * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -26351,14 +26124,6 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 class MapChartDataLayer extends MapChartLayer implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                    /**
-                     * Gets the extent.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get Extent(): GeographicExtent;
                     /**
                      * Gets the layer visualization for this data layer.
                      * 
@@ -27229,14 +26994,6 @@ declare namespace Spotfire.Dxp {
                  */
                 class StandardTileLayer extends TileLayer implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                     /**
-                     * Gets the extent.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get Extent(): GeographicExtent;
-                    /**
                      * Gets or sets the name of the map service to use, for example "Basic map" or "Roads".
                      * If the service is not found, the map layer is still valid except there will be a visualization issue
                      * and no map tiles will be displayed.
@@ -27283,24 +27040,6 @@ declare namespace Spotfire.Dxp {
                  */
                 class TileLayer extends MapChartLayer implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                     /**
-                     * Gets or sets a value indicating whether this layer's extent should be taken into account when resetting view extent.
-                     * @remark Tile and Wms layers are always false. Setting the property on these layers is always ignored.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get IncludeInResetViewExtent(): JsType<System.Boolean>;
-                    set IncludeInResetViewExtent(value: JsType<System.Boolean>);
-                    /**
-                     * Gets a value indicating whether the layer supports transparency or not.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get SupportsTransparency(): JsType<System.Boolean>;
-                    /**
                      * @ignore
                      * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                      */
@@ -27344,14 +27083,6 @@ declare namespace Spotfire.Dxp {
                     get CopyrightText(): JsType<System.String>;
                     set CopyrightText(value: JsType<System.String>);
                     /**
-                     * Gets the extent.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get Extent(): GeographicExtent;
-                    /**
                      * Gets or sets the TMS layer URL template. Should have {x}, {y} and {z} in its path.
                      * 
                      * @since 2.0
@@ -27394,24 +27125,6 @@ declare namespace Spotfire.Dxp {
                      */
                     get CacheImages(): JsType<System.Boolean>;
                     set CacheImages(value: JsType<System.Boolean>);
-                    /**
-                     * Gets the extent.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get Extent(): GeographicExtent;
-                    /**
-                     * Gets or sets a value indicating whether this layer's extent should be taken into account when resetting view extent.
-                     * @remark Tile and Wms layers are always false. Setting the property on these layers is always ignored.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get IncludeInResetViewExtent(): JsType<System.Boolean>;
-                    set IncludeInResetViewExtent(value: JsType<System.Boolean>);
                     /**
                      * Gets the legend object for this layer.
                      * 
@@ -27461,14 +27174,6 @@ declare namespace Spotfire.Dxp {
                      * @group Default capability
                      */
                     get Sublayers(): WmsSublayerCollection;
-                    /**
-                     * Gets a value indicating whether the layer supports transparency or not.
-                     * 
-                     * @since 2.0
-                     * 
-                     * @group Default capability
-                     */
-                    get SupportsTransparency(): JsType<System.Boolean>;
                     /**
                      * Gets or sets a value indicating whether a tiled schema should be used when rendering.
                      * 
@@ -30130,7 +29835,7 @@ declare namespace Spotfire.Dxp {
                 }
                 
                 /**
-                 * Partial class for {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayer.ColumnNameAxis}.
+                 * Represents a layer of reference elements.
                  * 
                  * @since 2.2
                  * 
@@ -33168,8 +32873,6 @@ declare namespace Spotfire.Dxp {
          * @group Default capability
          */
         class DataFilteringSelection extends DataSelection implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-            /** Gets a value indicating whether the selection is read-only or not. */
-            get IsReadOnly(): JsType<System.Boolean>;
             /**
              * @ignore
              * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -33352,23 +33055,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             get DataSource(): DataSource;
-            /**
-             * Gets a document title for the data returned from this data source with the current configuration.
-             * @remark The default implementation returns string.Empty.
-             * 
-             * @since 2.0
-             * 
-             * @group Default capability
-             */
-            get DocumentTitle(): JsType<System.String>;
-            /**
-             * Gets a value indicating whether this instance supports linked data mode.
-             * 
-             * @since 2.0
-             * 
-             * @group Default capability
-             */
-            get IsLinkable(): JsType<System.Boolean>;
             /**
              * Get a read-only copy of the list of {@link Spotfire.Dxp.Data.DataTransformation}'s.
              * 
@@ -33922,8 +33608,6 @@ declare namespace Spotfire.Dxp {
              */
             get Color(): JsType<System.Drawing.Color>;
             set Color(value: JsType<System.Drawing.Color>);
-            /** Gets a value indicating whether the selection is read-only or not. */
-            get IsReadOnly(): JsType<System.Boolean>;
             /**
              * @ignore
              * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -37532,37 +37216,6 @@ declare namespace Spotfire.Dxp {
          * @group Default capability
          */
         class DataValueGeneric<T> extends DataValue {
-            /**
-             * Gets the data type corresponding to the runtime values that can be stored in this value container.
-             * The data type is fixed, since a data value cannot be used for values of varying types.
-             * @remark For the time and and date data types, DataType.DateTime will be returned.
-             * That is, the subtype information is not maintained. This behaviour is not ideal and should be
-             * considered as a known issue which may be improved in a future release.
-             * 
-             * @since 2.0
-             * 
-             * @group Default capability
-             */
-            get DataType(): DataType;
-            /**
-             * Gets a value indicating whether this DataValue contains a valid value.
-             * If HasValidValue is false, then either IsNullValue is true or HasDataError is true, but not both.
-             * If HasValidValue is true, the IsNullValue and HasDataError are both false.
-             * 
-             * @since 2.0
-             * 
-             * @group Default capability
-             */
-            get HasValidValue(): JsType<System.Boolean>;
-            /**
-             * Gets a value indicating whether this DataValue instance represents a null value,
-             * or, more precisely, an invalid value with a null data error.
-             * 
-             * @since 2.0
-             * 
-             * @group Default capability
-             */
-            get IsNullValue(): JsType<System.Boolean>;
             /**
              * Gets or sets the valid value contained in this DataValue instance.
              * A default value is returned if there is no valid value.
@@ -42624,28 +42277,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get AddedData(): DataOperation;
                 /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
-                /**
                  * Gets the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} producing the original data, i.e. the data before adding columns.
                  * 
                  * @since 2.0
@@ -42707,28 +42338,6 @@ declare namespace Spotfire.Dxp {
                 get AddRowsSettings(): AddRowsSettings;
                 set AddRowsSettings(value: AddRowsSettings);
                 /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
-                /**
                  * Gets the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} producing the original data, i.e. the data before adding rows.
                  * 
                  * @since 2.0
@@ -42777,28 +42386,6 @@ declare namespace Spotfire.Dxp {
                  */
                 get Calculation(): Calculation;
                 /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
-                /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
@@ -42821,38 +42408,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class DataConnectionOperation extends DataOperation {
-                /**
-                 * Gets or sets the {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior} for this operation.
-                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataOperation.CanSetDataLoadingBehavior|CanSetDataLoadingBehavior(behavior)} is true.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DataLoadingBehavior(): DataLoadingBehavior;
-                set DataLoadingBehavior(value: DataLoadingBehavior);
-                /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -42923,28 +42478,6 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 get DataFunction(): DataFunctions.DataFunction;
-                /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
                 /**
                  * Gets the {@link Spotfire.Dxp.Data.DataFunctions.OutputParameter} for the {@link Spotfire.Dxp.Data.DataOperations.DataFunctionOperation.DataFunction}.
                  * @remark A {@link Spotfire.Dxp.Data.DataFunctions.DataFunction} can have several outputs.
@@ -43228,38 +42761,6 @@ declare namespace Spotfire.Dxp {
              */
             class DataSourceOperation extends DataOperation {
                 /**
-                 * Gets or sets the {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior} for this operation.
-                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataOperation.CanSetDataLoadingBehavior|CanSetDataLoadingBehavior(behavior)} is true.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DataLoadingBehavior(): DataLoadingBehavior;
-                set DataLoadingBehavior(value: DataLoadingBehavior);
-                /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
-                /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
                  */
@@ -43366,16 +42867,6 @@ declare namespace Spotfire.Dxp {
              */
             class DataTableDataSourceOperation extends DataOperation {
                 /**
-                 * Gets or sets the {@link Spotfire.Dxp.Data.DataOperations.DataLoadingBehavior} for this operation.
-                 * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataOperation.CanSetDataLoadingBehavior|CanSetDataLoadingBehavior(behavior)} is true.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DataLoadingBehavior(): DataLoadingBehavior;
-                set DataLoadingBehavior(value: DataLoadingBehavior);
-                /**
                  * Gets the {@link Spotfire.Dxp.Data.DataTable} that data is read from.
                  * @remark The returned value may be null, typically if the DataTable has been removed from the analysis.
                  * 
@@ -43384,28 +42875,6 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 get DataTable(): DataTable;
-                /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
                 /**
                  * Gets or sets the {@link Spotfire.Dxp.Data.Import.DataTableDataSourceUpdateBehavior}.
                  * @remark Before using the set accessor, validate that {@link Spotfire.Dxp.Data.DataOperations.DataTableDataSourceOperation.CanSetUpdateBehavior|CanSetUpdateBehavior(behavior)} returns true.
@@ -43498,28 +42967,6 @@ declare namespace Spotfire.Dxp {
              */
             class DataTransformationsOperation extends DataOperation {
                 /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
-                /**
                  * Gets the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} producing the original data, i.e. the data that the transformations are applied on.
                  * 
                  * @since 2.0
@@ -43588,28 +43035,6 @@ declare namespace Spotfire.Dxp {
              */
             class FreezeColumnOperation extends DataOperation {
                 /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
-                /**
                  * Gets the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} producing the original data, i.e. the data before the column was frozen.
                  * 
                  * @since 2.0
@@ -43640,20 +43065,6 @@ declare namespace Spotfire.Dxp {
              */
             class InformationLinkOnDemandOperation extends DataOperation {
                 /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
                  * Gets the Information Link id.
                  * 
                  * @since 2.0
@@ -43661,14 +43072,6 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 get InformationLinkId(): JsType<System.Guid>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
                 /**
                  * @ignore
                  * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
@@ -43732,28 +43135,6 @@ declare namespace Spotfire.Dxp {
              */
             class RemoveColumnsOperation extends DataOperation {
                 /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
-                /**
                  * Gets the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} producing the original data, before columns were removed.
                  * 
                  * @since 2.0
@@ -43799,28 +43180,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class RemoveRowsOperation extends DataOperation {
-                /**
-                 * Gets a localized display name for the operation.
-                 * This string is for display purposes only.
-                 * @remark Note: This string should not be used to programmatically check for
-                 * the presence of any particular setting.
-                 * The format and content of this string may change between releases.
-                 * See the various concrete {@link Spotfire.Dxp.Data.DataOperations} classes for
-                 * details on how to read specific settings.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get DisplayName(): JsType<System.String>;
-                /**
-                 * Gets the inputs, if any, to the operation.
-                 * 
-                 * @since 2.0
-                 * 
-                 * @group Default capability
-                 */
-                get Inputs(): System.Collections.Generic.IReadOnlyList<DataOperation>;
                 /**
                  * Gets the {@link Spotfire.Dxp.Data.DataOperations.DataOperation} producing the original data, before rows were removed.
                  * 
@@ -46655,13 +46014,6 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class SbdfLibraryDataSource extends DataSource {
-                /**
-                 * Gets a document title for the data returned from this data source with the current configuration.
-                 * @remark The default implementation returns string.Empty.
-                 */
-                get DocumentTitle(): JsType<System.String>;
-                /** Gets a value indicating whether this instance supports linked data mode. */
-                get IsLinkable(): JsType<System.Boolean>;
                 /**
                  * Initializes a new instance of the {@link Spotfire.Dxp.Data.Import.SbdfLibraryDataSource} class.
                  * @param libraryItem The library item.
@@ -50130,8 +49482,7 @@ declare namespace Spotfire.Dxp {
         
         namespace Library {
             /**
-             * Exceptions thrown for errors encountered at Library service
-             * communications.
+             * Exceptions thrown for errors encountered at Library service communications.
              * 
              * @since 2.0
              * 
