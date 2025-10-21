@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.147.8"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.150.1"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
@@ -12,14 +12,14 @@
 <title>Getting started | Spotfire® Mods</title>
   <meta itemprop="name" content="Getting started">
   <meta itemprop="description" content="This guide describes how to get started with mods development in Spotfire.">
-  <meta itemprop="datePublished" content="2025-06-09T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-06-09T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1181">
+  <meta itemprop="datePublished" content="2025-06-16T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-06-16T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1203">
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" as="style">
-<link href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" as="style">
+<link href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -188,6 +188,14 @@
       
         
           
+          
+          <a class="td-sidebar-link td-sidebar-link__page  active" id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
+        
+      
+      
+      
+        
+          
 
 
 
@@ -207,14 +215,6 @@
   </ul>
 </ul>
 
-        
-      
-      
-      
-        
-          
-          
-          <a class="td-sidebar-link td-sidebar-link__page  active" id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
         
       
       
@@ -688,20 +688,15 @@ The development tooling requires <a href="https://nodejs.org/en/download/">Node.
 </ul>
 <p><em>Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.</em></p>
 <h2 id="developing-a-mod">Developing a mod</h2>
+<p>This section describes the basic steps for creating a mod using the Spotfire mods SDK.</p>
 <h3 id="1-create-a-new-project">1. Create a new project</h3>
-<ul>
-<li>
 <p>Create an empty folder for the project and open the folder in VS Code.</p>
-</li>
-<li>
 <p>Open a terminal and run the following commands to create a mod from the default template:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>npx @spotfire/mods-sdk@latest new <span style="color:#ce5c00;font-weight:bold">[</span>action<span style="color:#000;font-weight:bold">|</span>visualization<span style="color:#ce5c00;font-weight:bold">]</span>
 </span></span><span style="display:flex;"><span>npm install
 </span></span><span style="display:flex;"><span>npm run build
-</span></span></code></pre></div></li>
-</ul>
-<p>Depending on the specified mod type (<em>action</em> or <em>visualization</em>) the corresponding VS Code project with some simple example code will be created.</p>
-<p>For more info about the folder structure, see the detailed documentation for the mod type.</p>
+</span></span></code></pre></div><p>Depending on the specified mod type (<em>action</em> or <em>visualization</em>) the corresponding VS Code project with some simple example code will be created.</p>
+<p><sub>💡 Note: You can add the <code>--api-version &lt;mods-api-version&gt;</code> when running the <code>new</code> command to target a specific version of the Mods API.</sub></p>
 <h3 id="2-start-the-local-development-server">2. Start the local development server</h3>
 <p>Run the default build task, either by pressing &ldquo;Ctrl + Shift + B&rdquo; or by running the &ldquo;Start watchers&rdquo; task.
 This will launch three watchers:</p>
@@ -795,7 +790,7 @@ Your mod will be rebuilt when any TypeScript file is changed or when the mod man
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 9, 2025
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 16, 2025
 </div>
 </div>
 

@@ -316,6 +316,7 @@
                                                                                                                 </dd>
                                                                                                         </dl>
                                                                                                     </section>
+                                                                                            
                                                                                 </section>
                                                                             </section>
                                                                     </div>
@@ -512,8 +513,24 @@
                                                                                                                                                         </section>
                                                                                                                                             </div>
                                                                                                                                         </dd>
+                                                                                                                                        <dt data-property-name="optional">
+                                                                                                                                            <span class="json-property-name">optional:</span>
+                                                                                                                                            
+                                                                                                                                            <span class="json-property-type">boolean</span>
+                                                                                                                                            <span class="json-property-range" title="Value limits"></span>
+                                                                                                                                            
+                                                                                                                                                    <span class="json-property-default-value">true</span>
+                                                                                                                                        </dt>
+                                                                                                                                        <dd>
+                                                                                                                                            <p>Specifies that the axis can be left unconfigured. Added in API version 2.2.</p>
+                                                                                                                            
+                                                                                                                                            <div class="json-inner-schema">
+                                                                                                                                                
+                                                                                                                                            </div>
+                                                                                                                                        </dd>
                                                                                                                                 </dl>
                                                                                                                             </section>
+                                                                                                                    
                                                                                                         </section>
                                                                                                     </section>
                                                                                             </div>
@@ -815,6 +832,21 @@
                                                                             </dt>
                                                                             <dd>
                                                                                 <p>Specifies the order in which this axis will be treated when the heuristics assigns the initial expression. A higher value means it will be treated before axes with a lower value. Two axes with the same value will be treated in undefined order.</p>
+                                                                
+                                                                                <div class="json-inner-schema">
+                                                                                    
+                                                                                </div>
+                                                                            </dd>
+                                                                            <dt data-property-name="disableOnAutoConfigure">
+                                                                                <span class="json-property-name">disableOnAutoConfigure:</span>
+                                                                                
+                                                                                <span class="json-property-type">boolean</span>
+                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                
+                                                                                        <span class="json-property-default-value">true</span>
+                                                                            </dt>
+                                                                            <dd>
+                                                                                <p>Specifies that heuristics should not be run during auto configure, e.g. during mod initialization. Heuristics will only be run when the axis is explicitly enabled by the user via the visualization properties panel. Added in API version 2.2.</p>
                                                                 
                                                                                 <div class="json-inner-schema">
                                                                                     

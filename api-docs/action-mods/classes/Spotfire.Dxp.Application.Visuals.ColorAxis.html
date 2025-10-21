@@ -1,0 +1,538 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>ColorAxis | Action</title><meta name="description" content="Documentation for Action"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script><style>@import "https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i";
+
+html {
+    height: 100%;
+}
+
+body {
+    margin-top: 0rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background: white;
+}
+
+.tsd-page-title {
+    padding: 20px 0 20px 0;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+#tsd-search .results {
+    z-index: 1;
+}
+
+.tsd-page-toolbar {
+    z-index: inherit;
+    position: static;
+}
+
+.tsd-panel {
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+#main-wrapper {
+    overflow: auto;
+    flex-grow: 1;
+    width: 100%;
+    height: calc(100vh - 4rem);
+}
+
+.lead {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.overview-link {
+    width: 16px;
+    height: 16px;
+}
+
+.overview-link svg {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+#nav-wrapper {
+    min-height: 4rem;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* Make the search white */
+.tsd-page-toolbar .tsd-toolbar-contents  {
+    background: white;
+}
+
+/********************************
+*
+* Extracted via collect-css.js
+*
+********************************/
+#nav-wrapper {
+    border-collapse: separate;
+    border-spacing: 0px 0px;
+    caption-side: top;
+    color: rgb(34, 34, 34);
+    cursor: auto;
+    direction: ltr;
+    empty-cells: show;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 16px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    font-stretch: 100%;
+    font: 16px / 24px Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    letter-spacing: normal;
+    line-height: 24px;
+    list-style-position: outside;
+    list-style-type: disc;
+    list-style: outside none disc;
+    orphans: 2;
+    tab-size: 8;
+    text-align: left;
+    text-align-last: auto;
+    text-decoration-color: rgb(34, 34, 34);
+    text-indent: 0px;
+    visibility: visible;
+    white-space: normal;
+    widows: 2;
+    word-break: normal;
+    word-spacing: 0px;
+    word-wrap: normal;
+}
+#nav-wrapper *,
+#nav-wrapper ::before,
+#nav-wrapper ::after {
+    box-sizing: border-box;
+}
+#nav-wrapper article,
+#nav-wrapper aside,
+#nav-wrapper figcaption,
+#nav-wrapper figure,
+#nav-wrapper footer,
+#nav-wrapper header,
+#nav-wrapper hgroup,
+#nav-wrapper main,
+#nav-wrapper nav,
+#nav-wrapper section {
+    display: block;
+}
+#nav-wrapper .navbar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+}
+#nav-wrapper .navbar-expand {
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+}
+#nav-wrapper .flex-column {
+    flex-direction: column !important;
+}
+@media (min-width: 768px) {
+    #nav-wrapper .flex-md-row {
+        flex-direction: row !important;
+    }
+}
+#nav-wrapper .td-navbar {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.15), 0px 4px 5px rgba(0, 0, 0, 0.14);
+    min-height: 4rem;
+    margin: 0px;
+    z-index: 32;
+}
+@media (min-width: 768px) {
+    #nav-wrapper .td-navbar {
+        position: fixed;
+        top: 0px;
+        width: 100%;
+    }
+}
+#nav-wrapper a {
+    color: rgb(145, 173, 255);
+    text-decoration: none;
+    background-color: transparent;
+}
+#nav-wrapper .navbar-brand {
+    display: inline-block;
+    padding: 0;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+#nav-wrapper .navbar-dark .navbar-brand {
+    color: rgb(255, 255, 255);
+}
+#nav-wrapper .td-navbar .navbar-brand {
+    text-transform: none;
+}
+#nav-wrapper svg {
+    overflow: hidden;
+    vertical-align: middle;
+}
+#nav-wrapper .td-navbar .navbar-brand svg {
+    display: inline-block;
+    margin: 0px 10px 0px 5px;
+    height: 40px;
+}
+#nav-wrapper .text-uppercase {
+    text-transform: uppercase !important;
+}
+#nav-wrapper .font-weight-bold {
+    font-weight: 700 !important;
+}
+@media (min-width: 768px) {
+    #nav-wrapper .ml-md-auto,
+    #nav-wrapper .mx-md-auto {
+        margin-left: auto !important;
+    }
+}
+#nav-wrapper .td-navbar #main_navbar {
+    margin-top: 5px;
+}
+#nav-wrapper ol,
+#nav-wrapper ul,
+#nav-wrapper dl {
+    margin-top: 0px;
+    margin-bottom: 1rem;
+}
+#nav-wrapper .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0px;
+    margin-bottom: 0px;
+    list-style: none;
+}
+#nav-wrapper .navbar-expand .navbar-nav {
+    flex-direction: row;
+}
+#nav-wrapper .mt-2,
+#nav-wrapper .my-2 {
+    margin-top: 0.5rem !important;
+}
+@media (min-width: 992px) {
+    #nav-wrapper .mt-lg-0,
+    #nav-wrapper .my-lg-0 {
+        margin-top: 0px !important;
+    }
+}
+#nav-wrapper .mb-2,
+#nav-wrapper .my-2 {
+    margin-bottom: 0.5rem !important;
+}
+#nav-wrapper .mr-4,
+#nav-wrapper .mx-4 {
+    margin-right: 1.5rem !important;
+}
+@media (min-width: 992px) {
+    #nav-wrapper .mb-lg-0,
+    #nav-wrapper .my-lg-0 {
+        margin-bottom: 0px !important;
+    }
+}
+#nav-wrapper .nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+}
+#nav-wrapper .navbar-nav .nav-link {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+#nav-wrapper .navbar-expand .navbar-nav .nav-link {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+}
+#nav-wrapper .navbar-dark .navbar-nav .nav-link {
+    color: #6d7078;
+}
+#nav-wrapper .navbar-dark .navbar-nav .nav-link:hover {
+    color: #313336;
+}
+#nav-wrapper .td-navbar .nav-link {
+    text-transform: none;
+    font-weight: 400;
+}
+#nav-wrapper .navbar-dark .navbar-nav .show > .nav-link,
+#nav-wrapper .navbar-dark .navbar-nav .active > .nav-link,
+#nav-wrapper .navbar-dark .navbar-nav .nav-link.show,
+#nav-wrapper .navbar-dark .navbar-nav .nav-link.active {
+    color: #000;
+}
+#nav-wrapper .d-none {
+    display: none !important;
+}
+@media (min-width: 992px) {
+    #nav-wrapper .d-lg-block {
+        display: block !important;
+    }
+}
+
+#nav-wrapper .navbar-subnav {
+    font-size: 16px;
+    padding: 0;
+}
+
+#nav-wrapper .navbar-subnav.top {
+    font-size: 14px;
+    display: none;
+    position: absolute;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0px 4px 5px 0px #00000024;
+    padding: 16px;
+}
+
+#nav-wrapper  .navbar-subnav .nav-item {
+    list-style: none;
+}
+
+#nav-wrapper  .navbar-subnav .nav-link {
+    padding: 0;
+}
+
+#nav-wrapper  .navbar-subnav.top > .nav-item {
+    padding-top: 12px;
+}
+#nav-wrapper  .navbar-subnav.top > .nav-item:first-child {
+    padding-top: 0;
+}
+
+#nav-wrapper  .navbar-subnav.top .nav-item span {
+    color: #495057;
+    font-weight: bold;
+}
+
+#nav-wrapper  .navbar-subnav .nav-item .nav-item span {
+    color: initial;
+    font-weight: initial;
+}
+
+#nav-wrapper  .nav-item:hover .navbar-subnav.top {
+    display: block;
+}
+
+#nav-wrapper .navbar-subnav ul {
+    margin-bottom: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: var(--dark-color-background, "#2b2e33");
+    }
+    /* Make the search white */
+    .tsd-page-toolbar .tsd-toolbar-contents  {
+        background: var(--dark-color-background, "#2b2e33");;
+    }
+}
+</style></head><body><div id="nav-wrapper">
+    <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/spotfire-mods/">
+            <span class="navbar-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232 40">
+                    <path d="M160.46 29.9V10.8h1.8V30h-1.8v-.1zm8.7-5.8l-8.3-12.4.6-.5.7-.5 7.9 11.6-.9 1.8zm0 0l-.8-1.8 7.8-11.6.7.5.6.5-8.3 12.4zm7.1 5.8V10.8h1.8V30h-1.8v-.1zm12.4.3c-1.3 0-2.5-.3-3.5-.9s-1.8-1.5-2.4-2.5c-.6-1.1-.9-2.3-.9-3.7s.3-2.6.8-3.7c.6-1.1 1.4-1.9 2.4-2.5s2.2-.9 3.5-.9 2.5.3 3.5.9 1.8 1.5 2.4 2.5c.6 1.1.8 2.3.8 3.7s-.3 2.6-.8 3.7-1.3 1.9-2.4 2.5c-.9.6-2.1.9-3.4.9zm0-1.5c1 0 1.9-.2 2.6-.7s1.3-1.1 1.8-2 .6-1.8.6-2.9-.2-2.1-.6-2.9c-.4-.8-1-1.5-1.8-2s-1.6-.7-2.6-.7-1.9.2-2.6.7c-.8.5-1.4 1.1-1.8 2-.4.8-.6 1.8-.6 2.9s.2 2.1.7 2.9c.4.8 1 1.5 1.8 2s1.5.7 2.5.7zm15.3 1.5c-1.2 0-2.3-.3-3.2-.9s-1.7-1.5-2.2-2.5c-.5-1.1-.8-2.3-.8-3.7s.3-2.6.8-3.7 1.3-1.9 2.2-2.5 2-.9 3.2-.9 2.2.3 3.1.9c.9.6 1.6 1.5 2.1 2.5.5 1.1.8 2.3.8 3.7s-.3 2.6-.8 3.7-1.2 1.9-2.1 2.5c-.9.6-1.9.9-3.1.9zm.3-1.4c.9 0 1.7-.2 2.3-.7.7-.5 1.2-1.2 1.6-2 .4-.9.6-1.8.6-3 0-1.1-.2-2.1-.6-3-.4-.9-.9-1.5-1.6-2-.7-.5-1.5-.7-2.4-.7s-1.8.2-2.5.7-1.3 1.2-1.7 2c-.4.9-.6 1.8-.6 3 0 1.1.2 2.1.6 3 .4.9 1 1.5 1.7 2s1.7.7 2.6.7zm4.6 1.1l-.1-2.5V10.8h1.6V30h-1.5v-.1zm10.3.3c-1 0-1.9-.2-2.7-.5-.7-.3-1.4-.7-1.8-1.2-.5-.5-.8-1-1-1.5l1.5-.5c.3.7.8 1.2 1.5 1.6s1.4.6 2.2.6c1 0 1.8-.2 2.5-.6s1-1 1-1.7-.2-1.2-.7-1.6-1.2-.8-2.2-1l-1.3-.4c-1.2-.3-2.2-.8-2.8-1.4s-1-1.3-1-2.1c0-1.3.4-2.2 1.2-2.9s2.1-1.1 3.8-1.1c.8 0 1.5.1 2.1.3.6.2 1.2.6 1.6 1 .4.4.8.9 1 1.5l-1.5.6c-.3-.7-.7-1.2-1.3-1.5s-1.3-.4-2.2-.4c-1 0-1.7.2-2.3.6s-.8 1-.8 1.7c0 .4.2.8.7 1.2s1.1.7 2 .9l1.2.3c.9.2 1.7.5 2.3.9s1.1.9 1.5 1.4.5 1.1.5 1.8c0 .8-.2 1.5-.6 2.1s-1 1-1.7 1.4c-.9.4-1.8.5-2.7.5zM117.392 29.942h2.709a.222.222 0 0 0 .225-.219v-13.93a.222.222 0 0 0-.225-.219h-2.634a.222.222 0 0 0-.225.219v14.003c0 .081.067.146.15.146zM125.381 17.372v-1.578a.222.222 0 0 0-.225-.219h-2.634a.222.222 0 0 0-.225.219v13.93c0 .121.101.219.225.219h2.634a.222.222 0 0 0 .225-.219v-7.329c0-1.476.311-2.513.933-3.111.622-.597 1.537-.896 2.746-.896h.559a.222.222 0 0 0 .225-.219v-2.667a.224.224 0 0 0-.231-.221c-.93.029-1.742.234-2.433.616a4.772 4.772 0 0 0-1.662 1.514c-.041.061-.137.035-.137-.038zM87.727 18.219c2.815 0 5.046 2.484 4.507 5.32-.338 1.781-1.807 3.212-3.635 3.542-2.911.525-5.459-1.649-5.459-4.392 0-2.465 2.058-4.471 4.587-4.471m0-2.98c-4.509 0-8.107 3.804-7.598 8.299.387 3.417 3.221 6.179 6.727 6.556 4.613.497 8.516-3.01 8.516-7.404 0-4.115-3.423-7.451-7.646-7.451zM115.714 11.446V8.991a.227.227 0 0 0-.215-.221c-2.029-.089-4.069.347-5.129 1.308-1.097.995-1.646 2.45-1.646 4.365v1.131h-2.415a.222.222 0 0 0-.225.219v2.374c0 .121.101.219.225.219h2.407v11.336c0 .121.101.219.225.219h2.661a.222.222 0 0 0 .225-.219V18.386h3.65a.222.222 0 0 0 .225-.219v-2.374a.222.222 0 0 0-.225-.219h-3.662v-1.131c0-1.971 1.549-2.897 3.657-2.779a.224.224 0 0 0 .242-.218z" fill="#333c66"></path>
+                    <ellipse cx="118.793" cy="10.634" rx="1.885" ry="1.837" fill="#333c66"></ellipse>
+                    <path d="M78.029 18.508a6.836 6.836 0 0 0-2.74-2.531 7.943 7.943 0 0 0-3.646-.864 7.76 7.76 0 0 0-1.596.167 7.77 7.77 0 0 0-2.006.717 6.893 6.893 0 0 0-1.024.652c-.049.038-.12.005-.12-.056v-1.007a.223.223 0 0 0-.225-.22h-2.634a.222.222 0 0 0-.225.22v19.815c0 .121.101.219.225.219h2.639a.219.219 0 0 0 .221-.216v-7.558c0-.068.084-.098.13-.047.539.602 1.217 1.11 2.034 1.524.889.451 1.906.675 3.051.672l.149-.006a7.614 7.614 0 0 0 3.028-.878c1.134-.603 2.048-1.479 2.74-2.631.692-1.151 1.039-2.491 1.039-4.017s-.347-2.845-1.039-3.957zm-6.365 8.44c-2.453 0-4.442-2.002-4.442-4.471s1.989-4.471 4.442-4.471 4.442 2.002 4.442 4.471-1.989 4.471-4.442 4.471zM60.825 20.631c-.806-.926-1.985-1.661-3.603-2.246l-2.111-.771c-2.111-.761-3.183-1.424-3.183-2.938 0-1.555 1.665-2.368 3.31-2.368.952 0 1.806.232 2.585.705.68.413 1.541.409 2.2-.036l1.154-.779c.261-.176.28-.328.191-.425-1.525-1.651-3.68-2.557-6.1-2.557-1.904 0-3.616.541-4.821 1.523-1.26 1.027-1.926 2.467-1.926 4.166 0 2.698 1.56 4.506 4.908 5.69l2.287.8c2.06.738 2.978 1.697 2.978 3.11 0 1.495-1.397 2.54-3.398 2.54-1.394 0-2.66-.453-3.68-1.298-.696-.577-1.691-.651-2.442-.144l-.981.662c-.286.193-.326.367-.241.497 1.37 2.089 4.106 3.375 7.227 3.375 2.008 0 3.732-.551 4.985-1.594 1.267-1.054 1.937-2.52 1.937-4.238.014-1.469-.403-2.67-1.276-3.673zM104.685 18.387a.222.222 0 0 0 .225-.22v-2.368a.222.222 0 0 0-.225-.219h-3.661v-3.697a.217.217 0 0 0-.219-.216h-2.669a.218.218 0 0 0-.221.215v3.697h-2.408a.222.222 0 0 0-.225.22v2.368c0 .121.101.219.225.219h2.408v7.501c0 1.429.369 2.461 1.109 3.096.739.635 1.803.953 3.192.953h2.474a.222.222 0 0 0 .225-.22v-2.074a.223.223 0 0 0-.225-.22h-1.933c-.631 0-1.078-.119-1.339-.357-.262-.238-.392-.63-.392-1.178v-7.501h3.66zM137.727 27.339c-1.203 0-2.219-.288-3.053-.864-.834-.577-1.367-1.661-1.598-2.738h11.374a.227.227 0 0 0 .224-.194c.059-.44.089-.8.089-1.081 0-1.555-.355-2.495-1.149-3.882-.238-.416-.557-.791-.901-1.158-1.367-1.453-3.116-2.182-5.248-2.182-2.249 0-4.089.714-5.523 2.139-1.434 1.428-2.152 3.198-2.152 5.313 0 2.153.727 3.935 2.181 5.341 1.453 1.408 3.362 2.11 5.727 2.11 2.487 0 4.432-.811 5.841-2.424a.218.218 0 0 0-.022-.306l-.689-.609c-.668-.59-1.667-.679-2.413-.186-.725.48-1.621.72-2.688.72zm-3.198-8.386c.775-.624 1.745-.935 2.907-.935 1.027 0 1.924.293 2.69.878.75.574 1.234 1.164 1.453 2.282.004.023.01.044.015.067h-8.547c.212-1.077.708-1.669 1.483-2.292zM33.715 19.52l-.019-.222-.034-.472-.058-.454a5.052 5.052 0 0 0-.07-.451l-.084-.466-.06-.262c-.047-.208-.095-.424-.157-.627a13.622 13.622 0 0 0-.618-1.751 14.48 14.48 0 0 0-.849-1.643 13.563 13.563 0 0 0-3.756-4.027c-.174-.131-.349-.242-.534-.36-.081-.052-.162-.103-.242-.156-.08-.044-.17-.097-.261-.15-.182-.106-.353-.207-.534-.295a13.4 13.4 0 0 0-1.696-.741 14.16 14.16 0 0 0-1.775-.498l-.454-.083a5.386 5.386 0 0 0-.449-.071l-.466-.06-.458-.033-.234-.019-.225-.005-.461-.011-.462.011-.236.006-.221.019-.47.035-.452.058c-.146.016-.296.04-.449.07l-.464.085a13.371 13.371 0 0 0-3.998 1.534c-.091.053-.181.106-.273.158l-.23.149c-.185.118-.36.229-.529.356a13.571 13.571 0 0 0-3.764 4.036 14.566 14.566 0 0 0-.847 1.639 13.627 13.627 0 0 0-.616 1.743c-.064.21-.112.425-.159.633l-.062.273-.082.452a5.08 5.08 0 0 0-.07.451l-.059.468-.033.46-.019.235-.005.226-.011.47.011.461.006.235.019.224.034.47.058.456c.016.146.039.293.07.451l.084.463c.019.078.039.166.058.254a13.622 13.622 0 0 0 .777 2.386c.209.49.479 1.012.849 1.643a13.614 13.614 0 0 0 4.282 4.382l.251.161c.08.044.17.098.261.151.181.107.352.208.533.294.482.259 1.018.493 1.696.741.371.134.723.245 1.07.338v-1.723a3.634 3.634 0 0 0-1.434-2.656l-.014-.01a566.35 566.35 0 0 1-.386-.291l-.31-.233-.065-.049-.052-.037a9.907 9.907 0 0 1-1.973-1.847 11.055 11.055 0 0 1-.782-1.107c-.255-.44-.456-.811-.622-1.207a9.62 9.62 0 0 1-.449-1.274 4.03 4.03 0 0 1-.105-.41 6.596 6.596 0 0 0-.055-.234l-.06-.342a3.302 3.302 0 0 1-.053-.342l-.043-.323-.024-.347-.013-.164-.004-.179-.009-.333.009-.347.004-.167.014-.178.023-.33.045-.343a3.08 3.08 0 0 1 .054-.343l.056-.32c.023-.093.041-.171.058-.249.031-.138.063-.281.109-.422.115-.445.29-.889.445-1.262.179-.426.403-.829.619-1.201.28-.443.528-.795.785-1.112a9.96 9.96 0 0 1 1.981-1.853c.11-.086.235-.164.355-.241.067-.043.134-.085.2-.13l.008-.006.009-.005c.073-.039.144-.081.215-.123.119-.07.243-.143.374-.205a9.694 9.694 0 0 1 1.227-.536c.366-.134.765-.247 1.296-.367l.335-.059c.111-.023.225-.041.342-.054l.324-.043.344-.024.163-.013.179-.004.332-.009.344.009.166.004.177.014.329.023.342.045a3.1 3.1 0 0 1 .342.054l.319.056c.54.122.939.235 1.304.368.35.129.806.307 1.238.541.121.056.245.129.364.199.071.042.143.084.215.123l.009.005.008.006c.065.045.133.087.2.13.12.076.245.155.363.246a9.895 9.895 0 0 1 1.972 1.846c.258.319.506.67.782 1.107.219.379.443.782.622 1.207.156.374.331.817.449 1.274.043.129.074.272.105.409.017.078.035.157.055.234l.06.342c.023.11.041.224.053.342l.043.325.024.345.013.164.004.179.009.335-.009.345-.004.167-.014.177-.023.332-.045.341a3.08 3.08 0 0 1-.054.343l-.056.32a8.908 8.908 0 0 0-.058.249c-.031.138-.063.28-.108.421a9.376 9.376 0 0 1-.445 1.262c-.166.397-.368.767-.619 1.201-.275.437-.53.799-.785 1.113a9.956 9.956 0 0 1-2.037 1.891l-.054.042-.31.233-.383.288-.021.015a3.636 3.636 0 0 0-1.43 2.665v1.712a13.17 13.17 0 0 0 1.07-.338 12.77 12.77 0 0 0 1.687-.737 7.13 7.13 0 0 0 .541-.299c.091-.053.181-.107.273-.158.071-.047.154-.101.238-.154a13.634 13.634 0 0 0 4.284-4.387c.367-.626.637-1.148.847-1.639a13.627 13.627 0 0 0 .777-2.384l.06-.264.082-.45c.032-.161.055-.308.07-.451l.059-.469.033-.458.019-.237.005-.224.011-.47-.011-.461-.006-.237z" fill="#333c66"></path>
+                    <ellipse cx="20.22" cy="20" rx="5.227" ry="5.17" fill="#e94165"></ellipse>
+                    <path d="M20.22 3.65c4.428 0 8.589 1.704 11.717 4.798 3.121 3.087 4.84 7.19 4.84 11.552s-1.719 8.465-4.84 11.552c-3.128 3.094-7.289 4.798-11.717 4.798s-8.589-1.704-11.717-4.798c-3.121-3.087-4.84-7.19-4.84-11.552s1.719-8.465 4.84-11.552C11.631 5.354 15.792 3.65 20.22 3.65m0-3.65C9.053 0 0 8.954 0 20s9.053 20 20.22 20 20.22-8.954 20.22-20S31.387 0 20.22 0zM145.845 15.333a1.917 1.917 0 0 1-1.917-1.917 1.894 1.894 0 0 1 .561-1.362 1.933 1.933 0 0 1 2.108-.412 1.921 1.921 0 0 1 1.022 1.022c.1.231.149.483.149.752a1.906 1.906 0 0 1-.561 1.356 1.897 1.897 0 0 1-1.362.561zm0-.397c.298 0 .561-.064.788-.192.227-.128.405-.306.532-.536.128-.229.192-.493.192-.791 0-.303-.064-.568-.192-.795a1.398 1.398 0 0 0-.532-.536 1.558 1.558 0 0 0-.788-.195c-.293 0-.554.065-.781.195-.227.13-.405.309-.532.536s-.192.492-.192.795c0 .298.064.562.192.791.128.229.305.408.532.536.227.128.487.192.781.192zm-.717-.511v-2.072h.745c.213 0 .388.06.525.181s.206.28.206.479a.605.605 0 0 1-.11.355.671.671 0 0 1-.295.234l.49.823h-.419l-.426-.752h-.348v.752h-.369zm.369-1.093h.39a.333.333 0 0 0 .238-.089.3.3 0 0 0 .096-.231.304.304 0 0 0-.099-.238.38.38 0 0 0-.262-.089h-.362v.646z" fill="#333c66"></path>
+                </svg>
+            </span>
+        </a>
+        <div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+            <ul class="navbar-nav mt-2 mt-lg-0">
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                    <a class="nav-link" href="/spotfire-mods/about/"><span>About</span></a>
+                </li>
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                    <a class="nav-link" href="/spotfire-mods/docs/">Working with mods</a>
+                </li>
+                <li class="nav-item mr-4 mb-2 mb-lg-0">
+                    <span class="nav-link active"><span class="active">API
+                            documentation</span></span>
+                    <ul class="navbar-subnav top">
+                        <li class="nav-item">
+                            <span>Action mods</span>
+                            <ul class="navbar-subnav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/spotfire-mods/api-docs/action-mods/index.html">
+                                    <span>API documentation</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <span>Visualization mods</span>
+                            <ul class="navbar-subnav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/spotfire-mods/overview/">
+                                    <span>API overview</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/spotfire-mods/api-docs/visualization-mods/index.html">
+                                    <span>API documentation</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-nav d-none d-lg-block"></div>
+    </nav>
+</div>
+<div id="main-wrapper"></div><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="../index.html" class="title">Action</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb" aria-label="Breadcrumb"><li><a href="../modules/Spotfire.html">Spotfire</a></li><li><a href="../modules/Spotfire.Dxp.html">Dxp</a></li><li><a href="../modules/Spotfire.Dxp.Application.html">Application</a></li><li><a href="../modules/Spotfire.Dxp.Application.Visuals.html">Visuals</a></li><li><a href="" aria-current="page">ColorAxis</a></li></ul><h1>Class ColorAxis</h1></div><section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography"><p>Axis used to define coloring within a visualization.</p>
+</div><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since">Since<a href="#since" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div></section><section class="tsd-panel tsd-hierarchy" data-refl="18673"><h4>Hierarchy (<a href="../hierarchy.html#Spotfire.Dxp.Application.Visuals.ColorAxis">View Summary</a>)</h4><ul class="tsd-hierarchy"><li class="tsd-hierarchy-item"><a href="Spotfire.Dxp.Application.Visuals.Axis.html" class="tsd-signature-type tsd-kind-class">Axis</a><ul class="tsd-hierarchy"><li class="tsd-hierarchy-item"><span class="tsd-hierarchy-target">ColorAxis</span></li></ul></li></ul></section><section class="tsd-panel"><h4>Implements</h4><ul class="tsd-hierarchy"><li><a href="../types/Explicit.html" class="tsd-signature-type tsd-kind-type-alias">Explicit</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/System.IServiceProvider.html" class="tsd-signature-type tsd-kind-interface">IServiceProvider</a><span class="tsd-signature-symbol">&gt;</span></li><li><a href="../types/Explicit.html" class="tsd-signature-type tsd-kind-type-alias">Explicit</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Spotfire.Dxp.Framework.DocumentModel.ITransactions.html" class="tsd-signature-type tsd-kind-interface">ITransactions</a><span class="tsd-signature-symbol">&gt;</span></li><li><a href="../types/Explicit.html" class="tsd-signature-type tsd-kind-type-alias">Explicit</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/Spotfire.Dxp.Framework.DocumentModel.INodeContext.html" class="tsd-signature-type tsd-kind-interface">INodeContext</a><span class="tsd-signature-symbol">&gt;</span></li></ul></section><section class="tsd-panel-group tsd-index-group"><section class="tsd-panel tsd-index-panel"><details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h5 class="tsd-index-heading uppercase">Index</h5></summary><div class="tsd-accordion-details"><section class="tsd-index-section"><h3 class="tsd-index-heading">Methods</h3><div class="tsd-index-list"><a href="#cast" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Cast</span></a>
+<a href="#equals" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Equals</span></a>
+<a href="#gethashcode" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Get<wbr/>Hash<wbr/>Code</span></a>
+<a href="#tostring" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>To<wbr/>String</span></a>
+<a href="#trycast" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Try<wbr/>Cast</span></a>
+<a href="#equals-2" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Equals</span></a>
+</div></section><section class="tsd-index-section"><h3 class="tsd-index-heading">Default capability</h3><div class="tsd-index-list"><a href="#axismode" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Axis<wbr/>Mode</span></a>
+<a href="#binding" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Binding</span></a>
+<a href="#categorical" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Categorical</span></a>
+<a href="#categorymode" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Category<wbr/>Mode</span></a>
+<a href="#coloring" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Coloring</span></a>
+<a href="#context" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Context</span></a>
+<a href="#continuous" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Continuous</span></a>
+<a href="#defaultcolor" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Default<wbr/>Color</span></a>
+<a href="#evaluationmode" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Evaluation<wbr/>Mode</span></a>
+<a href="#expression" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Expression</span></a>
+<a href="#isattached" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Is<wbr/>Attached</span></a>
+<a href="#legenditem" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Legend<wbr/>Item</span></a>
+<a href="#name" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Name</span></a>
+<a href="#titlefontmetadata" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Title<wbr/>Font<wbr/>Metadata</span></a>
+<a href="#transactions" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Transactions</span></a>
+<a href="#foreachnodeinsubtree" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>For<wbr/>Each<wbr/>Node<wbr/>In<wbr/>Sub<wbr/>Tree</span></a>
+</div></section></div></details></section></section><details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h2>Methods</h2></summary><section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="cast"><span>Cast</span><a href="#cast" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li class="tsd-is-inherited"><div class="tsd-signature tsd-anchor-link" id="cast-1"><span class="tsd-kind-call-signature">Cast</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#castt1">T1</a><span class="tsd-signature-symbol">,</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="#castt2">T2</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">this</span><span class="tsd-signature-symbol">:</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#castt2">T2</a><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">type</span><span class="tsd-signature-symbol">:</span> <a href="../types/TypeRef.html" class="tsd-signature-type tsd-kind-type-alias">TypeRef</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#castt1">T1</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#castt1">T1</a><a href="#cast-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Casts this object to the specified type. Throws error on failure.</p>
+</div><section class="tsd-panel"><h4>Type Parameters</h4><ul class="tsd-type-parameter-list"><li><span id="castt1"><span class="tsd-kind-type-parameter">T1</span></span><div class="tsd-comment tsd-typography"><p>The target type of the cast.</p>
+</div></li><li><span id="castt2"><span class="tsd-kind-type-parameter">T2</span></span><div class="tsd-comment tsd-typography"><p>The type of the object to cast.</p>
+</div></li></ul></section><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">this</span>: <a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#castt2">T2</a></span></li><li><span><span class="tsd-kind-parameter">type</span>: <a href="../types/TypeRef.html" class="tsd-signature-type tsd-kind-type-alias">TypeRef</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#castt1">T1</a><span class="tsd-signature-symbol">&gt;</span></span><div class="tsd-comment tsd-typography"><p>The type to cast to.</p>
+</div></li></ul></div><h4 class="tsd-returns-title">Returns <a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#castt1">T1</a></h4><aside class="tsd-sources"><p>Inherited from <a href="Spotfire.Dxp.Application.Visuals.Axis.html">Axis</a>.<a href="Spotfire.Dxp.Application.Visuals.Axis.html#cast">Cast</a></p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="equals"><span>Equals</span><a href="#equals" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li class="tsd-is-inherited"><div class="tsd-signature tsd-anchor-link" id="equals-1"><span class="tsd-kind-call-signature">Equals</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">obj</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><a href="#equals-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Determines whether the specified object is equal to the current object.</p>
+</div><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">obj</span>: <span class="tsd-signature-type">any</span></span><div class="tsd-comment tsd-typography"><p>The object to compare with the current object.</p>
+</div></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><p>true if the specified object  is equal to the current object; otherwise, false.</p>
+<aside class="tsd-sources"><p>Inherited from <a href="Spotfire.Dxp.Application.Visuals.Axis.html">Axis</a>.<a href="Spotfire.Dxp.Application.Visuals.Axis.html#equals">Equals</a></p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="gethashcode"><span>Get<wbr/>Hash<wbr/>Code</span><a href="#gethashcode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li class="tsd-is-inherited"><div class="tsd-signature tsd-anchor-link" id="gethashcode-1"><span class="tsd-kind-call-signature">GetHashCode</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><a href="#gethashcode-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Serves as the default hash function.</p>
+</div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><p>A hash code for the current object.</p>
+<aside class="tsd-sources"><p>Inherited from <a href="Spotfire.Dxp.Application.Visuals.Axis.html">Axis</a>.<a href="Spotfire.Dxp.Application.Visuals.Axis.html#gethashcode">GetHashCode</a></p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="tostring"><span>To<wbr/>String</span><a href="#tostring" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li class="tsd-is-inherited"><div class="tsd-signature tsd-anchor-link" id="tostring-1"><span class="tsd-kind-call-signature">ToString</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><a href="#tostring-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Returns a string that represents the current object.</p>
+</div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><p>A string that represents the current object.</p>
+<aside class="tsd-sources"><p>Inherited from <a href="Spotfire.Dxp.Application.Visuals.Axis.html">Axis</a>.<a href="Spotfire.Dxp.Application.Visuals.Axis.html#tostring">ToString</a></p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="trycast"><span>Try<wbr/>Cast</span><a href="#trycast" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li class="tsd-is-inherited"><div class="tsd-signature tsd-anchor-link" id="trycast-1"><span class="tsd-kind-call-signature">TryCast</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#trycastt1">T1</a><span class="tsd-signature-symbol">,</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="#trycastt2">T2</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">this</span><span class="tsd-signature-symbol">:</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#trycastt2">T2</a><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">type</span><span class="tsd-signature-symbol">:</span> <a href="../types/TypeRef.html" class="tsd-signature-type tsd-kind-type-alias">TypeRef</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#trycastt1">T1</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span> <span class="tsd-signature-symbol">|</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#trycastt1">T1</a><a href="#trycast-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Casts this object to the specified type. Returns null on failure.</p>
+</div><section class="tsd-panel"><h4>Type Parameters</h4><ul class="tsd-type-parameter-list"><li><span id="trycastt1"><span class="tsd-kind-type-parameter">T1</span></span><div class="tsd-comment tsd-typography"><p>The target type of the cast.</p>
+</div></li><li><span id="trycastt2"><span class="tsd-kind-type-parameter">T2</span></span><div class="tsd-comment tsd-typography"><p>The type of the object to cast.</p>
+</div></li></ul></section><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">this</span>: <a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#trycastt2">T2</a></span></li><li><span><span class="tsd-kind-parameter">type</span>: <a href="../types/TypeRef.html" class="tsd-signature-type tsd-kind-type-alias">TypeRef</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#trycastt1">T1</a><span class="tsd-signature-symbol">&gt;</span></span><div class="tsd-comment tsd-typography"><p>The type to cast to.</p>
+</div></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span> <span class="tsd-signature-symbol">|</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.DataValue.html#trycastt1">T1</a></h4><aside class="tsd-sources"><p>Inherited from <a href="Spotfire.Dxp.Application.Visuals.Axis.html">Axis</a>.<a href="Spotfire.Dxp.Application.Visuals.Axis.html#trycast">TryCast</a></p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="equals-2"><code class="tsd-tag">Static</code><span>Equals</span><a href="#equals-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li class="tsd-is-inherited"><div class="tsd-signature tsd-anchor-link" id="equals-3"><span class="tsd-kind-call-signature">Equals</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">objA</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">objB</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><a href="#equals-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Determines whether the specified object instances are considered equal.</p>
+</div><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">objA</span>: <span class="tsd-signature-type">any</span></span><div class="tsd-comment tsd-typography"><p>The first object to compare.</p>
+</div></li><li><span><span class="tsd-kind-parameter">objB</span>: <span class="tsd-signature-type">any</span></span><div class="tsd-comment tsd-typography"><p>The second object to compare.</p>
+</div></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><p>true if the objects are considered equal; otherwise, false. If both objA and objB are null, the method returns true.</p>
+<aside class="tsd-sources"><p>Inherited from <a href="Spotfire.Dxp.Application.Visuals.Axis.html">Axis</a>.<a href="Spotfire.Dxp.Application.Visuals.Axis.html#equals-2">Equals</a></p></aside></div></li></ul></section></section></details><details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Default capability"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h2>Default capability</h2></summary><section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="axismode"><span>Axis<wbr/>Mode</span><a href="#axismode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="axismodeaxismode"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">AxisMode</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.AxisMode.html" class="tsd-signature-type tsd-kind-class">AxisMode</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets the axis mode.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Application.Visuals.AxisMode.html" class="tsd-signature-type tsd-kind-class">AxisMode</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-1">Since<a href="#since-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.AxisMode</p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="binding"><span>Binding</span><a href="#binding" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="bindingbinding"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">Binding</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.AxisBinding.html" class="tsd-signature-type tsd-kind-class">AxisBinding</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets or sets the axis binding.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Application.Visuals.AxisBinding.html" class="tsd-signature-type tsd-kind-class">AxisBinding</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-remark"><h4 class="tsd-anchor-link" id="remark">Remark<a href="#remark" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Axis bindings are used to bind the expression on an axis to the currently marked value in a column.</p>
+<p>The default value of this property is null.</p>
+</div><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-2">Since<a href="#since-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.Binding</p></aside></div></li><li><div class="tsd-signature" id="bindingbinding-1"><span class="tsd-signature-keyword">set</span> <span class="tsd-kind-set-signature">Binding</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.AxisBinding.html" class="tsd-signature-type tsd-kind-class">AxisBinding</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span></div><div class="tsd-description"><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">value</span>: <a href="Spotfire.Dxp.Application.Visuals.AxisBinding.html" class="tsd-signature-type tsd-kind-class">AxisBinding</a></span></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources"><p>Inherited from Axis.Binding</p></aside></div></li></ul></section><section class="tsd-panel tsd-member"><h3 class="tsd-anchor-link" id="categorical"><span>Categorical</span><a href="#categorical" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures"><li><div class="tsd-signature" id="categoricalcategorical"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">Categorical</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.ColorAxis.CategoricalColorAxis.html" class="tsd-signature-type tsd-kind-class">CategoricalColorAxis</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets the categorical part of this axis. Can be null for axes that do not support categorical expressions.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Application.Visuals.ColorAxis.CategoricalColorAxis.html" class="tsd-signature-type tsd-kind-class">CategoricalColorAxis</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-remark"><h4 class="tsd-anchor-link" id="remark-1">Remark<a href="#remark-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>With version 3.1, the <a href="#coloring" class="tsd-kind-accessor">Spotfire.Dxp.Application.Visuals.ColorAxis.Coloring</a> property should be used to control how values are mapped to colors.</p>
+<p>In versions prior to 3.1, the Spotfire.Dxp.Application.Visuals.ColorAxis.CategoricalColorAxis.ColorMap property or the Spotfire.Dxp.Application.Visuals.ColorAxis.CategoricalColorAxis.ColorMap
+property can be used to do this.</p>
+</div><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-3">Since<a href="#since-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="categorymode"><span>Category<wbr/>Mode</span><a href="#categorymode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="categorymodecategorymode"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">CategoryMode</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.CategoryMode.html" class="tsd-signature-type tsd-kind-class">CategoryMode</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets or sets a value controlling how a categorical axis responds to filtering.
+This property only affects axes where the categories are laid out spatially.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Application.Visuals.CategoryMode.html" class="tsd-signature-type tsd-kind-class">CategoryMode</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-4">Since<a href="#since-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.CategoryMode</p></aside></div></li><li><div class="tsd-signature" id="categorymodecategorymode-1"><span class="tsd-signature-keyword">set</span> <span class="tsd-kind-set-signature">CategoryMode</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.CategoryMode.html" class="tsd-signature-type tsd-kind-class">CategoryMode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span></div><div class="tsd-description"><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">value</span>: <a href="Spotfire.Dxp.Application.Visuals.CategoryMode.html" class="tsd-signature-type tsd-kind-class">CategoryMode</a></span></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources"><p>Inherited from Axis.CategoryMode</p></aside></div></li></ul></section><section class="tsd-panel tsd-member"><h3 class="tsd-anchor-link" id="coloring"><span>Coloring</span><a href="#coloring" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures"><li><div class="tsd-signature" id="coloringcoloring"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">Coloring</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.ConditionalColoring.Coloring.html" class="tsd-signature-type tsd-kind-class">Coloring</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets a <a href="Spotfire.Dxp.Application.Visuals.ConditionalColoring.Coloring.html" class="tsd-kind-class">Spotfire.Dxp.Application.Visuals.ConditionalColoring.Coloring</a> object that controls how values are mapped to colors.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Application.Visuals.ConditionalColoring.Coloring.html" class="tsd-signature-type tsd-kind-class">Coloring</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-remark"><h4 class="tsd-anchor-link" id="remark-2">Remark<a href="#remark-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Note that the <a href="Spotfire.Dxp.Application.Visuals.CrossTablePlot.html" class="tsd-kind-class">Spotfire.Dxp.Application.Visuals.CrossTablePlot</a> does not use this property, although its measure axis is of type ColorAxis.
+The coloring in the cross table is controlled by the <a href="Spotfire.Dxp.Application.Visuals.CrossTablePlot.html#colorings" class="tsd-kind-accessor">Spotfire.Dxp.Application.Visuals.CrossTablePlot.Colorings</a> property.</p>
+</div><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-5">Since<a href="#since-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="context"><span>Context</span><a href="#context" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="contextcontext"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">Context</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/Spotfire.Dxp.Framework.DocumentModel.INodeContext.html" class="tsd-signature-type tsd-kind-interface">INodeContext</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets the context of this node.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="../interfaces/Spotfire.Dxp.Framework.DocumentModel.INodeContext.html" class="tsd-signature-type tsd-kind-interface">INodeContext</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-6">Since<a href="#since-6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.Context</p></aside></div></li></ul></section><section class="tsd-panel tsd-member"><h3 class="tsd-anchor-link" id="continuous"><span>Continuous</span><a href="#continuous" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures"><li><div class="tsd-signature" id="continuouscontinuous"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">Continuous</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.ColorAxis.ContinuousColorAxis.html" class="tsd-signature-type tsd-kind-class">ContinuousColorAxis</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets the continuous part of this axis. Can be null for axes that do not support continuous expressions.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Application.Visuals.ColorAxis.ContinuousColorAxis.html" class="tsd-signature-type tsd-kind-class">ContinuousColorAxis</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-remark"><h4 class="tsd-anchor-link" id="remark-3">Remark<a href="#remark-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>With version 3.1, the <a href="#coloring" class="tsd-kind-accessor">Spotfire.Dxp.Application.Visuals.ColorAxis.Coloring</a> property should be used to control how values are mapped to colors.</p>
+<p>In versions prior to 3.1, the Spotfire.Dxp.Application.Visuals.ColorAxis.ContinuousColorAxis.ColorScheme property can be used to do this.</p>
+</div><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-7">Since<a href="#since-7" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div></div></li></ul></section><section class="tsd-panel tsd-member"><h3 class="tsd-anchor-link" id="defaultcolor"><span>Default<wbr/>Color</span><a href="#defaultcolor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures"><li><div class="tsd-signature" id="defaultcolordefaultcolor"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">DefaultColor</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="System.Drawing.Color.html" class="tsd-signature-type tsd-kind-class">Color</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets or sets the default color.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="System.Drawing.Color.html" class="tsd-signature-type tsd-kind-class">Color</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-remark"><h4 class="tsd-anchor-link" id="remark-4">Remark<a href="#remark-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>In versions 3.1 and later, this is a shortcut to the Coloring.DefaultColor property.</p>
+</div><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-8">Since<a href="#since-8" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div></div></li><li><div class="tsd-signature" id="defaultcolordefaultcolor-1"><span class="tsd-signature-keyword">set</span> <span class="tsd-kind-set-signature">DefaultColor</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <a href="System.Drawing.Color.html" class="tsd-signature-type tsd-kind-class">Color</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span></div><div class="tsd-description"><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">value</span>: <a href="System.Drawing.Color.html" class="tsd-signature-type tsd-kind-class">Color</a></span></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="evaluationmode"><span>Evaluation<wbr/>Mode</span><a href="#evaluationmode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="evaluationmodeevaluationmode"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">EvaluationMode</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.AxisEvaluationMode.html" class="tsd-signature-type tsd-kind-class">AxisEvaluationMode</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets or sets a value controlling whether the axis expression should be evaluated on all data or
+on filtered data.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Application.Visuals.AxisEvaluationMode.html" class="tsd-signature-type tsd-kind-class">AxisEvaluationMode</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-9">Since<a href="#since-9" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.EvaluationMode</p></aside></div></li><li><div class="tsd-signature" id="evaluationmodeevaluationmode-1"><span class="tsd-signature-keyword">set</span> <span class="tsd-kind-set-signature">EvaluationMode</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.AxisEvaluationMode.html" class="tsd-signature-type tsd-kind-class">AxisEvaluationMode</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span></div><div class="tsd-description"><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">value</span>: <a href="Spotfire.Dxp.Application.Visuals.AxisEvaluationMode.html" class="tsd-signature-type tsd-kind-class">AxisEvaluationMode</a></span></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources"><p>Inherited from Axis.EvaluationMode</p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="expression"><span>Expression</span><a href="#expression" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="expressionexpression"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">Expression</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets or sets the expression that defines how data is mapped to this axis.</p>
+</div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-remark"><h4 class="tsd-anchor-link" id="remark-5">Remark<a href="#remark-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Expressions are either continuous or categorical. Categorical
+expressions are embraced by angle brackets: The expression X is
+continuous, whereas the expression &lt;X&gt; is categorical.</p>
+<p>In its simplest form an expression is simply a column name,
+such as Sales. In aggregated visualization this is often combined
+with an aggregation method, as in Sum(Sales).</p>
+<p>An axis may support categorical expressions, continuous expressions,
+or both. This depends on the axis in question. The Y axis of a
+scatter plot, for instance, can be either continuous or categorical,
+but the Y axis of a bar chart only supports continuous expressions.</p>
+<p>When building expressions programmatically, identifiers such as column
+names should be escaped. This is to ensure that special characters such as
+square brackets and spaces are treated correctly. This can be done using
+the <a href="Spotfire.Dxp.Data.Expressions.ExpressionUtilities.html" class="tsd-kind-class">Spotfire.Dxp.Data.Expressions.ExpressionUtilities</a> class, or by using
+the <a href="Spotfire.Dxp.Data.DataColumn.html#nameescapedforexpression" class="tsd-kind-accessor">Spotfire.Dxp.Data.DataColumn.NameEscapedForExpression</a> property
+of <a href="Spotfire.Dxp.Data.DataColumn.html" class="tsd-kind-class">Spotfire.Dxp.Data.DataColumn</a>.</p>
+</div><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-10">Since<a href="#since-10" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.Expression</p></aside></div></li><li><div class="tsd-signature" id="expressionexpression-1"><span class="tsd-signature-keyword">set</span> <span class="tsd-kind-set-signature">Expression</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span></div><div class="tsd-description"><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type">string</span></span></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources"><p>Inherited from Axis.Expression</p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="isattached"><span>Is<wbr/>Attached</span><a href="#isattached" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="isattachedisattached"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">IsAttached</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets a value indicating whether this node is attached.</p>
+</div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-11">Since<a href="#since-11" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.IsAttached</p></aside></div></li></ul></section><section class="tsd-panel tsd-member"><h3 class="tsd-anchor-link" id="legenditem"><span>Legend<wbr/>Item</span><a href="#legenditem" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures"><li><div class="tsd-signature" id="legenditemlegenditem"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">LegendItem</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Application.Visuals.LegendColorItem.html" class="tsd-signature-type tsd-kind-class">LegendColorItem</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets the legend item.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Application.Visuals.LegendColorItem.html" class="tsd-signature-type tsd-kind-class">LegendColorItem</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-12">Since<a href="#since-12" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="name"><span>Name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="namename"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">Name</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets the axis name.</p>
+</div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-13">Since<a href="#since-13" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.Name</p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="titlefontmetadata"><span>Title<wbr/>Font<wbr/>Metadata</span><a href="#titlefontmetadata" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="titlefontmetadatatitlefontmetadata"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">TitleFontMetadata</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Framework.Styles.FontMetadata.html" class="tsd-signature-type tsd-kind-class">FontMetadata</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets or sets the title font for this axis.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="Spotfire.Dxp.Framework.Styles.FontMetadata.html" class="tsd-signature-type tsd-kind-class">FontMetadata</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-14">Since<a href="#since-14" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.TitleFontMetadata</p></aside></div></li><li><div class="tsd-signature" id="titlefontmetadatatitlefontmetadata-1"><span class="tsd-signature-keyword">set</span> <span class="tsd-kind-set-signature">TitleFontMetadata</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <a href="Spotfire.Dxp.Framework.Styles.FontMetadata.html" class="tsd-signature-type tsd-kind-class">FontMetadata</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span></div><div class="tsd-description"><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">value</span>: <a href="Spotfire.Dxp.Framework.Styles.FontMetadata.html" class="tsd-signature-type tsd-kind-class">FontMetadata</a></span></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources"><p>Inherited from Axis.TitleFontMetadata</p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="transactions"><span>Transactions</span><a href="#transactions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li><div class="tsd-signature" id="transactionstransactions"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">Transactions</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/Spotfire.Dxp.Framework.DocumentModel.ITransactions.html" class="tsd-signature-type tsd-kind-interface">ITransactions</a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Gets a collection of methods for executing transactions on the document.</p>
+</div><h4 class="tsd-returns-title">Returns <a href="../interfaces/Spotfire.Dxp.Framework.DocumentModel.ITransactions.html" class="tsd-signature-type tsd-kind-interface">ITransactions</a></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-15">Since<a href="#since-15" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.0</p>
+</div></div><aside class="tsd-sources"><p>Inherited from Axis.Transactions</p></aside></div></li></ul></section><section class="tsd-panel tsd-member tsd-is-inherited"><h3 class="tsd-anchor-link" id="foreachnodeinsubtree"><span>For<wbr/>Each<wbr/>Node<wbr/>In<wbr/>Sub<wbr/>Tree</span><a href="#foreachnodeinsubtree" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li class="tsd-is-inherited"><div class="tsd-signature tsd-anchor-link" id="foreachnodeinsubtree-1"><span class="tsd-kind-call-signature">ForEachNodeInSubTree</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#foreachnodeinsubtreetnode">TNode</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">typeTNode</span><span class="tsd-signature-symbol">:</span> <a href="../types/TypeRefParam.html" class="tsd-signature-type tsd-kind-type-alias">TypeRefParam</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.Calculation.html#foreachnodeinsubtreetnode">TNode</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">action</span><span class="tsd-signature-symbol">:</span> <a href="System.Action.html" class="tsd-signature-type tsd-kind-class">Action</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.Calculation.html#foreachnodeinsubtreetnode">TNode</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#foreachnodeinsubtree-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div><div class="tsd-description"><div class="tsd-comment tsd-typography"><p>Applies the specified action to all nodes of the specified type in the subtree spanned
+from this node, including this node.</p>
+</div><section class="tsd-panel"><h4>Type Parameters</h4><ul class="tsd-type-parameter-list"><li><span id="foreachnodeinsubtreetnode"><span class="tsd-kind-type-parameter">TNode</span></span></li></ul></section><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">typeTNode</span>: <a href="../types/TypeRefParam.html" class="tsd-signature-type tsd-kind-type-alias">TypeRefParam</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.Calculation.html#foreachnodeinsubtreetnode">TNode</a><span class="tsd-signature-symbol">&gt;</span></span><div class="tsd-comment tsd-typography"><p>Generic type argument</p>
+</div></li><li><span><span class="tsd-kind-parameter">action</span>: <a href="System.Action.html" class="tsd-signature-type tsd-kind-class">Action</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="Spotfire.Dxp.Data.Calculation.html#foreachnodeinsubtreetnode">TNode</a><span class="tsd-signature-symbol">&gt;</span></span><div class="tsd-comment tsd-typography"><p>The action to apply.</p>
+</div></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><div class="tsd-comment tsd-typography"><div class="tsd-tag-since"><h4 class="tsd-anchor-link" id="since-16">Since<a href="#since-16" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>2.1</p>
+</div></div><aside class="tsd-sources"><p>Inherited from <a href="Spotfire.Dxp.Application.Visuals.Axis.html">Axis</a>.<a href="Spotfire.Dxp.Application.Visuals.Axis.html#foreachnodeinsubtree">ForEachNodeInSubTree</a></p></aside></div></li></ul></section></section></details></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Methods</summary><div><a href="#cast" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Cast</span></a><a href="#equals" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Equals</span></a><a href="#gethashcode" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Get<wbr/>Hash<wbr/>Code</span></a><a href="#tostring" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>To<wbr/>String</span></a><a href="#trycast" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Try<wbr/>Cast</span></a><a href="#equals-2" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>Equals</span></a></div></details><details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Default capability"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Default capability</summary><div><a href="#axismode" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Axis<wbr/>Mode</span></a><a href="#binding" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Binding</span></a><a href="#categorical"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Categorical</span></a><a href="#categorymode" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Category<wbr/>Mode</span></a><a href="#coloring"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Coloring</span></a><a href="#context" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Context</span></a><a href="#continuous"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Continuous</span></a><a href="#defaultcolor"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Default<wbr/>Color</span></a><a href="#evaluationmode" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Evaluation<wbr/>Mode</span></a><a href="#expression" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Expression</span></a><a href="#isattached" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Is<wbr/>Attached</span></a><a href="#legenditem"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Legend<wbr/>Item</span></a><a href="#name" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Name</span></a><a href="#titlefontmetadata" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Title<wbr/>Font<wbr/>Metadata</span></a><a href="#transactions" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Accessor"><use href="../assets/icons.svg#icon-262144"></use></svg><span>Transactions</span></a><a href="#foreachnodeinsubtree" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>For<wbr/>Each<wbr/>Node<wbr/>In<wbr/>Sub<wbr/>Tree</span></a></div></details></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../index.html">Action</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><div class="overlay"></div></div><script>(function () {
+    let favicon = document.createElement("link");
+    favicon.rel = "icon";
+    favicon.type = "image/png";
+    favicon.href = "/spotfire-mods/favicons/favicon.ico";
+    document.head.appendChild(favicon);
+    
+    var titleElem = document.querySelector("h1");
+    var title = (titleElem && titleElem.textContent) || "";
+
+    localStorage.removeItem("tsd-theme");
+    let themeToggle = document.querySelector(".tsd-theme-toggle");
+    if (themeToggle) {
+        themeToggle.style = "display:none";
+    }
+
+    if (title.indexOf("Interface") != 0 || document.location.href.includes("script-mods-api")) {
+        return;
+    }
+
+    var interfaceName = title.split("Interface ")[1];
+
+    let div = document.createElement("div");
+
+    let span = document.createElement("span");
+    span.innerHTML = "Display in ";
+
+    let link = document.createElement("a");
+    link.classList.add("overview-link");
+    link.innerHTML = "API overview";
+    link.title = "Display " + interfaceName + " in the API overview.";
+    link.href = "/spotfire-mods/overview/#" + interfaceName.split("<")[0];
+
+    div.appendChild(span);
+    insertAfter(link, span);
+    insertAfter(div, titleElem);
+
+    function insertAfter(newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+})();
+</script></body></html>

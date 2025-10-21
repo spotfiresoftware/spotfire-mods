@@ -5,7 +5,7 @@
     <description>Recent content in Working with Spotfire® Mods on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 12 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 26 Sep 2025 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/index.xml" rel="self" type="application/rss+xml" />
     
@@ -18,7 +18,7 @@
     <item>
       <title>Docs: Getting started</title>
       <link>/spotfire-mods/docs/getting-started/</link>
-      <pubDate>Mon, 09 Jun 2025 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 16 Jun 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/getting-started/</guid>
       <description>
@@ -42,20 +42,15 @@ The development tooling requires &lt;a href=&#34;https://nodejs.org/en/download/
 &lt;/ul&gt;
 &lt;p&gt;&lt;em&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id=&#34;developing-a-mod&#34;&gt;Developing a mod&lt;/h2&gt;
+&lt;p&gt;This section describes the basic steps for creating a mod using the Spotfire mods SDK.&lt;/p&gt;
 &lt;h3 id=&#34;1-create-a-new-project&#34;&gt;1. Create a new project&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
 &lt;p&gt;Create an empty folder for the project and open the folder in VS Code.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
 &lt;p&gt;Open a terminal and run the following commands to create a mod from the default template:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npx @spotfire/mods-sdk@latest new &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;action&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;visualization&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npm install
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npm run build
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Depending on the specified mod type (&lt;em&gt;action&lt;/em&gt; or &lt;em&gt;visualization&lt;/em&gt;) the corresponding VS Code project with some simple example code will be created.&lt;/p&gt;
-&lt;p&gt;For more info about the folder structure, see the detailed documentation for the mod type.&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Depending on the specified mod type (&lt;em&gt;action&lt;/em&gt; or &lt;em&gt;visualization&lt;/em&gt;) the corresponding VS Code project with some simple example code will be created.&lt;/p&gt;
+&lt;p&gt;&lt;sub&gt;💡 Note: You can add the &lt;code&gt;--api-version &amp;lt;mods-api-version&amp;gt;&lt;/code&gt; when running the &lt;code&gt;new&lt;/code&gt; command to target a specific version of the Mods API.&lt;/sub&gt;&lt;/p&gt;
 &lt;h3 id=&#34;2-start-the-local-development-server&#34;&gt;2. Start the local development server&lt;/h3&gt;
 &lt;p&gt;Run the default build task, either by pressing &amp;ldquo;Ctrl + Shift + B&amp;rdquo; or by running the &amp;ldquo;Start watchers&amp;rdquo; task.
 This will launch three watchers:&lt;/p&gt;
@@ -966,7 +961,7 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
     <item>
       <title>Docs: Action mods API documentation</title>
       <link>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</link>
-      <pubDate>Mon, 30 Sep 2024 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 12 Sep 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</guid>
       <description>
@@ -978,6 +973,7 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
 &lt;p&gt;The version number is the same for all mods API:s. Therefore, there are no older versions than 2.0 of this API.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/api-docs/action-mods/v2-1/&#34;&gt;API documentation version 2.1&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/spotfire-mods/api-docs/action-mods/v2-0/&#34;&gt;API documentation version 2.0&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -987,7 +983,7 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
     <item>
       <title>Docs: Visualization mods API documentation</title>
       <link>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</link>
-      <pubDate>Mon, 30 Sep 2024 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 12 Sep 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</guid>
       <description>
@@ -999,6 +995,7 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
 &lt;p&gt;The latest API version is backwards compatible with older 1.x release. All new functionality is marked by a &lt;code&gt;version&lt;/code&gt; tag.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/v2-1/&#34;&gt;API documentation version 2.1&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/v2-0/&#34;&gt;API documentation version 2.0&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/v1-3/&#34;&gt;API documentation version 1.3&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/v1-2/&#34;&gt;API documentation version 1.2&lt;/a&gt;&lt;/li&gt;

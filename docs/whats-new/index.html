@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.147.8"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/whats-new/index.xml">
+<meta name="generator" content="Hugo 0.150.1"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/whats-new/index.xml">
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
@@ -13,14 +13,14 @@
 <title>What&#39;s new? | Spotfire® Mods</title>
   <meta itemprop="name" content="What&#39;s new?">
   <meta itemprop="description" content="This page describes some of the latest additions to the mods API and SDK.">
-  <meta itemprop="datePublished" content="2025-06-12T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-06-12T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1564">
+  <meta itemprop="datePublished" content="2025-06-13T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-06-13T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1854">
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" as="style">
-<link href="/spotfire-mods/scss/main.min.715ecd975a53524c234d1aad588bdad28ec7691e9bd523fd977e6698257204a6.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" as="style">
+<link href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -189,6 +189,14 @@
       
         
           
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
+        
+      
+      
+      
+        
+          
 
 
 
@@ -208,14 +216,6 @@
   </ul>
 </ul>
 
-        
-      
-      
-      
-        
-          
-          
-          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
         
       
       
@@ -615,18 +615,16 @@
 
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#action-mods">Action mods</a>
+    <li><a href="#mods-api-22">Mods API 2.2</a>
       <ul>
-        <li><a href="#new-parameter-types">New parameter types</a></li>
-        <li><a href="#new-apis">New APIs</a></li>
-        <li><a href="#add-resources-to-your-action-mod">Add resources to your action mod</a></li>
-        <li><a href="#unique-icon-per-script">Unique icon per script</a></li>
+        <li><a href="#action-mods">Action mods</a></li>
+        <li><a href="#visualization-mods">Visualization mods</a></li>
       </ul>
     </li>
-    <li><a href="#visualization-mods">Visualization mods</a>
+    <li><a href="#mods-api-21">Mods API 2.1</a>
       <ul>
-        <li><a href="#axis-expression-heuristics">Axis expression heuristics</a></li>
-        <li><a href="#more-styling-information">More styling information</a></li>
+        <li><a href="#action-mods-1">Action mods</a></li>
+        <li><a href="#visualization-mods-1">Visualization mods</a></li>
       </ul>
     </li>
   </ul>
@@ -668,7 +666,7 @@
 	
 	
 	
-	<p class="-text-secondary pt-3 h6" >Reading time: 7 minutes and 45 seconds.</p>
+	<p class="-text-secondary pt-3 h6" >Reading time: 8 minutes and 45 seconds.</p>
 	<h1>What&#39;s new?</h1>
 	<div class="lead">This page describes some of the latest additions to the mods API and SDK.</div>
 	
@@ -679,7 +677,28 @@
 <li><a href="https://www.npmjs.com/package/@spotfire/mods-dev-server">@spotfire/mods-dev-server</a></li>
 </ul>
 <p>If you have started from an SDK template, simply run <code>npm update</code> to get the latest compatible versions.</p>
-<h1 id="mods-api-21">Mods API 2.1</h1>
+<h2 id="mods-api-22">Mods API 2.2</h2>
+<p>Version 2.2 of the mods API introduces optional axes to visualization mods as well as exposing new action mods APIs for working with reference layers.
+Using API features introduced in the 2.2 API requires Spotfire version 14.6 or later.
+To upgrade an existing mod follow these steps:</p>
+<ol>
+<li>Update the <code>&quot;apiVersion&quot;</code> version in the mod manifest for <code>&quot;2.2&quot;</code>.</li>
+<li>Update the version of <code>&quot;@spotfire/mods-api&quot;</code> in the <code>package.json</code> file to <code>~2.2.0</code>.</li>
+<li>Run <code>npm update</code>.</li>
+</ol>
+<h3 id="action-mods">Action mods</h3>
+<p>No new additions to the action mods framework has been added however, Spotfire 14.6 introduces many new features which are supported in the API.
+One such feature is the new &ldquo;reference layers&rdquo; feature which allow you to add reference layers such as trend lines to certain visualizations.
+As an example on how to use the new APIs for this feature, see snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-a-reference-layer-showing-trend-lines">&ldquo;Add a reference layer showing trend lines&rdquo;</a>.</p>
+<h3 id="visualization-mods">Visualization mods</h3>
+<p>Version 2.2 of the visualization mods API adds the ability to mark an axis &ldquo;optional&rdquo;.
+This can be done by setting the <code>&quot;optional&quot;</code> property of the axis object in the manifest to <code>true</code>.
+An axis being marked optional indicates that it should not be display the new visualization properties panel when in an unconfigured state.
+It also makes it possible to clear the axis expression by removing the card from the visualization properties panel if it has been configured.</p>
+<p>To control the automatic configuration of an optional axis the API also introduces the <code>&quot;disableOnAutoConfigure&quot;</code> property on the <code>&quot;automaticConfiguration&quot;</code> object.
+An optional axis with a defined automatic configuration will be configured when the mod visualization is initially added to the document.
+By setting <code>&quot;disableOnAutoConfigure&quot;</code> to <code>false</code> the axis will only be automatically configured when its axis card is added in the visualization properties panel.</p>
+<h2 id="mods-api-21">Mods API 2.1</h2>
 <p>Version 2.1 of the mods API contains many improvements to both action mods and visualization mods.
 Using API features introduced in the 2.1 API requires Spotfire version 14.5 or later.
 To upgrade your mod, follow these steps:</p>
@@ -688,12 +707,12 @@ To upgrade your mod, follow these steps:</p>
 <li>Update the version of <code>@spotfire/mods-api</code> in the <code>package.json</code> file to <code>~2.1.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
-<h2 id="action-mods">Action mods</h2>
+<h3 id="action-mods-1">Action mods</h3>
 <p>Version 2.1 of the API contains a lot of improvements and new features for action mods.</p>
-<h3 id="new-parameter-types">New parameter types</h3>
+<h4 id="new-parameter-types">New parameter types</h4>
 <p>This API introduces two new types with two variants each: <a href="/spotfire-mods/docs/whats-new/#datacolumn">DataColumn</a> (array: true/false) and <a href="/spotfire-mods/docs/whats-new/#dataviewdefinition">DataViewDefinition</a> (singleColumn: true/false).
 Additionally, it is now possible to define parameters as optional (see <a href="/spotfire-mods/docs/whats-new/#optional">Optional</a>), to limit numerics to a range (see <a href="/spotfire-mods/docs/whats-new/#numeric-ranges">Numeric ranges</a>), and to specify a set of allowed values for string parameters (see <a href="/spotfire-mods/docs/whats-new/#enum">Enum</a>).</p>
-<h4 id="datacolumn">DataColumn</h4>
+<h5 id="datacolumn">DataColumn</h5>
 <p>Scripts can now define <a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#datacolumn">DataColumn</a> as a possible parameter type.
 This can be done by setting <code>&quot;type&quot;: &quot;DataColumn&quot;</code> for the parameter in the manifest.
 Defining a parameter of this type will allow you to select a column from an existing data table during configuration or when the parameter is prompted.</p>
@@ -715,7 +734,7 @@ See the snippet for the updated code and manifest.</p>
 <p>The new DataColumn type also supports setting property <code>&quot;array&quot;: true</code> to allow multiple columns as a value.
 When configured as an array, the script argument will have type <code>Iterable&lt;DataColumn&gt;</code> and can be consumed by the script via <code>for ... of</code> loops or functions which operate on iterables such as <code>Array.from</code>.</p>
 <p>Additionally, the set of possible columns that the user is allowed to choose from can be limited by specifying <strong>allowedDataTypes</strong>. For example, to limit to only integer, columns set <code>&quot;allowedDataTypes&quot;: [&quot;Integer&quot;]</code>.</p>
-<h4 id="dataviewdefinition">DataViewDefinition</h4>
+<h5 id="dataviewdefinition">DataViewDefinition</h5>
 <p>Scripts can now define <a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#dataviewdefinition">DataViewDefinition</a> as a possible parameter type.
 This can be done by setting <code>&quot;type&quot;: &quot;DataViewDefinition&quot;</code> for the parameter in the manifest.
 Defining a parameter of this type can be configured by selecting columns, a column search expression, or a custom expression.
@@ -724,24 +743,24 @@ The data view definition can also contain a number of limitations, such as limit
 The data view can be limited to only a single column expression by setting the <code>&quot;singleColumn&quot;: true</code> property.</p>
 <p>The main purpose of this parameter is to be passed along to data functions.
 This is made possible by a new overload of <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionInputCollection.html#setinput">DataFunctionInputCollection.SetInput</a> which takes a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.ActionDataViewDefinition.html">ActionDataViewDefinition</a> as its second argument, as an example see snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-a-data-function-using-a-data-view-definition">&ldquo;Add a data function using a data view definition&rdquo;</a>.</p>
-<h4 id="optional">Optional</h4>
+<h5 id="optional">Optional</h5>
 <p>A parameter can be marked as optional by defining <code>&quot;optional&quot;: true</code>.
 When a parameter has been defined as optional, it is not necessary to provide an input value during configuration.
 Adding optional parameters to existing scripts does not invalidate existing configurations.
 When defining a parameter of some type <code>T</code> as optional the argument will be typed as <code>T?</code>, meaning that the value may either be provided or <code>undefined</code>.</p>
 <p>Optional parameters are a great way to update existing scripts without breaking existing usages (the API will remain stable).
 They can also be used to reduce the amount of configuration in cases where you can assume some default value for an optional parameter.</p>
-<h4 id="enum">Enum</h4>
+<h5 id="enum">Enum</h5>
 <p>You can now limit string parameters to allow specific values by specifying <code>&quot;enum&quot;: [&quot;Value 1&quot;, &quot;Value 2&quot;]</code>.
 A string parameter limited in this way will provide the user with a drop-down list of the available options during configuration.
 Adding a value to an existing enum will not invalidate existing configurations and will therefore not break existing usages.</p>
-<h4 id="numeric-ranges">Numeric ranges</h4>
+<h5 id="numeric-ranges">Numeric ranges</h5>
 <p>Numeric parameters can now be restricted to a specified range in the manifest.
 For instance, for a <strong>Real</strong> that is used to represent a value between 0% and 100%, you can restrict the parameter to that range by defining <code>&quot;range&quot;: { &quot;min&quot;: 0, &quot;max&quot;: 1 }</code>.
 Another useful range would be an <strong>Integer</strong> used to represent a count starting from 0.
 This can be achieved by specifying <code>&quot;range&quot;: { &quot;min&quot;: 0 }</code>.
 For more information, see the parameter documentation for <a href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/#numerics">Numerics</a>.</p>
-<h3 id="new-apis">New APIs</h3>
+<h4 id="new-apis">New APIs</h4>
 <p>Some new and previously existing .NET APIs have now been made available to action mods.
 These include:</p>
 <ul>
@@ -755,7 +774,7 @@ Note that the new <a href="/spotfire-mods/docs/whats-new/#dataviewdefinition">Da
 <li>Creating and configuring visualizations from the visualization mods maintained by the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ModManager.html">ModManager</a>.
 This includes loading visualizations from the library. See snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-latest-mod-visualization">&ldquo;Add Latest Mod Visualization&rdquo;</a>.</li>
 </ul>
-<h3 id="add-resources-to-your-action-mod">Add resources to your action mod</h3>
+<h4 id="add-resources-to-your-action-mod">Add resources to your action mod</h4>
 <p>File resources, specified using the <code>files</code> property in the manifest, can now be accessed as <a href="/spotfire-mods/api-docs/action-mods/classes/System.IO.Stream.html">Streams</a> inside a script.
 Specifying the path relative to manifest in the <code>files</code> field will include the file in the mod, the mod can then be accessed via the <code>resources</code> parameter provided to every script&rsquo;s entry point function.</p>
 <p>Let&rsquo;s try to add a PNG image to a text area on the active page.</p>
@@ -798,19 +817,19 @@ The script should look like this:</p>
 </span></span><span style="display:flex;"><span><span style="color:#000">RegisterEntryPoint</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">addImageToTextArea</span><span style="color:#000;font-weight:bold">);</span>
 </span></span></code></pre></div><p>Spotfire previously used to re-fetch the entire mod on any file update, which would cause performance to slow down when mods with large resource files were developed.
 Make sure you are using version 1.2 or later of <a href="https://www.npmjs.com/package/@spotfire/mods-dev-server">mods-dev-server</a> to allow Spotfire to only fetch the files that have actually changed.</p>
-<h3 id="unique-icon-per-script">Unique icon per script</h3>
+<h4 id="unique-icon-per-script">Unique icon per script</h4>
 <p>Each script can now specify its own unique SVG icon, which will show up in various parts of the UI such as floating buttons, title bar buttons, and in the Actions flyout.
 Scripts that do not specify an icon will fall back to the icon of the action mod.
 To specify an icon, add an <code>&quot;icon&quot;: &quot;path/to/icon.svg&quot;</code> property to the script in the manifest.</p>
-<h2 id="visualization-mods">Visualization mods</h2>
+<h3 id="visualization-mods-1">Visualization mods</h3>
 <p>Version 2.1 of the API also contains some smaller improvements to visualization mods.</p>
-<h3 id="axis-expression-heuristics">Axis expression heuristics</h3>
+<h4 id="axis-expression-heuristics">Axis expression heuristics</h4>
 <p>When a new instance of a visualization mod is created, heuristics are used to assign initial expressions to the axes of the visualization.
 You can now specify a string, like <code>count()</code>, to use as the initial expression. This is made in the <code>automaticConfiguration/expressionHeuristics</code>
 property of an <a href="/spotfire-mods/visualization-mods-schema/#/definitions/axis">axis</a> specification in the manifest.</p>
 <p>When the default heuristics are used for a continuous axis, the <code>allowNonAggregatingMeasures</code> can be set to <code>&quot;prefer&quot;</code> to control the heuristics to attempt to select
 an expression that is not aggregating.</p>
-<h3 id="more-styling-information">More styling information</h3>
+<h4 id="more-styling-information">More styling information</h4>
 <p>The <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/StylingInfo.html">StylingInfo</a> object has been extended with more information describing the current theme. For instance regarding how zoom sliders and trellis panel headers are styled.</p>
 
         
@@ -822,7 +841,7 @@ an expression that is not aggregating.</p>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 12, 2025
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 13, 2025
 </div>
 </div>
 
