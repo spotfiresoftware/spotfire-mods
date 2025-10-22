@@ -2,6 +2,11 @@
     "name": "@spotfire/mods-sdk",
     "version": "1.1.1",
     "description": "Developer SDK for Spotfire® Mods",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/spotfiresoftware/spotfire-mods"
+    },
+    "homepage": "https://github.com/spotfiresoftware/spotfire-mods/tree/master/tools/mods-sdk",
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
