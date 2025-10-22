@@ -13,9 +13,9 @@
 <title>What&#39;s new? | Spotfire® Mods</title>
   <meta itemprop="name" content="What&#39;s new?">
   <meta itemprop="description" content="This page describes some of the latest additions to the mods API and SDK.">
-  <meta itemprop="datePublished" content="2025-06-13T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-06-13T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1854">
+  <meta itemprop="datePublished" content="2025-10-22T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-10-22T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1855">
 
 
 
@@ -189,14 +189,6 @@
       
         
           
-          
-          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
-        
-      
-      
-      
-        
-          
 
 
 
@@ -216,6 +208,14 @@
   </ul>
 </ul>
 
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
         
       
       
@@ -678,26 +678,26 @@
 </ul>
 <p>If you have started from an SDK template, simply run <code>npm update</code> to get the latest compatible versions.</p>
 <h2 id="mods-api-22">Mods API 2.2</h2>
-<p>Version 2.2 of the mods API introduces optional axes to visualization mods as well as exposing new action mods APIs for working with reference layers.
+<p>Version 2.2 of the mods API introduces optional axes to visualization mods, as well as exposing new action mods APIs for working with reference layers.
 Using API features introduced in the 2.2 API requires Spotfire version 14.6 or later.
-To upgrade an existing mod follow these steps:</p>
+To upgrade an existing mod, follow these steps:</p>
 <ol>
-<li>Update the <code>&quot;apiVersion&quot;</code> version in the mod manifest for <code>&quot;2.2&quot;</code>.</li>
+<li>Update the <code>&quot;apiVersion&quot;</code> version in the mod manifest to <code>&quot;2.2&quot;</code>.</li>
 <li>Update the version of <code>&quot;@spotfire/mods-api&quot;</code> in the <code>package.json</code> file to <code>~2.2.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
 <h3 id="action-mods">Action mods</h3>
 <p>No new additions to the action mods framework has been added however, Spotfire 14.6 introduces many new features which are supported in the API.
-One such feature is the new &ldquo;reference layers&rdquo; feature which allow you to add reference layers such as trend lines to certain visualizations.
-As an example on how to use the new APIs for this feature, see snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-a-reference-layer-showing-trend-lines">&ldquo;Add a reference layer showing trend lines&rdquo;</a>.</p>
+One such feature is the new &ldquo;reference elements&rdquo; feature, which allows you to add reference layers such as trend lines to certain visualizations.
+As an example on how to use the new APIs for this feature, see the snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-a-reference-layer-showing-trend-lines">&ldquo;Add a reference layer showing trend lines&rdquo;</a>.</p>
 <h3 id="visualization-mods">Visualization mods</h3>
 <p>Version 2.2 of the visualization mods API adds the ability to mark an axis &ldquo;optional&rdquo;.
 This can be done by setting the <code>&quot;optional&quot;</code> property of the axis object in the manifest to <code>true</code>.
-An axis being marked optional indicates that it should not be display the new visualization properties panel when in an unconfigured state.
+An axis marked optional indicates that it should not be displayed in the new visualization properties panel when in an unconfigured state.
 It also makes it possible to clear the axis expression by removing the card from the visualization properties panel if it has been configured.</p>
-<p>To control the automatic configuration of an optional axis the API also introduces the <code>&quot;disableOnAutoConfigure&quot;</code> property on the <code>&quot;automaticConfiguration&quot;</code> object.
+<p>To control the automatic configuration of an optional axis, the API also introduces the <code>&quot;disableOnAutoConfigure&quot;</code> property on the <code>&quot;automaticConfiguration&quot;</code> object.
 An optional axis with a defined automatic configuration will be configured when the mod visualization is initially added to the document.
-By setting <code>&quot;disableOnAutoConfigure&quot;</code> to <code>false</code> the axis will only be automatically configured when its axis card is added in the visualization properties panel.</p>
+By setting <code>&quot;disableOnAutoConfigure&quot;</code> to <code>false</code>, the axis will only be automatically configured when its axis card is added in the visualization properties panel.</p>
 <h2 id="mods-api-21">Mods API 2.1</h2>
 <p>Version 2.1 of the mods API contains many improvements to both action mods and visualization mods.
 Using API features introduced in the 2.1 API requires Spotfire version 14.5 or later.
@@ -841,7 +841,7 @@ an expression that is not aggregating.</p>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 13, 2025
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 22, 2025
 </div>
 </div>
 
