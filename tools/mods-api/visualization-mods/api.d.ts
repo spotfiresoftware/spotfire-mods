@@ -1,9 +1,14 @@
-/*
-* Copyright © 2025. Cloud Software Group, Inc.
-* This file is subject to the license terms contained
-* in the license file that is distributed with this file.
-*/
+/**
+ * Copyright © 2024 Cloud Software Group, Inc.
+ * This file is subject to the license terms contained
+ * in the license file that is distributed with this file.
+ * 
+ * Spotfire Visualization Mods API declaration.
+ * Version: 2.0
+ */
+
 export as namespace Spotfire;
+
 /**
  * Predicate to determine if a current read operation for {@link DataView.allRows} should be aborted when there is new, non-streaming, data available. If this predicate returns true the {@link DataView.allRows} promise will be rejected and no rows will be returned.
  * @public
@@ -15,7 +20,8 @@ export declare type AbortPredicate = (currentRowCount: number) => boolean;
  * These can be either document properties, data table properties or data column properties.
  * @public
  */
-export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType> extends AnalysisPropertyValue<T> {
+export declare interface AnalysisProperty<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>
+    extends AnalysisPropertyValue<T> {
     /**
      * Set the value of this instance.
      * @param value - The value to set.
@@ -204,47 +210,6 @@ export declare interface Controls {
 }
 
 /**
- * Represents the styling information that applies to a control of some kind in the Mod Visualization.
- * For example, the controls for search, layers, navigation, etc., in a Spotfire Map Chart follows this styling.
- * @public
- * @version 2.1
- */
-export declare interface ControlStylingInfo {
-    /**
-     * Gets the value to use for the `background-color` CSS property.
-     * @version 2.1
-     */
-    backgroundColor: string;
-    /**
-     * Gets the values to use for the color CSS properties in different states.
-     * @version 2.1
-     */
-    color: StateDependentValue<string>;
-}
-
-/**
- * Represents the basic settings of a custom theme used in Spotfire.
- * @public
- * @version 2.1
- */
-export declare interface CustomThemeStylingInfo {
-    /**
-     * Gets a value describing the theme that this custom theme is based on.
-     */
-    baseTheme: KnownTheme;
-    /**
-     * Gets the base color of the theme.
-     * @version 2.1
-     */
-    baseColor: string;
-    /**
-     * Gets the primary color of the theme.
-     * @version 2.1
-     */
-    primaryColor: string;
-}
-
-/**
  * Represents a data table in the Spotfire document.
  * @public
  */
@@ -296,7 +261,19 @@ export declare interface DataType {
     /**
      * Gets the name of this DataType.
      */
-    name: "String" | "Integer" | "LongInteger" | "Real" | "SingleReal" | "Currency" | "Boolean" | "Date" | "DateTime" | "Time" | "TimeSpan" | "Binary";
+    name:
+        | "String"
+        | "Integer"
+        | "LongInteger"
+        | "Real"
+        | "SingleReal"
+        | "Currency"
+        | "Boolean"
+        | "Date"
+        | "DateTime"
+        | "Time"
+        | "TimeSpan"
+        | "Binary";
     /**
      * Gets a value indicating whether the data type is numeric or not, that is,
      * Integer, Currency, Real, LongInteger, or SingleReal.
@@ -324,7 +301,7 @@ export declare interface DataType {
  * on the Axes and other relevant settings.
  * @public
  */
-declare interface DataView_2 {
+export declare interface DataView {
     /**
      * Mark a set of rows.
      * The full set will be the union of all mark operations performed within one transaction (see {@link Mod.transaction}).
@@ -332,13 +309,13 @@ declare interface DataView_2 {
      * @param rows - The rows to be selected.
      * @param operation - Optional {@link MarkingOperation}. Default value is `Replace`.
      */
-    mark(rows: DataViewRow[], operation?: MarkingOperation): void;
+    mark(rows: DataViewRow[], markingOperation?: MarkingOperation): void;
     /**
      * Clears the current marking
      */
     clearMarking(): void;
     /**
-     * Gets the marking information, or `null` if marking is not enabled.
+     * Gets the marking information, or null if marking is not enabled.
      */
     marking(): Promise<MarkingInfo | null>;
     /**
@@ -349,11 +326,6 @@ declare interface DataView_2 {
      */
     hasExpired(): Promise<boolean>;
     /**
-     * Gets a value indicating whether the data view is the result of a streaming update.
-     * @version 2.1
-     */
-    isStreamingUpdate: boolean;
-    /**
      * Gets any errors generated while creating the dataview.
      * Returns empty array if none occurred.
      */
@@ -362,7 +334,7 @@ declare interface DataView_2 {
      * Gets metadata for a specific categorical axis in the {@link DataView}.
      * Categorical axes are defined in the manifest file as categorical or dual.
      * When this method fails to return a valid axis getting the corresponding call to {@link DataViewRow.categorical} will throw an error.
-     * Returns `null` for axes with empty expressions or for dual mode axes that currently are in continuous mode.
+     * Returns null for axes with empty expressions or for dual mode axes that currently are in continuous mode.
      * Throws if the axis does not exist or the axes mode is continuous.
      * @param name - The axis name.
      */
@@ -371,7 +343,7 @@ declare interface DataView_2 {
      * Gets metadata for a specific continuous axis in the {@link DataView}.
      * Continuous axes are defined in the manifest file as continuous or dual.
      * When this method fails to return a valid axis getting the corresponding call to {@link DataViewRow.continuous} will throw an error.
-     * Returns `null` for axes with empty expressions or for dual mode axes that currently are in categorical mode.
+     * Returns null for axes with empty expressions or for dual mode axes that currently are in categorical mode.
      * Throws if the axis does not exist or the axes mode is categorical.
      * @param name - The axis name.
      */
@@ -385,7 +357,7 @@ declare interface DataView_2 {
      * Gets a hierarchy for a categorical axis.
      *
      * If the axis has an empty expression the hierarchy will contain one single root node.
-     * Returns `null` for dual mode axes that currently are in continuous mode.
+     * Returns null for dual mode axes that currently are in continuous mode.
      * Throws if the axis does not exist or the axes mode is continuous.
      * @param name - The name of the axis to get the hierarchy for.
      */
@@ -400,11 +372,10 @@ declare interface DataView_2 {
      * The allRows function has a built in cache and can be called multiple times with the same dataView and it will return the same list of rows.
      * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns true the promise will be rejected.
      * The default behavior is that reading will be aborted when new non-streaming update is available.
-     * @returns `null` if reading data was aborted, otherwise a {@link DataViewRow}[].
+     * @returns null if reading data was aborted, otherwise a {@link DataViewRow}[].
      */
     allRows(abortPredicate?: AbortPredicate): Promise<DataViewRow[] | null>;
 }
-export { DataView_2 as DataView }
 
 /**
  * Contains metadata computed for an {@link Axis}.
@@ -474,11 +445,11 @@ export declare interface DataViewCategoricalValuePathElement {
      *
      * They key is suitable to be used for identifying objects when implementing rendering transitions.
      *
-     * The key can be `null` when the corresponding {@link DataViewCategoricalValuePathElement.value} is null.
+     * The key can be null when the corresponding {@link DataViewCategoricalValuePathElement.value} is null.
      */
     key: string | null;
     /**
-     * Gets the value of this element, or `null` if this element represents a missing or invalid data point.
+     * Gets the value of this element, or null if this element represents a missing or invalid data point.
      *
      * The type of the returned value can be determined from the {@link DataViewHierarchy.levels} in the {@link DataViewHierarchy} of
      * the associated {@link DataViewCategoricalAxis}.
@@ -549,9 +520,9 @@ export declare interface DataViewHierarchy {
     leafCount: number;
     /**
      *  Gets the virtual root node of the hierarchy. The level of the root node is -1. Spotfire does not usually render the root node in visualization.
-     * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns `true` the promise will be rejected.
+     * @param abortPredicate - Optional. Predicate to determine whether the operation should be aborted when there is new, non-streaming, data available. If this predicate returns true the promise will be rejected.
      * The default behavior is that reading will be aborted when new non-streaming update is available.
-     * @returns `null` if reading data was aborted, otherwise a {@link DataViewHierarchyNode}.
+     * @returns null if reading data was aborted, otherwise a {@link DataViewHierarchyNode}.
      */
     root(abortPredicate?: AbortPredicate): Promise<DataViewHierarchyNode | null>;
 }
@@ -595,11 +566,11 @@ export declare interface DataViewHierarchyNode {
      *
      * They key is suitable to be used for identifying objects when implementing rendering transitions.
      *
-     * The key can be `null` when the corresponding {@link DataViewHierarchyNode.value} is null.
+     * The key can be null when the corresponding {@link DataViewHierarchyNode.value} is null.
      */
     key: string | null;
     /**
-     * Gets the value of this node, or `null` if this node represents a missing or invalid data point.
+     * Gets the value of this node, or null if this node represents a missing or invalid data point.
      *
      * The type of the returned value can be determined from the {@link DataViewHierarchy.levels} in the associated {@link DataViewHierarchy}.
      */
@@ -652,7 +623,7 @@ export declare interface DataViewHierarchyNode {
  * Represents an object that provides access to a {@link DataView}.
  * @public
  */
-export declare type DataViewProxy = DataViewProxyMethods & Readable<DataView_2>;
+export declare type DataViewProxy = DataViewProxyMethods & Readable<DataView>;
 
 /**
  * Represents the methods available on a {@link DataViewProxy}.
@@ -690,7 +661,7 @@ export declare interface DataViewRow {
     continuous<T extends DataViewValueType>(axisName: string): DataViewContinuousValue<T>;
     /**
      * Gets the leaf {@link DataViewHierarchyNode} for the specified axis,
-     * or `null` for dual mode axes with continuous axis expression.
+     * or null for dual mode axes with continuous axis expression.
      * This method will throw an error for continuous mode axes
      * or if there is no axis by that name.
      * @param axisName - The name of the axis
@@ -734,34 +705,6 @@ export declare interface DataViewRow {
 export declare type DataViewValueType = number | string | boolean | Date | Time | TimeSpan;
 
 /**
- * Represents a group of values used for the top, bottom, left and right edges of a CSS property of an associated DOM element.
- * @public
- * @version 2.1
- */
-export declare interface EdgeValues<T> {
-    /**
-     * Gets the value to use for the `-top-` CSS property. For instance `border-top-color`.
-     * @version 2.1
-     */
-    top: T;
-    /**
-     * Gets the value to use for the `-bottom-` CSS property. For instance `border-bottom-color`.
-     * @version 2.1
-     */
-    bottom: T;
-    /**
-     * Gets the value to use for the `-left-` CSS property. For instance `border-left-color`.
-     * @version 2.1
-     */
-    left: T;
-    /**
-     * Gets the value to use for the `-right-` CSS property. For instance `border-right-color`.
-     * @version 2.1
-     */
-    right: T;
-}
-
-/**
  * Provides access to show an error overlay covering the entire Mod shown by Spotfire.
  * @public
  */
@@ -774,7 +717,7 @@ export declare interface ErrorOverlay {
     show(messages: string[], category?: string): void;
     /**
      * Show error message. Showing any error message will hide the Mods UI.
-     * @param message - The error message.
+     * @param messages - The error message.
      * @param category - Optional error categorization. Useful if multiple error message are to be shown. Error messages will be sorted based on the category.
      */
     show(message: string, category?: string): void;
@@ -790,7 +733,9 @@ export declare interface ErrorOverlay {
  * @public
  */
 export declare type ExtractValueType<readableArray extends ReadonlyArray<Readable<any>>> = {
-    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType> ? readableNameType : never;
+    [readableName in keyof readableArray]: readableArray[readableName] extends Readable<infer readableNameType>
+        ? readableNameType
+        : never;
 };
 
 /**
@@ -833,10 +778,6 @@ export declare interface GeneralStylingInfo {
      * Gets the value to use for the `background-color` CSS property of the Mod Visualization.
      */
     backgroundColor: string;
-    /**
-     * Gets a value describing the theme that is used in the Spotfire UI.
-     */
-    activeTheme: KnownTheme | CustomThemeStylingInfo;
 }
 
 /**
@@ -854,13 +795,6 @@ export declare interface GeneralStylingInfo {
  * @param onLoaded - Callback that is called when the mod API is initialized and ready to be interacted with.
  */
 export declare function initialize(onLoaded: OnLoadCallback): void;
-
-/**
- * Describes the theme that is used in the Spotfire UI.
- * @public
- * @version 2.1
- */
-export declare type KnownTheme = "Light" | "Dark";
 
 /**
  * Represents the styling information that applies to scale lines in the Mod Visualization.
@@ -1368,24 +1302,6 @@ export declare interface Progress {
 }
 
 /**
- * Represents the styling information that applies to a range, for instance in a zoom slider, in the Mod Visualization.
- * @public
- * @version 2.1
- */
-export declare interface RangeStylingInfo {
-    /**
-     * Gets the value to use for the `background-color` CSS property.
-     * @version 2.1
-     */
-    backgroundColor: string;
-    /**
-     * Gets the values to use for the border color CSS properties.
-     * @version 2.1
-     */
-    borderColors: EdgeValues<string>;
-}
-
-/**
  * Represents a value in the Mod API that can be accessed and/or modified. These values can
  * be used when creating an instance of a {@link Reader} via the {@link Mod.createReader} method.
  * @public
@@ -1410,7 +1326,8 @@ export declare interface Readable<T = any> extends Promise<T> {
  * A full node will be created by using a {@link Reader}.
  * @public
  */
-export declare type ReadableProxy<Node> = Readable<Node> & Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
+export declare type ReadableProxy<Node> = Readable<Node> &
+    Omit<Pick<Node, MethodKeys<Node>>, OmittedReadableProxyMethods>;
 
 /**
  * The reader is responsible for combining multiple {@link Readable}s and scheduling a callback to be invoked
@@ -1422,8 +1339,7 @@ export declare type ReadableProxy<Node> = Readable<Node> & Omit<Pick<Node, Metho
 export declare interface Reader<T extends ReadonlyArray<any>> {
     /**
      * Subscribe to changes in the content for the specified readables when the reader was created.
-     * @example
-     * Subscribe to changes in the {@link DataView}.
+     * @example Subscribe to changes in the {@link DataView}.
      *
      * ```
      * let reader = mod.createReader(mod.visualization.data());
@@ -1440,8 +1356,7 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
     /**
      * Read the content once for the readables specified when the reader was created.
      * Any current subscription for this reader will be cancelled.
-     * @example
-     * Read content of a mod property once.
+     * @example Read content of a mod property once.
      *
      * ```
      * let reader = mod.createReader(mod.property("CreatedBy"));
@@ -1465,8 +1380,7 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
     /**
      * Check whether one or more passed arguments are new since the last time the subscribe loop was called.
      *
-     * @example
-     * Check if the data view has changed in the subscribe loop.
+     * @example Check if the data view has changed in the subscribe loop.
      *
      * ```
      * let reader = mod.createReader(mod.visualization.data(), mod.windowSize());
@@ -1590,7 +1504,9 @@ export declare interface SpotfireDocument {
     /**
      * Provides access to the `Document Property` with the specified `name` in the Spotfire Document.
      */
-    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(name: string): ReadableProxy<AnalysisProperty<T>>;
+    property<T extends AnalysisPropertyDataType = AnalysisPropertyDataType>(
+        name: string
+    ): ReadableProxy<AnalysisProperty<T>>;
     /**
      * Provides access to the {@link Page}s in the Spotfire document.
      */
@@ -1617,34 +1533,6 @@ export declare interface SpotfireDocument {
 }
 
 /**
- * Represents a group of values used in different states of an associated DOM element.
- * @version 2.1
- * @public
- */
-export declare interface StateDependentValue<T> {
-    /**
-     * Gets the value to use in the default state. That is, when no pseudo-class is active.
-     * @version 2.1
-     */
-    default: T;
-    /**
-     * Gets the value to use in the `hover` state. If this property is undefined, the `default` value should be used.
-     * @version 2.1
-     */
-    hover?: T;
-    /**
-     * Gets the value to use in the `active` state. If this property is undefined, the `default` value should be used.
-     * @version 2.1
-     */
-    active?: T;
-    /**
-     * Gets the value to use in the `disabled` state. If this property is undefined, the `default` value should be used.
-     * @version 2.1
-     */
-    disabled?: T;
-}
-
-/**
  * Represents the styling (theme) that affects the look and feel of a Mod Visualization.
  * @public
  */
@@ -1658,39 +1546,6 @@ export declare interface StylingInfo {
      * Gets an object describing the styling of the scales in the Mod Visualization.
      */
     scales: ScaleStylingInfo;
-    /**
-     * Gets an object describing the styling of the trellis panel headers in the Mod Visualization.
-     * @version 2.1
-     */
-    trellisPanelHeaders: TrellisPanelHeaderStylingInfo;
-    /**
-     * Gets an object describing the styling of the zoom sliders in the Mod Visualization.
-     * @version 2.1
-     */
-    zoomSliders: ZoomSliderStylingInfo;
-    /**
-     * Gets an object describing the styling of controls in the Mod Visualization.
-     * @version 2.1
-     */
-    controls: ControlStylingInfo;
-}
-
-/**
- * Represents the styling information that applies to a thumb, for instance in a zoom slider, in the Mod Visualization.
- * @public
- * @version 2.1
- */
-export declare interface ThumbStylingInfo {
-    /**
-     * Gets the value to use for the `background-image` CSS property.
-     * @version 2.1
-     */
-    backgroundImage: StateDependentValue<string>;
-    /**
-     * Gets the values to use for the border color CSS properties.
-     * @version 2.1
-     */
-    borderColors: EdgeValues<string>;
 }
 
 /**
@@ -1786,57 +1641,9 @@ export declare interface Tooltip {
 }
 
 /**
- * Represents the styling information that applies to trellis panel headers in the Mod Visualization.
- * @public
- * @version 2.1
- */
-export declare interface TrellisPanelHeaderStylingInfo {
-    /**
-     * Gets the color to use for the `background-color` CSS property. This value is valid a CSS color or the value `"none"`.
-     * @version 2.1
-     */
-    backgroundColor: string;
-    /**
-     * Gets the values to use for the border color CSS properties.
-     * @version 2.1
-     */
-    borderColors: EdgeValues<string>;
-    /**
-     * Gets and object describing the font that shall be used in the trellis headers of the Mod Visualization.
-     * @version 2.1
-     */
-    font: FontInfo;
-}
-
-/**
  * Extract all possible types in a Tuple type.
  * @public
  */
 export declare type UnionFromTupleTypes<T extends readonly any[], U = never> = T[number] | U;
-
-/**
- * Represents the styling information that applies to zoom sliders in the Mod Visualization.
- * @public
- * @version 2.1
- */
-export declare interface ZoomSliderStylingInfo {
-    /**
-     * Gets the styling information to use for the inner range of a zoom slider in the Mod Visualization.
-     * The inner range is the area between the thumbs of the zoom slider.
-     * @version 2.1
-     */
-    innerRange: RangeStylingInfo;
-    /**
-     * Gets the styling information to use for the outer range of a zoom slider in the Mod Visualization.
-     * The outer range is the area between the ends of the zoom slider, visible when the thumbs have been moved inwards.
-     * @version 2.1
-     */
-    outerRange: RangeStylingInfo;
-    /**
-     * Gets the styling information to use for the thumbs of a zoom slider in the Mod Visualization.
-     * @version 2.1
-     */
-    thumb: ThumbStylingInfo;
-}
 
 export { }

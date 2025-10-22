@@ -23,11 +23,10 @@
                     "description": "Specifies the mode that this axis prefers to be in. This option only applies if this axis is configured with mode 'dual'."
                 },
                 "allowNonAggregatingMeasures": {
-                    "type": "string",
-                    "enum": ["no", "yes", "prefer"],
-                    "title": "Non-aggregating measures",
-                    "description": "Specifies if this axis supports non-aggregating expressions (expressions without an aggregation method) when it is in continuous mode, and whether it prefers to have a non-aggregating expression. The default is 'no'.",
-                    "default": "no"
+                    "type": "boolean",
+                    "title": "Allow non-aggregating measures",
+                    "description": "Specifies if this axis supports non-aggregating expressions (expressions without an aggregation method) when it is in continuous mode.",
+                    "default": false
                 },
                 "automaticConfiguration": {
                     "type": "object",
@@ -36,37 +35,17 @@
                     "additionalProperties": false,
                     "properties": {
                         "expressionHeuristics": {
+                            "type": "string",
                             "title": "Expression heuristics",
-                            "description": "Specifies the heuristics to use when this axis is assigned an initial expression. Use 'none' to skip the heuristics and leave this axis with an empty expression. Use 'default' to set an expression using Spotfire default heuristics. Use an object with an 'expression' property to set a specified expression.",
-                            "anyOf": [
-                                {
-                                    "type": "string",
-                                    "default": "default",
-                                    "enum": ["none", "default"]
-                                },
-                                {
-                                    "type": "object",
-                                    "examples": [{ "expression": "Count()" }, { "expression": "${Axis.X.Expression}" }],
-                                    "properties": {
-                                        "expression": {
-                                            "type": "string",
-                                            "description": "The initial expression to set."
-                                        }
-                                    }
-                                }
-                            ]
+                            "enum": ["none", "default"],
+                            "default": "default",
+                            "description": "Specifies the heuristics to use when this axis is assigned an initial expression. Use 'none' to skip the heuristics and leave this axis with an empty expression."
                         },
                         "priority": {
                             "type": "integer",
                             "title": "Priority",
                             "default": "0",
                             "description": "Specifies the order in which this axis will be treated when the heuristics assigns the initial expression. A higher value means it will be treated before axes with a lower value. Two axes with the same value will be treated in undefined order."
-                        },
-                        "disableOnAutoConfigure": {
-                            "type": "boolean",
-                            "default": true,
-                            "title": "Run heuristic on mod init for optional axis",
-                            "description": "Specifies that heuristics should not be run during auto configure, e.g. during mod initialization. Heuristics will only be run when the axis is explicitly enabled by the user via the visualization properties panel. Added in API version 2.2."
                         }
                     }
                 },
@@ -275,7 +254,6 @@
             "additionalProperties": false,
             "properties": {
                 "colorAxis": {
-                    "unevaluatedProperties": false,
                     "allOf": [
                         { "$ref": "#/definitions/axis" },
                         {
@@ -298,17 +276,6 @@
                                     }
                                 }
                             }
-                        },
-                        {
-                            "title": "disableOnAutoConfigure not allowed on color axis",
-                            "not": {
-                                "required": ["automaticConfiguration"],
-                                "properties": {
-                                    "automaticConfiguration": {
-                                        "required": ["disableOnAutoConfigure"]
-                                    }
-                                }
-                            }
                         }
                     ]
                 },
@@ -317,7 +284,6 @@
                     "title": "The mod axes",
                     "description": "Specifies the axes that defines how Spotfire computes the data view consumed by the Mod.",
                     "items": {
-                        "unevaluatedProperties": false,
                         "allOf": [
                             { "$ref": "#/definitions/axis" },
                             {
@@ -384,26 +350,6 @@
                                                 "title": "Title",
                                                 "description": "Specifies the title of the control for this axis."
                                             }
-                                        }
-                                    },
-                                    "optional": {
-                                        "type": "boolean",
-                                        "default": true,
-                                        "title": "Optional axis",
-                                        "description": "Specifies that the axis can be left unconfigured. Added in API version 2.2."
-                                    }
-                                }
-                            },
-                            {
-                                "title": "disableOnAutoConfigure only allowed when optional is true",
-                                "not": {
-                                    "required": ["automaticConfiguration"],
-                                    "properties": {
-                                        "automaticConfiguration": {
-                                            "required": ["disableOnAutoConfigure"]
-                                        },
-                                        "optional": {
-                                            "not": { "enum": [true] }
                                         }
                                     }
                                 }

@@ -1,6 +1,6 @@
 {
     "name": "@spotfire/mods-api",
-    "version": "2.2.0",
+    "version": "2.0.1",
     "description": "API typings and schemas for Spotfire® Mods",
     "repository": {
         "type": "git",
