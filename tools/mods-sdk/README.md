@@ -8,7 +8,7 @@ Spotfire Mods SDK (@spotfire/mods-sdk)
 [![NPM version][npm-image]][npm-url]
 
 The Spotfire Mods SDK is a CLI tool for creating, building, and developing Spotfire Mods.
-To run the tool [Node.js](https://nodejs.org/) version 20 or greater is required.
+To run the tool [Node.js](https://nodejs.org/) version 22 or greater is required.
 
 ### Commands
 
