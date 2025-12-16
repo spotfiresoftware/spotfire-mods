@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as d3 from "d3";
 import { DataViewRow } from "spotfire-api";
 import { setBusy, setIdle } from "./interactionLock";
