@@ -4,7 +4,7 @@
  * in the license file that is distributed with this file.
  * 
  * Spotfire Action Mods API declaration.
- * Version: 2.2
+ * Version: 2.3
  */
 
 declare namespace Spotfire.Dxp {
@@ -6209,6 +6209,100 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
+             * Represents a data view in a mod visualization.
+             * 
+             * @since 2.3
+             * 
+             * @group Default capability
+             */
+            class ModDataViewVisualization extends Visuals.Visualization implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the axes declared, as defined in the mod-manifest.json,
+                 * excluding the color axis. To access the color axis, use the ColorAxis property.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Axes(): TypedArray<ModAxis>;
+                /**
+                 * Gets the axes names.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get AxesNames(): TypedArray<JsType<System.String>>;
+                /**
+                 * Gets the color axis. Implements IColorAxis.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get ColorAxis(): (Visuals.ColorAxis | null);
+                /**
+                 * Gets the details.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get Details(): Visuals.Details;
+                /**
+                 * Gets a value indicating whether this instance has a color axis in the mod manifest.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                get HasColorAxis(): JsType<System.Boolean>;
+                /**
+                 * Gets a value indicating whether this instance has tooltips enabled.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                get HasTooltips(): JsType<System.Boolean>;
+                /**
+                 * Gets the view name.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                get Name(): JsType<System.String>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Gets the axis with the specified name declared by this Mod Visualization, as
+                 * defined in the mod-manifest.json, excluding the color axis.
+                 * To access the color axis, use the ColorAxis property.
+                 * @param name The name of the axis to get.
+                 * @returns An object representing the Mod Axis, or null.
+                 * 
+                 * @since 2.1
+                 * 
+                 * @group Default capability
+                 */
+                Axis(name: (JsType<System.String> | System.String)): (ModAxis | null);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_339521640: null;
+            }
+            
+            /**
              * Identifies a Mod that can be used in the Document.
              * 
              * @since 2.1
@@ -6400,56 +6494,7 @@ declare namespace Spotfire.Dxp {
              * 
              * @group Default capability
              */
-            class ModVisualization extends Visuals.Visualization implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
-                /**
-                 * Gets the axes declared by this Mod Visualization, as defined in the mod-manifest.json,
-                 * excluding the color axis. To access the color axis, use the ColorAxis property.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get Axes(): TypedArray<ModAxis>;
-                /**
-                 * Gets the names of the axes declared by this instance, including the Color axis, if declared.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get AxesNames(): TypedArray<JsType<System.String>>;
-                /**
-                 * Gets the color axis, or null.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get ColorAxis(): (Visuals.ColorAxis | null);
-                /**
-                 * Gets the details.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get Details(): Visuals.Details;
-                /**
-                 * Gets a value indicating whether this instance has a color axis in the mod manifest.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get HasColorAxis(): JsType<System.Boolean>;
-                /**
-                 * Gets a value indicating whether this instance has tooltips enabled.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                get HasTooltips(): JsType<System.Boolean>;
+            class ModVisualization extends ModDataViewVisualization implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                 /**
                  * Gets the static mod identifier, as specified in the mod manifest, or null.
                  * 
@@ -6458,6 +6503,14 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 get ModIdentifier(): (ModIdentifier | null);
+                /**
+                 * Gets the named data views.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                get NamedDataViews(): System.Collections.Generic.IEnumerable<ModDataViewVisualization>;
                 /**
                  * Gets the properties of this Mod Visualization, as defined in the mod-manifest.json.
                  * 
@@ -6472,18 +6525,6 @@ declare namespace Spotfire.Dxp {
                  */
                 constructor();
                 /**
-                 * Gets the axis with the specified name declared by this Mod Visualization, as
-                 * defined in the mod-manifest.json, excluding the color axis.
-                 * To access the color axis, use the ColorAxis property.
-                 * @param name The name of the axis to get.
-                 * @returns An object representing the Mod Axis, or null.
-                 * 
-                 * @since 2.1
-                 * 
-                 * @group Default capability
-                 */
-                Axis(name: (JsType<System.String> | System.String)): (ModAxis | null);
-                /**
                  * Gets the Mod Property with the specified name, or null if no such property
                  * of the specified type TValue exists.
                  * @param name The name of the Mod Property, as defined in the mod-manifest.json.
@@ -6495,6 +6536,17 @@ declare namespace Spotfire.Dxp {
                  * @param typeTValue - Generic type argument
                  */
                 Property<TValue>(typeTValue: TypeRefParam<TValue>, name: (JsType<System.String> | System.String)): (ModPropertyGeneric<TValue> | null);
+                /**
+                 * Try to get a named dataview.
+                 * @param name The name as defined in the manifest.
+                 * @param namedDataView The dataview, or null if the view does not exists.
+                 * @returns True if the dataview was found, otherwise false.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                TryGetNamedDataView(name: (JsType<System.String> | System.String), namedDataView: OutParam<ModDataViewVisualization>): JsType<System.Boolean>;
                 /**
                  * @ignore
                  * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
@@ -7519,6 +7571,15 @@ declare namespace Spotfire.Dxp {
                  */
                 get Layers(): Layers.LayerCollection;
                 /**
+                 * Gets or sets the marker shape.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                get MarkerShape(): MarkerShape;
+                set MarkerShape(value: MarkerShape);
+                /**
                  * Gets or sets the size of the markers.
                  * @remark The marker size is expressed relative to the width of a category on
                  * the x-axis. A value of 100 means it will occupy the full width.
@@ -7589,6 +7650,15 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 get Violin(): BoxPlotViolin;
+                /**
+                 * Gets or sets a value indicating which markers that should be visible.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                get VisibleMarkers(): BoxPlotVisibleMarkers;
+                set VisibleMarkers(value: BoxPlotVisibleMarkers);
                 /**
                  * Gets the X-axis.
                  * 
@@ -7744,7 +7814,7 @@ declare namespace Spotfire.Dxp {
             }
             
             /**
-             * The orientation of the bars in a bar chart.
+             * The orientation of the boxes in the box plot.
              * 
              * @since 2.2
              * 
@@ -8160,6 +8230,26 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
                 private __type_1028538654: null;
+            }
+            
+            /**
+             * Represents which markers should be shown in a {@link Spotfire.Dxp.Application.Visuals.BoxPlot}.
+             * 
+             * @since 2.3
+             * 
+             * @group Default capability
+             */
+            class BoxPlotVisibleMarkers extends System.Enum {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /** All markers are shown. */
+                static readonly All: BoxPlotVisibleMarkers;
+                /** The outliers are visible. */
+                static readonly Outliers: BoxPlotVisibleMarkers;
+                private __type_2542665438: null;
             }
             
             /**
@@ -8650,6 +8740,15 @@ declare namespace Spotfire.Dxp {
                 get MaxNumberOfLabels(): JsType<System.Int32>;
                 set MaxNumberOfLabels(value: JsType<System.Int32>);
                 /**
+                 * Gets or sets the orientation of the bars.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                get Orientation(): CombinationChartOrientation;
+                set Orientation(value: CombinationChartOrientation);
+                /**
                  * Gets the legend item that displays series information.
                  * @remark This is the legend items that displays color and series information. The combination chart does not display the legend item of its color axis.
                  * 
@@ -8919,6 +9018,26 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
                 private __type_1639517331: null;
+            }
+            
+            /**
+             * Represents the orientation of the bars in a combination chart.
+             * 
+             * @since 2.3
+             * 
+             * @group Default capability
+             */
+            class CombinationChartOrientation extends System.Enum {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /** Horizontal orientation of the bars in a combination chart. This means that the x and y-axes positions are swapped. */
+                static readonly Horizontal: CombinationChartOrientation;
+                /** Vertical orientation of the bars in a combination chart. */
+                static readonly Vertical: CombinationChartOrientation;
+                private __type_1195717552: null;
             }
             
             /**
@@ -14220,6 +14339,15 @@ declare namespace Spotfire.Dxp {
                 get MaxNumberOfLabels(): JsType<System.Int32>;
                 set MaxNumberOfLabels(value: JsType<System.Int32>);
                 /**
+                 * Gets or sets the orientation of the lines.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                get Orientation(): LineChartOrientation;
+                set Orientation(value: LineChartOrientation);
+                /**
                  * Gets or sets a value indicating whether the lines are individually scaled.
                  * @remark The Y-axis scale can either be the same for all lines, or individual for each line.
                  * Individual means the lines are normalized so that all lines are shown on a scale with the actual value expressed as a
@@ -14357,6 +14485,26 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
                 private __type_2666589593: null;
+            }
+            
+            /**
+             * Represents the orientation of the lines in a line chart.
+             * 
+             * @since 2.3
+             * 
+             * @group Default capability
+             */
+            class LineChartOrientation extends System.Enum {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /** Horizontal orientation of the lines in a line chart. */
+                static readonly Horizontal: LineChartOrientation;
+                /** Vertical orientation of the lines in a line chart. This means that the x and y-axes positions are swapped. */
+                static readonly Vertical: LineChartOrientation;
+                private __type_1980329989: null;
             }
             
             /**
@@ -27066,6 +27214,7 @@ declare namespace Spotfire.Dxp {
                 class TmsLayer extends TileLayer implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
                     /**
                      * Gets or sets the TMS layer copyright link.
+                     * @deprecated Use the CopyrightInfoItems collection property instead. This property now accesses the Link of the first item in the collection.
                      * 
                      * @since 2.0
                      * 
@@ -27075,6 +27224,7 @@ declare namespace Spotfire.Dxp {
                     set CopyrightLink(value: (JsType<System.Uri> | null));
                     /**
                      * Gets or sets the TMS layer copyright text.
+                     * @deprecated Use the CopyrightInfoItems collection property instead. This property now accesses the Text of the first item in the collection.
                      * 
                      * @since 2.0
                      * 
@@ -29688,6 +29838,31 @@ declare namespace Spotfire.Dxp {
                 }
                 
                 /**
+                 * Represents a legend item for a reference layer.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                class LegendReferenceLayerItem extends LegendItem implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                        System_IServiceProvider: Implementation<System.IServiceProvider>,
+                        Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                        Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                    };
+                    private __type_3111711369: null;
+                }
+                
+                /**
                  * Represents disjunct lines that are rendered on the values computed by a reference element.
                  * 
                  *  One line is rendered for each point defined by {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayer.Expression}/{@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayer.SecondaryExpression}
@@ -29878,6 +30053,15 @@ declare namespace Spotfire.Dxp {
                     get ColumnNameMatchTarget(): ColumnNameMatch;
                     set ColumnNameMatchTarget(value: ColumnNameMatch);
                     /**
+                     * Gets the details object for this layer, containing items that control
+                     * tooltip settings.
+                     * 
+                     * @since 2.3
+                     * 
+                     * @group Default capability
+                     */
+                    get Details(): ReferenceLayerDetails;
+                    /**
                      * Gets or sets the evaluation modes, describing which of the top level visualization axes
                      * that are used to group by.
                      * 
@@ -29914,6 +30098,22 @@ declare namespace Spotfire.Dxp {
                      * @group Default capability
                      */
                     get Label(): Label;
+                    /**
+                     * Gets the legend object for this layer.
+                     * 
+                     * @since 2.3
+                     * 
+                     * @group Default capability
+                     */
+                    get Legend(): Legend;
+                    /**
+                     * Gets the legend item object for this layer.
+                     * 
+                     * @since 2.3
+                     * 
+                     * @group Default capability
+                     */
+                    get LegendItem(): LegendReferenceLayerItem;
                     /**
                      * Gets or sets a value indicating whether to limit the reference layer to the marked data.
                      * 
@@ -30009,6 +30209,64 @@ declare namespace Spotfire.Dxp {
                         Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                     };
                     private __type_2977985793: null;
+                }
+                
+                /**
+                 * Representation of detail information for elements in a {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayer}.
+                 * The information contained in this class is displayed in tooltips.
+                 * 
+                 * @since 2.3
+                 * 
+                 * @group Default capability
+                 */
+                class ReferenceLayerDetails extends Details implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                    /**
+                     * Gets the detail item associated with the Category By.
+                     * 
+                     * @since 2.3
+                     * 
+                     * @group Default capability
+                     */
+                    get CategoryBy(): NamedDetailItem;
+                    /**
+                     * Gets the detail item associated with the Color By.
+                     * 
+                     * @since 2.3
+                     * 
+                     * @group Default capability
+                     */
+                    get ColorBy(): NamedDetailItem;
+                    /**
+                     * Gets the detail item associated with the Layer name.
+                     * 
+                     * @since 2.3
+                     * 
+                     * @group Default capability
+                     */
+                    get LayerName(): NamedDetailItem;
+                    /**
+                     * Gets the detail item associated with the Values.
+                     * 
+                     * @since 2.3
+                     * 
+                     * @group Default capability
+                     */
+                    get Values(): NamedDetailItem;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                        System_IServiceProvider: Implementation<System.IServiceProvider>,
+                        Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                        Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                    };
+                    private __type_4092502075: null;
                 }
                 
                 /**
@@ -49528,6 +49786,8 @@ declare namespace Spotfire.Dxp {
                 static readonly AttachmentFailure: LibraryExceptionFaultCode;
                 /** The client is offline. */
                 static readonly ClientIsOffline: LibraryExceptionFaultCode;
+                /** The database is full. */
+                static readonly DatabaseFull: LibraryExceptionFaultCode;
                 /** Library entry does not exist. */
                 static readonly EntryDoesNotExist: LibraryExceptionFaultCode;
                 /** Library entry exists. */
@@ -49536,18 +49796,31 @@ declare namespace Spotfire.Dxp {
                 static readonly EntryTitleInvalid: LibraryExceptionFaultCode;
                 /** Library entry is of wrong type. */
                 static readonly EntryWrongType: LibraryExceptionFaultCode;
+                /** An illegal argument was provided. */
+                static readonly IllegalArgument: LibraryExceptionFaultCode;
                 /** The user has insufficient permissions to an item. */
                 static readonly InsufficientPermissions: LibraryExceptionFaultCode;
                 /** The parent entry is invalid, for example wrong type etc. */
                 static readonly InvalidParent: LibraryExceptionFaultCode;
                 /** The user has entered an invalid search expression. */
                 static readonly InvalidSearchExpression: LibraryExceptionFaultCode;
+                /** The job was canceled. */
+                static readonly JobCanceled: LibraryExceptionFaultCode;
+                /** The job does not exist. */
+                static readonly JobDoesNotExist: LibraryExceptionFaultCode;
+                /** The job has not finished. */
+                static readonly JobNotFinished: LibraryExceptionFaultCode;
                 /** Specifies any failures from a LibraryAccessControlServiceException. */
                 static readonly LibraryAccessControlServiceException: LibraryExceptionFaultCode;
                 /** Any failures from a LibraryServiceException. */
                 static readonly LibraryServiceException: LibraryExceptionFaultCode;
-                /** When the library service is not running. */
+                /**
+                 * When the library service is not running.
+                 * @deprecated Error code not used any more.
+                 */
                 static readonly LibraryServiceNotRunning: LibraryExceptionFaultCode;
+                /** The maximum folder depth has been exceeded. */
+                static readonly MaximumFolderDepthExceeded: LibraryExceptionFaultCode;
                 /** Any other errors. */
                 static readonly Other: LibraryExceptionFaultCode;
                 /** The query timed out. */
@@ -49556,6 +49829,8 @@ declare namespace Spotfire.Dxp {
                 static readonly Undefined: LibraryExceptionFaultCode;
                 /** The result from the server was unexpected or incomplete. */
                 static readonly UnexpectedResult: LibraryExceptionFaultCode;
+                /** An unknown library type was provided. */
+                static readonly UnknownType: LibraryExceptionFaultCode;
                 /** Any error from using the User Directory. */
                 static readonly UserDirectoryException: LibraryExceptionFaultCode;
                 /** User is unauthorized to perform the requested operation. */

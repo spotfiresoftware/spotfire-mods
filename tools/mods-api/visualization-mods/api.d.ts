@@ -326,6 +326,11 @@ export declare interface DataType {
  */
 declare interface DataView_2 {
     /**
+     * Gets the name of the dataview.
+     * @since 2.3
+     */
+    name(): string | null;
+    /**
      * Mark a set of rows.
      * The full set will be the union of all mark operations performed within one transaction (see {@link Mod.transaction}).
      * All mark operations must have the same marking operation.
@@ -1055,10 +1060,23 @@ export declare interface ModVisualization {
      */
     data(): DataViewProxy;
     /**
+     * Provides access to the {@link DataView} that the Mod Visualization is to render.
+     * @param name - The name of the view.
+     * @since 2.3
+     */
+    data(name?: string): DataViewProxy;
+    /**
      * Provides access to the {@link DataTable} in the Spotfire document that the Mod Visualization
      * uses as its main table.
      */
     mainTable(): ReadableProxy<DataTable>;
+    /**
+     * Provides access to the {@link DataTable} in the Spotfire document that the Mod Visualization
+     * uses as its main table.
+     * @param dataViewName - The name of the {@link DataView}.
+     * @since 2.3
+     */
+    mainTable(dataViewName?: string): ReadableProxy<DataTable>;
     /**
      * Sets the main {@link DataTable} in the Mod visualization.
      * @param tableName - The name or id of the {@link DataTable} to be used as main table.
@@ -1066,15 +1084,37 @@ export declare interface ModVisualization {
     setMainTable(tableName: string): void;
     /**
      * Sets the main {@link DataTable} in the Mod visualization.
+     * @param tableName - The name or id of the {@link DataTable} to be used as main table.
+     * @param dataViewName - The name of the {@link DataView}.
+     * @since 2.3
+     */
+    setMainTable(tableName: string, dataViewName?: string): void;
+    /**
+     * Sets the main {@link DataTable} in the Mod visualization.
      * @param table - The {@link DataTable} object to be used as main table.
      */
     setMainTable(table: DataTable): void;
+    /**
+     * Sets the main {@link DataTable} in the Mod visualization.
+     * @param table - The {@link DataTable} object to be used as main table.
+     * @param dataViewName - The name of the {@link DataView}.
+     * @since 2.3
+     */
+    setMainTable(table: DataTable, dataViewName?: string): void;
     /**
      * Provides access to the {@link Axis} in the Mod Visualization with the specified `name`. All axes
      * must be declared in the mod-manifest.json.
      * @param name - The name of the {@link Axis}.
      */
     axis(name: string): ReadableProxy<Axis>;
+    /**
+     * Provides access to the {@link Axis} in the Mod Visualization with the specified `axisName` in the dataview with name `dataViewName`.
+     * All axes must be declared in the mod-manifest.json.
+     * @since 2.3
+     * @param axisName - The name of the {@link Axis}.
+     * @param dataViewName - The name of the {@link DataView}.
+     */
+    axis(name: string, dataViewName?: string): ReadableProxy<Axis>;
 }
 
 /**
