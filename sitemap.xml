@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/spotfire-mods/docs/whats-new/</loc>
-    <lastmod>2025-10-22T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>/spotfire-mods/docs/getting-started/</loc>
-    <lastmod>2025-06-16T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/spotfire-mods/docs/whats-new/</loc>
+    <lastmod>2025-10-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/action-mods/using-the-api/parameter-types/</loc>
     <lastmod>2025-06-12T00:00:00+00:00</lastmod>
@@ -23,20 +23,11 @@
     <loc>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</loc>
     <lastmod>2024-06-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/spotfire-mods/examples/area-chart/</loc>
-    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/spotfire-mods/examples/circular-tree-map/</loc>
-    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/spotfire-mods/examples/gauge/</loc>
-    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</loc>
-    <lastmod>2025-09-12T00:00:00+00:00</lastmod>
+    <lastmod>2025-10-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</loc>
-    <lastmod>2025-09-12T00:00:00+00:00</lastmod>
+    <lastmod>2025-10-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/action-mods/tutorial/</loc>
     <lastmod>2025-05-27T00:00:00+00:00</lastmod>
@@ -81,13 +72,13 @@
     <lastmod>2024-06-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/getting-started-11/</loc>
-    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/</loc>
-    <lastmod>2025-10-22T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/</loc>
-    <lastmod>2025-10-22T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/index.json</loc>
   </url><url>

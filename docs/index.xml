@@ -5,7 +5,7 @@
     <description>Recent content in Working with Spotfire® Mods on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 22 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 16 Dec 2025 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/index.xml" rel="self" type="application/rss+xml" />
     
@@ -18,7 +18,7 @@
     <item>
       <title>Docs: Getting started</title>
       <link>/spotfire-mods/docs/getting-started/</link>
-      <pubDate>Mon, 16 Jun 2025 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/getting-started/</guid>
       <description>
@@ -139,7 +139,7 @@ Your mod will be rebuilt when any TypeScript file is changed or when the mod man
 &lt;/ul&gt;
 &lt;p&gt;You can now connect to the mods development server just like described above.&lt;/p&gt;
 &lt;p&gt;To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html&#34;&gt;Trusting custom content in the Spotfire environment&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from the &lt;a href=&#34;https://spotfi.re/download&#34;&gt;Spotfire Download site&lt;/a&gt;, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &amp;gt; Downloads.&lt;/p&gt;
+&lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from the &lt;a href=&#34;https://spotfi.re/download&#34;&gt;Spotfire Download site&lt;/a&gt;, if you have access.&lt;/p&gt;
 &lt;p&gt;An administrator can also import a certificate from one system to another to keep signed items valid. See &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html&#34;&gt;Moving certificates from one system to another&lt;/a&gt; for more information.&lt;/p&gt;
 
       </description>
@@ -961,7 +961,7 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
     <item>
       <title>Docs: Action mods API documentation</title>
       <link>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</link>
-      <pubDate>Fri, 12 Sep 2025 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</guid>
       <description>
@@ -983,7 +983,7 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
     <item>
       <title>Docs: Visualization mods API documentation</title>
       <link>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</link>
-      <pubDate>Fri, 12 Sep 2025 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</guid>
       <description>
@@ -1539,7 +1539,7 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
     <item>
       <title>Docs: Getting started (before 14.4)</title>
       <link>/spotfire-mods/docs/visualization-mods/getting-started-11/</link>
-      <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/getting-started-11/</guid>
       <description>
@@ -1684,7 +1684,7 @@ When the mod has been saved to the library, it is possible for others, connected
 &lt;/ol&gt;
 &lt;h2 id=&#34;sharing-mods&#34;&gt;Sharing mods&lt;/h2&gt;
 &lt;p&gt;To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html&#34;&gt;Trusting custom content in the Spotfire environment&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a visualization mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from the &lt;a href=&#34;https://spotfi.re/download&#34;&gt;Spotfire download site&lt;/a&gt;, if you have access. On TIBCO Cloud Spotfire, the Package Builder can be downloaded from the library, under Resources &amp;gt; Downloads.&lt;/p&gt;
+&lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a visualization mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from the &lt;a href=&#34;https://spotfi.re/download&#34;&gt;Spotfire download site&lt;/a&gt;, if you have access.&lt;/p&gt;
 &lt;p&gt;An administrator can also import a certificate from one system to another to keep signed items valid. See &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html&#34;&gt;Moving certificates from one system to another&lt;/a&gt; for more information.&lt;/p&gt;
 
       </description>
