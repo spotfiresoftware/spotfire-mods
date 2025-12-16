@@ -127,8 +127,8 @@ window.Spotfire.initialize(async (mod) => {
             },
             containerSelector: "#mod-container",
             size: windowSize,
-            clearMarking: () => {
-                if (currentInteractionMode() == InteractionMode.drilldown) {
+            clearMarking: (altKey: boolean) => {
+                if (currentInteractionMode(altKey) == InteractionMode.drilldown) {
                     var currentPath = rootNodePath.value();
                     if (currentPath) {
                         let json = JSON.parse(currentPath) as { path: (string | null)[] };
@@ -137,20 +137,20 @@ window.Spotfire.initialize(async (mod) => {
                     }
                 } else dataView.clearMarking();
             },
-            mark(node: SunBurstHierarchyNode) {
-                if (d3.event.ctrlKey) {
+            mark(node: SunBurstHierarchyNode, toggleOrAdd: boolean) {
+                if (toggleOrAdd) {
                     node.mark("ToggleOrAdd");
                 } else {
                     node.mark();
                 }
             },
-            click(node: SunBurstHierarchyNode) {
-                if (currentInteractionMode() == InteractionMode.drilldown) {
+            click(node: SunBurstHierarchyNode, toogleOrAdd: boolean, altKey: boolean) {
+                if (currentInteractionMode(altKey) == InteractionMode.drilldown) {
                     if (node.children && node.children.length) {
                         rootNodePath.set(JSON.stringify({ path: getPathToNode(node) }));
                     }
                 } else {
-                    if (d3.event.ctrlKey) {
+                    if (toogleOrAdd) {
                         node.mark("ToggleOrAdd");
                     } else {
                         node.mark();
@@ -225,11 +225,11 @@ window.Spotfire.initialize(async (mod) => {
 
         context.signalRenderComplete();
 
-        function currentInteractionMode(): InteractionMode {
+        function currentInteractionMode(altKey: boolean): InteractionMode {
             if (interactionMode.value() == InteractionMode.drilldown) {
-                return d3.event.altKey ? InteractionMode.mark : InteractionMode.drilldown;
+                return altKey ? InteractionMode.mark : InteractionMode.drilldown;
             }
-            return d3.event.altKey ? InteractionMode.drilldown : InteractionMode.mark;
+            return altKey ? InteractionMode.drilldown : InteractionMode.mark;
         }
 
         function flattenColorsIfColorSplits(node: SunBurstHierarchyNode): any {
