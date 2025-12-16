@@ -1,5 +1,10 @@
 # Spotfire® Mods
 
+<p align="center">
+<a href="https://spotfiresoftware.github.io/spotfire-mods/">Documentation</a> |
+<a href="https://spotfiresoftware.github.io/spotfire-mods/docs/getting-started/">Getting started</a>
+</p>
+
 Welcome to the public repository for Spotfire® Mods.
 
 The Spotfire Mods framework makes it quick and easy to extend Spotfire® with custom visualizations and actions tailored for specific domains and use cases.
@@ -10,7 +15,8 @@ A Spotfire action mod is a collection of actions (scripts) that are packaged tog
 
 ## To get started
 
-Creating a new Spotfire mod template is easily done user our [mods SDK](https://www.npmjs.com/package/@spotfire/mods-sdk). Just create a blank folder, run `npx @spotfire/mods-sdk new action` or `npx @spotfire/mods-sdk new visualization` and follow the instruction. 
+Creating a new Spotfire mod template is easily done user our [mods SDK](https://www.npmjs.com/package/@spotfire/mods-sdk). Just create a blank folder, run `npx @spotfire/mods-sdk new action` or `npx @spotfire/mods-sdk new visualization` and follow the instruction.
+For more info see the ["Getting started"](https://spotfiresoftware.github.io/spotfire-mods/docs/getting-started/) documentation.
 
 [Spotfire mods SDK](https://www.npmjs.com/package/@spotfire/mods-sdk)
 
