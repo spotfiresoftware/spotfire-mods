@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.150.1"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/whats-new/index.xml">
+<meta name="generator" content="Hugo 0.152.2"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/whats-new/index.xml">
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
@@ -13,14 +13,14 @@
 <title>What&#39;s new? | Spotfire® Mods</title>
   <meta itemprop="name" content="What&#39;s new?">
   <meta itemprop="description" content="This page describes some of the latest additions to the mods API and SDK.">
-  <meta itemprop="datePublished" content="2025-10-30T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-10-30T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1853">
+  <meta itemprop="datePublished" content="2025-12-16T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-12-16T00:00:00+00:00">
+  <meta itemprop="wordCount" content="2497">
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" as="style">
-<link href="/spotfire-mods/scss/main.min.b0e45692b242d6dff0bb1c57e0fa258091aef4e06f53aa9cab666f62cc2a1489.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.611dbb678289efd7ec655cc8ba608a9038169188984397cb722317f450975b34.css" as="style">
+<link href="/spotfire-mods/scss/main.min.611dbb678289efd7ec655cc8ba608a9038169188984397cb722317f450975b34.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -615,16 +615,22 @@
 
 <nav id="TableOfContents">
   <ul>
+    <li><a href="#mods-api-23">Mods API 2.3</a>
+      <ul>
+        <li><a href="#visualization-mods">Visualization mods</a></li>
+        <li><a href="#action-mods">Action mods</a></li>
+      </ul>
+    </li>
     <li><a href="#mods-api-22">Mods API 2.2</a>
       <ul>
-        <li><a href="#action-mods">Action mods</a></li>
-        <li><a href="#visualization-mods">Visualization mods</a></li>
+        <li><a href="#action-mods-1">Action mods</a></li>
+        <li><a href="#visualization-mods-1">Visualization mods</a></li>
       </ul>
     </li>
     <li><a href="#mods-api-21">Mods API 2.1</a>
       <ul>
-        <li><a href="#action-mods-1">Action mods</a></li>
-        <li><a href="#visualization-mods-1">Visualization mods</a></li>
+        <li><a href="#action-mods-2">Action mods</a></li>
+        <li><a href="#visualization-mods-2">Visualization mods</a></li>
       </ul>
     </li>
   </ul>
@@ -666,7 +672,7 @@
 	
 	
 	
-	<p class="-text-secondary pt-3 h6" >Reading time: 8 minutes and 45 seconds.</p>
+	<p class="-text-secondary pt-3 h6" >Reading time: 11 minutes and 45 seconds.</p>
 	<h1>What&#39;s new?</h1>
 	<div class="lead">This page describes some of the latest additions to the mods API and SDK.</div>
 	
@@ -677,6 +683,104 @@
 <li><a href="https://www.npmjs.com/package/@spotfire/mods-dev-server">@spotfire/mods-dev-server</a></li>
 </ul>
 <p>If you have started from an SDK template, simply run <code>npm update</code> to get the latest compatible versions.</p>
+<h2 id="mods-api-23">Mods API 2.3</h2>
+<p>Version 2.3 of the mods API introduces the ability to define multiple data views in visualization mods.
+This feature enables the ability to develop mod visualizations which contain sub-visualizations (layers), or which consume data from multiple data tables.</p>
+<ol>
+<li>Update the <code>&quot;apiVersion&quot;</code> version in the mod manifest to <code>&quot;2.3&quot;</code>.</li>
+<li>Update the version of <code>&quot;@spotfire/mods-api&quot;</code> in the <code>package.json</code> file to <code>~2.3.0</code>.</li>
+<li>Run <code>npm update</code>.</li>
+</ol>
+<h3 id="visualization-mods">Visualization mods</h3>
+<p>Version 2.3 introduces the biggest new feature to visualization mods since its release; the ability to define multiple data view definitions.
+Previously, a mod could only contain a single data view definition, declared in the mod manifest using the <code>&quot;dataViewDefinition&quot;</code> property.
+This limited mods to only being able to consume data from a single data table, or to require the user of a mod to prepare their data in such a way that it could fit the data view definition.
+Now we have added the ability to define multiple data view definitions via the <code>&quot;namedDataViewDefinitions&quot;</code> property in the manifest.</p>
+<p>For example, a network graph may want to consume data from two different data tables, one table which contains the node definitions, and another which describes the edges between nodes.
+For such a mod, these definitions can be specified as follows:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;apiVersion&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2.3&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;dataViewDefinition&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;namedDataViewDefinitions&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Nodes&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;icon&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;nodes.svg&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NodeID&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;dropTarget&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#204a87;font-weight:bold">&#34;icon&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Column&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Set {0} on the NodeID axis&#34;</span> <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Edges&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;icon&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;edges.svg&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;From&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;dropTarget&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#204a87;font-weight:bold">&#34;icon&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Column&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Set {0} on the Edge From axis&#34;</span> <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">},</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;To&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;dropTarget&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#204a87;font-weight:bold">&#34;icon&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Column&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Set {0} on the Edge To axis&#34;</span> <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span></code></pre></div><p>Note that we have left the <code>&quot;dataViewDefinition&quot;</code> completely empty to illustrate the fact that you do not need to declare a &ldquo;main&rdquo; data view definition.
+Data view definitions defined within the <code>&quot;namedDataViewDefinitions&quot;</code> must declare a name and may optionally declare an icon (shown in the contextual visualization properties panel).
+For the manifest defined above, the data can be consumed using the familiar <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#data-2">mod.visualization.data</a> API by providing the name of the data view you want to subscribe to.
+Note that other APIs used to get or set data table or axis information now also take an optional name parameter for the cases where they are defined in a named data view definition.
+The render function for the network graph can look something like this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Nodes&#34;</span><span style="color:#000;font-weight:bold">),</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Edges&#34;</span><span style="color:#000;font-weight:bold">),</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">context</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getRenderContext</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">render</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">render</span><span style="color:#000;font-weight:bold">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">nodesDataView</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">edgesDataView</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">errors</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">Promise</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">all</span><span style="color:#000;font-weight:bold">([</span><span style="color:#000">nodesDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getErrors</span><span style="color:#000;font-weight:bold">(),</span> <span style="color:#000">edgesDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getErrors</span><span style="color:#000;font-weight:bold">()])).</span><span style="color:#000">flatMap</span><span style="color:#000;font-weight:bold">((</span><span style="color:#000">errs</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000">errs</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">errors</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">length</span> <span style="color:#ce5c00;font-weight:bold">&gt;</span> <span style="color:#0000cf;font-weight:bold">0</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">controls</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">errorOverlay</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">show</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">errors</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">return</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#000">nodeRows</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">edgeRows</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">Promise</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">all</span><span style="color:#000;font-weight:bold">([</span><span style="color:#000">nodesDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">allRows</span><span style="color:#000;font-weight:bold">(),</span> <span style="color:#000">edgesDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">allRows</span><span style="color:#000;font-weight:bold">()]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">nodeRows</span> <span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#204a87;font-weight:bold">null</span> <span style="color:#ce5c00;font-weight:bold">||</span> <span style="color:#000">edgeRows</span> <span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#204a87;font-weight:bold">null</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">controls</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">errorOverlay</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">show</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;No nodes or edges to render.&#34;</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">return</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">controls</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">errorOverlay</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">hide</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8f5902;font-style:italic">// Render the network graph.
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">signalRenderComplete</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
+</span></span></code></pre></div><p>The <code>nodeRows</code> and <code>edgeRows</code> results may contain a different number of rows in the case where they are configured with different data tables.
+A limitation is that axes cannot be shared between data view definitions.
+This means that it is up to you as the mod developer to perform any necessary matching, and to keep axes consistent between data view definitions.
+For instance, to support trellising, you need to add a &ldquo;Trellis by&rdquo; axis to both &ldquo;Nodes&rdquo; and &ldquo;Edges&rdquo;, and report errors if the axes are out of sync or become inconsistent.</p>
+<h3 id="action-mods">Action mods</h3>
+<p>No new additions to the action mods framework have been added.
+However, Spotfire 14.7 introduces many new features which are supported in the API.
+These include:</p>
+<ul>
+<li>The ability to configure a mod visualization defining multiple named data views via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ModVisualization.html#trygetnameddataview">ModVisualization.TryGetNamedDataView</a> and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ModVisualization.html#nameddataviews">ModVisualization.NamedDataViews</a>.</li>
+<li>Setting the orientation of line charts via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.LineChart.html#orientation">LineChart.Orientation</a>.</li>
+<li>Configuring the legend and tooltips of reference layers via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayer.html#details">ReferenceLayer.Details</a> and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayer.html#legend">ReferenceLayer.Legend</a>.</li>
+</ul>
 <h2 id="mods-api-22">Mods API 2.2</h2>
 <p>Version 2.2 of the mods API introduces optional axes to visualization mods, as well as exposing new action mods APIs for working with reference layers.
 Using API features introduced in the 2.2 API requires Spotfire version 14.6 or later.
@@ -686,11 +790,11 @@ To upgrade an existing mod, follow these steps:</p>
 <li>Update the version of <code>&quot;@spotfire/mods-api&quot;</code> in the <code>package.json</code> file to <code>~2.2.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
-<h3 id="action-mods">Action mods</h3>
+<h3 id="action-mods-1">Action mods</h3>
 <p>No new additions to the action mods framework has been added however, Spotfire 14.6 introduces many new features which are supported in the API.
 One such new feature is &ldquo;reference elements&rdquo;, which allows you to add reference layers to certain visualizations and show trend lines.
 As an example on how to use the new APIs for this feature, see the snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-a-reference-layer-showing-trend-lines">&ldquo;Add a reference layer showing trend lines&rdquo;</a>.</p>
-<h3 id="visualization-mods">Visualization mods</h3>
+<h3 id="visualization-mods-1">Visualization mods</h3>
 <p>Version 2.2 of the visualization mods API adds the ability to mark an axis &ldquo;optional&rdquo;.
 This can be done by setting the <code>&quot;optional&quot;</code> property of the axis object in the manifest to <code>true</code>.
 An axis marked optional indicates that it should not be displayed in the new visualization properties panel when in an unconfigured state.
@@ -707,7 +811,7 @@ To upgrade your mod, follow these steps:</p>
 <li>Update the version of <code>@spotfire/mods-api</code> in the <code>package.json</code> file to <code>~2.1.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
-<h3 id="action-mods-1">Action mods</h3>
+<h3 id="action-mods-2">Action mods</h3>
 <p>Version 2.1 of the API contains a lot of improvements and new features for action mods.</p>
 <h4 id="new-parameter-types">New parameter types</h4>
 <p>This API introduces two new types with two variants each: <a href="/spotfire-mods/docs/whats-new/#datacolumn">DataColumn</a> (array: true/false) and <a href="/spotfire-mods/docs/whats-new/#dataviewdefinition">DataViewDefinition</a> (singleColumn: true/false).
@@ -821,7 +925,7 @@ Make sure you are using version 1.2 or later of <a href="https://www.npmjs.com/p
 <p>Each script can now specify its own unique SVG icon, which will show up in various parts of the UI such as floating buttons, title bar buttons, and in the Actions flyout.
 Scripts that do not specify an icon will fall back to the icon of the action mod.
 To specify an icon, add an <code>&quot;icon&quot;: &quot;path/to/icon.svg&quot;</code> property to the script in the manifest.</p>
-<h3 id="visualization-mods-1">Visualization mods</h3>
+<h3 id="visualization-mods-2">Visualization mods</h3>
 <p>Version 2.1 of the API also contains some smaller improvements to visualization mods.</p>
 <h4 id="axis-expression-heuristics">Axis expression heuristics</h4>
 <p>When a new instance of a visualization mod is created, heuristics are used to assign initial expressions to the axes of the visualization.
@@ -841,7 +945,7 @@ an expression that is not aggregating.</p>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 30, 2025
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 16, 2025
 </div>
 </div>
 
