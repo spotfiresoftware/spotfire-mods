@@ -5,7 +5,7 @@
     <description>Recent content in Working with Spotfire® Mods on Spotfire® Mods</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 16 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 18 Dec 2025 00:00:00 +0000</lastBuildDate>
     
 	  <atom:link href="/spotfire-mods/docs/index.xml" rel="self" type="application/rss+xml" />
     
@@ -16,244 +16,9 @@
     
     
     <item>
-      <title>Docs: Getting started</title>
-      <link>/spotfire-mods/docs/getting-started/</link>
-      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
-      
-      <guid>/spotfire-mods/docs/getting-started/</guid>
-      <description>
-        
-        
-        &lt;p&gt;The getting started guide covers the aspects that are common to both mod types. When you have created a mod project and connected to it, continue to the articles with details specific to &lt;a href=&#34;/spotfire-mods/docs/action-mods/developing-action-mods/&#34;&gt;action mods&lt;/a&gt; or &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/developing-visualization-mods/&#34;&gt;visualization mods&lt;/a&gt;. This guide describes the workflow for developing mods from Spotfire version 14.4 and later. In earlier Spotfire versions, where only visualization mods are available, the workflow is slightly different, see &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt; &lt;br&gt;
-This is needed to develop and test a mod. Development can be done against the installed client or the web client using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Visual Studio Code.&lt;/strong&gt;&lt;br&gt;
-The development experience is designed to integrate well with Microsoft &lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt; (VS Code) by providing default build tasks, debug target, and IntelliSense.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Node.js (version 22 or later) installed.&lt;/strong&gt;&lt;br&gt;
-The development tooling requires &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; version 22 LTS or later to be installed. In particular, to create mods and work with the development tooling, it must be possible to execute the &lt;code&gt;npm&lt;/code&gt; and &lt;code&gt;npx&lt;/code&gt; commands.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.&lt;/em&gt;&lt;/p&gt;
-&lt;h2 id=&#34;developing-a-mod&#34;&gt;Developing a mod&lt;/h2&gt;
-&lt;p&gt;This section describes the basic steps for creating a mod using the Spotfire mods SDK.&lt;/p&gt;
-&lt;h3 id=&#34;1-create-a-new-project&#34;&gt;1. Create a new project&lt;/h3&gt;
-&lt;p&gt;Create an empty folder for the project and open the folder in VS Code.&lt;/p&gt;
-&lt;p&gt;Open a terminal and run the following commands to create a mod from the default template:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npx @spotfire/mods-sdk@latest new &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;action&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;visualization&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npm install
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npm run build
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Depending on the specified mod type (&lt;em&gt;action&lt;/em&gt; or &lt;em&gt;visualization&lt;/em&gt;) the corresponding VS Code project with some simple example code will be created.&lt;/p&gt;
-&lt;p&gt;&lt;sub&gt;💡 Note: You can add the &lt;code&gt;--api-version &amp;lt;mods-api-version&amp;gt;&lt;/code&gt; when running the &lt;code&gt;new&lt;/code&gt; command to target a specific version of the Mods API.&lt;/sub&gt;&lt;/p&gt;
-&lt;h3 id=&#34;2-start-the-local-development-server&#34;&gt;2. Start the local development server&lt;/h3&gt;
-&lt;p&gt;Run the default build task, either by pressing &amp;ldquo;Ctrl + Shift + B&amp;rdquo; or by running the &amp;ldquo;Start watchers&amp;rdquo; task.
-This will launch three watchers:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The &lt;a href=&#34;https://www.typescriptlang.org/&#34;&gt;TypeScript&lt;/a&gt; typechecker, which makes sure you are using the API in a type-safe manner.&lt;/li&gt;
-&lt;li&gt;A build watcher, which automatically transforms the TypeScript files found in the &lt;code&gt;src&lt;/code&gt; folder into JavaScript files which are output in the &lt;code&gt;build&lt;/code&gt; folder.&lt;/li&gt;
-&lt;li&gt;The mods development server, which serves your project files to Spotfire during development.
-Your mod will be rebuilt when any TypeScript file is changed or when the mod manifest changes.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;3-connect-spotfire-to-the-development-server&#34;&gt;3. Connect Spotfire to the development server&lt;/h3&gt;
-&lt;p&gt;Open Spotfire and load some data. Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Mods development&lt;/em&gt;. This will open the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/images/dev-ui.png&#34; alt=&#34;Mods developer tool&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Click the &lt;em&gt;Connect to development server&lt;/em&gt; button. In the pop-up that opens, make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the port number shown in VS Code, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire load the mod from the local development server.&lt;/p&gt;
-&lt;p&gt;If the mod appears under &lt;em&gt;In development&lt;/em&gt; in the sidebar to the left, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/spotfire-mods/images/dev-ui-dev-server.png&#34; alt=&#34;Connected to development server &#34;&gt;&lt;/p&gt;
-&lt;p&gt;Alternative workflows:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;If the analysis already contains one or more mods, click &lt;em&gt;New mod&lt;/em&gt; in the lower left corner of the &lt;em&gt;Mods development&lt;/em&gt; tool to access the &lt;em&gt;Connect to development server&lt;/em&gt; button.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;If you only have access to the source code, not a valid VS Code project, it is still possible to load this into Spotfire. Click the &lt;em&gt;Connect to file&lt;/em&gt; button and browse to the mod-manifest.json file of the project. This option is only available in the installed client, and the developer experience will be limited.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;4-developing-the-mod&#34;&gt;4. Developing the mod&lt;/h3&gt;
-&lt;p&gt;When updating and saving the source file, the build watcher will automatically rebuild the mod. The mods development server will then, when connected, send the new mod content to Spotfire for automatic update.&lt;/p&gt;
-&lt;p&gt;All metadata that concerns the mod is defined in the mod-manifest.json file. Below is a list of the entries that are common to all mods. Each mod type also has some specific entries that you can read more about in &lt;a href=&#34;/spotfire-mods/docs/action-mods/developing-action-mods/#3-continue-development&#34;&gt;Developing action mods&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/developing-visualization-mods/#3-edit-your-example&#34;&gt;Developing visualization mods&lt;/a&gt;.&lt;/p&gt;
-&lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;Entry&lt;/th&gt;
-          &lt;th&gt;Description&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;id&lt;/td&gt;
-          &lt;td&gt;The id of the mod. Note that this must be unique.&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;type&lt;/td&gt;
-          &lt;td&gt;Specifies the type of mod, &lt;em&gt;action&lt;/em&gt; or &lt;em&gt;visualization&lt;/em&gt;. This is available from apiVersion 2.0.&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;apiVersion&lt;/td&gt;
-          &lt;td&gt;The api version requested. This will affect which Spotfire versions the mod will work on.&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;name&lt;/td&gt;
-          &lt;td&gt;The name of the mod.&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;description&lt;/td&gt;
-          &lt;td&gt;A description of the mod. This is available from apiVersion 2.0.&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;version&lt;/td&gt;
-          &lt;td&gt;The version of the mod.&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;icon&lt;/td&gt;
-          &lt;td&gt;File path to the embedded icon, which is used in various places in the Spotfire UI.&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;files&lt;/td&gt;
-          &lt;td&gt;An array of all files that should be bundled in the mod. Only files specified here will be embedded by Spotfire.&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Changes to the mod manifest are not automatically sent to Spotfire like the content. Whenever the manifest is updated, you must click the &lt;em&gt;Reload manifest&lt;/em&gt; button.&lt;/p&gt;
-&lt;p&gt;Depending on the type of the connected mod, the actual workflow of developing and testing the mod is different. See &lt;a href=&#34;/spotfire-mods/docs/action-mods/developing-action-mods//&#34;&gt;Developing action mods&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/developing-visualization-mods//&#34;&gt;Developing visualization mods&lt;/a&gt; for details.&lt;/p&gt;
-&lt;h3 id=&#34;5-disconnecting&#34;&gt;5. Disconnecting&lt;/h3&gt;
-&lt;p&gt;When you are done developing a mod, click &lt;em&gt;Disconnect&lt;/em&gt; to exit the development workflow. This will force a synchronization of the local files to Spotfire, and unlock save options. The mod is now embedded in the analysis.&lt;/p&gt;
-&lt;h2 id=&#34;saving-to-the-library&#34;&gt;Saving to the library&lt;/h2&gt;
-&lt;p&gt;When a mod is embedded in the analysis (disconnected), you can share it with others by saving it to the library. In the &lt;em&gt;Mods development&lt;/em&gt; tool, you can right-click a mod in the sidebar and select &lt;em&gt;Save as library item&lt;/em&gt; from the menu. It is also possible to save a visualization mod from the &lt;em&gt;Visualization types&lt;/em&gt; flyout, and an action mod from the &lt;em&gt;Actions&lt;/em&gt; flyout.&lt;/p&gt;
-&lt;h2 id=&#34;sharing-mods&#34;&gt;Sharing mods&lt;/h2&gt;
-&lt;p&gt;When sharing a final version of the mod to end users, you might want to consider the form in which the mod is shared. Code minification and obfuscation should be considered in such cases, because it will:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Minimize the footprint of the mod, as minimized code is much more compact, making the mod file smaller.&lt;/li&gt;
-&lt;li&gt;Protect the intellectual property. Minimized and obfuscated code is harder to read and understand.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;To minimize and obfuscate the code, run the following commands:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;npm run build&lt;/code&gt; This will build the mod &lt;em&gt;once&lt;/em&gt; in a minimized and obfuscated form.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;npm run server&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;You can now connect to the mods development server just like described above.&lt;/p&gt;
-&lt;p&gt;To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html&#34;&gt;Trusting custom content in the Spotfire environment&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from the &lt;a href=&#34;https://spotfi.re/download&#34;&gt;Spotfire Download site&lt;/a&gt;, if you have access.&lt;/p&gt;
-&lt;p&gt;An administrator can also import a certificate from one system to another to keep signed items valid. See &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html&#34;&gt;Moving certificates from one system to another&lt;/a&gt; for more information.&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: Developing action mods</title>
-      <link>/spotfire-mods/docs/action-mods/developing-action-mods/</link>
-      <pubDate>Mon, 17 Jun 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/spotfire-mods/docs/action-mods/developing-action-mods/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;You have read the &lt;a href=&#34;/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;You have created a new action mod template project.&lt;/li&gt;
-&lt;li&gt;You have started a local development server and connected Spotfire to it.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;develop-and-test-the-mod&#34;&gt;Develop and test the mod&lt;/h2&gt;
-&lt;p&gt;When the action mod project template has been created, there is a single script called &lt;code&gt;my-script&lt;/code&gt; whose source code is defined in &lt;code&gt;src/scripts/my-script.ts&lt;/code&gt;.
-This script takes a single string argument and prints it to the console with an exclamation point appended.&lt;/p&gt;
-&lt;p&gt;For more information about the folder structure and the project, see the README.md file.&lt;/p&gt;
-&lt;h3 id=&#34;1-test-run-your-mod&#34;&gt;1. Test run your mod&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;In the &lt;em&gt;Mods development&lt;/em&gt; tool, open the &lt;em&gt;Test&lt;/em&gt; tab and click &lt;em&gt;Test run&lt;/em&gt;. Select the script in the flyout that opens, click &lt;em&gt;Next&lt;/em&gt;, provide a message in the text field, and click &lt;em&gt;Run&lt;/em&gt;.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;In the lower part of the &lt;em&gt;Mods development&lt;/em&gt; tool, click &lt;em&gt;Show script output&lt;/em&gt;. You should now see your message (followed by an exclamation point) printed.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;2-debug-your-mod&#34;&gt;2. Debug your mod&lt;/h3&gt;
-&lt;p&gt;Action mods support interactive debugging in VS Code. This option is available in the installed client only.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;To enable debugging, click &lt;em&gt;Start debugging&lt;/em&gt; in the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;In VS Code, add a breakpoint at the start of the script and press &lt;em&gt;F5&lt;/em&gt; (or run &amp;ldquo;Debug: Start Debugging&amp;rdquo; command). This opens a prompt for the debug port (default to 9222), make sure that this is the same port shown the &lt;em&gt;Mods development&lt;/em&gt; tool in Spotfire.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Run the script again. VS Code should now break at the breakpoint. You can inspect local variables and run JavaScript code using the debug tools provided by the editor.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;3-continue-development&#34;&gt;3. Continue development&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Change the code in &lt;code&gt;src/scripts/my-script.ts&lt;/code&gt; to print something else, save the file, and then re-run the script. Any changes made to scripts are automatically picked up by Spotfire if you have your local servers running.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Try adding a new script by running &lt;code&gt;npx @spotfire/mods-sdk add-script a-new-script&lt;/code&gt; in a terminal. This will create a new file under &lt;code&gt;src/scripts/a-new-script.ts&lt;/code&gt; and update your mod manifest. Since adding a script changes the manifest you must reload it in the the &lt;em&gt;Mods development&lt;/em&gt; tool by clicking the &lt;em&gt;Reload manifest&lt;/em&gt; button. It is also possible to add script entries in the manifest together with the script file manually, without using the &lt;code&gt;add-script&lt;/code&gt; command.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;All metadata that concerns the mod is defined in the mod-manifest.json file. A list of the entries that are common to all mods can be found in the &lt;a href=&#34;/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;. The entries that are specific to action mods are listed below:&lt;/p&gt;
-&lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;Entry&lt;/th&gt;
-          &lt;th&gt;Description&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;capabilities&lt;/td&gt;
-          &lt;td&gt;Any extended capabilites required by the scripts. Currently supports &lt;code&gt;LibraryRead&lt;/code&gt; and &lt;code&gt;LibraryWrite&lt;/code&gt;.&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;scripts&lt;/td&gt;
-          &lt;td&gt;An array of the scripts in the action mod.&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;For details, see the &lt;a href=&#34;/spotfire-mods/docs/action-mods/using-the-api/mod-schema/&#34;&gt;manifest schema&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;whats-next&#34;&gt;What&amp;rsquo;s next?&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Follow the &lt;a href=&#34;../tutorial&#34;&gt;tutorial&lt;/a&gt; to create a mod that loads data from the library, adds a visualization, and more.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Browse the &lt;a href=&#34;../snippets&#34;&gt;snippets&lt;/a&gt; for inspiration on what you can do with the Spotfire API.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Explore the entire &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/&#34;&gt;API&lt;/a&gt; in the API documentation.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Read the &lt;a href=&#34;../faq&#34;&gt;FAQ&lt;/a&gt;.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: API overview</title>
-      <link>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</guid>
-      <description>
-        
-        
-        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; is an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The visualization is a simplified view of the API. While the Mod API relies heavily on asynchronous behavior via Promises, the visualization only displays the interfaces defined in the &lt;em&gt;spotfire-api.d.ts&lt;/em&gt; file. There are some advanced types available in the declaration file that are not displayed in the hierarchy visualization. The advanced types describe some of the more intricate functionality in the API.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;/spotfire-mods/overview&#34;&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/api-overview.png&#34; alt=&#34;API Overview&#34;&gt;&lt;/a&gt;&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
       <title>Docs: Create a bar chart using Google Charts</title>
       <link>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</guid>
       <description>
@@ -269,7 +34,7 @@ This script takes a single string argument and prints it to the console with an 
 &lt;li&gt;Controlling the mod using a popout&lt;/li&gt;
 &lt;li&gt;Export to PDF&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;The mod created in this tutorial (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;js-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;. The example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
+&lt;p&gt;The mod created in this tutorial (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;ts-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;. The example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
 &lt;h3 id=&#34;dataset&#34;&gt;Dataset&lt;/h3&gt;
 &lt;p&gt;The dataset used in this tutorial can be found &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/heroes.txt&#34;&gt;here&lt;/a&gt;. It is a reduced version of this &lt;a href=&#34;https://www.kaggle.com/claudiodavi/superhero-set&#34;&gt;dataset&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
@@ -888,6 +653,241 @@ we&amp;rsquo;ll make this tutorial slightly simpliflied by changing the color ax
     </item>
     
     <item>
+      <title>Docs: Getting started</title>
+      <link>/spotfire-mods/docs/getting-started/</link>
+      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/getting-started/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The getting started guide covers the aspects that are common to both mod types. When you have created a mod project and connected to it, continue to the articles with details specific to &lt;a href=&#34;/spotfire-mods/docs/action-mods/developing-action-mods/&#34;&gt;action mods&lt;/a&gt; or &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/developing-visualization-mods/&#34;&gt;visualization mods&lt;/a&gt;. This guide describes the workflow for developing mods from Spotfire version 14.4 and later. In earlier Spotfire versions, where only visualization mods are available, the workflow is slightly different, see &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt; &lt;br&gt;
+This is needed to develop and test a mod. Development can be done against the installed client or the web client using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Visual Studio Code.&lt;/strong&gt;&lt;br&gt;
+The development experience is designed to integrate well with Microsoft &lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt; (VS Code) by providing default build tasks, debug target, and IntelliSense.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Node.js (version 22 or later) installed.&lt;/strong&gt;&lt;br&gt;
+The development tooling requires &lt;a href=&#34;https://nodejs.org/en/download/&#34;&gt;Node.js&lt;/a&gt; version 22 LTS or later to be installed. In particular, to create mods and work with the development tooling, it must be possible to execute the &lt;code&gt;npm&lt;/code&gt; and &lt;code&gt;npx&lt;/code&gt; commands.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Note: When you obtain third-party software or services, it is your responsibility to ensure you understand the license terms associated with such third-party software or services and comply with such terms.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;developing-a-mod&#34;&gt;Developing a mod&lt;/h2&gt;
+&lt;p&gt;This section describes the basic steps for creating a mod using the Spotfire mods SDK.&lt;/p&gt;
+&lt;h3 id=&#34;1-create-a-new-project&#34;&gt;1. Create a new project&lt;/h3&gt;
+&lt;p&gt;Create an empty folder for the project and open the folder in VS Code.&lt;/p&gt;
+&lt;p&gt;Open a terminal and run the following commands to create a mod from the default template:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npx @spotfire/mods-sdk@latest new &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[&lt;/span&gt;action&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt;visualization&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npm install
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;npm run build
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Depending on the specified mod type (&lt;em&gt;action&lt;/em&gt; or &lt;em&gt;visualization&lt;/em&gt;) the corresponding VS Code project with some simple example code will be created.&lt;/p&gt;
+&lt;p&gt;&lt;sub&gt;💡 Note: You can add the &lt;code&gt;--api-version &amp;lt;mods-api-version&amp;gt;&lt;/code&gt; when running the &lt;code&gt;new&lt;/code&gt; command to target a specific version of the Mods API.&lt;/sub&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2-start-the-local-development-server&#34;&gt;2. Start the local development server&lt;/h3&gt;
+&lt;p&gt;Run the default build task, either by pressing &amp;ldquo;Ctrl + Shift + B&amp;rdquo; or by running the &amp;ldquo;Start watchers&amp;rdquo; task.
+This will launch three watchers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;a href=&#34;https://www.typescriptlang.org/&#34;&gt;TypeScript&lt;/a&gt; typechecker, which makes sure you are using the API in a type-safe manner.&lt;/li&gt;
+&lt;li&gt;A build watcher, which automatically transforms the TypeScript files found in the &lt;code&gt;src&lt;/code&gt; folder into JavaScript files which are output in the &lt;code&gt;build&lt;/code&gt; folder.&lt;/li&gt;
+&lt;li&gt;The mods development server, which serves your project files to Spotfire during development.
+Your mod will be rebuilt when any TypeScript file is changed or when the mod manifest changes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-connect-spotfire-to-the-development-server&#34;&gt;3. Connect Spotfire to the development server&lt;/h3&gt;
+&lt;p&gt;Open Spotfire and load some data. Go to &lt;em&gt;Tools &amp;gt; Development &amp;gt; Mods development&lt;/em&gt;. This will open the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/images/dev-ui.png&#34; alt=&#34;Mods developer tool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click the &lt;em&gt;Connect to development server&lt;/em&gt; button. In the pop-up that opens, make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the port number shown in VS Code, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire load the mod from the local development server.&lt;/p&gt;
+&lt;p&gt;If the mod appears under &lt;em&gt;In development&lt;/em&gt; in the sidebar to the left, it means that Spotfire has successfully connected to the development server.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/spotfire-mods/images/dev-ui-dev-server.png&#34; alt=&#34;Connected to development server &#34;&gt;&lt;/p&gt;
+&lt;p&gt;Alternative workflows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If the analysis already contains one or more mods, click &lt;em&gt;New mod&lt;/em&gt; in the lower left corner of the &lt;em&gt;Mods development&lt;/em&gt; tool to access the &lt;em&gt;Connect to development server&lt;/em&gt; button.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you only have access to the source code, not a valid VS Code project, it is still possible to load this into Spotfire. Click the &lt;em&gt;Connect to file&lt;/em&gt; button and browse to the mod-manifest.json file of the project. This option is only available in the installed client, and the developer experience will be limited.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;4-developing-the-mod&#34;&gt;4. Developing the mod&lt;/h3&gt;
+&lt;p&gt;When updating and saving the source file, the build watcher will automatically rebuild the mod. The mods development server will then, when connected, send the new mod content to Spotfire for automatic update.&lt;/p&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in the mod-manifest.json file. Below is a list of the entries that are common to all mods. Each mod type also has some specific entries that you can read more about in &lt;a href=&#34;/spotfire-mods/docs/action-mods/developing-action-mods/#3-continue-development&#34;&gt;Developing action mods&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/developing-visualization-mods/#3-edit-your-example&#34;&gt;Developing visualization mods&lt;/a&gt;.&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Entry&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;id&lt;/td&gt;
+          &lt;td&gt;The id of the mod. Note that this must be unique.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;type&lt;/td&gt;
+          &lt;td&gt;Specifies the type of mod, &lt;em&gt;action&lt;/em&gt; or &lt;em&gt;visualization&lt;/em&gt;. This is available from apiVersion 2.0.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;apiVersion&lt;/td&gt;
+          &lt;td&gt;The api version requested. This will affect which Spotfire versions the mod will work on.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;name&lt;/td&gt;
+          &lt;td&gt;The name of the mod.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;description&lt;/td&gt;
+          &lt;td&gt;A description of the mod. This is available from apiVersion 2.0.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;version&lt;/td&gt;
+          &lt;td&gt;The version of the mod.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;icon&lt;/td&gt;
+          &lt;td&gt;File path to the embedded icon, which is used in various places in the Spotfire UI.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;files&lt;/td&gt;
+          &lt;td&gt;An array of all files that should be bundled in the mod. Only files specified here will be embedded by Spotfire.&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Changes to the mod manifest are not automatically sent to Spotfire like the content. Whenever the manifest is updated, you must click the &lt;em&gt;Reload manifest&lt;/em&gt; button.&lt;/p&gt;
+&lt;p&gt;Depending on the type of the connected mod, the actual workflow of developing and testing the mod is different. See &lt;a href=&#34;/spotfire-mods/docs/action-mods/developing-action-mods//&#34;&gt;Developing action mods&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/developing-visualization-mods//&#34;&gt;Developing visualization mods&lt;/a&gt; for details.&lt;/p&gt;
+&lt;h3 id=&#34;5-disconnecting&#34;&gt;5. Disconnecting&lt;/h3&gt;
+&lt;p&gt;When you are done developing a mod, click &lt;em&gt;Disconnect&lt;/em&gt; to exit the development workflow. This will force a synchronization of the local files to Spotfire, and unlock save options. The mod is now embedded in the analysis.&lt;/p&gt;
+&lt;h2 id=&#34;saving-to-the-library&#34;&gt;Saving to the library&lt;/h2&gt;
+&lt;p&gt;When a mod is embedded in the analysis (disconnected), you can share it with others by saving it to the library. In the &lt;em&gt;Mods development&lt;/em&gt; tool, you can right-click a mod in the sidebar and select &lt;em&gt;Save as library item&lt;/em&gt; from the menu. It is also possible to save a visualization mod from the &lt;em&gt;Visualization types&lt;/em&gt; flyout, and an action mod from the &lt;em&gt;Actions&lt;/em&gt; flyout.&lt;/p&gt;
+&lt;h2 id=&#34;sharing-mods&#34;&gt;Sharing mods&lt;/h2&gt;
+&lt;p&gt;When sharing a final version of the mod to end users, you might want to consider the form in which the mod is shared. Code minification and obfuscation should be considered in such cases, because it will:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Minimize the footprint of the mod, as minimized code is much more compact, making the mod file smaller.&lt;/li&gt;
+&lt;li&gt;Protect the intellectual property. Minimized and obfuscated code is harder to read and understand.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To minimize and obfuscate the code, run the following commands:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;npm run build&lt;/code&gt; This will build the mod &lt;em&gt;once&lt;/em&gt; in a minimized and obfuscated form.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;npm run server&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can now connect to the mods development server just like described above.&lt;/p&gt;
+&lt;p&gt;To learn more about how the trust framework for mods works when used in a Spotfire Server environment, see &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/trusting_custom_content_in_the_spotfire_environment.html&#34;&gt;Trusting custom content in the Spotfire environment&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;When building mods to be shared between different environments, it is recommended to sign the mods using a certificate from a trusted certificate authority (CA). See &lt;a href=&#34;https://docs.tibco.com/pub/sfire_dev/area/doc/html/devdoc/topics/signing_a_visualization_mod_using_package_builder.html&#34;&gt;Signing a mod using Package Builder&lt;/a&gt; for more information. Spotfire Package Builder is available in the SDK folder of the Spotfire Developer software, which can be downloaded from the &lt;a href=&#34;https://spotfi.re/download&#34;&gt;Spotfire Download site&lt;/a&gt;, if you have access.&lt;/p&gt;
+&lt;p&gt;An administrator can also import a certificate from one system to another to keep signed items valid. See &lt;a href=&#34;https://docs.tibco.com/pub/spotfire_server/latest/doc/html/TIB_sfire_server_tsas_admin_help/server/topics/moving_certificates_from_one_system_to_another.html&#34;&gt;Moving certificates from one system to another&lt;/a&gt; for more information.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Developing action mods</title>
+      <link>/spotfire-mods/docs/action-mods/developing-action-mods/</link>
+      <pubDate>Mon, 17 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/action-mods/developing-action-mods/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;You have read the &lt;a href=&#34;/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You have created a new action mod template project.&lt;/li&gt;
+&lt;li&gt;You have started a local development server and connected Spotfire to it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;develop-and-test-the-mod&#34;&gt;Develop and test the mod&lt;/h2&gt;
+&lt;p&gt;When the action mod project template has been created, there is a single script called &lt;code&gt;my-script&lt;/code&gt; whose source code is defined in &lt;code&gt;src/scripts/my-script.ts&lt;/code&gt;.
+This script takes a single string argument and prints it to the console with an exclamation point appended.&lt;/p&gt;
+&lt;p&gt;For more information about the folder structure and the project, see the README.md file.&lt;/p&gt;
+&lt;h3 id=&#34;1-test-run-your-mod&#34;&gt;1. Test run your mod&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;In the &lt;em&gt;Mods development&lt;/em&gt; tool, open the &lt;em&gt;Test&lt;/em&gt; tab and click &lt;em&gt;Test run&lt;/em&gt;. Select the script in the flyout that opens, click &lt;em&gt;Next&lt;/em&gt;, provide a message in the text field, and click &lt;em&gt;Run&lt;/em&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the lower part of the &lt;em&gt;Mods development&lt;/em&gt; tool, click &lt;em&gt;Show script output&lt;/em&gt;. You should now see your message (followed by an exclamation point) printed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-debug-your-mod&#34;&gt;2. Debug your mod&lt;/h3&gt;
+&lt;p&gt;Action mods support interactive debugging in VS Code. This option is available in the installed client only.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;To enable debugging, click &lt;em&gt;Start debugging&lt;/em&gt; in the &lt;em&gt;Mods development&lt;/em&gt; tool.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In VS Code, add a breakpoint at the start of the script and press &lt;em&gt;F5&lt;/em&gt; (or run &amp;ldquo;Debug: Start Debugging&amp;rdquo; command). This opens a prompt for the debug port (default to 9222), make sure that this is the same port shown the &lt;em&gt;Mods development&lt;/em&gt; tool in Spotfire.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Run the script again. VS Code should now break at the breakpoint. You can inspect local variables and run JavaScript code using the debug tools provided by the editor.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-continue-development&#34;&gt;3. Continue development&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Change the code in &lt;code&gt;src/scripts/my-script.ts&lt;/code&gt; to print something else, save the file, and then re-run the script. Any changes made to scripts are automatically picked up by Spotfire if you have your local servers running.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Try adding a new script by running &lt;code&gt;npx @spotfire/mods-sdk add-script a-new-script&lt;/code&gt; in a terminal. This will create a new file under &lt;code&gt;src/scripts/a-new-script.ts&lt;/code&gt; and update your mod manifest. Since adding a script changes the manifest you must reload it in the the &lt;em&gt;Mods development&lt;/em&gt; tool by clicking the &lt;em&gt;Reload manifest&lt;/em&gt; button. It is also possible to add script entries in the manifest together with the script file manually, without using the &lt;code&gt;add-script&lt;/code&gt; command.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All metadata that concerns the mod is defined in the mod-manifest.json file. A list of the entries that are common to all mods can be found in the &lt;a href=&#34;/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;. The entries that are specific to action mods are listed below:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Entry&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;capabilities&lt;/td&gt;
+          &lt;td&gt;Any extended capabilites required by the scripts. Currently supports &lt;code&gt;LibraryRead&lt;/code&gt; and &lt;code&gt;LibraryWrite&lt;/code&gt;.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;scripts&lt;/td&gt;
+          &lt;td&gt;An array of the scripts in the action mod.&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For details, see the &lt;a href=&#34;/spotfire-mods/docs/action-mods/using-the-api/mod-schema/&#34;&gt;manifest schema&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What&amp;rsquo;s next?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Follow the &lt;a href=&#34;../tutorial&#34;&gt;tutorial&lt;/a&gt; to create a mod that loads data from the library, adds a visualization, and more.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Browse the &lt;a href=&#34;../snippets&#34;&gt;snippets&lt;/a&gt; for inspiration on what you can do with the Spotfire API.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Explore the entire &lt;a href=&#34;/spotfire-mods/api-docs/action-mods/&#34;&gt;API&lt;/a&gt; in the API documentation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Read the &lt;a href=&#34;../faq&#34;&gt;FAQ&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: API overview</title>
+      <link>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</link>
+      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The &lt;a href=&#34;/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; is an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The visualization is a simplified view of the API. While the Mod API relies heavily on asynchronous behavior via Promises, the visualization only displays the interfaces defined in the &lt;em&gt;spotfire-api.d.ts&lt;/em&gt; file. There are some advanced types available in the declaration file that are not displayed in the hierarchy visualization. The advanced types describe some of the more intricate functionality in the API.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/spotfire-mods/overview&#34;&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/api-overview.png&#34; alt=&#34;API Overview&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Developing visualization mods</title>
       <link>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</link>
       <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
@@ -1011,53 +1011,53 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
     <item>
       <title>Docs: Mod data views</title>
       <link>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</guid>
       <description>
         
         
-        &lt;h2 id=&#34;data-view-definition&#34;&gt;Data view definition&lt;/h2&gt;
-&lt;p&gt;A mod can create a single aggregated data view.&lt;/p&gt;
-&lt;p&gt;The data view is declared in the mod manifest. Its content is specified as a number of axes. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.&lt;/p&gt;
+        &lt;h2 id=&#34;defining-a-data-view&#34;&gt;Defining a data view&lt;/h2&gt;
+&lt;p&gt;A mod can define one or more aggregated data view definitions.&lt;/p&gt;
+&lt;p&gt;The data view is declared in the mod manifest. Its content is specified as a number of axes and an optional color axis. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.&lt;/p&gt;
 &lt;p&gt;In the simplest form, the data view definition part of a mod manifest could look like this.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dataViewDefinition&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;  
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;axes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;  
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dataViewDefinition&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;axes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;continuous&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;  
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This specifies that the mod will have a single continuous axis called Y, that will compute a single aggregated value, e.g. Sum(Sales). Continuous axes are typically rendered on a continuous scale.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/BarChart1.PNG&#34; alt=&#34;Bar Chart 1&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The &amp;ldquo;mode&amp;rdquo; parameter can be &amp;ldquo;continuous&amp;rdquo;, &amp;ldquo;categorical&amp;rdquo; or &amp;ldquo;dual&amp;rdquo;. Dual means that the axis supports both continuous and categorical mode and can be switched between them.&lt;/p&gt;
 &lt;p&gt;A categorical axis always splits the aggregation. The columns/expressions on the axes are used in the group by clause in the aggregated query generated for the visualization. Categorical axes are typically rendered on a categorical, or discrete, scale.&lt;/p&gt;
 &lt;p&gt;If we continue the example above we could add a categorical x axis to the visualization.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dataViewDefinition&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;  
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;axes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;  
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;dataViewDefinition&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;axes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;categorical&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;categorical&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;continuous&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;continuous&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That could be rendered like this:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/BarChart2.PNG&#34; alt=&#34;Bar Chart 2&#34;&gt;&lt;/p&gt;
 &lt;p&gt;It is always possible to add more columns to the expression on a categorical axis. This will split the aggregation further, and Spotfire usually renders this as a hierarchy.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/BarChart3.PNG&#34; alt=&#34;Bar Chart 3&#34;&gt;&lt;/p&gt;
-&lt;h2 id=&#34;consuming-data-from-javascript&#34;&gt;Consuming data from JavaScript&lt;/h2&gt;
+&lt;h2 id=&#34;consuming-the-data-view&#34;&gt;Consuming the data view&lt;/h2&gt;
+&lt;p&gt;A data view definition results in a data view object at runtime that can be used to retrieve the underyling data.&lt;/p&gt;
 &lt;h3 id=&#34;the-data-view-object&#34;&gt;The data view object&lt;/h3&gt;
-&lt;p&gt;On the javascript side data is retrieved via a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to &lt;code&gt;await&lt;/code&gt; their result.&lt;/p&gt;
-&lt;p&gt;There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#continuous&#34;&gt;continuous&lt;/a&gt; method for continuous axes and a  &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#categorical&#34;&gt;categorical&lt;/a&gt; method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;yValue&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The value retrieved by these methods can be of two types depending on which one is called. Either it is a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewContinuousValue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. To list all values of a data view in csv like format, you could do this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;logDataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;p&gt;On the client side, data is retrieved via a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html&#34;&gt;DataView&lt;/a&gt; object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to &lt;code&gt;await&lt;/code&gt; their result.&lt;/p&gt;
+&lt;p&gt;There are two methods available to retrieve the value for an axis in a data row. Depending on the mode of the axis that is being queried there is a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#continuous&#34;&gt;continuous&lt;/a&gt; method for continuous axes and a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#categorical&#34;&gt;categorical&lt;/a&gt; method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;yValue&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The value retrieved by these methods can be one of two types depending on which one is called. Either, it is a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewContinuousValue.html&#34;&gt;DataViewContinuousValue&lt;/a&gt;, or it is a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html&#34;&gt;DataViewCategoricalValue&lt;/a&gt;. To list all values of a data view in csv like format, you could do this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;logDataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Print axes names
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
@@ -1065,13 +1065,16 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Print the row values.
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;allRows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;forEach&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;isCategorical&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;){&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;categorical&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;formattedValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#000&#34;&gt;axes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;isCategorical&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;categorical&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;formattedValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;axis&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;})&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;join&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;});&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the simple bar chart above showing sales per fruit, the output would be:&lt;/p&gt;
@@ -1091,8 +1094,7 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
 &lt;p&gt;Another way to access the data in the data view is to go via hierarchies. These are represented by &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchy.html&#34;&gt;DataViewHierarchy&lt;/a&gt; objects that can be retrieved for all categorical axes. Either via the &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalAxis.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; property on the axis you get via getAxis, or via the &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html#hierarchy&#34;&gt;hierarchy&lt;/a&gt; function on the data view.&lt;/p&gt;
 &lt;p&gt;The hierarchy is a tree structure with some metadata about the levels, and a method to retrieve the root of the tree (&lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchy.html#root&#34;&gt;root&lt;/a&gt;). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaf nodes retrieved from the &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchyNode.html#leaves&#34;&gt;&lt;code&gt;leaves&lt;/code&gt;&lt;/a&gt; method on the root object.&lt;/p&gt;
 &lt;p&gt;Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;logViaHierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;logViaHierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xHierarchy&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;dataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;root&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xHierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;root&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;root&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
@@ -1100,11 +1102,10 @@ The root folder contains all static content, like the &lt;code&gt;index.html&lt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;formattedValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;    &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;children&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;children&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;children&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;forEach&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;forEach&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#000&#34;&gt;node&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;forEach&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;console&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;log&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;indent&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;row&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()));&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
@@ -1197,6 +1198,65 @@ For continuous axes it is possible to specify what data types should be supporte
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &amp;ldquo;mode&amp;rdquo; and other properties for the color axis are specified the same way as for other axes.&lt;/p&gt;
 &lt;p&gt;On the Javascript side you access the data values for the color axis by referring to it by its name, &amp;ldquo;Color&amp;rdquo;.
 The actual color computed for each row can be retrieved via the &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#color&#34;&gt;color&lt;/a&gt; function on a row. It returns an object with the color hexcode.&lt;/p&gt;
+&lt;h2 id=&#34;defining-multiple-data-views&#34;&gt;Defining multiple data views&lt;/h2&gt;
+&lt;p&gt;A mod can define additional data views by giving them names which identify them. This is done in the manifest using the &amp;ldquo;namedDataViewDefinitions&amp;rdquo; property. For instance, to create a visualization showing reference lines on top of a bar chart, the mod manifest may be defined as follows.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;namedDataViewDefinitions&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Bar chart&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;axes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;categorical&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;continuous&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Reference line&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;axes&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;categorical&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;continuous&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The data views can then be consumed separately by providing a value for the name parameter when calling the &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#data-2&#34;&gt;data&lt;/a&gt; method. For instance:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-ts&#34; data-lang=&#34;ts&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;visualization&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Bar chart&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;),&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;visualization&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Reference line&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;));&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000&#34;&gt;reader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;render&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;render&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;barChartDataView&lt;/span&gt;: &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;Spotfire.DataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceLineDataView&lt;/span&gt;: &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;Spotfire.DataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xHierachy&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;barChartDataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xRoot&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xHierachy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;root&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceXHierarchy&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceLineDataView&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;hierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;X&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceXRoot&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceXHierarchy&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;root&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;leaf&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;of&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xRoot&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;leaves&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;())&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xValue&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;leaf&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;barChartHeight&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;leaf&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()[&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;].&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// Find a match in the other data view.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceLineLeaf&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceXRoot&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;leaves&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;find&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;l&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;l&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;xValue&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;// We are not guaranteed that a value exists for this category.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;referenceLineLeaf&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;null&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceLineHeight&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;referenceLineLeaf&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;rows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;()[&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;].&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;continuous&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;Y&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;number&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;&amp;gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note that we have to match the categorical axes across the data views manually.
+We are also not guaranteed that the expression on the different &amp;ldquo;X&amp;rdquo; axes are the same or that they are evaluated on the same data table.
+It is up to you as the mod developer to validate that the data view configuration is as expected using the &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#maintable-2&#34;&gt;mainTable&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#axis-2&#34;&gt;axis&lt;/a&gt; APIs.&lt;/p&gt;
 &lt;h2 id=&#34;using-multiple-measures-on-continuous-axes&#34;&gt;Using multiple measures on continuous axes&lt;/h2&gt;
 &lt;p&gt;By default you can only have a single measure on a continuous axis. However Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &amp;ldquo;allowMultipleMeasures&amp;rdquo; flag to true for the axis in the manifest.&lt;/p&gt;
 &lt;p&gt;When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &amp;ldquo;(Column Names)&amp;rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.&lt;/p&gt;
@@ -1299,7 +1359,7 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
     <item>
       <title>Docs: Working with mod readers</title>
       <link>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</guid>
       <description>
@@ -1533,7 +1593,7 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
 &lt;li&gt;Modifications should be done on user interaction, not directly in a &lt;code&gt;reader&lt;/code&gt; callback.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;full-examples&#34;&gt;Full examples&lt;/h2&gt;
-&lt;p&gt;All examples can bee downloaded &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/examples.js&#34;&gt;here&lt;/a&gt;. They can be tested with one of the existing examples, such as the &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods/tree/master/examples/js-dev-starter&#34;&gt;js-dev-starter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;All examples can bee downloaded &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/examples.js&#34;&gt;here&lt;/a&gt;. They can be tested with one of the existing examples, such as the &lt;a href=&#34;https://github.com/spotfiresoftware/spotfire-mods/tree/master/examples/ts-dev-starter&#34;&gt;ts-dev-starter&lt;/a&gt;.&lt;/p&gt;
 
       </description>
     </item>
@@ -1541,7 +1601,7 @@ The actual color computed for each row can be retrieved via the &lt;a href=&#34;
     <item>
       <title>Docs: Getting started (before 14.4)</title>
       <link>/spotfire-mods/docs/visualization-mods/getting-started-11/</link>
-      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/getting-started-11/</guid>
       <description>
@@ -1575,16 +1635,12 @@ To enable live updates when developing a mod, a set of tools based on &lt;a href
 &lt;p&gt;Click &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;here&lt;/a&gt; to access the example mod projects to start the development from. Extract the zip archive locally. The extracted zip archive contains examples of mods, using the mod API in different ways.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-barchart&lt;/strong&gt; &lt;br&gt;
+&lt;p&gt;&lt;strong&gt;ts-dev-barchart&lt;/strong&gt; &lt;br&gt;
 To get familiar with mod development, start with this example containing a simple bar chart. This is the example that will be used in the following sections of this getting started guide.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-starter&lt;/strong&gt; &lt;br&gt;
+&lt;p&gt;&lt;strong&gt;ts-dev-starter&lt;/strong&gt; &lt;br&gt;
 This example can be used as a starting point for any new mod.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-starter-ie11&lt;/strong&gt; &lt;br&gt;
-This example can be used as a starting point for any new mod that is also compatible with the IE11 browser.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt; &lt;br&gt;
@@ -1604,13 +1660,13 @@ This is a more complex example built using the D3 library, where you can see how
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;ts-spiderchart-d3&lt;/strong&gt; &lt;br&gt;
-This is an example of a spider chart developed in TypeScript, rendered with D3, and bundled with webpack.&lt;/p&gt;
+This is an example of a spider chart developed in TypeScript, rendered with D3.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Each example contains a README file with detailed instructions specific to the example.&lt;/p&gt;
 &lt;h4 id=&#34;3-start-local-development-server&#34;&gt;3. Start local development server&lt;/h4&gt;
-&lt;p&gt;To use the js-dev-barchart example, open the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
-&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
+&lt;p&gt;To use the ts-dev-barchart example, open the &lt;code&gt;ts-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
+&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;ts-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
 &lt;h4 id=&#34;4-connect-spotfire-to-the-development-server&#34;&gt;4. Connect Spotfire to the development server&lt;/h4&gt;
 &lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the pop-up that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/spotfire-mods/images/connect-to-development-server.gif&#34; alt=&#34;Connect to development server&#34;&gt;&lt;/p&gt;

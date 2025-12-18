@@ -150,7 +150,7 @@ Open Chrome developer tools (Ctrl+Shift+I) and go to the Network tab, then selec
     <item>
       <title>Docs: Getting started (before 14.4)</title>
       <link>/spotfire-mods/docs/visualization-mods/getting-started-11/</link>
-      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/getting-started-11/</guid>
       <description>
@@ -184,16 +184,12 @@ To enable live updates when developing a mod, a set of tools based on &lt;a href
 &lt;p&gt;Click &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;here&lt;/a&gt; to access the example mod projects to start the development from. Extract the zip archive locally. The extracted zip archive contains examples of mods, using the mod API in different ways.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-barchart&lt;/strong&gt; &lt;br&gt;
+&lt;p&gt;&lt;strong&gt;ts-dev-barchart&lt;/strong&gt; &lt;br&gt;
 To get familiar with mod development, start with this example containing a simple bar chart. This is the example that will be used in the following sections of this getting started guide.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-starter&lt;/strong&gt; &lt;br&gt;
+&lt;p&gt;&lt;strong&gt;ts-dev-starter&lt;/strong&gt; &lt;br&gt;
 This example can be used as a starting point for any new mod.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;js-dev-starter-ie11&lt;/strong&gt; &lt;br&gt;
-This example can be used as a starting point for any new mod that is also compatible with the IE11 browser.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;js-dev-barchart-googlecharts&lt;/strong&gt; &lt;br&gt;
@@ -213,13 +209,13 @@ This is a more complex example built using the D3 library, where you can see how
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;ts-spiderchart-d3&lt;/strong&gt; &lt;br&gt;
-This is an example of a spider chart developed in TypeScript, rendered with D3, and bundled with webpack.&lt;/p&gt;
+This is an example of a spider chart developed in TypeScript, rendered with D3.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Each example contains a README file with detailed instructions specific to the example.&lt;/p&gt;
 &lt;h4 id=&#34;3-start-local-development-server&#34;&gt;3. Start local development server&lt;/h4&gt;
-&lt;p&gt;To use the js-dev-barchart example, open the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
-&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;js-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
+&lt;p&gt;To use the ts-dev-barchart example, open the &lt;code&gt;ts-dev-barchart&lt;/code&gt; folder in VS Code. Select &lt;em&gt;Terminal &amp;gt; Run Build Task&lt;/em&gt;. This will install necessary development dependencies and start a local web server (the task is defined in the .vscode settings folder). The task launches a URL to the mod manifest in your web browser.&lt;/p&gt;
+&lt;p&gt;If you are not using the VS Code editor you can start the development server by navigating to the &lt;code&gt;ts-dev-barchart&lt;/code&gt; folder in a command line tool. The first time you are building this example, type &lt;code&gt;npm install&lt;/code&gt; and press Enter. This will install necessary development dependencies. Skip this step on any subsequent builds. Type &lt;code&gt;npm run server&lt;/code&gt; and press Enter. This will start a local web server and open the mod manifest in your web browser.&lt;/p&gt;
 &lt;h4 id=&#34;4-connect-spotfire-to-the-development-server&#34;&gt;4. Connect Spotfire to the development server&lt;/h4&gt;
 &lt;p&gt;Switch over to Spotfire and click the &lt;em&gt;Connect to project&lt;/em&gt; button. In the pop-up that opens, click &lt;em&gt;Development server&lt;/em&gt;. Make sure the port number (e.g. &lt;code&gt;8090&lt;/code&gt;) in the displayed URL matches the launched URL in your browser, and then click the &lt;em&gt;Connect&lt;/em&gt; button. This will make Spotfire navigate to your local server and serve files from your src folder.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/spotfire-mods/images/connect-to-development-server.gif&#34; alt=&#34;Connect to development server&#34;&gt;&lt;/p&gt;

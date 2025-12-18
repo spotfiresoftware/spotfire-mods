@@ -12,9 +12,9 @@
 <title>Mod data views | Spotfire® Mods</title>
   <meta itemprop="name" content="Mod data views">
   <meta itemprop="description" content="This page gives you an introduction to the mod data views.">
-  <meta itemprop="datePublished" content="2024-06-14T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-06-14T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1420">
+  <meta itemprop="datePublished" content="2025-12-18T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-12-18T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1731">
 
 
 
@@ -188,14 +188,6 @@
       
         
           
-          
-          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
-        
-      
-      
-      
-        
-          
 
 
 
@@ -215,6 +207,14 @@
   </ul>
 </ul>
 
+        
+      
+      
+      
+        
+          
+          
+          <a class="td-sidebar-link td-sidebar-link__page " id="m-spotfire-modsdocsgetting-started" href="/spotfire-mods/docs/getting-started/">Getting started</a>
         
       
       
@@ -614,8 +614,8 @@
 
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#data-view-definition">Data view definition</a></li>
-    <li><a href="#consuming-data-from-javascript">Consuming data from JavaScript</a>
+    <li><a href="#defining-a-data-view">Defining a data view</a></li>
+    <li><a href="#consuming-the-data-view">Consuming the data view</a>
       <ul>
         <li><a href="#the-data-view-object">The data view object</a></li>
         <li><a href="#dataviewcontinuousvalue-and-dataviewcategoricalvalue">DataViewContinuousValue and DataViewCategoricalValue</a></li>
@@ -625,6 +625,7 @@
     </li>
     <li><a href="#specifying-data-types-for-continuous-axes">Specifying data types for continuous axes</a></li>
     <li><a href="#using-the-spotfire-color-axis">Using the Spotfire color axis</a></li>
+    <li><a href="#defining-multiple-data-views">Defining multiple data views</a></li>
     <li><a href="#using-multiple-measures-on-continuous-axes">Using multiple measures on continuous axes</a></li>
     <li><a href="#using-non-aggregating-expressions-on-a-continuous-axes">Using non-aggregating expressions on a continuous axes</a></li>
     <li><a href="#data-view-sort-order">Data view sort order</a></li>
@@ -686,53 +687,53 @@
 
 
 
-<p class="-text-primary pt-3 h6" >Reading time: 6 minutes and 45 seconds.</p>
+<p class="-text-primary pt-3 h6" >Reading time: 7 minutes and 52 seconds.</p>
 <p>
 <div class="td-content">
 	<h1>Mod data views</h1>
     <div class="lead">This page gives you an introduction to the mod data views.</div>
 	       
-	<h2 id="data-view-definition">Data view definition</h2>
-<p>A mod can create a single aggregated data view.</p>
-<p>The data view is declared in the mod manifest. Its content is specified as a number of axes. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.</p>
+	<h2 id="defining-a-data-view">Defining a data view</h2>
+<p>A mod can define one or more aggregated data view definitions.</p>
+<p>The data view is declared in the mod manifest. Its content is specified as a number of axes and an optional color axis. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.</p>
 <p>In the simplest form, the data view definition part of a mod manifest could look like this.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#4e9a06">&#34;dataViewDefinition&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">{</span>  
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>  
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#4e9a06">&#34;dataViewDefinition&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">,</span>  
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">,</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;continuous&#34;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>  
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">]</span>  
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">]</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
 </span></span></code></pre></div><p>This specifies that the mod will have a single continuous axis called Y, that will compute a single aggregated value, e.g. Sum(Sales). Continuous axes are typically rendered on a continuous scale.</p>
 <p><img src="/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/BarChart1.PNG" alt="Bar Chart 1"></p>
 <p>The &ldquo;mode&rdquo; parameter can be &ldquo;continuous&rdquo;, &ldquo;categorical&rdquo; or &ldquo;dual&rdquo;. Dual means that the axis supports both continuous and categorical mode and can be switched between them.</p>
 <p>A categorical axis always splits the aggregation. The columns/expressions on the axes are used in the group by clause in the aggregated query generated for the visualization. Categorical axes are typically rendered on a categorical, or discrete, scale.</p>
 <p>If we continue the example above we could add a categorical x axis to the visualization.</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#4e9a06">&#34;dataViewDefinition&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">{</span>  
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>  
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#4e9a06">&#34;dataViewDefinition&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">,</span>  
-</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span><span style="color:#000;font-weight:bold">,</span>  
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span><span style="color:#000;font-weight:bold">,</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">},</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">,</span>  
-</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;continuous&#34;</span><span style="color:#000;font-weight:bold">,</span>  
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;continuous&#34;</span><span style="color:#000;font-weight:bold">,</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">]</span>  
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">]</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
 </span></span></code></pre></div><p>That could be rendered like this:</p>
 <p><img src="/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/BarChart2.PNG" alt="Bar Chart 2"></p>
 <p>It is always possible to add more columns to the expression on a categorical axis. This will split the aggregation further, and Spotfire usually renders this as a hierarchy.</p>
 <p><img src="/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/BarChart3.PNG" alt="Bar Chart 3"></p>
-<h2 id="consuming-data-from-javascript">Consuming data from JavaScript</h2>
+<h2 id="consuming-the-data-view">Consuming the data view</h2>
+<p>A data view definition results in a data view object at runtime that can be used to retrieve the underyling data.</p>
 <h3 id="the-data-view-object">The data view object</h3>
-<p>On the javascript side data is retrieved via a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html">DataView</a> object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to <code>await</code> their result.</p>
-<p>There are two methods available to retrieve the value for an axis in a data row.  Depending on the mode of the axis that is being queried there is a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#continuous">continuous</a> method for continuous axes and a  <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#categorical">categorical</a> method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">let</span> <span style="color:#000">yValue</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
-</span></span></code></pre></div><p>The value retrieved by these methods can be of two types depending on which one is called. Either it is a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewContinuousValue.html">DataViewContinuousValue</a>, or it is a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html">DataViewCategoricalValue</a>. To list all values of a data view in csv like format, you could do this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">logDataView</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
+<p>On the client side, data is retrieved via a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html">DataView</a> object. The data view has methods for retrieving data rows and information about the current axes that has data mapped to them. The methods on the data view are asynchronous so you need to <code>await</code> their result.</p>
+<p>There are two methods available to retrieve the value for an axis in a data row. Depending on the mode of the axis that is being queried there is a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#continuous">continuous</a> method for continuous axes and a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#categorical">categorical</a> method for categorical axes. So, assuming that the Y axis is continuous, you would do the following to get its value:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">yValue</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">);</span>
+</span></span></code></pre></div><p>The value retrieved by these methods can be one of two types depending on which one is called. Either, it is a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewContinuousValue.html">DataViewContinuousValue</a>, or it is a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalValue.html">DataViewCategoricalValue</a>. To list all values of a data view in csv like format, you could do this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">logDataView</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#8f5902;font-style:italic">// Print axes names
 </span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">axes</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">axes</span><span style="color:#000;font-weight:bold">();</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axes</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">map</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">join</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;,&#34;</span><span style="color:#000;font-weight:bold">));</span>
@@ -740,13 +741,16 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#8f5902;font-style:italic">// Print the row values.
 </span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">rows</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">allRows</span><span style="color:#000;font-weight:bold">();</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000">rows</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">forEach</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">row</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axes</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">map</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">if</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">isCategorical</span><span style="color:#000;font-weight:bold">){</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">categorical</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">formattedValue</span><span style="color:#000;font-weight:bold">()</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">}</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">()</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}).</span><span style="color:#000">join</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;,&#34;</span><span style="color:#000;font-weight:bold">));</span>
-</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">axes</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">.</span><span style="color:#000">map</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">isCategorical</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">categorical</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">formattedValue</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">axis</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">})</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">.</span><span style="color:#000">join</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;,&#34;</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">});</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
 </span></span></code></pre></div><p>For the simple bar chart above showing sales per fruit, the output would be:</p>
@@ -766,8 +770,7 @@
 <p>Another way to access the data in the data view is to go via hierarchies. These are represented by <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchy.html">DataViewHierarchy</a> objects that can be retrieved for all categorical axes. Either via the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewCategoricalAxis.html#hierarchy">hierarchy</a> property on the axis you get via getAxis, or via the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html#hierarchy">hierarchy</a> function on the data view.</p>
 <p>The hierarchy is a tree structure with some metadata about the levels, and a method to retrieve the root of the tree (<a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchy.html#root">root</a>). If you care about the hierarchical structure, you would traverse from the root. If not, you would just use the leaf nodes retrieved from the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewHierarchyNode.html#leaves"><code>leaves</code></a> method on the root object.</p>
 <p>Each node in the tree can be mapped to rows in the data view. The following sample shows how to traverse the data view for a bar chart above from the x hierarchy:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">logViaHierarchy</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">logViaHierarchy</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">xHierarchy</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">dataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">hierarchy</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">root</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">xHierarchy</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">root</span><span style="color:#000;font-weight:bold">();</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">root</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#4e9a06">&#34;&#34;</span><span style="color:#000;font-weight:bold">);</span>
@@ -775,11 +778,10 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">indent</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">indent</span> <span style="color:#ce5c00;font-weight:bold">+</span> <span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">formattedValue</span><span style="color:#000;font-weight:bold">());</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000">indent</span> <span style="color:#ce5c00;font-weight:bold">+=</span> <span style="color:#4e9a06">&#34;    &#34;</span><span style="color:#000;font-weight:bold">;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">if</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">children</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">children</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">children</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">forEach</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">node</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">indent</span><span style="color:#000;font-weight:bold">));</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">else</span> <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">rows</span><span style="color:#000;font-weight:bold">().</span><span style="color:#000">forEach</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">row</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">indent</span> <span style="color:#ce5c00;font-weight:bold">+</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">()))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span> <span style="color:#204a87;font-weight:bold">else</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">node</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">rows</span><span style="color:#000;font-weight:bold">().</span><span style="color:#000">forEach</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">row</span> <span style="color:#000;font-weight:bold">=&gt;</span> <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">indent</span> <span style="color:#ce5c00;font-weight:bold">+</span> <span style="color:#000">row</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">()));</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
@@ -872,6 +874,65 @@ For continuous axes it is possible to specify what data types should be supporte
 </span></span></code></pre></div><p>The &ldquo;mode&rdquo; and other properties for the color axis are specified the same way as for other axes.</p>
 <p>On the Javascript side you access the data values for the color axis by referring to it by its name, &ldquo;Color&rdquo;.
 The actual color computed for each row can be retrieved via the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#color">color</a> function on a row. It returns an object with the color hexcode.</p>
+<h2 id="defining-multiple-data-views">Defining multiple data views</h2>
+<p>A mod can define additional data views by giving them names which identify them. This is done in the manifest using the &ldquo;namedDataViewDefinitions&rdquo; property. For instance, to create a visualization showing reference lines on top of a bar chart, the mod manifest may be defined as follows.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;namedDataViewDefinitions&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Bar chart&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">},</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;continuous&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Reference line&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;continuous&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span></code></pre></div><p>The data views can then be consumed separately by providing a value for the name parameter when calling the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#data-2">data</a> method. For instance:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Bar chart&#34;</span><span style="color:#000;font-weight:bold">),</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Reference line&#34;</span><span style="color:#000;font-weight:bold">));</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">render</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">render</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">barChartDataView</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">referenceLineDataView</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">xHierachy</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">barChartDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">hierarchy</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">xRoot</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">xHierachy</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">root</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">referenceXHierarchy</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">referenceLineDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">hierarchy</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;X&#34;</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">referenceXRoot</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">referenceXHierarchy</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">root</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">leaf</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">xRoot</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">leaves</span><span style="color:#000;font-weight:bold">())</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">xValue</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">leaf</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">barChartHeight</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">leaf</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">rows</span><span style="color:#000;font-weight:bold">()[</span><span style="color:#0000cf;font-weight:bold">0</span><span style="color:#000;font-weight:bold">].</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">number</span><span style="color:#000;font-weight:bold">&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8f5902;font-style:italic">// Find a match in the other data view.
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">referenceLineLeaf</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">referenceXRoot</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">leaves</span><span style="color:#000;font-weight:bold">().</span><span style="color:#000">find</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">l</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000">l</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">()</span> <span style="color:#ce5c00;font-weight:bold">===</span> <span style="color:#000">xValue</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8f5902;font-style:italic">// We are not guaranteed that a value exists for this category.
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span>        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">referenceLineLeaf</span> <span style="color:#ce5c00;font-weight:bold">!=</span> <span style="color:#204a87;font-weight:bold">null</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">referenceLineHeight</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">referenceLineLeaf</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">rows</span><span style="color:#000;font-weight:bold">()[</span><span style="color:#0000cf;font-weight:bold">0</span><span style="color:#000;font-weight:bold">].</span><span style="color:#000">continuous</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Y&#34;</span><span style="color:#000;font-weight:bold">).</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">number</span><span style="color:#000;font-weight:bold">&gt;();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span></code></pre></div><p>Note that we have to match the categorical axes across the data views manually.
+We are also not guaranteed that the expression on the different &ldquo;X&rdquo; axes are the same or that they are evaluated on the same data table.
+It is up to you as the mod developer to validate that the data view configuration is as expected using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#maintable-2">mainTable</a> and <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#axis-2">axis</a> APIs.</p>
 <h2 id="using-multiple-measures-on-continuous-axes">Using multiple measures on continuous axes</h2>
 <p>By default you can only have a single measure on a continuous axis. However Spotfire allows having one axis with multiple measures on it. To turn this on, you set the &ldquo;allowMultipleMeasures&rdquo; flag to true for the axis in the manifest.</p>
 <p>When an axis has multiple measures, Spotfire will place each measure on its own row in the data view. This also requires the special &ldquo;(Column Names)&rdquo; expression, [Axis.Default.Names] in the expression language, to be used on a categorical axis in the visualization.</p>
@@ -883,7 +944,7 @@ The actual color computed for each row can be retrieved via the <a href="/spotfi
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 14, 2024
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 18, 2025
 </div>
 </div>
 

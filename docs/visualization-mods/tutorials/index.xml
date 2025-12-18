@@ -18,7 +18,7 @@
     <item>
       <title>Docs: Create a bar chart using Google Charts</title>
       <link>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
       
       <guid>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</guid>
       <description>
@@ -34,7 +34,7 @@
 &lt;li&gt;Controlling the mod using a popout&lt;/li&gt;
 &lt;li&gt;Export to PDF&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;The mod created in this tutorial (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;js-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;. The example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
+&lt;p&gt;The mod created in this tutorial (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;ts-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;. The example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;
 &lt;h3 id=&#34;dataset&#34;&gt;Dataset&lt;/h3&gt;
 &lt;p&gt;The dataset used in this tutorial can be found &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/heroes.txt&#34;&gt;here&lt;/a&gt;. It is a reduced version of this &lt;a href=&#34;https://www.kaggle.com/claudiodavi/superhero-set&#34;&gt;dataset&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
