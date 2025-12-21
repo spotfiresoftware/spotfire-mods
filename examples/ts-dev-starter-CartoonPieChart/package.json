@@ -4,10 +4,10 @@
     "type": "module",
     "description": "",
     "scripts": {
-        "build": "mods-sdk build",
-        "build:dev": "mods-sdk build --watch --debug",
+        "build": "mods-sdk build src/mod-manifest.json",
+        "build:dev": "mods-sdk build --watch --debug src/mod-manifest.json",
         "tsc:dev": "tsc --watch",
-        "server": "mods-dev-server"
+        "server": "mods-dev-server src"
     },
     "keywords": [],
     "author": "",
