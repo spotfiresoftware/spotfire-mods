@@ -1,8 +1,8 @@
 {
     "apiVersion": "1.3",
     "version": "1.1",
-    "name": "Circular Treemap",
-    "id": "js-dev-circular-treemap",
+    "name": "Circular Treemap with Zoom",
+    "id": "js-dev-circular-treemap-zoom",
     "icon": "icon.svg",
     "dataViewDefinition": {
         "tooltip": { "enabled": true },
