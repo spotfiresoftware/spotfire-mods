@@ -36,8 +36,8 @@
         ]
     },
     "files": [
-        "src/index.html",
-        "src/main.css",
-        "build/main.js"
+        "index.html",
+        "main.css",
+        "../build/main.js"
     ]
 }

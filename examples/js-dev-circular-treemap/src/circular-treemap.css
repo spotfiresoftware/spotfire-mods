@@ -20,7 +20,7 @@ html, body {
 * a light theme). 
 */
 circle {
-    fill: #333;
+    fill: #6c6c6c;
     opacity: 0.15;
-    stroke: white;
+    stroke: rgb(255, 255, 255);
 }

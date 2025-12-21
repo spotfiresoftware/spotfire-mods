@@ -1,0 +1,23 @@
+/*
+* Copyright © 2023. Cloud Software Group, Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
+:root {
+    color-scheme: light dark;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+#mod-container {
+    width: 100%;
+    height: 100%;
+}

@@ -14,4 +14,4 @@ pattern-filled pie slices, honoring Spotfire colors and marking.
 4. Edit `src/main.ts` and rebuild when changes are made.
 
 ## Packaging without a dev server
-Build the project and point Spotfire to the `mod-manifest.json` in the project root.
+Build the project and point Spotfire to the `mod-manifest.json` in the `src` folder (the manifest and static files are now located in `src/`).

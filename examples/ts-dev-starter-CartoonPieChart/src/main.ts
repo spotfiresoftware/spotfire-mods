@@ -11,7 +11,7 @@ import type { LegendComponentOption, TooltipComponentOption } from "echarts/comp
 import { PieChart } from "echarts/charts";
 import type { PieSeriesOption } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
-import type { CallbackDataParams } from "echarts/types";
+// CallbackDataParams type not available in this dev dependency — use a loose type in the formatter below.
 
 echarts.use([LegendComponent, TooltipComponent, PieChart, CanvasRenderer]);
 
@@ -121,7 +121,7 @@ async function render(
         backgroundColor: renderContext.styling.general.backgroundColor,
         tooltip: {
             trigger: "item",
-            formatter: (params: CallbackDataParams) => {
+            formatter: (params: any) => {
                 const data = params.data as PieDatum;
                 const measure = data.row.continuous("Y");
                 return `${params.name}<br/>${measure.formattedValue()}`;
@@ -162,7 +162,7 @@ async function render(
                     length: 12,
                     length2: 8,
                 },
-                data: pieData,
+                data: pieData as any,
             },
         ],
     };
