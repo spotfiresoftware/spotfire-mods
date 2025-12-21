@@ -1,18 +1,17 @@
-# Mod Starter Project
-This is a mod template project. It contains the minimum amount of code necessary to run a working mod.  
+# Cartoon Pie Chart (TypeScript)
 
-All source code for the mod example can be found in the `src` folder.
+This mod renders the Apache ECharts "Pie Pattern" example using Spotfire data bindings.
+It supports categorical labels on the X-axis and a continuous measure on the Y-axis to size
+pattern-filled pie slices, honoring Spotfire colors and marking.
 
 ## Prerequisites
-These instructions assume that you have [Node.js](https://nodejs.org/en/) (which includes npm) installed.
+- [Node.js](https://nodejs.org/en/) (includes npm)
 
-## How to get started (with development server)
-- Open a terminal at the location of this example.
-- Run `npm install`. This will install necessary tools. Run this command only the first time you are building the mod and skip this step for any subsequent builds.
-- Run `npm run build`. This will convert the source file from JS to TS.
-- Run `npm run server`. This will start a development server.
-- Start editing, for example `src/main.ts`. Re-run `npm run build` to re-build or start a watcher which does this automatically on save via `npm run build:dev`.
-- In Spotfire, follow the steps of creating a new mod and connecting to the development server.
+## Development
+1. Run `npm install` to restore dependencies (requires internet access to fetch ECharts).
+2. Build with `npm run build` or start a watcher via `npm run build:dev`.
+3. Launch the dev server using `npm run server` and connect from Spotfire Analyst.
+4. Edit `src/main.ts` and rebuild when changes are made.
 
-## Working without a development server
-- In Spotfire, follow the steps of creating a new mod and then browse for, and point to, the _manifest_ in the `src` folder.
+## Packaging without a dev server
+Build the project and point Spotfire to the `mod-manifest.json` in the project root.

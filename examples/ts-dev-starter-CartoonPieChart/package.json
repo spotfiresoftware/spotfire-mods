@@ -19,5 +19,8 @@
         "esbuild": "^0.25.1",
         "prettier": "^3.3.0",
         "typescript": "^5.8.2"
+    },
+    "dependencies": {
+        "echarts": "^6.0.0"
     }
 }
