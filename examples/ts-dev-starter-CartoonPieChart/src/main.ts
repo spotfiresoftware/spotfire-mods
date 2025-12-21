@@ -5,14 +5,20 @@
  */
 
 import * as echarts from "echarts/core";
+import type { ComposeOption, EChartsType } from "echarts/core";
 import { LegendComponent, TooltipComponent } from "echarts/components";
+import type { LegendComponentOption, TooltipComponentOption } from "echarts/components";
 import { PieChart } from "echarts/charts";
+import type { PieSeriesOption } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
+import type { CallbackDataParams } from "echarts/types";
 
 echarts.use([LegendComponent, TooltipComponent, PieChart, CanvasRenderer]);
 
+type EChartsOption = ComposeOption<LegendComponentOption | TooltipComponentOption | PieSeriesOption>;
+
 const container = document.querySelector<HTMLDivElement>("#mod-container");
-let chart: echarts.ECharts | null = null;
+let chart: EChartsType | null = null;
 
 type PieDatum = {
     name: string;
@@ -57,7 +63,7 @@ async function render(
     }
 
     const rowCount = await dataView.rowCount();
-    if (rowCount === 0) {
+    if (!rowCount) {
         bailout(mod);
         return;
     }
@@ -111,11 +117,11 @@ async function render(
     ensureChart(size, renderContext);
     mod.controls.errorOverlay.hide();
 
-    const option: echarts.EChartsOption = {
+    const option: EChartsOption = {
         backgroundColor: renderContext.styling.general.backgroundColor,
         tooltip: {
             trigger: "item",
-            formatter: (params) => {
+            formatter: (params: CallbackDataParams) => {
                 const data = params.data as PieDatum;
                 const measure = data.row.continuous("Y");
                 return `${params.name}<br/>${measure.formattedValue()}`;
@@ -198,7 +204,11 @@ function ensureChart(size: Spotfire.Size, renderContext: Spotfire.RenderContext)
 function bailout(mod: Spotfire.Mod, messages?: string | string[]) {
     chart?.clear();
     if (messages) {
-        mod.controls.errorOverlay.show(messages);
+        if (Array.isArray(messages)) {
+            mod.controls.errorOverlay.show(messages);
+        } else {
+            mod.controls.errorOverlay.show(messages);
+        }
     } else {
         mod.controls.errorOverlay.hide();
     }
