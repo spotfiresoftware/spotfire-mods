@@ -1,0 +1,34 @@
+{
+    "apiVersion": "1.3",
+    "version": "1.1",
+    "name": "Circular Treemap (Zoom)",
+    "id": "js-dev-circular-treemap-zoom",
+    "icon": "icon.svg",
+    "dataViewDefinition": {
+        "tooltip": { "enabled": true },
+        "colorAxis": {
+            "mode": "dual",
+            "preferredDualMode": "continuous",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [
+            {
+                "name": "Hierarchy",
+                "mode": "categorical"
+            },
+            {
+                "name": "Size",
+                "mode": "continuous"
+            }
+        ]
+    },
+    "files": [
+        "index.html",
+        "circular-treemap.js",
+        "circular-treemap.css",
+        "d3.min.js"
+    ]
+}
