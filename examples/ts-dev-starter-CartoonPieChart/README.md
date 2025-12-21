@@ -10,8 +10,10 @@ pattern-filled pie slices, honoring Spotfire colors and marking.
 ## Development
 1. Run `npm install` to restore dependencies (requires internet access to fetch ECharts).
 2. Build with `npm run build` or start a watcher via `npm run build:dev`.
-3. Launch the dev server using `npm run server` and connect from Spotfire Analyst.
+3. Launch the dev server using `npm run server` (served from `src/`) and connect from Spotfire Analyst.
 4. Edit `src/main.ts` and rebuild when changes are made.
 
 ## Packaging without a dev server
-Build the project and point Spotfire to the `mod-manifest.json` in the `src` folder (the manifest and static files are now located in `src/`).
+Build the project and point Spotfire to the `mod-manifest.json` in the `src` folder. All static
+assets (HTML, CSS, icon) now live next to the manifest, and the bundled script is emitted to
+`src/build/main.js`.
