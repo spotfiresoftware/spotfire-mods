@@ -20,7 +20,7 @@ html, body {
 * a light theme). 
 */
 circle {
-    fill: #333;
+    fill: #d3d3d3;
     opacity: 0.15;
     stroke: white;
 }
@@ -33,7 +33,7 @@ text {
 }
 
 circle.hovered {
-    stroke: #111;
+    stroke: #c9c9c9;
     stroke-width: 2px;
     opacity: 0.25;
 }

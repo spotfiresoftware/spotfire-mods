@@ -24,16 +24,3 @@ circle {
     opacity: 0.15;
     stroke: white;
 }
-
-text {
-    font-weight: 600;
-    paint-order: stroke;
-    stroke: rgba(0, 0, 0, 0.35);
-    stroke-width: 1px;
-}
-
-circle.hovered {
-    stroke: #111;
-    stroke-width: 2px;
-    opacity: 0.25;
-}

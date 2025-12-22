@@ -136,36 +136,6 @@ Spotfire.initialize(function (mod) {
     }
 
     /**
-     * Selects which leaf nodes should receive labels.
-     * If all values are equal (e.g. no size expression), picks a random subset
-     * to avoid hiding all labels. Otherwise the largest leaves by value are used.
-     *
-     * @param {d3.HierarchyNode<Spotfire.DataViewHierarchyNode>[]} leaves
-     * @param {number} maxLabels
-     */
-    function selectLabelNodes(leaves, maxLabels) {
-        if (leaves.length <= maxLabels) {
-            return leaves;
-        }
-
-        const sorted = [...leaves].sort((a, b) => (b.value || 0) - (a.value || 0));
-        const minValue = sorted[sorted.length - 1].value || 0;
-        const maxValue = sorted[0].value || 0;
-
-        if (maxValue === minValue) {
-            // All values are identical. Pick a random subset to avoid bias.
-            for (let i = sorted.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                const temp = sorted[i];
-                sorted[i] = sorted[j];
-                sorted[j] = temp;
-            }
-        }
-
-        return sorted.slice(0, maxLabels);
-    }
-
-    /**
      * Clears the DOM.
      */
     function clear() {
@@ -290,9 +260,7 @@ Spotfire.initialize(function (mod) {
         const fontFamily = renderCtx.styling.general.font.fontFamily;
         const fontSize = renderCtx.styling.general.font.fontSize;
         labelCtx.font = "" + fontSize + "px " + fontFamily;
-        const labelBudget = 50;
-        const leavesForLabel = selectLabelNodes(d3Root.leaves(), labelBudget);
-        leavesForLabel.forEach((d3Node) => {
+        d3Root.leaves().forEach((d3Node) => {
             addLabel(d3Node, fontSize);
         });
 
@@ -316,12 +284,10 @@ Spotfire.initialize(function (mod) {
             } else {
                 mod.controls.tooltip.show(getRow(sfNode));
             }
-            d3.select(d3.event.currentTarget).classed("hovered", true);
         });
 
         circles.on("mouseleave", () => {
             mod.controls.tooltip.hide();
-            d3.select(d3.event.currentTarget).classed("hovered", false);
         });
     }
 });
