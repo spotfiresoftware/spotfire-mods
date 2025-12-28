@@ -24,6 +24,7 @@ Spotfire.initialize(function (mod) {
     // can re-resolve the focused node after a full re-render which creates new d3 nodes.
     let persistentFocusPath = null;
     let lastD3Root = null;
+    let showParentLabels = true;  // Toggle state for parent labels visibility
 
     // Setup reader/rendering loop
     const reader = mod.createReader(mod.visualization.data(), mod.windowSize());
@@ -335,6 +336,53 @@ Spotfire.initialize(function (mod) {
         const fontSize = renderCtx.styling.general.font.fontSize;
         labelCtx.font = "" + fontSize + "px " + fontFamily;
 
+        // ========== HELPER FUNCTIONS (defined early) ==========
+        // Helper: get node ancestry formatted values
+        function getAncestryValues(node) {
+            const path = [];
+            let current = node;
+            while (current) {
+                path.unshift(current.data.formattedValue());
+                current = current.parent;
+            }
+            return path;
+        }
+
+        // Helper: Check if nodeA is a descendant of nodeB
+        function isDescendantOf(nodeA, nodeB) {
+            let current = nodeA;
+            while (current) {
+                if (current === nodeB) return true;
+                current = current.parent;
+            }
+            return false;
+        }
+
+        // Helper: truncate text to fit inside circle using canvas measurements
+        function truncateText(text, maxWidthPx, fontPx) {
+            if (!labelCtx) {
+                const avgCharPx = fontPx * 0.6;
+                const maxChars = Math.floor(maxWidthPx / avgCharPx);
+                if (text.length <= maxChars) return text;
+                return text.slice(0, Math.max(0, maxChars - 1)) + '…';
+            }
+            labelCtx.font = `${fontPx}px ${fontFamily}`;
+            if (labelCtx.measureText(text).width <= maxWidthPx) return text;
+            let left = 0;
+            let right = text.length;
+            while (left < right) {
+                const mid = Math.floor((left + right) / 2);
+                const candidate = text.slice(0, mid) + '…';
+                if (labelCtx.measureText(candidate).width <= maxWidthPx) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            return text.slice(0, Math.max(0, left - 1)) + '…';
+        }
+        // ========== END HELPERS ==========
+
         // Create labels for all nodes (we'll show/hide them depending on zoom)
         const labels = container
             .selectAll("text")
@@ -357,6 +405,17 @@ Spotfire.initialize(function (mod) {
             .style("text-rendering", "geometricPrecision")
             .text((d) => d.data.formattedValue());
 
+        // --- Separate parent label selection (for non-leaf nodes) ---
+        // This is completely independent from leaf labels.
+        // We'll populate it dynamically on every zoom, respecting:
+        // 1. Only non-leaf nodes with >2 children
+        // 2. Top 5 per relative depth level
+        // 3. Visibility constrained by focus ancestry
+        const parentLabels = container
+            .selectAll("text.parent-label");
+        // Note: We bind data in updateParentLabels(), not here
+        // This creates an empty selection initially that we'll manage dynamically
+
         // CANONICAL D3 ZOOM PATTERN
         // 1. Pack layout is already done above (packLayout(d3Root))
         // 2. Keep all x, y, r values stable
@@ -365,17 +424,7 @@ Spotfire.initialize(function (mod) {
         
         // Restore focus from persistent state if possible
         lastD3Root = d3Root;
-        // Helper: get node ancestry formatted values
-        function getAncestryValues(node) {
-            const path = [];
-            let current = node;
-            while (current) {
-                path.unshift(current.data.formattedValue());
-                current = current.parent;
-            }
-            return path;
-        }
-
+        
         // Helper: match node by ancestry formattedValue path
         function nodeMatchesPath(node, path) {
             const values = getAncestryValues(node);
@@ -412,18 +461,6 @@ Spotfire.initialize(function (mod) {
         }
         // Save the resolved focus back to persistent path (ensures it exists in this render)
         persistentFocusPath = getAncestryValues(focus);
-
-        /**
-         * Helper: Check if nodeA is a descendant of nodeB
-         */
-        function isDescendantOf(nodeA, nodeB) {
-            let current = nodeA;
-            while (current) {
-                if (current === nodeB) return true;
-                current = current.parent;
-            }
-            return false;
-        }
 
         /**
          * Zoom to focus on a target node by:
@@ -534,34 +571,14 @@ Spotfire.initialize(function (mod) {
 
             // Also update label text/font-size consistency for the final state (in case transition was interrupted)
             updateLabelsForScale(k);
-
-        }
-
-        // Helper: truncate text to fit inside circle using canvas measurements
-        function truncateText(text, maxWidthPx, fontPx) {
-            if (!labelCtx) {
-                // Fallback: simple truncation if canvas text metrics aren't available
-                const avgCharPx = fontPx * 0.6;
-                const maxChars = Math.floor(maxWidthPx / avgCharPx);
-                if (text.length <= maxChars) return text;
-                return text.slice(0, Math.max(0, maxChars - 1)) + '…';
+            
+            // Recompute and update parent labels for the new focus
+            if (showParentLabels) {
+                updateParentLabels(targetNode, k);
+            } else {
+                // Hide all parent labels if toggle is off
+                container.selectAll("text.parent-label").style('opacity', 0);
             }
-
-            labelCtx.font = `${fontPx}px ${fontFamily}`;
-            if (labelCtx.measureText(text).width <= maxWidthPx) return text;
-            // Binary search for max length that fits with ellipsis
-            let left = 0;
-            let right = text.length;
-            while (left < right) {
-                const mid = Math.floor((left + right) / 2);
-                const candidate = text.slice(0, mid) + '…';
-                if (labelCtx.measureText(candidate).width <= maxWidthPx) {
-                    left = mid + 1;
-                } else {
-                    right = mid;
-                }
-            }
-            return text.slice(0, Math.max(0, left - 1)) + '…';
         }
 
         // Helper: update labels to use dynamic font size (no transform scale) and truncation
@@ -593,6 +610,93 @@ Spotfire.initialize(function (mod) {
             });
         }
 
+        /**
+         * Select top-N parent nodes from the NEXT immediate level only (relDepth = 1).
+         * This keeps the visualization clean by showing only the next hierarchy level.
+         * Rules:
+         * - Only non-leaf nodes with >2 children
+         * - Only descendants of focus
+         * - ONLY immediate next level (relativeDepth = 1)
+         * - Top N nodes by d.value
+         */
+        function selectTopParentNodes(focusNode, topPerLevel) {
+            const focusDepth = focusNode.depth;
+            
+            // Candidates: descendants of focus, non-leaf, >2 children, ONLY next level
+            const candidates = focusNode.descendants().filter(d => {
+                if (!d.children || d.children.length <= 2) return false;
+                if (d === focusNode) return false; // never label focus itself
+                const relDepth = d.depth - focusDepth;
+                return relDepth === 1; // ONLY the immediate next level
+            });
+            
+            // Sort by value and keep top N
+            candidates.sort((a, b) => (b.value || 0) - (a.value || 0));
+            return candidates.slice(0, topPerLevel);
+        }
+        
+        /**
+         * Update parent label data binding, sizing, truncation, and visibility.
+         * Called during zoom and immediate focus restoration.
+         */
+        function updateParentLabels(focusNode, k) {
+            const topParents = selectTopParentNodes(focusNode, 10); // Only next level (relDepth = 1)
+            
+            // Bind data to selection
+            const bound = parentLabels.data(topParents, d => getAncestryValues(d).join("|"));
+            
+            // ENTER: Create new parent label elements
+            const enter = bound.enter()
+                .append("text")
+                .classed("parent-label", true)
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "middle")
+                .attr("pointer-events", "none")
+                .style("fill", d3.hsl("#effcb2ff")) // neutral yellowish
+                .style("font-family", fontFamily)
+                .style("font-weight", "900") // semi-bold
+                .style("text-shadow", "none")
+                .style("filter", "none")
+                .style("paint-order", "stroke")
+                .style("stroke", "none")
+                .style("shape-rendering", "geometricPrecision")
+                .style("text-rendering", "geometricPrecision");
+            
+            // EXIT: Remove old parent labels
+            bound.exit().remove();
+            
+            // MERGE: Combine enter + update selections
+            const merged = enter.merge(bound);
+            
+            // Update positions (critical for zooming to work)
+            merged.attr('x', (d) => d.x)
+                  .attr('y', (d) => d.y);
+            
+            // Update text and styling
+            merged.each(function (d) {
+                const sel = d3.select(this);
+                
+                // Font sizing
+                const minFontPx = 8;
+                const maxFontPx = 32;
+                const scaleFactor = 0.25;
+                const renderedFontPx = Math.max(minFontPx, Math.min(maxFontPx, d.r * k * scaleFactor));
+                const setFontPx = Math.max(1, renderedFontPx / k);
+                
+                // Update font size
+                sel.style('font-size', setFontPx + 'px');
+                
+                // Truncate text
+                const maxWidthRendered = d.r * 2 * k * 0.85;
+                const truncated = truncateText(d.data.formattedValue(), maxWidthRendered, renderedFontPx);
+                sel.text(truncated);
+                
+                // Visibility
+                const shouldShow = truncated && renderedFontPx >= minFontPx + 0.1;
+                sel.style('opacity', shouldShow ? 0.75 : 0);
+            });
+        }
+
         // Apply focus state immediately (no animation) to persist across re-renders
         function applyFocusImmediate(targetNode) {
             const k = Math.min(size.width, size.height) / (targetNode.r * 2);
@@ -619,6 +723,12 @@ Spotfire.initialize(function (mod) {
 
             // Update labels with dynamic font sizing & truncation
             updateLabelsForScale(k);
+            // Update parent labels immediately as well (respecting toggle state)
+            if (showParentLabels) {
+                updateParentLabels(targetNode, k);
+            } else {
+                container.selectAll("text.parent-label").style('opacity', 0);
+            }
         }
 
         // Initial label sizing and truncation: show labels for largest leaves only
@@ -631,6 +741,11 @@ Spotfire.initialize(function (mod) {
             if (d.children) return 0;
             return leavesForLabel.includes(d) ? 1 : 0;
         });
+
+        // Compute and display parent labels for initial focus (root) if enabled
+        if (showParentLabels) {
+            updateParentLabels(d3Root, 1);
+        }
 
         // Apply resolved focus immediately so zoom persists across Spotfire renders
         applyFocusImmediate(focus);
@@ -680,6 +795,114 @@ Spotfire.initialize(function (mod) {
                 .style("left", "10px")
                 .style("z-index", "9999");
 
+            // Parent Labels Toggle Switch (ABOVE the button)
+            const toggleContainer = backButtonContainer
+                .append("div")
+                .style("display", "flex")
+                .style("align-items", "center")
+                .style("gap", "8px")
+                .style("padding", "6px 8px")
+                .style("background-color", "#f5f5f5")
+                .style("border-radius", "4px")
+                .style("border", "1px solid #ddd")
+                .style("margin-bottom", "8px");
+
+            // Toggle checkbox (hidden, styled via CSS)
+            const toggleCheckbox = toggleContainer
+                .append("input")
+                .attr("type", "checkbox")
+                .attr("id", "parentLabelsToggle")
+                .property("checked", showParentLabels)
+                .style("display", "none");
+
+            // Custom styled toggle switch
+            const toggleSwitch = toggleContainer
+                .append("div")
+                .attr("class", "toggle-switch")
+                .style("position", "relative")
+                .style("width", "34px")
+                .style("height", "18px")
+                .style("background-color", showParentLabels ? "#4CAF50" : "#ccc")
+                .style("border-radius", "9px")
+                .style("cursor", "pointer")
+                .style("transition", "background-color 0.3s ease")
+                .style("border", "none")
+                .style("outline", "none");
+
+            // Toggle slider circle
+            const toggleSlider = toggleSwitch
+                .append("div")
+                .style("position", "absolute")
+                .style("top", "2px")
+                .style("left", showParentLabels ? "16px" : "2px")
+                .style("width", "14px")
+                .style("height", "14px")
+                .style("background-color", "white")
+                .style("border-radius", "50%")
+                .style("transition", "left 0.3s ease")
+                .style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)");
+
+            // Toggle label
+            toggleContainer
+                .append("label")
+                .attr("for", "parentLabelsToggle")
+                .text("Parent Labels")
+                .style("cursor", "pointer")
+                .style("user-select", "none")
+                .style("font-size", "13px")
+                .style("font-weight", "500")
+                .style("color", "#333");
+
+            // Toggle click handler
+            toggleSwitch.on("click", function () {
+                showParentLabels = !showParentLabels;
+                console.log(`🔆 Parent labels ${showParentLabels ? "ON" : "OFF"}`);
+
+                // Update toggle appearance
+                d3.select(this)
+                    .style("background-color", showParentLabels ? "#4CAF50" : "#ccc");
+
+                d3.select(this).select("div")
+                    .transition()
+                    .duration(250)
+                    .style("left", showParentLabels ? "16px" : "2px");
+
+                // Update checkbox state
+                toggleCheckbox.property("checked", showParentLabels);
+
+                // Immediately update parent labels visibility
+                if (showParentLabels) {
+                    updateParentLabels(focus, Math.min(size.width, size.height) / (focus.r * 2));
+                } else {
+                    // Hide all parent labels - use live selector from container
+                    container.selectAll("text.parent-label").style('opacity', 0);
+                }
+            });
+
+            // Checkbox change handler (for accessibility)
+            toggleCheckbox.on("change", function () {
+                const isChecked = d3.select(this).property("checked");
+                showParentLabels = isChecked;
+                console.log(`🔆 Parent labels ${showParentLabels ? "ON" : "OFF"}`);
+
+                // Update toggle appearance
+                toggleSwitch
+                    .style("background-color", showParentLabels ? "#4CAF50" : "#ccc");
+
+                toggleSwitch.select("div")
+                    .transition()
+                    .duration(250)
+                    .style("left", showParentLabels ? "16px" : "2px");
+
+                // Update parent labels visibility
+                if (showParentLabels) {
+                    updateParentLabels(focus, Math.min(size.width, size.height) / (focus.r * 2));
+                } else {
+                    container.selectAll("text.parent-label").style('opacity', 0);
+                }
+            });
+
+            // Zoom Back to Root Button (BELOW the toggle)
             backButtonContainer
                 .append("button")
                 .attr("id", "zoomBackButton")
@@ -696,6 +919,7 @@ Spotfire.initialize(function (mod) {
                     zoomTo(lastD3Root);
                 });
 
+            // Zoom Level Display
             backButtonContainer
                 .append("div")
                 .attr("id", "zoomLevelDisplay")
