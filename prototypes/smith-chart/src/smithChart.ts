@@ -1,5 +1,4 @@
 // @ts-ignore
-import * as d3 from "d3";
 import { rectangularSelection } from "./rectangularMarking";
 
 export type ComplexNumber = [real: number, imaginary: number];
