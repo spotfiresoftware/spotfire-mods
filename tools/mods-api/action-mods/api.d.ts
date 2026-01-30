@@ -1,10 +1,10 @@
 /**
- * Copyright © 2006 - 2025 Cloud Software Group, Inc.
+ * Copyright © 2006 - 2026 Cloud Software Group, Inc.
  * This file is subject to the license terms contained
  * in the license file that is distributed with this file.
  * 
  * Spotfire Action Mods API declaration.
- * Version: 2.3
+ * Version: 2.4
  */
 
 declare namespace Spotfire.Dxp {
@@ -6260,7 +6260,7 @@ declare namespace Spotfire.Dxp {
                 /**
                  * Gets a value indicating whether this instance has tooltips enabled.
                  * 
-                 * @since 2.3
+                 * @since 2.1
                  * 
                  * @group Default capability
                  */
@@ -6346,6 +6346,173 @@ declare namespace Spotfire.Dxp {
                 _interfaces: {
                 };
                 private __type_307779478: null;
+            }
+            
+            /**
+             * Represents a layer in a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.4
+             * 
+             * @group Default capability
+             */
+            class ModLayer extends ModVisualizationBase implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the type of the layer as defined in the mod manifest, or null if this is an instance of
+                 * the top-level {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                get LayerType(): (JsType<System.String> | null);
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * Adds a duplicate of this layer after this layer in the owning {@link Spotfire.Dxp.Application.Mods.ModVisualization}'s layer collection.
+                 * @returns The duplicated layer.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                AddDuplicate(): ModLayer;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_4084320246: null;
+            }
+            
+            /**
+             * A collection of {@link Spotfire.Dxp.Application.Mods.ModLayer}s in a {@link Spotfire.Dxp.Application.Mods.ModVisualization}.
+             * 
+             * @since 2.4
+             * 
+             * @group Default capability
+             */
+            class ModLayerCollection extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext>, Explicit<System.Collections.Generic.IEnumerable<ModLayer>>, Explicit<System.Collections.IEnumerable> {
+                /**
+                 * Gets the number of layers.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                get Count(): JsType<System.Int32>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                [Symbol.iterator](): Iterator<ModLayer>;
+                /**
+                 * Adds a layer of the specified type layerType to the visualization.
+                 * @param layerType The type of the layer, as defined the mod manifest.
+                 * @param title A title expression for the layer, or null for automatic title.
+                 * @returns The mod layer.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                AddLayer(layerType: (JsType<System.String> | System.String), title?: ((JsType<System.String> | System.String) | null)): ModLayer;
+                /**
+                 * Removes all layers.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                Clear(): void;
+                /**
+                 * Move the layer from index fromIndex to index toIndex.
+                 * @param fromIndex The index of the layer to move.
+                 * @param toIndex The destination to move the layer to.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                Move(fromIndex: (JsType<System.Int32> | System.Int32), toIndex: (JsType<System.Int32> | System.Int32)): void;
+                /**
+                 * Move the specified layer to index toIndex.
+                 * @param layer A layer in the collection.
+                 * @param toIndex The destination to move the layer to.
+                 * @returns true if the layer could be found in the collection, otherwise false.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                Move(layer: ModLayer, toIndex: (JsType<System.Int32> | System.Int32)): JsType<System.Boolean>;
+                /**
+                 * Removes the specified layer.
+                 * @param layer The layer to remove.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                Remove(layer: ModLayer): void;
+                /**
+                 * Removes all the layers that match the specified predicate.
+                 * @param match The predicate that defines the conditions of the elements to remove.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                RemoveAll(match: System.Predicate<ModLayer>): void;
+                /**
+                 * Removes the layer at the specified index.
+                 * @param index The zero-based index of the item to remove.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                RemoveAt(index: (JsType<System.Int32> | System.Int32)): void;
+                /**
+                 * Tries to get the layer with the specified id.
+                 * @param id The id of the layer.
+                 * @param layer The layer if it could be found, otherwise null.
+                 * @returns true if a layer with the specified id could be found, otherwise false.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                TryGetLayer(id: (JsType<System.Guid> | System.Guid), layer: OutParam<ModLayer>): JsType<System.Boolean>;
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                    System_Collections_Generic_IEnumerable: Implementation<System.Collections.Generic.IEnumerable<ModLayer>>,
+                    System_Collections_IEnumerable: Implementation<System.Collections.IEnumerable>,
+                };
+                /**
+                 * Gets the {@link Spotfire.Dxp.Application.Mods.ModLayer} at the specified index.
+                 * @param index The zero-based index for the item to retrieve.
+                 * @returns The {@link Spotfire.Dxp.Application.Mods.ModLayer} at the specified index.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                readonly Item: PropertyGet<(JsType<System.Int32> | System.Int32), ModLayer>;
+                private __type_3170091658: null;
             }
             
             /**
@@ -6494,7 +6661,15 @@ declare namespace Spotfire.Dxp {
              * 
              * @group Default capability
              */
-            class ModVisualization extends ModDataViewVisualization implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+            class ModVisualization extends ModVisualizationBase implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the layer collection.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                get Layers(): ModLayerCollection;
                 /**
                  * Gets the static mod identifier, as specified in the mod manifest, or null.
                  * 
@@ -6504,6 +6679,39 @@ declare namespace Spotfire.Dxp {
                  */
                 get ModIdentifier(): (ModIdentifier | null);
                 /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /**
+                 * @ignore
+                 * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                 */
+                _interfaces: {
+                    System_IServiceProvider: Implementation<System.IServiceProvider>,
+                    Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                    Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                };
+                private __type_2600286319: null;
+            }
+            
+            /**
+             * Shared base implementation for mod visualizations and layers.
+             * 
+             * @since 2.4
+             * 
+             * @group Default capability
+             */
+            class ModVisualizationBase extends ModDataViewVisualization implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                /**
+                 * Gets the id.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                get Id(): JsType<System.Guid>;
+                /**
                  * Gets the named data views.
                  * 
                  * @since 2.3
@@ -6512,7 +6720,7 @@ declare namespace Spotfire.Dxp {
                  */
                 get NamedDataViews(): System.Collections.Generic.IEnumerable<ModDataViewVisualization>;
                 /**
-                 * Gets the properties of this Mod Visualization, as defined in the mod-manifest.json.
+                 * Gets the properties of this mod visualization or layer, as defined in the mod-manifest.json.
                  * 
                  * @since 2.1
                  * 
@@ -6525,10 +6733,10 @@ declare namespace Spotfire.Dxp {
                  */
                 constructor();
                 /**
-                 * Gets the Mod Property with the specified name, or null if no such property
+                 * Gets the mod property with the specified name, or null if no such property
                  * of the specified type TValue exists.
-                 * @param name The name of the Mod Property, as defined in the mod-manifest.json.
-                 * @returns An object representing the Mod Property, or null.
+                 * @param name The name of the mod property, as defined in the mod-manifest.json.
+                 * @returns An object representing the mod property, or null.
                  * 
                  * @since 2.1
                  * 
@@ -6537,10 +6745,10 @@ declare namespace Spotfire.Dxp {
                  */
                 Property<TValue>(typeTValue: TypeRefParam<TValue>, name: (JsType<System.String> | System.String)): (ModPropertyGeneric<TValue> | null);
                 /**
-                 * Try to get a named dataview.
+                 * Try to get a named data view.
                  * @param name The name as defined in the manifest.
-                 * @param namedDataView The dataview, or null if the view does not exists.
-                 * @returns True if the dataview was found, otherwise false.
+                 * @param namedDataView The data view, or null if the view does not exist.
+                 * @returns true if the data view was found, otherwise false.
                  * 
                  * @since 2.3
                  * 
@@ -6556,7 +6764,7 @@ declare namespace Spotfire.Dxp {
                     Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
                     Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
                 };
-                private __type_2600286319: null;
+                private __type_3431717194: null;
             }
             
             function ModProperty<T>(typeT: TypeRefParam<T>): TypeRef<ModPropertyGeneric<T>>;
@@ -19823,6 +20031,14 @@ declare namespace Spotfire.Dxp {
                  */
                 get PanelAxis(): TrellisAxis;
                 /**
+                 * Gets the page axis used when {@link Spotfire.Dxp.Application.Visuals.Trellis.TrellisMode} is {@link Spotfire.Dxp.Application.Visuals.TrellisMode.Panels}
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                get PanelPageAxis(): TrellisAxis;
+                /**
                  * Gets the row axis.
                  * 
                  * @since 2.0
@@ -25263,6 +25479,15 @@ declare namespace Spotfire.Dxp {
                      */
                     AddNewReferenceLayer(): ReferenceElements.ReferenceLayer;
                     /**
+                     * Adds a new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatisticLayer} to the collection.
+                     * @returns A new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatisticLayer} instance.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    AddNewReferenceStatisticLayer(): ReferenceElements.ReferenceStatisticLayer;
+                    /**
                      * Gets the enumerator for the collection.
                      * @returns An enumerator for the collection.
                      * 
@@ -29619,6 +29844,26 @@ declare namespace Spotfire.Dxp {
                 }
                 
                 /**
+                 * Used to denote an axis.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                class CategoryAxis extends System.Enum {
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /** The X-axis. */
+                    static readonly X: CategoryAxis;
+                    /** The Y-axis. */
+                    static readonly Y: CategoryAxis;
+                    private __type_1160855384: null;
+                }
+                
+                /**
                  * Describes which axis of a visualization to extract the column names from and treat like a
                  * pseudo column that is matched against a column in a secondary table.
                  * 
@@ -29652,6 +29897,34 @@ declare namespace Spotfire.Dxp {
                      */
                     static readonly YAxis: ColumnNameMatch;
                     private __type_280119967: null;
+                }
+                
+                /**
+                 * Display name granularity determines whether to show one or multiple display name labels.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                class DisplayNameGranularity extends System.Enum {
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * Display displayName per label.
+                     * 
+                     * @since 2.4
+                     */
+                    static readonly All: DisplayNameGranularity;
+                    /**
+                     * Display displayName once per panel
+                     * 
+                     * @since 2.4
+                     */
+                    static readonly FirstOnly: DisplayNameGranularity;
+                    private __type_3621582934: null;
                 }
                 
                 /**
@@ -30270,6 +30543,262 @@ declare namespace Spotfire.Dxp {
                 }
                 
                 /**
+                 * Represents a statistic measure shown in a {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatisticLayer}.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                class ReferenceStatistic extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                    /**
+                     * Gets the display name of the measure.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get DisplayName(): JsType<System.String>;
+                    /**
+                     * Gets or sets the expression.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get Expression(): JsType<System.String>;
+                    set Expression(value: JsType<System.String>);
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                        System_IServiceProvider: Implementation<System.IServiceProvider>,
+                        Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                        Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                    };
+                    private __type_3410396800: null;
+                }
+                
+                /**
+                 * Represents a collection of {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatistic} instances.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                class ReferenceStatisticCollection extends Framework.DocumentModel.DocumentNode implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext>, Explicit<System.Collections.Generic.IEnumerable<ReferenceStatistic>>, Explicit<System.Collections.IEnumerable> {
+                    /**
+                     * Gets the number of items in the collection.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get Count(): JsType<System.Int32>;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    [Symbol.iterator](): Iterator<ReferenceStatistic>;
+                    /**
+                     * Adds a new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatistic} with the specified expression to the collection.
+                     * @param expression The expression to add
+                     * @returns The {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatistic} added.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    AddNew(expression: (JsType<System.String> | System.String)): ReferenceStatistic;
+                    /**
+                     * Removes all items from the collection.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    Clear(): void;
+                    /**
+                     * Returns an enumerator that iterates through the collection.
+                     * @returns An enumerator that can be used to iterate through the collection.
+                     */
+                    GetEnumerator(): System.Collections.Generic.IEnumerator<ReferenceStatistic>;
+                    /**
+                     * Removes the specified item from the collection.
+                     * @param item The item to remove.
+                     * @returns true if the item was removed.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    Remove(item: ReferenceStatistic): JsType<System.Boolean>;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                        System_IServiceProvider: Implementation<System.IServiceProvider>,
+                        Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                        Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                        System_Collections_Generic_IEnumerable: Implementation<System.Collections.Generic.IEnumerable<ReferenceStatistic>>,
+                        System_Collections_IEnumerable: Implementation<System.Collections.IEnumerable>,
+                    };
+                    private __type_1024438552: null;
+                }
+                
+                /**
+                 * Represents a layer of reference statistics elements.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                class ReferenceStatisticLayer extends Layers.Layer implements Explicit<System.IServiceProvider>, Explicit<Framework.DocumentModel.ITransactions>, Explicit<Framework.DocumentModel.INodeContext> {
+                    /**
+                     * Gets or sets a value specifying how reference elements are rendered on a {@link Spotfire.Dxp.Application.Visuals.BarChart} or {@link Spotfire.Dxp.Application.Visuals.CombinationChart}
+                     * for different values of {@link Spotfire.Dxp.Application.Visuals.BarChart.StackMode}.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get BarSegmentHandling(): BarSegmentHandling;
+                    set BarSegmentHandling(value: BarSegmentHandling);
+                    /**
+                     * Gets or sets a value indicating which axis in the parent visualization that is the category axis.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get CategoriesFrom(): CategoryAxis;
+                    set CategoriesFrom(value: CategoryAxis);
+                    /**
+                     * Gets or sets a value that override the standard column name matching behavior to instead match on columns from this target axis.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get ColumnNameMatchTarget(): ColumnNameMatch;
+                    set ColumnNameMatchTarget(value: ColumnNameMatch);
+                    /**
+                     * Gets or sets the evaluation modes, describing which of the top level visualization axes
+                     * that are used to group by.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get EvaluationModes(): ReferenceValueEvaluationModes;
+                    set EvaluationModes(value: ReferenceValueEvaluationModes);
+                    /**
+                     * Gets or sets the font used for this {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatisticLayer}.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get LabelFont(): Framework.Styles.FontMetadata;
+                    set LabelFont(value: Framework.Styles.FontMetadata);
+                    /**
+                     * Gets or sets a value indicating whether to limit the reference layer to the marked data.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get LimitByMarking(): JsType<System.Boolean>;
+                    set LimitByMarking(value: JsType<System.Boolean>);
+                    /**
+                     * Gets the {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatisticLayer.ReferenceStatisticCollection}.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get ReferenceStatisticCollection(): ReferenceStatisticCollection;
+                    /**
+                     * Gets the visualizationRelations.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get Relations(): VisualizationRelations;
+                    /**
+                     * Gets or sets a value indicating where the statistic will be rendered.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get RenderArea(): RenderArea;
+                    set RenderArea(value: RenderArea);
+                    /**
+                     * Gets or sets the span for the render area when the statistic is drawn outside the plot area.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get Span(): JsType<System.Single>;
+                    set Span(value: JsType<System.Single>);
+                    /**
+                     * Gets or sets an object describing the {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} of this {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatisticLayer}.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get Style(): StatisticStyle;
+                    set Style(value: StatisticStyle);
+                    /**
+                     * Gets or sets a value for the relative width.
+                     * This value is always in the range [0, 100], where 100 is the full width of the categorical element
+                     * and 0 means that the element is not visible.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get Width(): JsType<System.Single>;
+                    set Width(value: JsType<System.Single>);
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /**
+                     * Adds a new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatistic} to the collection.
+                     * @param expressionValue The expression.
+                     * @returns A new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatistic} instance.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    AddNew(expressionValue: (JsType<System.String> | System.String)): ReferenceStatistic;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                        System_IServiceProvider: Implementation<System.IServiceProvider>,
+                        Spotfire_Dxp_Framework_DocumentModel_ITransactions: Implementation<Framework.DocumentModel.ITransactions>,
+                        Spotfire_Dxp_Framework_DocumentModel_INodeContext: Implementation<Framework.DocumentModel.INodeContext>,
+                    };
+                    private __type_2029805131: null;
+                }
+                
+                /**
                  * Controls for which subsets of the data a reference value is computed.
                  * 
                  * @since 2.2
@@ -30313,6 +30842,213 @@ declare namespace Spotfire.Dxp {
                      */
                     static readonly Trellis: ReferenceValueEvaluationModes;
                     private __type_764183743: null;
+                }
+                
+                /**
+                 * Render area
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                class RenderArea extends System.Enum {
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                     */
+                    constructor();
+                    /** Render elements inside the visualization. No additional space is reserved for the elements. */
+                    static readonly InPanels: RenderArea;
+                    /** Render elements to the right/top of the visualization, depending on visualization and element orientation. */
+                    static readonly OutsideFar: RenderArea;
+                    /** Render elements to the left/bottom of the visualization, depending on visualization and element orientation. */
+                    static readonly OutsideNear: RenderArea;
+                    private __type_2646319556: null;
+                }
+                
+                /**
+                 * Represents the style settings for statistics in the context of a {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceStatisticLayer}.
+                 * 
+                 * @since 2.4
+                 * 
+                 * @group Default capability
+                 */
+                class StatisticStyle extends Object {
+                    /**
+                     * Gets the color of the line.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get Color(): Framework.Styles.ColorInfo;
+                    /**
+                     * Gets the factor used to blend the color towards black or white. This is only used when {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle.ColorType} is {@link Spotfire.Dxp.Application.Visuals.Styles.ColorType.Default}
+                     * This is linear interpolation where 0 means no blending, and -1 means all black or 1 is all white.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get ColorLightnessFactor(): JsType<System.Single>;
+                    /**
+                     * Gets the color type for the line.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get ColorType(): Styles.ColorType;
+                    /**
+                     * Gets a value indicating whether the display name should be shown for first category or all categories, when it is shown.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get DisplayNameGranularity(): DisplayNameGranularity;
+                    /**
+                     * Gets the horizontal alignment.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get HorizontalAlignment(): Framework.Styles.Align;
+                    /**
+                     * Gets a value indicating whether the display name should be shown.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get ShowDisplayName(): JsType<System.Boolean>;
+                    /**
+                     * Gets the text orientation.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get TextDirection(): Framework.Styles.TextDirection;
+                    /**
+                     * Gets the vertical alignment.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    get VerticalAlignment(): Framework.Styles.VerticalAlign;
+                    /**
+                     * Initializes a new instance of the {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} class.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    constructor();
+                    /**
+                     * Determines whether the specified object is equal to the current object.
+                     * @param obj The object to compare with the current object.
+                     * @returns true if the specified object  is equal to the current object; otherwise, false.
+                     */
+                    Equals(obj: any): JsType<System.Boolean>;
+                    /**
+                     * Determines whether the specified other{@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} is equal to this instance.
+                     * @param other The {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} to compare with this instance.
+                     * @returns true if the specified {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} is equal to this instance; otherwise, false.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    Equals(other: StatisticStyle): JsType<System.Boolean>;
+                    /**
+                     * Creates a new {@link Spotfire.Dxp.Application.Visuals.Styles.Stroke} with the given color.
+                     * @param color The color.
+                     * @returns A new stroke.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    WithColor(color: Framework.Styles.ColorInfo): StatisticStyle;
+                    /**
+                     * Creates a new {@link Spotfire.Dxp.Application.Visuals.Styles.Stroke} with default color. The color is inherited from the coloring in the visualization or theme.
+                     * @returns A new stroke.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    WithDefaultColor(): StatisticStyle;
+                    /**
+                     * Creates a new {@link Spotfire.Dxp.Application.Visuals.Styles.Stroke} with default color. The color is inherited from the coloring in the visualization or theme.
+                     * @param lightnessFactor A factor used to blend the color towards black or white. This is only used when {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle.ColorType} is {@link Spotfire.Dxp.Application.Visuals.Styles.ColorType.Default}
+                     * This is linear interpolation where 0 means no blending, and -1 means all black or 1 is all white. The value is clamped to the range [-1, 1].
+                     * @returns A new stroke.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    WithDefaultColor(lightnessFactor: (JsType<System.Single> | System.Single)): StatisticStyle;
+                    /**
+                     * Creates a {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} where the {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle.DisplayNameGranularity} property is set to the specified value and {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle.ShowDisplayName} is true.
+                     * @param value The value.
+                     * @returns A new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} instance.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    WithDisplayName(value: DisplayNameGranularity): StatisticStyle;
+                    /**
+                     * Creates a {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} where the {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle.ShowDisplayName} property is set to false.
+                     * @returns A new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} instance.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    WithoutDisplayName(): StatisticStyle;
+                    /**
+                     * Creates a {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} where the {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle.HorizontalAlignment} property is set to the specified value.
+                     * @param value The value.
+                     * @returns A new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} instance.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    WithTextAlign(value: Framework.Styles.Align): StatisticStyle;
+                    /**
+                     * Creates a {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} where the {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle.TextDirection} property is set to the specified value.
+                     * @param value The value.
+                     * @returns A new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} instance.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    WithTextDirection(value: Framework.Styles.TextDirection): StatisticStyle;
+                    /**
+                     * Creates a {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} where the {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle.VerticalAlignment} property is set to the specified value.
+                     * @param value The value.
+                     * @returns A new {@link Spotfire.Dxp.Application.Visuals.ReferenceElements.StatisticStyle} instance.
+                     * 
+                     * @since 2.4
+                     * 
+                     * @group Default capability
+                     */
+                    WithVerticalAlign(value: Framework.Styles.VerticalAlign): StatisticStyle;
+                    /**
+                     * @ignore
+                     * @deprecated Do not use, exists for type safety only and will be undefined at runtime.
+                     */
+                    _interfaces: {
+                    };
+                    private __type_1979358134: null;
                 }
                 
                 /**
@@ -51376,6 +52112,28 @@ declare namespace Spotfire.Dxp {
         
         namespace Styles {
             /**
+             * Horizontal alignment
+             * 
+             * @since 2.4
+             * 
+             * @group Default capability
+             */
+            class Align extends System.Enum {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /** Centered. */
+                static readonly Center: Align;
+                /** Left aligned. */
+                static readonly Left: Align;
+                /** Right aligned. */
+                static readonly Right: Align;
+                private __type_2517649685: null;
+            }
+            
+            /**
              * Represents border radius for a corner in a box.
              * 
              * @since 2.0
@@ -52180,6 +52938,28 @@ declare namespace Spotfire.Dxp {
                 /** Text is rotated 90 degrees clockwise. */
                 static readonly TopDown: TextDirection;
                 private __type_1513541100: null;
+            }
+            
+            /**
+             * Describes how to vertically position/align something that is rendered.
+             * 
+             * @since 2.4
+             * 
+             * @group Default capability
+             */
+            class VerticalAlign extends System.Enum {
+                /**
+                 * @ignore
+                 * @deprecated Do not use, constructor exists for type safety only and will throw at runtime.
+                 */
+                constructor();
+                /** Aligned to the bottom. */
+                static readonly Bottom: VerticalAlign;
+                /** Aligned in the middle. */
+                static readonly Middle: VerticalAlign;
+                /** Align to the top. */
+                static readonly Top: VerticalAlign;
+                private __type_2822254807: null;
             }
             
             /**
