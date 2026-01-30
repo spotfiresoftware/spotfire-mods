@@ -1,5 +1,5 @@
 /*
-* Copyright © 2025. Cloud Software Group, Inc.
+* Copyright © 2026. Cloud Software Group, Inc.
 * This file is subject to the license terms contained
 * in the license file that is distributed with this file.
 */
@@ -845,6 +845,12 @@ export declare interface GeneralStylingInfo {
 }
 
 /**
+ * Guid type used as global identifier of instances.
+ * @public
+ */
+export declare type Guid = string;
+
+/**
  * Initializes the Mod API. The specified `onLoaded` callback is called when the initialization is complete.
  * @example
  * ```
@@ -866,6 +872,21 @@ export declare function initialize(onLoaded: OnLoadCallback): void;
  * @version 2.1
  */
 export declare type KnownTheme = "Light" | "Dark";
+
+/**
+ * Specifies the and trigger behavior of the {@link ModVisualization.layers} readable, and the matarialization behavior of its {@link DataView}s.
+ * <pre>
+ * - "EagerData" (default) - Data views in all layers are fetched immediately when the layers collection is fetched.
+ *   Use this mode when all {@link DataView}s are required to render the visualization.
+ * - "LazyData" - Data views in all layers are fetched when the promise for data is awaited.
+ *   Use this mode to increase overall performance when not all {@link DataView}s are expected to be consumed, as this mode allows the mod to avoid fetching unnecessary data, or to control the order in which dataview to fetched..
+ * - "CollectionOnly" - Like LazyData, but the readers created with this mode will only be invalidated when the {@link ModLayers.items} collection changes, i.e. layers are added, removed or reordered.
+ *   Use this mode only when separate readers are created per layer.
+ * </pre>
+ * @since 2.4
+ * @public
+ */
+export declare type LayerMode = "EagerData" | "LazyData" | "CollectionOnly";
 
 /**
  * Represents the styling information that applies to scale lines in the Mod Visualization.
@@ -989,6 +1010,116 @@ export declare interface Mod {
 }
 
 /**
+ * Represents an instance of a dynamic layer in a mod visualization.
+ * @since 2.4
+ * @public
+ */
+export declare interface ModLayer {
+    /** The id of the layer instance. */
+    id: Guid;
+    /** The type of the layer, as defined in the manifest. */
+    type: string;
+    /**
+     * Provides access to the {@link Title} of the layer or named {@link DataView}.
+     * @param dataViewName - The name of the named {@link DataView} as specified in the mod-manifest.json.
+     */
+    title(dataViewName?: string): ReadableProxy<Title>;
+    /**
+     * Provides access to the {@link Axis} in the layer with the specified `name`. All axes
+     * must be declared in the mod-manifest.json.
+     * @param name - The name of the {@link Axis}.
+     */
+    axis(name: string): ReadableProxy<Axis>;
+    /**
+     * Provides access to the {@link Axis} in the layer with the specified `axisName` in the data view with name `dataViewName`.
+     * All axes must be declared in the mod-manifest.json.
+     * @param axisName - The name of the {@link Axis}.
+     * @param dataViewName - The name of the {@link DataView}.
+     */
+    axis(name: string, dataViewName: string): ReadableProxy<Axis>;
+    /**
+     * Provides access to the main {@link DataView} of the layer.
+     */
+    data(): DataViewProxy;
+    /**
+     * Provides access to a {@link DataView} of the layer with the specified `name`.
+     * @param name - The name of the view.
+     */
+    data(name?: string): DataViewProxy;
+    /**
+     * Provides access to the {@link DataTable} in the Spotfire document that the layer
+     * uses as its main table.
+     */
+    mainTable(): ReadableProxy<DataTable>;
+    /**
+     * Provides access to the {@link DataTable} in the Spotfire document that the layer
+     * uses as the main table of the named data view.
+     * @param dataViewName - The name of the {@link DataView}.
+     */
+    mainTable(dataViewName?: string): ReadableProxy<DataTable>;
+    /**
+     * Sets the main {@link DataTable} in the layer.
+     * @param tableName - The name or id of the {@link DataTable} to be used as main table.
+     */
+    setMainTable(tableName: string): void;
+    /**
+     * Sets the main {@link DataTable} of the named data view in the layer.
+     * @param tableName - The name or id of the {@link DataTable} to be used as main table.
+     * @param dataViewName - The name of the {@link DataView}.
+     */
+    setMainTable(tableName: string, dataViewName?: string): void;
+    /**
+     * Sets the main {@link DataTable} in the layer.
+     * @param table - The {@link DataTable} object to be used as main table.
+     */
+    setMainTable(table: DataTable): void;
+    /**
+     * Sets the main {@link DataTable} of the named data view in the layer.
+     * @param table - The {@link DataTable} object to be used as main table.
+     * @param dataViewName - The name of the {@link DataView}.
+     */
+    setMainTable(table: DataTable, dataViewName?: string): void;
+    /**
+     * Provides access to the {@link ModProperty} with the specified `name`.
+     */
+    property<T extends ModPropertyDataType>(name: string): ReadableProxy<ModProperty<T>>;
+}
+
+/**
+ * Represents the collection of {@link ModLayer}s.
+ * @since 2.4
+ * @public
+ */
+export declare interface ModLayers {
+    /**
+     * The layer items in the mod.
+     */
+    items: ModLayer[];
+    /**
+     * Add a new layer instance to the mod..
+     * @param type - The type of layer to add, as defined in the manifest.
+     */
+    add(type: string): ModLayer;
+    /**
+     * Remove a layer from the mod.
+     * @param layerId - The id of the layer to remove.
+     */
+    remove(layerId: string): void;
+    /**
+     * Move a layer to a new position.
+     * @param layerId - The id of the layer to move.
+     * @param to - The position to move the layer to.
+     */
+    move(layerId: string, to: number): void;
+    /**
+     * Move a layer to a new position.
+     * @param from - The current position of the layer to move.
+     * @param to - The new position to move the layer to.
+     */
+    move(from: number, to: number): void;
+}
+
+/**
  * Represents that metadata of the Mod Visualization, as defined in the mod-manifest-json.
  * @public
  */
@@ -1066,6 +1197,13 @@ export declare interface ModVisualization {
      */
     data(name?: string): DataViewProxy;
     /**
+     * Provides access to all {@link ModLayer}s in the mod.
+     * @param mode - Optional argument to control the materialization and trigger behavior of the {@link ModLayer}s.
+     * The default mode is "EagerData".
+     * @since 2.4
+     */
+    layers(mode?: LayerMode): ReadableProxy<ModLayers>;
+    /**
      * Provides access to the {@link DataTable} in the Spotfire document that the Mod Visualization
      * uses as its main table.
      */
@@ -1114,7 +1252,13 @@ export declare interface ModVisualization {
      * @param axisName - The name of the {@link Axis}.
      * @param dataViewName - The name of the {@link DataView}.
      */
-    axis(name: string, dataViewName?: string): ReadableProxy<Axis>;
+    axis(name: string, dataViewName: string): ReadableProxy<Axis>;
+    /**
+     * Provides access to the {@link Title} of the mod visualization or named {@link DataView}.
+     * @since 2.4
+     * @param dataViewName - The name of the named {@link DataView} as specified in the mod-manifest.json.
+     */
+    title(dataViewName?: string): ReadableProxy<Title>;
 }
 
 /**
@@ -1521,6 +1665,30 @@ export declare interface Reader<T extends ReadonlyArray<any>> {
      * @version 1.3
      */
     hasValueChanged(value: UnionFromTupleTypes<T>, ...values: UnionFromTupleTypes<T>[]): boolean;
+    /**
+     * Check whether one or more passed readable arguments has changed since the last query time within this reader.
+     *
+     * @example
+     * Check if any of the main data views in any dynamic layer has changed in the subscribe loop.
+     *
+     * ```
+     * let reader = mod.createReader(mod.visualization.layers(), mod.windowSize());
+     * reader.subscribe((layers, size) => {
+     *    console.log(reader.hasReadableChanged(...layers.items.map(layer => layer.data())));
+     * });
+     * ```
+     *
+     * @param readables - Readables retrieved from the API.
+     * Note that a readable that is never read (via await or .then()), is not guaranteed to be invalidated when changed in the document.
+     * For example, the following will always return false if the property value never is read by the mod elsewhere:
+     * ```
+     * reader.hasReadableChanged(mod.document.property("Description"))
+     * ```
+     *
+     * @returns true if any of the values are new, otherwise false.
+     * @version 2.4
+     */
+    hasReadableChanged(...readables: Readable[]): boolean;
 }
 
 /**
@@ -1534,6 +1702,18 @@ export declare interface ReaderSubscription {
      * Neither the callback or the error callback will be invoked afterwards.
      */
     cancel(): void;
+    /**
+     * Temporarily pause the current subscription.
+     * Pausing a subscription will prevent any invokations to the render function, while for example allowing the user to perform an area marking operation while holding off streaming data updates.
+     * @version 2.4
+     */
+    pause(): void;
+    /**
+     * Resume the current subscription.
+     * Any number of changes to one or more subscribed readable that occured when the subscription was paused will yield one invokation to the render callback.
+     * @version 2.4
+     */
+    resume(): void;
 }
 
 /**
@@ -1788,6 +1968,29 @@ export declare interface TimeSpan {
     hours: number;
     /** The day part of the instance. */
     days: number;
+}
+
+/**
+ * Represents a title in the Spotfire document.
+ * @since 2.4
+ * @public
+ */
+export declare interface Title extends TitleValues {
+    /**
+     * Sets the title of the entity.
+     * @param value - The new title.
+     */
+    set: (value: string) => void;
+}
+
+/**
+ * Represents the values held by a {@link Title}.
+ * @since 2.4
+ * @public
+ */
+export declare interface TitleValues {
+    /** Gets the title. */
+    value: string;
 }
 
 /**
