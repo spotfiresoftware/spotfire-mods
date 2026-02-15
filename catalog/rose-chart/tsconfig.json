@@ -8,7 +8,6 @@
         "noEmitOnError": false,
         "noImplicitAny": true,
         "strict": true,
-        "charset": "utf8",
         "sourceMap": true,
         "inlineSources": true,
         "module": "es2015",
