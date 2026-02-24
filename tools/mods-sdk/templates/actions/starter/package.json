@@ -12,8 +12,8 @@
         "@spotfire/mods-api": "~MODS-API-VERSION",
         "@spotfire/mods-dev-server": "^1.2.0",
         "@spotfire/mods-sdk": "^MODS-SDK-VERSION",
-        "esbuild": "^0.27.0",
-        "prettier": "^3.6.2",
+        "esbuild": "^0.27.3",
+        "prettier": "^3.8.1",
         "typescript": "^5.9.3"
     },
     "engines": {
