@@ -4,7 +4,7 @@
     "description": "Development server for Spotfire® Mods",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/spotfiresoftware/spotfire-mods"
+        "url": "git+https://github.com/spotfiresoftware/spotfire-mods.git"
     },
     "homepage": "https://github.com/spotfiresoftware/spotfire-mods/tree/master/tools/mods-dev-server",
     "files": [
@@ -13,7 +13,7 @@
         "websocket.html"
     ],
     "bin": {
-        "mods-dev-server": "./cli.js"
+        "mods-dev-server": "cli.js"
     },
     "types": "server.d.ts",
     "scripts": {
