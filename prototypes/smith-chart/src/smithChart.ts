@@ -1,14 +1,23 @@
 // @ts-ignore
 import * as d3 from "d3";
+import { ModProperty } from "spotfire-api";
 import { rectangularSelection } from "./rectangularMarking";
 
 export type ComplexNumber = [real: number, imaginary: number];
+
+const fullCircle = Math.PI*2;
+const halfCircle = Math.PI;
 
 export interface SmithSettings {
     canvas: Canvas;
     size: { width: number; height: number };
     gridDensity?: number;
     showExtras?: boolean;
+    showOuterScales?: boolean;
+    showInnerScales?: boolean;
+    zoom?: ModProperty <number>;
+    xCoord?: ModProperty<number>;
+    yCoord?: ModProperty <number>;
     clearMarking?(): void;
     mouseLeave(): void;
 }
@@ -79,7 +88,8 @@ export function render(settings: SmithSettings, points: Point[]) {
         return 0;
     });
 
-    let radius = Math.min(settings.size.width, settings.size.height) / 2;
+    let scaleRadius = settings.zoom?.value() ? Math.min((settings.size.width, settings.size.height)*(100+settings.zoom.value()!))/200:  Math.min(settings.size.width, settings.size.height)/2
+    let radius = settings.showOuterScales ? scaleRadius-60 : scaleRadius;
 
     Object.keys(canvas).forEach((k) => {
         canvas[k as keyof typeof canvas].width = settings.size.width;
@@ -88,13 +98,14 @@ export function render(settings: SmithSettings, points: Point[]) {
 
     const padding = 3;
     radius -= padding;
+    scaleRadius -= padding;
 
     const bgContext = canvas.bg.getContext("2d")!;
     const mainContext = canvas.main.getContext("2d")!;
     const highlightContext = canvas.hightlight.getContext("2d")!;
 
-    const centerX = canvas.main.width / 2;
-    const centerY = canvas.main.height / 2;
+    let centerX = settings.xCoord ?  (canvas.main.width / 2) - (settings.xCoord.value()!*0.01*radius) : canvas.main.width / 2;
+    let centerY = settings.yCoord ?  canvas.main.height / 2  - (settings.yCoord.value()!*0.01*radius): canvas.main.height / 2;
 
     bg(bgContext);
     let rendered: RenderedPoint[] = [];
@@ -121,7 +132,7 @@ export function render(settings: SmithSettings, points: Point[]) {
                 rc.cy * radius * -1 + centerY,
                 rc.r * radius,
                 0,
-                2 * Math.PI,
+                fullCircle,
                 false
             );
             mainContext.stroke();
@@ -134,7 +145,7 @@ export function render(settings: SmithSettings, points: Point[]) {
                     ic.cy * radius * -1 + centerY,
                     ic.r * radius,
                     0,
-                    2 * Math.PI,
+                    fullCircle,
                     false
                 );
                 mainContext.stroke();
@@ -156,7 +167,7 @@ export function render(settings: SmithSettings, points: Point[]) {
         const cx = p.r[0] * radius + centerX;
         const cy = p.r[1] * radius * -1 + centerY;
         const pointRadius = 2;
-        mainContext.arc(cx, cy, pointRadius, 0, 2 * Math.PI, false);
+        mainContext.arc(cx, cy, pointRadius, 0, fullCircle, false);
         rendered.push({
             cx,
             cy,
@@ -166,6 +177,30 @@ export function render(settings: SmithSettings, points: Point[]) {
 
         mainContext.fill();
     }
+
+    // Zoom with wheel
+    canvas.main.onwheel = (e: WheelEvent) => {
+        settings.zoom?.set( Math.min(Math.max( settings.zoom?.value()! - e.deltaY, 0), 400));
+    };
+
+    // Move canvas with arrow keys
+    document.onkeydown = (e: KeyboardEvent) => {
+        var speed = 2;
+        switch(e.key){
+            case ("ArrowRight") :
+                settings.xCoord?.set(Math.min(settings.xCoord.value()!+speed, 100));
+                break;
+            case ("ArrowLeft") :
+                settings.xCoord?.set(Math.max(settings.xCoord.value()!-speed, -100));
+                break;
+            case ("ArrowUp") : 
+                settings.yCoord?.set(Math.max(settings.yCoord.value()!-speed, -100));
+                break;
+            case ("ArrowDown") : 
+                settings.yCoord?.set(Math.min(settings.yCoord.value()!+speed, 100));
+                break;
+        }
+    };
 
     rectangularSelection(canvas.main, rendered, {
         mark(p, e) {
@@ -221,38 +256,160 @@ export function render(settings: SmithSettings, points: Point[]) {
         context.strokeStyle = "#222222";
         context.lineWidth = 1;
 
+        if(settings.showOuterScales)
+        {
+            // Add a circle as a clip path
+            circleClip(context, centerX, centerY, scaleRadius);
+            context.fillStyle = "rgb(100, 137, 250)";
+            context.strokeStyle = "rgb(100, 137, 250)";
+
+            // Outer scales
+            for(let i = 0; i < 4; i++){
+                if(i == 3){
+                    context.fillStyle = "rgb(255, 78, 51)";
+                    context.strokeStyle = "rgb(255, 78, 51)";
+                }
+                context.beginPath();
+                context.arc(centerX, centerY, scaleRadius-(17*i), 0, 2 * Math.PI, false);
+                context.stroke();
+            }
+
+            // Scale text prep
+            context.fillStyle = "#222222";
+            context.strokeStyle = "#222222";
+            context.save();
+            context.translate(centerX, centerY);
+            context.textAlign = "center";
+
+            //Scale 1. 180>0>-170
+            context.rotate(-halfCircle/2);
+            let steps = 36*5;
+
+            for(let i = 0; i < steps; i++){
+                if(i%5 == 0){
+                    context.fillText(i== 0 ? "±" + (180-(2*i)) : (180-(2*i)).toString(), 0, -scaleRadius+(17*2 + 11));
+                    context.lineWidth = 1;
+                }
+                
+                context.beginPath();
+                context.moveTo(0, -scaleRadius+(17*3));
+                context.lineTo(0, -scaleRadius+(17*2 + 11 + 3));
+                context.stroke();
+                context.rotate(fullCircle/steps);
+                context.lineWidth = 0.5;
+            }
+
+            //Scale 2 & 3. 0.0->0.49
+            steps = 50*5;
+            for(let i = 0; i < steps; i++){
+                if(i%5 == 0){
+                    // Show less numbers if visualization is very small to avoid clutter
+                    if(scaleRadius > 280 || i%10 == 0){
+                        context.fillText(i == 0 ? "0,0" : ((steps-i)/500).toString(), 0, -scaleRadius+(17*1 + 11 + 1));
+                        context.fillText(i == 0 ? "0,0" :(i/500).toString(), 0, -scaleRadius+(17*0 + 11 + 1));
+                    }
+                    context.lineWidth = 1;
+                    context.beginPath();
+                    context.moveTo(0, -scaleRadius+(17*1 + 3));
+                    context.lineTo(0, -scaleRadius+(17*1 - 3));
+                }
+                else{
+                    context.lineWidth = 0.5;
+                    context.beginPath();
+                    context.moveTo(0, -scaleRadius+(17*1 + 2));
+                    context.lineTo(0, -scaleRadius+(17*1 - 2));
+                }
+                context.stroke();
+                context.rotate(fullCircle/steps);
+            }
+
+            context.restore();
+        }
+
+        enum Quadrant {
+            First,
+            Second,
+            Third,
+            Fourth
+        }
+
+        function innerScalesInCircle(text : string[], quadrant: Quadrant){
+            // vsvensso: 
+            context.save();
+            context.translate(centerX, centerY);
+            context.rotate(-halfCircle/2);
+            var denominator = 16;
+            var increase = 0;
+
+            for(let i = 0; i < text.length; i++){
+                denominator += quadrant == Quadrant.First || quadrant == Quadrant.Second ? 2+increase : -2+increase;
+                context.rotate(quadrant == Quadrant.First || quadrant == Quadrant.Third ? halfCircle/denominator : -halfCircle/denominator);
+                context.fillText(text[i], quadrant == Quadrant.First || quadrant == Quadrant.Fourth ? radius-17 : -radius+3, -1, 15);
+                increase += quadrant == Quadrant.First || quadrant == Quadrant.Second ? 1 : -0.2/(i+1);
+            }
+
+            context.restore();
+        }
+
+        if(settings.showInnerScales){
+            var text = ["1.2", "1.4", "1.6", "1.8", "2.0"];
+            innerScalesInCircle(text, Quadrant.First);
+            innerScalesInCircle(text, Quadrant.Second);
+
+            text = ["0.8", "0.6", "0.4"];
+            innerScalesInCircle(text, Quadrant.Third);
+            innerScalesInCircle(text, Quadrant.Fourth);
+        }
+        
         // Add a circle as a clip path
         circleClip(context, centerX, centerY, radius);
 
+        // Circle border
         context.beginPath();
-        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        context.arc(centerX, centerY, radius, 0, fullCircle, false);
         context.stroke();
 
+        // Horizontal line through chart
         context.beginPath();
         context.moveTo(centerX - radius, centerY);
         context.lineTo(centerX + radius, centerY);
         context.stroke();
 
+        // Vertical line through chart
         context.beginPath();
         context.moveTo(centerX, centerY - radius);
         context.lineTo(centerX, centerY + radius);
         context.stroke();
 
+
+        context.save();
+        context.translate(centerX, centerY);
+        context.rotate(-halfCircle/2);
+        // Real circles
         for (let index = 0; index < realCircles.length; index++) {
             const circle = realCircles[index];
             context.beginPath();
             context.strokeStyle = index % 5 == 0 ? "rgba(2,2,2, 0.6)" : "rgba(2,2,2,0.3)";
             context.arc(
-                circle.cx * radius + centerX,
-                circle.cy * radius + centerY,
+                circle.cy * radius,
+                circle.cx * radius,
                 circle.r * radius,
                 0,
-                2 * Math.PI,
+                fullCircle,
                 false
             );
             context.stroke();
-        }
 
+            if(settings.showInnerScales){
+                // Horizontal scales 
+                if((index % 5 == 0 && index/5 < 7) || index/5 < 1){
+                    context.fillText((index/5).toString(),  3,  circle.cx * radius - circle.r * radius - 2);
+                }
+            }
+        }
+        context.restore();
+
+        // Imaginary circles
         for (let index = 0; index < imaginaryCircles.length; index++) {
             const circle = imaginaryCircles[index];
             context.beginPath();
@@ -262,7 +419,7 @@ export function render(settings: SmithSettings, points: Point[]) {
                 circle.cy * radius * -1 + centerY,
                 circle.r * radius,
                 0,
-                2 * Math.PI,
+                fullCircle,
                 false
             );
             context.stroke();
