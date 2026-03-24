@@ -5,6 +5,7 @@ import { readFile, writeFile } from "fs/promises";
 import path from "path";
 import {
     Manifest,
+    ManifestParameter,
     ModType,
     ParameterType,
     QuietOtions,
@@ -56,6 +57,74 @@ function toCsType(type: ParameterType) {
     }
 }
 
+function toArgumentLiteralType(type: ParameterType): string {
+    switch (type) {
+        case "Boolean":
+            return "boolean";
+        case "String":
+            return "string";
+        case "Currency":
+        case "Integer":
+        case "Real":
+        case "SingleReal":
+            return "number";
+        case "LongInteger":
+            return "BigInt";
+        case "Date":
+        case "DateTime":
+        case "Time":
+            return "System.DateTime";
+        case "TimeSpan":
+            return "System.TimeSpan";
+        default:
+            return type;
+    }
+}
+
+function toArgumentType(param: ManifestParameter): string {
+    if (!param.type) {
+        return "unknown";
+    }
+
+    // For an optional parameter, "no value" is expressed by wrapping null in the argument, e.g.
+    // `new ActionModScriptArgumentNode(null)`. Every argument type is generic, and null construction
+    // has type `...<null>`, so the null is added inside the generic (`...Node<DataColumn | null>`,
+    // `...DataView<DataTable | null>`, ...). This keeps a null argument assignable to an optional slot
+    // only: a required slot stays `...<X>` and rejects it. DataView/Expression are parameterized by
+    // their data table (null data table = "no value").
+    const orNull = param.optional ? " | null" : "";
+    const dataView = `Spotfire.Dxp.Application.Mods.ActionModScriptArgumentDataView<Spotfire.Dxp.Data.DataTable${orNull}>`;
+    const expression = `Spotfire.Dxp.Application.Mods.ActionModScriptArgumentExpression<Spotfire.Dxp.Data.DataTable${orNull}>`;
+
+    switch (param.type) {
+        case "DataTable":
+            return `Spotfire.Dxp.Application.Mods.ActionModScriptArgumentNode<Spotfire.Dxp.Data.DataTable${orNull}>`;
+        case "Page":
+            return `Spotfire.Dxp.Application.Mods.ActionModScriptArgumentNode<Spotfire.Dxp.Application.Page${orNull}>`;
+        case "Visualization":
+            return `Spotfire.Dxp.Application.Mods.ActionModScriptArgumentNode<Spotfire.Dxp.Visuals.Visual${orNull}>`;
+
+        case "DataColumn":
+            if (param.array) {
+                return dataView;
+            }
+            return `Spotfire.Dxp.Application.Mods.ActionModScriptArgumentNode<Spotfire.Dxp.Data.DataColumn${orNull}>`;
+
+        case "DataViewDefinition":
+            return dataView;
+
+        default: {
+            // Scalar types: Expression | Literal<T>
+            if (param.enum) {
+                const enumUnion = param.enum.map((x) => `"${x}"`).join(" | ");
+                return `${expression} | Spotfire.Dxp.Application.Mods.ActionModScriptArgumentLiteral<${enumUnion}${orNull}>`;
+            }
+            const literalType = toArgumentLiteralType(param.type);
+            return `${expression} | Spotfire.Dxp.Application.Mods.ActionModScriptArgumentLiteral<${literalType}${orNull}>`;
+        }
+    }
+}
+
 export type GenerateEnvFileResult = Result<string, string[]>;
 
 export async function generateEnvFile({
@@ -74,7 +143,7 @@ export async function generateEnvFile({
     envFileContent +=
         '/// <reference types="@spotfire/mods-api/action-mods/api.d.ts" />\n';
 
-    if (!manifest.scripts) {
+    if (!manifest.scripts && !manifest.agents) {
         return {
             status: "success",
             result: envFileContent,
@@ -92,7 +161,7 @@ export async function generateEnvFile({
         error(apiVersionResult.error);
     }
 
-    for (const script of manifest.scripts!) {
+    for (const script of manifest.scripts ?? []) {
         if (!script.name) {
             error("Script has no name.");
         }
@@ -137,6 +206,13 @@ export async function generateEnvFile({
                     )}. These files will not be reachable from within the scripts in this action mod unless you increase your apiVersion.`
                 );
             }
+
+            if (apiVersion.supportsFeature("ScriptInvocations")) {
+                tsType += `
+    /** Utilities for invoking action mod scripts. */
+    utils: Spotfire.Dxp.Application.Mods.ActionModScriptUtils<ActionModScriptDefinitions>;
+`;
+            }
         }
 
         for (const param of script.parameters ?? []) {
@@ -158,8 +234,7 @@ export async function generateEnvFile({
                     )
                 ) {
                     error(
-                        `Parameter '${
-                            param.name
+                        `Parameter '${param.name
                         }' is declared optional but the mod targets an apiVersion earlier than ${formatVersion(
                             features.OptionalParameter
                         )}. Consider targeting a later version to enable this feature.`
@@ -181,8 +256,7 @@ export async function generateEnvFile({
                     !apiVersionResult.result.supportsFeature(feature)
                 ) {
                     error(
-                        `Parameter '${param.name}' is type '${
-                            param.type
+                        `Parameter '${param.name}' is type '${param.type
                         }' but the mod targets an apiVersion earlier than ${formatVersion(
                             features[feature]
                         )}. Consider targeting a later version to use this type.`
@@ -197,8 +271,7 @@ export async function generateEnvFile({
                         )
                     ) {
                         error(
-                            `Parameter '${
-                                param.name
+                            `Parameter '${param.name
                             }' declares an enum but the mod targets an apiVersion earlier than ${formatVersion(
                                 features.EnumParameter
                             )}. Consider targeting a later version to enable this feature.`
@@ -212,8 +285,7 @@ export async function generateEnvFile({
                         !apiVersionResult.result.supportsFeature("DataViews")
                     ) {
                         error(
-                            `Parameter '${
-                                param.name
+                            `Parameter '${param.name
                             }' declares array but the mod targets an apiVersion earlier than ${formatVersion(
                                 features.DataViews
                             )}. Consider targeting a later version to enable this feature.`
@@ -236,6 +308,64 @@ export async function generateEnvFile({
         tsType = tsType.trimEnd();
         tsType += "\n}\n";
         envFileContent += tsType;
+    }
+
+    if (
+        apiVersionResult.status === "success" &&
+        apiVersionResult.result.supportsFeature("ScriptInvocations")
+    ) {
+        let defsType = "\ninterface ActionModScriptDefinitions {\n";
+        for (const script of manifest.scripts ?? []) {
+            if (!script.id) {
+                continue;
+            }
+            defsType += `    "${script.id}": {\n`;
+            for (const param of script.parameters ?? []) {
+                if (!param.name || !param.type || !isParameterType(param.type)) {
+                    continue;
+                }
+                // Optional parameters use an optional key so they can be omitted. For the generic
+                // argument types, null is also accepted inside the generic (see toArgumentType), so
+                // `new ActionModScriptArgumentNode(null)` type-checks for optional params only.
+                const argType = toArgumentType(param);
+                const optionalMarker = param.optional ? "?" : "";
+                defsType += `        ${param.name}${optionalMarker}: ${argType};\n`;
+            }
+            defsType += `    };\n`;
+        }
+        defsType += "}\n";
+        envFileContent += defsType;
+    }
+
+    const supportsAgents =
+        apiVersionResult.status === "success" &&
+        apiVersionResult.result.supportsFeature("Agents");
+
+    if (supportsAgents && manifest.agents) {
+        const resourcesType =
+            manifest.files != null
+                ? `<${manifest.files.map((f) => `"${f}"`).join(" | ")}>`
+                : "";
+
+        const agentContextTypes: Record<string, { contextName: string; apiType: string }> = {
+            marking: { contextName: "MarkingContext", apiType: "MarkingInsightAgentContext" },
+            visual: { contextName: "VisualContext", apiType: "VisualInsightAgentContext" },
+        };
+
+        const presentTypes = new Set(manifest.agents.map((i) => i.type));
+        for (const type of presentTypes) {
+            const mapping = type != null ? agentContextTypes[type] : undefined;
+            if (mapping == null) {
+                continue;
+            }
+
+            let contextInterface = `\ninterface ${mapping.contextName} {\n`;
+            contextInterface += `    context: Spotfire.Dxp.Application.Insights.${mapping.apiType};\n`;
+            contextInterface += `    utils: Spotfire.Dxp.Application.Mods.ActionModScriptUtils<ActionModScriptDefinitions>;\n`;
+            contextInterface += `    resources: Spotfire.Dxp.Application.Mods.ActionModResource${resourcesType};\n`;
+            contextInterface += "}\n";
+            envFileContent += contextInterface;
+        }
     }
 
     if (!hasFailed) {
@@ -498,7 +628,7 @@ async function getEsbuildOptions({
 
                     const oldVal =
                         defaultConfig[
-                            defaultConfigKey as keyof typeof defaultConfig
+                        defaultConfigKey as keyof typeof defaultConfig
                         ];
                     const newVal = userConfig[defaultConfigKey];
                     if (oldVal !== newVal) {

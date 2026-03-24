@@ -3,8 +3,9 @@
 import { Command } from "commander";
 import { createTemplate, TemplateType } from "./new-template.js";
 import { build } from "./build.js";
-import { ModType, getVersion, parseApiVersion } from "./utils.js";
+import { ModType, getVersion, parseApiVersion, AgentType } from "./utils.js";
 import { addScript } from "./add-script.js";
+import { addAgent } from "./add-agent.js";
 import { addParameter } from "./add-parameter.js";
 
 declare module "commander" {
@@ -28,7 +29,7 @@ Command.prototype.quiet = function () {
         .command("new")
         .argument(
             "<mod-type>",
-            "what you want to create: action, visualization, or gitignore",
+            "what you want to create: action, agent, visualization, or gitignore",
             (arg) => assertTemplateType(arg)
         )
         .description("Create a new Mods project based on a template")
@@ -90,6 +91,25 @@ Command.prototype.quiet = function () {
         .action(exec(addScript));
 
     program
+        .command("add-agent")
+        .argument("<id>", "the id of the agent")
+        .description("add an agent to the action mod")
+        .option("--name <name>", "the name of the agent")
+        .option("--type <type>", "the type of the agent (marking or visual)", (arg) => assertAgentType(arg), "marking")
+        .option(
+            "--scripts <path>",
+            "path to the folder containing all scripts",
+            "src/scripts"
+        )
+        .option(
+            "--manifest-path <path>",
+            "path to the mod-manifest.json file",
+            "mod-manifest.json"
+        )
+        .quiet()
+        .action(exec(addAgent));
+
+    program
         .command("add-parameter")
         .argument(
             "<script-id>",
@@ -121,13 +141,15 @@ Command.prototype.quiet = function () {
     function assertTemplateType(arg: TemplateType | string) {
         if (arg === "action") {
             return ModType.Action;
+        } else if (arg === "agent") {
+            return ModType.Agent;
         } else if (arg === "visualization") {
             return ModType.Visualization;
         } else if (arg === "gitignore") {
             return "gitignore";
         } else {
             program.error(
-                `Invalid template type '${arg}'. Possible values are: action, visualization, or gitignore.`
+                `Invalid template type '${arg}'. Possible values are: action, agent, visualization, or gitignore.`
             );
         }
     }
@@ -145,5 +167,16 @@ Command.prototype.quiet = function () {
         } else {
             return arg;
         }
+    }
+
+    function assertAgentType(arg: string): AgentType {
+        const valid: AgentType[] = ["marking", "visual"];
+        if (valid.includes(arg as AgentType)) {
+            return arg as AgentType;
+        }
+
+        return program.error(
+            `Invalid agent type '${arg}'. Possible values are: ${valid.join(", ")}.`
+        ) as never;
     }
 })();

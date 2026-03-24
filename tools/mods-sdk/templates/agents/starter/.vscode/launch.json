@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to script debugger",
+            "type": "node",
+            "request": "attach",
+            "trace": true,
+            "address": "127.0.0.1",
+            "sourceMaps": true,
+            "port": "${input:debugPort}",
+            "timeout": 20000
+        }
+    ],
+    "inputs": [
+        {
+            "id": "debugPort",
+            "type": "promptString",
+            "description": "The port displayed in the Spotfire developer UI",
+            "default": "9222"
+        }
+    ]
+}

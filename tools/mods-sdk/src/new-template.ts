@@ -32,6 +32,9 @@ async function getTemplateFolder(type: TemplateType) {
         case ModType.Visualization:
             typeFolder = "visualizations";
             break;
+        case ModType.Agent:
+            typeFolder = "agents";
+            break;
         case "gitignore":
             typeFolder = "gitignore";
             break;
@@ -133,8 +136,14 @@ async function createModTemplate({
             );
         }
 
+        const defaultApiVersion =
+            modType === ModType.Agent
+                ? "2.5"
+                : modType === ModType.Action
+                    ? "2.0"
+                    : "1.3";
         const apiVersion = parseApiVersion(
-            _apiVersion ?? (modType === ModType.Action ? "2.0" : "1.3")
+            _apiVersion ?? defaultApiVersion
         );
         if (apiVersion.status === "error") {
             throw new Error(

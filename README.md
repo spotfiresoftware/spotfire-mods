@@ -47,6 +47,7 @@ The Mods API is backwards compatible but not forwards compatible. Pick a Mod API
 | Spotfire 14.6    | 2.2             | Action & Visualization |
 | Spotfire 14.7    | 2.3             | Action & Visualization |
 | Spotfire 14.8    | 2.4             | Action & Visualization |
+| Spotfire 15.0    | 2.5             | Action & Visualization |
 
 A mod that uses features not available in the specified API version will fail at runtime. The details in the error message differs depending on the visualization type and whether the Spotfire instance is connected to a development server.
 
