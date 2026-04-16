@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.152.2"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/whats-new/index.xml">
+<meta name="generator" content="Hugo 0.157.0"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/whats-new/index.xml">
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
@@ -13,14 +13,14 @@
 <title>What&#39;s new? | Spotfire® Mods</title>
   <meta itemprop="name" content="What&#39;s new?">
   <meta itemprop="description" content="This page describes some of the latest additions to the mods API and SDK.">
-  <meta itemprop="datePublished" content="2025-12-18T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-12-18T00:00:00+00:00">
-  <meta itemprop="wordCount" content="2497">
+  <meta itemprop="datePublished" content="2026-04-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-04-07T00:00:00+00:00">
+  <meta itemprop="wordCount" content="4253">
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.611dbb678289efd7ec655cc8ba608a9038169188984397cb722317f450975b34.css" as="style">
-<link href="/spotfire-mods/scss/main.min.611dbb678289efd7ec655cc8ba608a9038169188984397cb722317f450975b34.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.a15f7054f5a17fd48e8fd19215718fefcf8aad314049dce32c166b18e614cef0.css" as="style">
+<link href="/spotfire-mods/scss/main.min.a15f7054f5a17fd48e8fd19215718fefcf8aad314049dce32c166b18e614cef0.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -615,22 +615,28 @@
 
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#mods-api-23">Mods API 2.3</a>
+    <li><a href="#mods-api-24">Mods API 2.4</a>
       <ul>
         <li><a href="#visualization-mods">Visualization mods</a></li>
         <li><a href="#action-mods">Action mods</a></li>
       </ul>
     </li>
+    <li><a href="#mods-api-23">Mods API 2.3</a>
+      <ul>
+        <li><a href="#visualization-mods-1">Visualization mods</a></li>
+        <li><a href="#action-mods-1">Action mods</a></li>
+      </ul>
+    </li>
     <li><a href="#mods-api-22">Mods API 2.2</a>
       <ul>
-        <li><a href="#action-mods-1">Action mods</a></li>
-        <li><a href="#visualization-mods-1">Visualization mods</a></li>
+        <li><a href="#action-mods-2">Action mods</a></li>
+        <li><a href="#visualization-mods-2">Visualization mods</a></li>
       </ul>
     </li>
     <li><a href="#mods-api-21">Mods API 2.1</a>
       <ul>
-        <li><a href="#action-mods-2">Action mods</a></li>
-        <li><a href="#visualization-mods-2">Visualization mods</a></li>
+        <li><a href="#action-mods-3">Action mods</a></li>
+        <li><a href="#visualization-mods-3">Visualization mods</a></li>
       </ul>
     </li>
   </ul>
@@ -672,7 +678,7 @@
 	
 	
 	
-	<p class="-text-secondary pt-3 h6" >Reading time: 11 minutes and 45 seconds.</p>
+	<p class="-text-secondary pt-3 h6" >Reading time: 19 minutes and 45 seconds.</p>
 	<h1>What&#39;s new?</h1>
 	<div class="lead">This page describes some of the latest additions to the mods API and SDK.</div>
 	
@@ -683,6 +689,167 @@
 <li><a href="https://www.npmjs.com/package/@spotfire/mods-dev-server">@spotfire/mods-dev-server</a></li>
 </ul>
 <p>If you have started from an SDK template, simply run <code>npm update</code> to get the latest compatible versions.</p>
+<h2 id="mods-api-24">Mods API 2.4</h2>
+<p>This version of the mods API extends the multiple data view definition feature introduced in version 2.3 by allowing visualization mods to define a dynamic number of data views.
+This feature enables the ability to develop mod visualizations with a dynamic number of layers of a certain type.
+Visualization mods also contain many more additions such as the ability to extend the axes of another data view, new transaction APIs, and new readable APIs.</p>
+<p>Version 2.4 does not contain any addition to the action mods framework itself, but many API additions have been made as part of Spotfire 14.8.</p>
+<h3 id="visualization-mods">Visualization mods</h3>
+<h4 id="dynamic-layers">Dynamic layers</h4>
+<p>With version 2.4 of the visualization mods API you can define layer types via the <code>&quot;layers&quot;</code> property in the mod manifest.
+Layer types may contain a single main data view definition and many named data view definitions.
+A layer may also define its own mod properties whose values are unique to each instance of the layer.
+A layer can be added via Spotfire&rsquo;s UI (unless <code>&quot;disableAddRemove&quot;</code> is set to <code>true</code>) or via the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayers.html#add">ModLayers.add</a> API.
+You can think of layers as sub visualizations inside your visualization mod, and the layer instance type <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html">ModLayer</a> supports many of the same APIs that the mod visualization does.</p>
+<p>The dynamic nature of layers allow you to create advanced visualizations which contain sub elements of a certain type.
+For instance you can now create a graphical table where each column defines a mini visualization such as a scatter plot or a bar chart.
+Another use-case is layered visualizations such as map charts where you may have many feature or scatter layers stacked on top of each other.</p>
+<p>To keep axes in sync across data views you can inherit the axis and data configuration via the <code>&quot;extendedAxes&quot;</code> property.
+This property takes an array of axis names defined further up in the manifest.</p>
+<p>To see a simple example of a visualization using the layers feature checkout the <a href="https://github.com/spotfiresoftware/spotfire-mods/tree/master/examples/ts-dev-graphical-table">ts-dev-graphical-table</a> example project.
+This project implements a graphical table supporting the bar chart and scatter plot mini visualizations.
+It uses the extended axes feature to sync the &ldquo;Row by&rdquo; axis across mini visualizations.</p>
+<p>The most straightforward way to show layers in a visualization mod is to add the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#layers">ModVisualization.layers</a> readable to your main render loop and render each layer instance consecutively.
+For example:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">layers</span><span style="color:#000;font-weight:bold">());</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">context</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getRenderContext</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">render</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">render</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">layers</span>: <span style="color:#204a87;font-weight:bold">Spotfire.ModLayers</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8f5902;font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">layer</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">layers</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">items</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">data</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">layer</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">errors</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">data</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getErrors</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">errors</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">length</span> <span style="color:#ce5c00;font-weight:bold">&gt;</span> <span style="color:#0000cf;font-weight:bold">0</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#8f5902;font-style:italic">// Show the error.
+</span></span></span><span style="display:flex;"><span>                <span style="color:#204a87;font-weight:bold">continue</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8f5902;font-style:italic">// Render the layer according to its type.
+</span></span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">switch</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">layer</span><span style="color:#000;font-weight:bold">.</span><span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#204a87;font-weight:bold">case</span> <span style="color:#4e9a06">&#34;FeatureLayer&#34;</span><span style="color:#ce5c00;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#8f5902;font-style:italic">// Render feature layer
+</span></span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#8f5902;font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
+</span></span></code></pre></div><p>The data views for layers are eagerly materialized for best performance in most cases.
+If your mod visualization requires a more advanced rendering flow you can pass a <a href="/spotfire-mods/api-docs/visualization-mods/types/LayerMode.html">LayerMode</a> argument to the layers readable to gain greater control over when data is materialized.
+For instance passing <code>&quot;LazyData&quot;</code> means Spotfire will not attempt to materialize the data view until the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html#data-1">ModLayer.data</a> readable is awaited.
+For total control you can pass the <code>&quot;CollectionOnly&quot;</code> layer mode and setup individual readables on each layer instance.</p>
+<h4 id="extended-axes">Extended axes</h4>
+<p>Mod visualization containing multiple data views often need to share some common splitting axes across all views being visualized.
+For instance a graphical table contains a top-level &ldquo;Row by&rdquo; axis which every mini visualization needs to respect.
+Previously this required duplicating the &ldquo;Row by&rdquo; axis across all data view definitions and adding error modes when the axes&rsquo; data tables and expression went out-of-sync.
+The <code>&quot;extendedAxes&quot;</code> property allows you to solve this issue by specifying a list of axes you want to inherit from an ancestor data view.
+For instance the manifest of a graphical table containing a bar chart mini visualization may look something like this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;apiVersion&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2.4&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;dataViewDefinition&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[{</span> <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Row by&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">&#34;placement&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;left&#34;</span> <span style="color:#000;font-weight:bold">}]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;layers&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;type&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Bar Chart&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">&#34;dataViewDefinition&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#204a87;font-weight:bold">&#34;extendedAxes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#4e9a06">&#34;Row by&#34;</span><span style="color:#000;font-weight:bold">],</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#204a87;font-weight:bold">&#34;axes&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Category&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;categorical&#34;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">},</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Value&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#204a87;font-weight:bold">&#34;mode&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;continuous&#34;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span></code></pre></div><p>When configuring a bar chart instance in this visualization the &ldquo;Data&rdquo; configuration will not be availble since it is controlled by the top-level data view containing the &ldquo;Row by&rdquo; axis.
+The axis can be read via the layers regular data readable similar to any other axis, but attempting to configure it will throw an error since its expression is controlled by the top-level data view.</p>
+<h4 id="title">Title</h4>
+<p>There is a new readable <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#title">ModVisualization.title</a> that allows mod to read, subscribe to and modify the mod title. Dynamic layers also has an identical readable <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html#title">ModLayer.title</a>.</p>
+<h4 id="pauseresume">Pause/resume</h4>
+<p>Sometimes a mod has a need to pause rendering, for example when the user begins a long running operation like area marking. In version 2.4 the reader can be temporarily stopped using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ReaderSubscription.html#pause">pause</a> function and resumed using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ReaderSubscription.html#resume">resume</a> function. While paused, no document changes will cause the render callback function to be invoked. Upon resume, the API will first await any current modifications, like marking operations, before the next render callback will occur. This will ensure a non flickering experience on resume.</p>
+<h4 id="readable-api-additions">Readable API additions</h4>
+<p>All readables in version 2.4 and upwards will cache its result internally, and return new instances only when there is a new value available on the backend. The underlying mechanism used is the same as when a reader invoke its registered callback function. This is an optimization required for the new <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#layers">layer</a> functionality, and should in most cases not require any code changes in existing mods. Only mods that rely on reference equality on readables will need to be refactored. A performance benefit is that awaiting a readable like <code>(await mod.property(&quot;myProperty&quot;)).value()</code> will immediately return the cached result until the mod property changes in the backend.</p>
+<p>In version 2.4 it is also valid to create multiple readers for a single readable. For example in the example below, every <code>&quot;layerReader&quot;</code> could include a mod global property <code>mod.property(&quot;renderStyle&quot;)</code> that would affect the rendering of all layers.</p>
+<h6 id="dynamically-creating-readers">Dynamically creating readers</h6>
+<p>Before the introduction of dynamic layers, all <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Readable.html">readables</a> that could be used when creating a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html">reader</a> was statically known from the API and the manifest. With dynamic layers, it is not always possible to statically know what readables that a reader require. For example, a mod that renders layers independently from eachother may want to set up a separate reader for every layer instance. While bookkeeping of new and removed layers needs to be performed by the mod itself, it may be handy to create one reader per layer. This is per se not</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">layers</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;CollectionOnly&#34;</span><span style="color:#000;font-weight:bold">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">layerReaders</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">Map</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">String</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#c4a000">Spotfire.ReaderSubscription</span><span style="color:#000;font-weight:bold">&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">render</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">render</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">layers</span>: <span style="color:#204a87;font-weight:bold">Spotfire.ModLayers</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">layerIds</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">layers</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">items</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">map</span><span style="color:#000;font-weight:bold">((</span><span style="color:#000">l</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000">l</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">id</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">newLayers</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">layers</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">items</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">filter</span><span style="color:#000;font-weight:bold">((</span><span style="color:#000">l</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000">layerReaders</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">has</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">l</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">id</span><span style="color:#000;font-weight:bold">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">removedLayers</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87">Array</span><span style="color:#000;font-weight:bold">.</span><span style="color:#204a87;font-weight:bold">from</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">layerReaders</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">keys</span><span style="color:#000;font-weight:bold">()).</span><span style="color:#000">filter</span><span style="color:#000;font-weight:bold">((</span><span style="color:#000">k</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000">layerIds</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">includes</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">k</span><span style="color:#000;font-weight:bold">));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">layer</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">newLayers</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">layerReaders</span><span style="color:#000;font-weight:bold">.</span><span style="color:#204a87;font-weight:bold">set</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">layer</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">id</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">layer</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">id</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">layer</span><span style="color:#000;font-weight:bold">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">id</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">removedLayers</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">layerReaders</span><span style="color:#000;font-weight:bold">.</span><span style="color:#204a87;font-weight:bold">get</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">id</span><span style="color:#000;font-weight:bold">)</span><span style="color:#ce5c00;font-weight:bold">?</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">cancel</span><span style="color:#000;font-weight:bold">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">layerReaders</span><span style="color:#000;font-weight:bold">.</span><span style="color:#204a87;font-weight:bold">delete</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">id</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">`Removed layer: </span><span style="color:#4e9a06">${</span><span style="color:#000">id</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">`</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">id</span>: <span style="color:#204a87;font-weight:bold">string</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">layer</span>: <span style="color:#204a87;font-weight:bold">Spotfire.ModLayer</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">`Add layer: </span><span style="color:#4e9a06">${</span><span style="color:#000">id</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">`</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">layerReader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">layer</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(),</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">property</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">number</span><span style="color:#000;font-weight:bold">&gt;(</span><span style="color:#4e9a06">&#34;renderStyle&#34;</span><span style="color:#000;font-weight:bold">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">return</span> <span style="color:#000">layerReader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">renderLayer</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">renderLayer</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">data</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">renderStyle</span>: <span style="color:#204a87;font-weight:bold">Spotfire.ModPropertyValue</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">number</span><span style="color:#000;font-weight:bold">&gt;)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">`Render layer: </span><span style="color:#4e9a06">${</span><span style="color:#000">id</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06"> with style </span><span style="color:#4e9a06">${</span><span style="color:#000">renderStyle</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">value</span><span style="color:#000;font-weight:bold">()</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">`</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
+</span></span></code></pre></div><h6 id="using-readerhasreadablechanged">Using Reader.hasReadableChanged</h6>
+<p>A layered mod that requires all layers when rendering may still want to query the API for udpate status on layer readables, similar to the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html#hasvaluechanged">Reader.hasValueChanged</a> method. This method will not work for layer.data() in the example below since it expects the resolved value, not the readable itself. There is a new similar method in API version 2.4, <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html#hasvaluechanged">Reader.hasReadableChanged</a>, that will tell whether a readable has a new value available since the last query. This is subtly different from its sibling method that tells whether the current argument has a new value compared to the last invocation.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">layers</span><span style="color:#000;font-weight:bold">());</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">render</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">render</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">layers</span>: <span style="color:#204a87;font-weight:bold">Spotfire.ModLayers</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">layer</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">layers</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">items</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">hasReadableChanged</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">layer</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">()))</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#8f5902;font-style:italic">// Render the layer.
+</span></span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
+</span></span></code></pre></div><h4 id="any-modification-requiring-prior-user-activation">Any modification requiring prior user activation</h4>
+<p>Mods specifying API version 2.4 will require a prior user gesture before attempting to modify any part of the document. The main purpose for this is to prevent a mod from modifying the document in a render loop, which is an API misuse that mainly breaks the undo/redo mechanism, export errors or other more subtle bugs. Any user gesture, such as key down, mouse down, or scroll wheel, is enough to allow API modifications. Mods specifying API version less than 2.4 will in Spotfire 14.8 or later yield a browser console warning.</p>
+<h4 id="invisible-and-sticky-transactions">Invisible and sticky transactions</h4>
+<p>When modifying the Spotfire analysis via the visualization mods API, it may sometimes be useful to control the undo/redo stack, which is done using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#transaction">transaction</a> API. Prior to 2.4, there was only possible to group a set of modifications into one undo step, and for most usages this was made implicitly by the API.</p>
+<ul>
+<li>
+<p><a href="spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#stickyTransaction">Sticky transaction</a> will automatically merge a set of modifications with the preceding transactions if they share the supplied transaction identifier. This type of transaction is useful for example when the mod updates a mod property when dragging a slider handle, resulting in only the final value being recorded in the undo/redo stack.</p>
+</li>
+<li>
+<p><a href="spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#invisibleTransaction">Invisible transaction</a> allows the mod author to make document modifications that will be invisible in regards to the undo/redo stack. For example if the mod as a notion of currently active section for interaction within the mod, this may be recorded as an invisible transaction. These changes will never produce its own undo/redo step.</p>
+</li>
+</ul>
+<h4 id="reading-data-from-dual-mode-axis">Reading data from dual mode axis</h4>
+<p>Reading row data for dual mod axis is in API versions prior to 2.4 somewhat cumbersome. Before using any of the methods <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#categorical">DataViewRow.categorical</a> or <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#continuous">DataViewRow.continuous</a>, you first need to check th current axis mode to know which of the two methods to use, or the method will throw an error.</p>
+<p>With API version 2.4 there are two new sibling methods; <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#tryCategorical">DataViewRow.tryCategorical</a> or <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#tryContinuous">DataViewRow.tryContinuous</a>. These methods will return null for <em>dual mode</em> axis that currently has an empty expression or does not match the current mode. They will however still throw an error if the <code>&quot;axisName&quot;</code> does not match a dual mode axis.</p>
+<h3 id="action-mods">Action mods</h3>
+<p>No new additions to the action mods framework have been added.
+However, Spotfire 14.8 introduces new features which are supported in the API.
+These include:</p>
+<ul>
+<li>The ability to configure mod visualizations which define dynamic layers via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ModVisualization.html#layers">ModVisualization.Layers</a>.</li>
+<li>Adding statistic layers to reference elements via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.Layers.LayerCollection.html#addnewreferencestatisticlayer">LayerCollection.AddNewReferenceStatisticLayer</a>.</li>
+</ul>
 <h2 id="mods-api-23">Mods API 2.3</h2>
 <p>Version 2.3 of the mods API introduces the ability to define multiple data views in visualization mods.
 This feature enables the ability to develop mod visualizations which contain sub-visualizations (layers), or which consume data from multiple data tables.</p>
@@ -691,14 +858,14 @@ This feature enables the ability to develop mod visualizations which contain sub
 <li>Update the version of <code>&quot;@spotfire/mods-api&quot;</code> in the <code>package.json</code> file to <code>~2.3.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
-<h3 id="visualization-mods">Visualization mods</h3>
+<h3 id="visualization-mods-1">Visualization mods</h3>
 <p>Version 2.3 introduces the biggest new feature to visualization mods since its release; the ability to define multiple data view definitions.
 Previously, a mod could only contain a single data view definition, declared in the mod manifest using the <code>&quot;dataViewDefinition&quot;</code> property.
 This limited mods to only being able to consume data from a single data table, or to require the user of a mod to prepare their data in such a way that it could fit the data view definition.
 Now we have added the ability to define multiple data view definitions via the <code>&quot;namedDataViewDefinitions&quot;</code> property in the manifest.</p>
 <p>For example, a network graph may want to consume data from two different data tables, one table which contains the node definitions, and another which describes the edges between nodes.
 For such a mod, these definitions can be specified as follows:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;apiVersion&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2.3&#34;</span><span style="color:#000;font-weight:bold">,</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;dataViewDefinition&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{},</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;namedDataViewDefinitions&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
@@ -736,20 +903,16 @@ Data view definitions defined within the <code>&quot;namedDataViewDefinitions&qu
 For the manifest defined above, the data can be consumed using the familiar <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#data-2">mod.visualization.data</a> API by providing the name of the data view you want to subscribe to.
 Note that other APIs used to get or set data table or axis information now also take an optional name parameter for the cases where they are defined in a named data view definition.
 The render function for the network graph can look something like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Nodes&#34;</span><span style="color:#000;font-weight:bold">),</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Edges&#34;</span><span style="color:#000;font-weight:bold">),</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">);</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Nodes&#34;</span><span style="color:#000;font-weight:bold">),</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">data</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Edges&#34;</span><span style="color:#000;font-weight:bold">));</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">context</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getRenderContext</span><span style="color:#000;font-weight:bold">();</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">render</span><span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">render</span><span style="color:#000;font-weight:bold">(</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000">nodesDataView</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">,</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000">edgesDataView</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">,</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">errors</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">Promise</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">all</span><span style="color:#000;font-weight:bold">([</span><span style="color:#000">nodesDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getErrors</span><span style="color:#000;font-weight:bold">(),</span> <span style="color:#000">edgesDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getErrors</span><span style="color:#000;font-weight:bold">()])).</span><span style="color:#000">flatMap</span><span style="color:#000;font-weight:bold">((</span><span style="color:#000">errs</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000">errs</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">async</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">render</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">nodesDataView</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">edgesDataView</span>: <span style="color:#204a87;font-weight:bold">Spotfire.DataView</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">errors</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">Promise</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">all</span><span style="color:#000;font-weight:bold">([</span><span style="color:#000">nodesDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getErrors</span><span style="color:#000;font-weight:bold">(),</span> <span style="color:#000">edgesDataView</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">getErrors</span><span style="color:#000;font-weight:bold">()])).</span><span style="color:#000">flatMap</span><span style="color:#000;font-weight:bold">(</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">errs</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000">errs</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">errors</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">length</span> <span style="color:#ce5c00;font-weight:bold">&gt;</span> <span style="color:#0000cf;font-weight:bold">0</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">controls</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">errorOverlay</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">show</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">errors</span><span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#204a87;font-weight:bold">return</span><span style="color:#000;font-weight:bold">;</span>
@@ -764,7 +927,7 @@ The render function for the network graph can look something like this:</p>
 </span></span><span style="display:flex;"><span>        <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">controls</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">errorOverlay</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">hide</span><span style="color:#000;font-weight:bold">();</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        <span style="color:#8f5902;font-style:italic">// Render the network graph.
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">signalRenderComplete</span><span style="color:#000;font-weight:bold">();</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
@@ -772,7 +935,7 @@ The render function for the network graph can look something like this:</p>
 A limitation is that axes cannot be shared between data view definitions.
 This means that it is up to you as the mod developer to perform any necessary matching, and to keep axes consistent between data view definitions.
 For instance, to support trellising, you need to add a &ldquo;Trellis by&rdquo; axis to both &ldquo;Nodes&rdquo; and &ldquo;Edges&rdquo;, and report errors if the axes are out of sync or become inconsistent.</p>
-<h3 id="action-mods">Action mods</h3>
+<h3 id="action-mods-1">Action mods</h3>
 <p>No new additions to the action mods framework have been added.
 However, Spotfire 14.7 introduces many new features which are supported in the API.
 These include:</p>
@@ -790,11 +953,11 @@ To upgrade an existing mod, follow these steps:</p>
 <li>Update the version of <code>&quot;@spotfire/mods-api&quot;</code> in the <code>package.json</code> file to <code>~2.2.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
-<h3 id="action-mods-1">Action mods</h3>
+<h3 id="action-mods-2">Action mods</h3>
 <p>No new additions to the action mods framework has been added however, Spotfire 14.6 introduces many new features which are supported in the API.
 One such new feature is &ldquo;reference elements&rdquo;, which allows you to add reference layers to certain visualizations and show trend lines.
 As an example on how to use the new APIs for this feature, see the snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-a-reference-layer-showing-trend-lines">&ldquo;Add a reference layer showing trend lines&rdquo;</a>.</p>
-<h3 id="visualization-mods-1">Visualization mods</h3>
+<h3 id="visualization-mods-2">Visualization mods</h3>
 <p>Version 2.2 of the visualization mods API adds the ability to mark an axis &ldquo;optional&rdquo;.
 This can be done by setting the <code>&quot;optional&quot;</code> property of the axis object in the manifest to <code>true</code>.
 An axis marked optional indicates that it should not be displayed in the new visualization properties panel when in an unconfigured state.
@@ -811,7 +974,7 @@ To upgrade your mod, follow these steps:</p>
 <li>Update the version of <code>@spotfire/mods-api</code> in the <code>package.json</code> file to <code>~2.1.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
-<h3 id="action-mods-2">Action mods</h3>
+<h3 id="action-mods-3">Action mods</h3>
 <p>Version 2.1 of the API contains a lot of improvements and new features for action mods.</p>
 <h4 id="new-parameter-types">New parameter types</h4>
 <p>This API introduces two new types with two variants each: <a href="/spotfire-mods/docs/whats-new/#datacolumn">DataColumn</a> (array: true/false) and <a href="/spotfire-mods/docs/whats-new/#dataviewdefinition">DataViewDefinition</a> (singleColumn: true/false).
@@ -824,14 +987,14 @@ Defining a parameter of this type will allow you to select a column from an exis
 Previously you had to pass a GUID or string to <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataColumnCollection.html#TryGetValue">DataColumnCollection.TryGetValue</a> and check that the method returned <code>true</code>, likely throwing an error if not.
 This was clunky, required writing boilerplate code, and prone to input errors such as misspelling the column name or entering an incorrect GUID.</p>
 <p>Take for instance the <a href="/spotfire-mods/docs/action-mods/snippets/#read-the-values-of-a-column">&ldquo;Read the values of a column&rdquo;</a> snippet which previously started with this code:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">export</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">readColumnValues</span><span style="color:#000;font-weight:bold">({</span> <span style="color:#204a87">document</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">table</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">column</span> <span style="color:#000;font-weight:bold">}</span><span style="color:#ce5c00;font-weight:bold">:</span> <span style="color:#000">ReadColumnValuesParameters</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">export</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">readColumnValues</span><span style="color:#000;font-weight:bold">({</span> <span style="color:#204a87">document</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">table</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">column</span> <span style="color:#000;font-weight:bold">}</span><span style="color:#ce5c00;font-weight:bold">:</span> <span style="color:#000">ReadColumnValuesParameters</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">dataColumn</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">OutParam</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">create</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">DataColumn</span><span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000">table</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Columns</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">TryGetValue</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">column</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">dataColumn</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">out</span><span style="color:#000;font-weight:bold">))</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#204a87">Error</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">`Data table &#39;</span><span style="color:#4e9a06">${</span><span style="color:#000">table</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Name</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">&#39; contains no column with name &#39;</span><span style="color:#4e9a06">${</span><span style="color:#000">column</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">&#39;.`</span><span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#8f5902;font-style:italic">// ...
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span><span style="color:#000;font-weight:bold">}</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
 </span></span></code></pre></div><p>By changing the <code>column</code> parameter type from <code>&quot;String&quot;</code> to <code>&quot;DataColumn&quot;</code>, this code can be completely removed.
 The <code>table</code> parameter is no longer necessary because it can be retrieved via the column&rsquo;s document node context.
 See the snippet for the updated code and manifest.</p>
@@ -904,7 +1067,7 @@ For existing scripts, simply add <code>resources</code> after <code>document</co
 This method returns a <a href="/spotfire-mods/api-docs/action-mods/classes/System.IO.Stream.html">Stream</a>, which is a type accepted by many APIs.
 Let&rsquo;s modify the script so that it creates a text area, adds the image to the text area&rsquo;s image collection, and displays it as HTML.
 The script should look like this:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">HtmlTextArea</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Application</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Visuals</span><span style="color:#000;font-weight:bold">;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">HtmlTextArea</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Application</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Visuals</span><span style="color:#000;font-weight:bold">;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">export</span> <span style="color:#204a87;font-weight:bold">function</span> <span style="color:#000">addImageToTextArea</span><span style="color:#000;font-weight:bold">({</span> <span style="color:#204a87">document</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">application</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">resources</span> <span style="color:#000;font-weight:bold">}</span><span style="color:#ce5c00;font-weight:bold">:</span> <span style="color:#000">AddImageToTextAreaParameters</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">page</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87">document</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">ActivePageReference</span><span style="color:#000;font-weight:bold">;</span>
@@ -925,7 +1088,7 @@ Make sure you are using version 1.2 or later of <a href="https://www.npmjs.com/p
 <p>Each script can now specify its own unique SVG icon, which will show up in various parts of the UI such as floating buttons, title bar buttons, and in the Actions flyout.
 Scripts that do not specify an icon will fall back to the icon of the action mod.
 To specify an icon, add an <code>&quot;icon&quot;: &quot;path/to/icon.svg&quot;</code> property to the script in the manifest.</p>
-<h3 id="visualization-mods-2">Visualization mods</h3>
+<h3 id="visualization-mods-3">Visualization mods</h3>
 <p>Version 2.1 of the API also contains some smaller improvements to visualization mods.</p>
 <h4 id="axis-expression-heuristics">Axis expression heuristics</h4>
 <p>When a new instance of a visualization mod is created, heuristics are used to assign initial expressions to the axes of the visualization.
@@ -945,7 +1108,7 @@ an expression that is not aggregating.</p>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified December 18, 2025
+	<div class="text-muted mt-5 pt-3 border-top">Last modified April 7, 2026
 </div>
 </div>
 
@@ -1028,7 +1191,7 @@ an expression that is not aggregating.</p>
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2025 Cloud Software Group All Rights Reserved</small>
+        <small class="text-white">&copy; 2026 Cloud Software Group All Rights Reserved</small>
         <small class="ml-1"><a href="https://www.cloud.com/privacy-policy" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>

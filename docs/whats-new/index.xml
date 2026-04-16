@@ -1,19 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Spotfire® Mods – What&#39;s new?</title>
+    <title>What&#39;s new? on Spotfire® Mods</title>
     <link>/spotfire-mods/docs/whats-new/</link>
     <description>Recent content in What&#39;s new? on Spotfire® Mods</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 18 Dec 2025 00:00:00 +0000</lastBuildDate>
-    
-	  <atom:link href="/spotfire-mods/docs/whats-new/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-      
-        
-      
-    
-    
+    <lastBuildDate></lastBuildDate>
+    <atom:link href="/spotfire-mods/docs/whats-new/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

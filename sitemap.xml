@@ -2,10 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</loc>
-    <lastmod>2025-12-18T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>/spotfire-mods/docs/whats-new/</loc>
+    <lastmod>2026-04-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</loc>
     <lastmod>2025-12-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/getting-started/</loc>
@@ -24,10 +24,10 @@
     <lastmod>2024-06-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/action-mods/using-the-api/api-docs/</loc>
-    <lastmod>2025-10-30T00:00:00+00:00</lastmod>
+    <lastmod>2026-03-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</loc>
-    <lastmod>2025-10-30T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/action-mods/tutorial/</loc>
     <lastmod>2025-05-27T00:00:00+00:00</lastmod>
@@ -75,10 +75,10 @@
     <lastmod>2025-12-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/docs/</loc>
-    <lastmod>2025-12-18T00:00:00+00:00</lastmod>
+    <lastmod>2026-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/</loc>
-    <lastmod>2025-12-18T00:00:00+00:00</lastmod>
+    <lastmod>2026-04-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/spotfire-mods/index.json</loc>
   </url><url>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.152.2"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/index.xml">
+<meta name="generator" content="Hugo 0.157.0"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/action-mods/using-the-api/parameter-types/index.xml">
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
@@ -19,8 +19,8 @@
 
 
 
-<link rel="preload" href="/spotfire-mods/scss/main.min.611dbb678289efd7ec655cc8ba608a9038169188984397cb722317f450975b34.css" as="style">
-<link href="/spotfire-mods/scss/main.min.611dbb678289efd7ec655cc8ba608a9038169188984397cb722317f450975b34.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/spotfire-mods/scss/main.min.a15f7054f5a17fd48e8fd19215718fefcf8aad314049dce32c166b18e614cef0.css" as="style">
+<link href="/spotfire-mods/scss/main.min.a15f7054f5a17fd48e8fd19215718fefcf8aad314049dce32c166b18e614cef0.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -727,7 +727,7 @@ To get the active page in a script, use <a href="/spotfire-mods/api-docs/action-
 The visual will be attached to a page which can be reached via its document node context, that is <code>page.Context.GetAncestor(Page)</code>.
 To get the active visualization (useful for instance if your script is attached to a visualization as a floating button) use <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Document.html#activevisualreference">Document.ActiveVisualReference</a>.</p>
 <p>To validate that the visual is of a specific type, use the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visual.html#as">Visual.As</a> method and check the return value for null:</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">ScatterPlot</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Application</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Visuals</span><span style="color:#000;font-weight:bold">;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">ScatterPlot</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Application</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Visuals</span><span style="color:#000;font-weight:bold">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">scatterPlot</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">visual</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">As</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ScatterPlot</span><span style="color:#000;font-weight:bold">);</span>
 </span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#ce5c00;font-weight:bold">!</span><span style="color:#000">scatterPlot</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">throw</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#204a87">Error</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;Expected the visual to be a scatter plot&#34;</span><span style="color:#000;font-weight:bold">);</span>
@@ -860,7 +860,7 @@ This parameter requires that the <strong>allowedDataTypes</strong> property is s
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2025 Cloud Software Group All Rights Reserved</small>
+        <small class="text-white">&copy; 2026 Cloud Software Group All Rights Reserved</small>
         <small class="ml-1"><a href="https://www.cloud.com/privacy-policy" target="_blank">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/spotfire-mods/about/">About Spotfire Mods</a></p>

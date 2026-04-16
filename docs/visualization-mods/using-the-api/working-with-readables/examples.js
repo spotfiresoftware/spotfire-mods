@@ -1,4 +1,4 @@
-//@ts-check
+﻿//@ts-check
 
 // Replace the `subscribeExample` function to switch example
 Spotfire.initialize(subscribeExample);
