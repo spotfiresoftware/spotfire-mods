@@ -14,6 +14,31 @@
             "name": "extras",
             "type": "boolean",
             "defaultValue": "false"
+        },
+        {
+            "name": "outerScales",
+            "type": "boolean",
+            "defaultValue": "true"
+        },
+        {
+            "name": "innerScales",
+            "type": "boolean",
+            "defaultValue": "true"
+        },
+        {
+            "name": "zoom",
+            "type": "integer",
+            "defaultValue": "0"
+        },
+        {
+            "name": "xCoord",
+            "type": "integer",
+            "defaultValue": "0"
+        },
+        {
+            "name": "yCoord",
+            "type": "integer",
+            "defaultValue": "0"
         }
     ],
     "dataViewDefinition": {

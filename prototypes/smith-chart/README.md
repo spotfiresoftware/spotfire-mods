@@ -6,9 +6,9 @@ All source code for the mod example can be found in the `src` folder. Other nece
 
 ## TODO
 
-- Tooltips
+- Tooltips (done?)
 - Scales
-- Hide extra circles settings
+- Hide extra circles settings (done?)
 
 ## Development Prerequisites
 
