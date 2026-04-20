@@ -9,8 +9,9 @@ export interface MarkingSettings {
     /**
      * Marking callback that will be invoked for each marked element.
      * @param data d3 Data object bound to the marked element.
+     * @param addToMarking boolean True if the marking should be toggles/added. False will replace the current marking.
      */
-    mark(data: unknown): void;
+    mark(data: unknown, addToMarking: boolean): void;
 
     /**
      * CSS Classes to ignore. Checks the parent of the marked element to see if any parent has an ignored class.
@@ -33,6 +34,7 @@ export interface MarkingSettings {
  */
 export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, any>, settings: MarkingSettings) {
     let firstTarget: any;
+    let ctrlPressed: boolean = false;
 
     function drawRectangle(x: number, y: number, w: number, h: number) {
         return "M" + [x, y] + " l" + [w, 0] + " l" + [0, h] + " l" + [-w, 0] + "z";
@@ -50,7 +52,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         rectangle.attr("d", drawRectangle(start[0], start[1], moved[0] - start[0], moved[1] - start[1]));
     };
 
-    const endSelection = function (start: [number, number], end: [number, number]) {
+    const endSelection = function (start: [number, number], end: [number, number], ctrlPressed: boolean) {
         rectangle.attr("visibility", "hidden");
 
         // Ignore rectangular markings that were just a click.
@@ -84,7 +86,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         }
 
         markedSectors.each((n: any) => {
-            settings.mark(n);
+            settings.mark(n, ctrlPressed);
         });
 
         function fullyPartOfMarking(this: SVGPathElement) {
@@ -110,22 +112,23 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         }
     };
 
-    svg.on("mousedown", function (this: any) {
-        if (d3.event.which === 3) {
+    svg.on("mousedown", function (event: any, element: any) {
+        if (event.which === 3) {
             return;
         }
 
-        firstTarget = d3.event.target;
+        firstTarget = event.target;
 
         let subject = d3.select(window),
-            start = d3.mouse(this);
+            start: [number, number] = [event.x, event.y],
+            ctrlPressed = event.ctrlKey;
         startSelection(start);
         subject
-            .on("mousemove.rectangle", function () {
-                moveSelection(start, d3.mouse(svg.node() as any));
+            .on("mousemove.rectangle", function (e: any) {
+                moveSelection(start, [e.x, e.y]);
             })
-            .on("mouseup.rectangle", function () {
-                endSelection(start, d3.mouse(svg.node() as any));
+            .on("mouseup.rectangle", function (e: any) {
+                endSelection(start, [e.x, e.y], ctrlPressed);
                 subject.on("mousemove.rectangle", null).on("mouseup.rectangle", null);
             });
     });

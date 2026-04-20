@@ -52,7 +52,9 @@ window.Spotfire.initialize(async (mod) => {
             animationSpeed: context.interactive ? 250 : 0,
             containerSelector: "#mod-container",
             size: windowSize,
-            clearMarking: dataView.clearMarking,
+            clearMarking: () => {
+                dataView.clearMarking();
+            },
             style: {
                 marking: { color: context.styling.scales.font.color },
                 background: { color: context.styling.general.backgroundColor },
@@ -124,8 +126,8 @@ function buildChartSlices(
         return {
             id: createId(leaf),
             label: displayLabels ? leaf.formattedPath() : "",
-            mark() {
-                if (d3.event.ctrlKey) {
+            mark(toggleOrAdd: boolean) {
+                if (toggleOrAdd) {
                     leaf.mark("ToggleOrAdd");
                     return;
                 }
@@ -155,8 +157,8 @@ function buildChartSlices(
                     (hasSizeExpression ? row.continuous(sizeAxisName).formattedValue() : 1),
                 value: value,
                 isNegative: getSize(row) < 0,
-                mark() {
-                    if (d3.event.ctrlKey) {
+                mark(toggleOrAdd: boolean) {
+                    if (toggleOrAdd) {
                         row.mark("ToggleOrAdd");
                         return;
                     }
