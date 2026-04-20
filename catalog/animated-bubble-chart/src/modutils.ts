@@ -1,5 +1,6 @@
 import * as d3 from "d3";
-import { DataViewRow } from "spotfire-api";
+import { Axis, DataViewRow } from "spotfire-api";
+import { Bubble } from "./index";
 import { setBusy, setIdle } from "./interactionLock";
 
 // /**
@@ -9,72 +10,65 @@ import { setBusy, setIdle } from "./interactionLock";
 //  */
 export function highlight(
     mod: Spotfire.Mod,
-    tooltipDisplayAxes: Spotfire.Axis[]
 ) {
-    function highlight(selection: any) {
+    let timeout: any = null;
+
+    return function highlight(selection: any) {
         selection.on("mouseenter", showTooltip).on("mouseleave", hideTooltip);
     }
 
     function hideTooltip() {
-        setIdle();
-        // d3.select("#HighlightShape").remove();
-        d3.select(".highlighter").remove();
-        mod.controls.tooltip.hide();
+        d3.selectAll(".highlighter").remove();
+
+        if (!timeout) {
+            timeout = setTimeout(() => {
+                setIdle();
+                mod.controls.tooltip.hide();
+                timeout = null;
+            }, 500);
+        }
     }
 
     /**
      * Show the tooltip
-     * @param {Spotfire.DataViewRow} row
+     * @param {Spotfire.Bubble} row
      * @param {Int} i
      */
-    function showTooltip(this: any, row: DataViewRow) {
+    function showTooltip(this: any, row: Bubble) {
+        clearTimeout(timeout);
+        timeout = null;
+        d3.selectAll("svg *").transition().duration(0);
         setBusy();
         d3.select(this)
             .clone()
             .raise()
             .style("fill", "None")
             .style("stroke", "black")
+            .classed("dot", false)
             .classed("highlighter", true);
 
-        let tooltipItems: string[] = [];
-        tooltipDisplayAxes.forEach((axis) => {
-            if (axis.expression == "") {
-                return;
-            }
-            if (axis.expression == "<>") {
-                return;
-            }
-
-            let tooltipItemText = getDisplayName(axis);
-            tooltipItemText += ": ";
-
-            if (axis.isCategorical) {
-                tooltipItemText += row.categorical(axis.name).formattedValue();
-            } else {
-                tooltipItemText += row.continuous(axis.name).formattedValue();
-            }
-            if (!tooltipItems.includes(tooltipItemText)) {
-                tooltipItems.push(tooltipItemText);
-            }
-        });
-        let tooltipText = tooltipItems.join("\n");
-
-        mod.controls.tooltip.show(tooltipText);
+        mod.controls.tooltip.show(row.tooltip);
     }
+}
 
-    /**
-     *
-     * @param {Spotfire.Axis} axis
-     */
-    function getDisplayName(axis: Spotfire.Axis) {
-        return axis.parts
-            .map((node) => {
-                return node.displayName;
-            })
-            .join();
-    }
-
-    return highlight;
+export function throttle<T extends Function>(func: T, timeout = 50): T {
+    let timer: any;
+    let cb = () => {};
+    return ((...args: any[]) => {
+        if (!timer) {
+            func.apply(null, args);
+            timer = setTimeout(() => {
+                cb();
+                cb = () => {};
+                timer = null;
+            }, timeout);
+            return;
+        } else {
+            cb = () => {
+                func.apply(null, args);
+            };
+        }
+    }) as any;
 }
 
 // /**
@@ -161,14 +155,9 @@ export function markingHandler(
             dataView.clearMarking();
         } else {
             nodes.forEach((element: any) => {
-                /**@type {Spotfire.DataViewRow} */
-                // @ts-ignore
-                var d = element.__data__;
-                markRowforAllTimes(
-                    d,
-                    dataView,
-                    d3.event.sourceEvent.ctrlKey || d3.event.sourceEvent.metaKey
-                );
+
+                var d : Bubble = element.__data__;
+                d.mark(d3.event.sourceEvent.ctrlKey || d3.event.sourceEvent.metaKey);
             });
         }
         markingRect.attr("class", "inactiveMarking");
@@ -184,31 +173,45 @@ export function markingHandler(
         .on("end", dragended);
 }
 
-export async function markRowforAllTimes(
-    row: DataViewRow,
-    dataView: Spotfire.DataView,
-    toggle: boolean
-) {
-    let mode: Spotfire.MarkingOperation = toggle ? "ToggleOrAdd" : "Replace";
 
-    if (!(await dataView.categoricalAxis("AnimateBy"))) {
-        row.mark(mode);
+export function tooltip(row: DataViewRow, axes: Axis[]) {
+    let tooltipItems: string[] = [];
+    axes.forEach((axis) => {
+        if (axis.expression == "") {
+            return;
+        }
+        if (axis.expression == "<>") {
+            return;
+        }
+
+        let tooltipItemText = getDisplayName(axis);
+        tooltipItemText += ": ";
+
+        if (axis.isCategorical) {
+            tooltipItemText += row
+                .categorical(axis.name)
+                .formattedValue();
+        } else {
+            tooltipItemText += row
+                .continuous(axis.name)
+                .formattedValue();
+        }
+        if (!tooltipItems.includes(tooltipItemText)) {
+            tooltipItems.push(tooltipItemText);
+        }
+    });
+
+    return tooltipItems.join("\n");
+
+    /**
+     *
+     * @param {Spotfire.Axis} axis
+     */
+    function getDisplayName(axis: Spotfire.Axis) {
+        return axis.parts
+            .map((node) => {
+                return node.displayName;
+            })
+            .join();
     }
-
-    const axes = (await dataView.axes())
-        .filter((a) => a.isCategorical && a.name != "AnimateBy")
-        .map((a) => a.name);
-    (await dataView.allRows())
-        ?.filter((sibling) => {
-            for (var i = 0; i < axes.length; i++) {
-                if (
-                    row.categorical(axes[i]).leafIndex !=
-                    sibling.categorical(axes[i]).leafIndex
-                ) {
-                    return false;
-                }
-            }
-            return true;
-        })
-        .forEach((r) => r.mark(mode));
 }
