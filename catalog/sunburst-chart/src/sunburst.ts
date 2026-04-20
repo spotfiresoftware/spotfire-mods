@@ -33,9 +33,9 @@ export interface SunBurstSettings {
     getLabel(data: unknown, availablePixels: number): string;
     /** Text to place in the center while hovering sectors. */
     getCenterText(data: unknown): { value: string; text: string };
-    mark(data: unknown): void;
-    click(data: unknown): void;
-    clearMarking(): void;
+    mark(data: unknown, toggleOrAdd: boolean): void;
+    click(data: unknown, ctrlKey: boolean, altKey: boolean): void;
+    clearMarking(altKey: boolean): void;
     breadcrumbs: (string | null)[];
     breadCrumbClick(index: number): void;
     animationSpeed: number;
@@ -110,9 +110,9 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
     sectors
         .merge(newSectors)
         .attr("class", "sector")
-        .on("click", (d) => {
-            settings.click(d.data);
-            d3.event.stopPropagation();
+        .on("click", (e: any, d: any) => {
+            settings.click(d.data, e.ctrlKey, e.altKey);
+            e.stopPropagation();
         })
         .on("mouseover.hover", onMouseover)
         .transition("add sectors")
@@ -202,7 +202,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
 
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
-        mark: (d: any) => settings.mark(d.data),
+        mark: (d: any, toogleOrAdd: boolean) => settings.mark(d.data, toogleOrAdd),
         getCenter(d: any) {
             let c = arc.centroid(d);
             return { x: c[0] + size.width / 2, y: c[1] + size.height / 2 };
@@ -286,7 +286,7 @@ export function render(hierarchy: d3.HierarchyNode<SunBurstHierarchyNode>, setti
         settings.onMouseLeave?.();
     }
 
-    function onMouseover(d: any) {
+    function onMouseover(_:any, d: any) {
         let texts = settings.getCenterText(d.data);
         settings.onMouseover?.(d.data);
 
