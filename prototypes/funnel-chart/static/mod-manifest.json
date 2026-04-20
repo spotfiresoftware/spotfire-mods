@@ -1,0 +1,65 @@
+{
+    "apiVersion": "1.3",
+    "version": "1.0",
+    "name": "Funnel Chart",
+    "id": "spotfire-funnel-chart-chart-mod",
+    "icon": "icon.svg",
+    "properties": [
+        {
+            "name": "labels",
+            "type": "string",
+            "defaultValue": "all"
+        },
+        {
+            "name": "showOnlyMarked",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "sortByValue",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "showProcessName",
+            "type": "boolean",
+            "defaultValue": true
+        },
+        {
+            "name": "showProcessQuantity",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "showProcessPercentage",
+            "type": "boolean",
+            "defaultValue": false
+        },
+        {
+            "name": "labelPosition",
+            "type": "string",
+            "defaultValue": "outside"
+        }
+    ],
+    "dataViewDefinition": {
+        "colorAxis": {
+            "mode": "categorical",
+            "preferredDualMode": "categorical",
+            "dropTarget": {
+                "icon": "Color",
+                "description": "Color by {0}"
+            }
+        },
+        "axes": [  
+        {
+            "name": "X",
+            "mode": "categorical"
+        },
+        {
+            "name": "Y",
+            "mode": "continuous"
+        }
+    ]
+    },
+    "files": ["index.html", "main.css", "bundle.js"]
+}
