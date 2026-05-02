@@ -6,13 +6,13 @@ export interface MarkingSettings<T> {
 
     /**
      * Marking callback that will be invoked for each marked element.
-     * @param datum d3 Data object bound to the marked element.
+     * @param datum T Data object bound to the marked element.
      */
     mark(datum: T, e: MouseEvent): void;
 
     /**
      * Get the calculated center of a datum object. The default is to take the center of the bounding box.
-     * @param datum  d3 Data object bound to the marked element.
+     * @param datum T Data object bound to the marked element.
      */
     getCenter(datum: T): [x: number, y: number];
 
