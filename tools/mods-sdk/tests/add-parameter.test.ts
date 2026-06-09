@@ -9,7 +9,7 @@ describe("add-parameter.test.ts", () => {
     const manifestPath = path.join(projectFolder, "mod-manifest.json");
 
     test("can add parameter", async () => {
-        const scriptId = "script-id";
+        const scriptId = "my-script";
         await setupProject(projectFolder, ModType.Action);
         await addParameter(scriptId, "param1", "DateTime", {
             manifestPath,

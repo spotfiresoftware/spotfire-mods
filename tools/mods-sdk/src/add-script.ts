@@ -99,15 +99,23 @@ export async function addScript(
         );
     }
 
-    manifest.scripts = [
-        ...(manifest.scripts ?? []),
-        {
-            id: id,
-            name: name ?? id,
-            entryPoint: entryPoint,
-            file: `build/${id}.js`,
-        },
-    ];
+    const apiVersion = readApiVersion(manifest);
+    const isEsm =
+        apiVersion.status === "success" &&
+        apiVersion.result.supportsFeature("Esm");
+
+    const newScript: NonNullable<Manifest["scripts"]>[number] = {
+        id: id,
+        name: name ?? id,
+        file: `build/${id}.js`,
+    };
+    // From apiVersion 2.6 the entry point is registered solely via
+    // RegisterEntryPoint, so the manifest no longer stores an 'entryPoint'.
+    if (!isEsm) {
+        newScript.entryPoint = entryPoint;
+    }
+
+    manifest.scripts = [...(manifest.scripts ?? []), newScript];
 
     await writeManifest(manifestPath, manifest, false);
 

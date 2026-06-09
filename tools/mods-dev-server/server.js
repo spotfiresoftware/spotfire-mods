@@ -275,14 +275,27 @@ function start(settings = {}) {
             declaredExternalResourcesInManifest = json.externalResources || [];
             manifestFiles = [...(json.files || []), json.icon];
 
-            if (json.scripts) {
-                for (const script of json.scripts) {
-                    if (script.file) {
-                        manifestFiles.push(script.file);
+            // Agents share the same shape as scripts, both declare a file and an optional icon.
+            for (const script of [...(json.scripts || []), ...(json.agents || [])]) {
+                if (script.file) {
+                    manifestFiles.push(script.file);
+                }
+
+                if (script.icon) {
+                    manifestFiles.push(script.icon);
+                }
+            }
+
+            if (json.skills) {
+                for (const skill of json.skills) {
+                    if (skill.icon) {
+                        manifestFiles.push(skill.icon);
                     }
 
-                    if (script.icon) {
-                        manifestFiles.push(script.icon);
+                    // The instructions are implicitly read from the skill folder. Any references
+                    // and assets are listed in the files list like all other resources.
+                    if (skill.id) {
+                        manifestFiles.push(`skills/${skill.id}/SKILL.md`);
                     }
                 }
             }
