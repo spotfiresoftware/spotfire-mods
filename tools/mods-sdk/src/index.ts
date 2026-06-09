@@ -6,7 +6,9 @@ import { build } from "./build.js";
 import { ModType, getVersion, parseApiVersion, AgentType } from "./utils.js";
 import { addScript } from "./add-script.js";
 import { addAgent } from "./add-agent.js";
+import { addSkill } from "./add-skill.js";
 import { addParameter } from "./add-parameter.js";
+import { migrate } from "./migrate.js";
 
 declare module "commander" {
     interface Command {
@@ -29,7 +31,7 @@ Command.prototype.quiet = function () {
         .command("new")
         .argument(
             "<mod-type>",
-            "what you want to create: action, agent, visualization, or gitignore",
+            "what you want to create: action, agent, skill, visualization, or gitignore",
             (arg) => assertTemplateType(arg)
         )
         .description("Create a new Mods project based on a template")
@@ -65,7 +67,7 @@ Command.prototype.quiet = function () {
         .option("--watch", "start a file watcher", false)
         .option("--debug", "build artifacts unminifed with sourcemaps", false)
         .option(
-            "--esbuild-config",
+            "--esbuild-config <path>",
             "path to a file which default exports an esbuild config",
             "esbuild.config.js"
         )
@@ -110,6 +112,28 @@ Command.prototype.quiet = function () {
         .action(exec(addAgent));
 
     program
+        .command("add-skill")
+        .argument("<id>", "the id of the skill")
+        .description("add a skill to the action mod")
+        .option("--name <name>", "the name of the skill")
+        .option(
+            "--description <description>",
+            "a description of what the skill does"
+        )
+        .option(
+            "--skills-dir <path>",
+            "path to the folder containing all skills",
+            "skills"
+        )
+        .option(
+            "--manifest-path <path>",
+            "path to the mod-manifest.json file",
+            "mod-manifest.json"
+        )
+        .quiet()
+        .action(exec(addSkill));
+
+    program
         .command("add-parameter")
         .argument(
             "<script-id>",
@@ -125,6 +149,37 @@ Command.prototype.quiet = function () {
         .option("--optional", "if the parameter is optional", false)
         .quiet()
         .action(exec(addParameter));
+
+    program
+        .command("migrate")
+        .argument(
+            "<api-version>",
+            "the Mods API version to migrate to",
+            (arg) => assertValidVersion(arg)
+        )
+        .description("Migrate a mod project to a new Mods API version")
+        .option(
+            "--manifest-path <path>",
+            "path to the mod-manifest.json file",
+            "mod-manifest.json"
+        )
+        .option(
+            "--package-path <path>",
+            "path to the package.json file",
+            "package.json"
+        )
+        .option(
+            "--scripts <path>",
+            "path to the folder containing all scripts",
+            "src/scripts"
+        )
+        .option(
+            "--esbuild-config <path>",
+            "path to a file which default exports an esbuild config",
+            "esbuild.config.js"
+        )
+        .quiet()
+        .action(exec(migrate));
 
     await program.parseAsync();
 
@@ -143,13 +198,15 @@ Command.prototype.quiet = function () {
             return ModType.Action;
         } else if (arg === "agent") {
             return ModType.Agent;
+        } else if (arg === "skill") {
+            return ModType.Skill;
         } else if (arg === "visualization") {
             return ModType.Visualization;
         } else if (arg === "gitignore") {
             return "gitignore";
         } else {
             program.error(
-                `Invalid template type '${arg}'. Possible values are: action, agent, visualization, or gitignore.`
+                `Invalid template type '${arg}'. Possible values are: action, agent, skill, visualization, or gitignore.`
             );
         }
     }
