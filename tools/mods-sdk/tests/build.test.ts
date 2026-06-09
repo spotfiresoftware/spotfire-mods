@@ -6,7 +6,7 @@ import { existsSync } from "fs";
 import { ApiVersion, Manifest, ManifestParameter, ModType } from "../src/utils";
 import { assertError, assertSuccess, setupProject } from "./test-utils";
 import { addParameter } from "../src/add-parameter";
-import { readFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 
 describe("build.ts", () => {
     describe("actions", () => {
@@ -38,12 +38,12 @@ describe("build.ts", () => {
 
         test("types get converted", async () => {
             await setupProject(project, ModType.Action);
-            await addParameter("script-id", "dateParam", "Date", {
+            await addParameter("my-script", "dateParam", "Date", {
                 manifestPath,
                 quiet: true,
                 optional: false,
             });
-            await addParameter("script-id", "boolParam", "Boolean", {
+            await addParameter("my-script", "boolParam", "Boolean", {
                 manifestPath,
                 quiet: true,
                 optional: false,
@@ -104,6 +104,102 @@ describe("build.ts", () => {
             expect(
                 existsSync(path.join(buildDir, "new-script.js"))
             ).toBeTruthy();
+        });
+
+        test("emits ES modules with spotfire kept external for apiVersion >= 2.6", async () => {
+            await setupProject(project, ModType.Action, "2.6");
+
+            // A script which consumes the Spotfire API through an ESM import.
+            await writeFile(
+                path.join(scriptsDir, "esm-script.ts"),
+                [
+                    `import * as application from "spotfire/dxp/application";`,
+                    `import { List } from "system/collections/generic";`,
+                    `export function esmScript() {`,
+                    `    console.log(application, List);`,
+                    `}`,
+                    `RegisterEntryPoint(esmScript);`,
+                    ``,
+                ].join("\n"),
+                "utf-8"
+            );
+
+            await build({
+                outdir: buildDir,
+                src: srcDir,
+                watch: false,
+                debug: true,
+                manifestPath: manifestPath,
+                envPath,
+                esbuildConfig,
+                quiet: true,
+            });
+
+            const output = await readFile(
+                path.join(buildDir, "esm-script.js"),
+                "utf-8"
+            );
+            // The Spotfire import is provided by the runtime, so it must remain
+            // an external ESM import rather than being bundled or wrapped.
+            expect(output).toContain(`from "spotfire/dxp/application"`);
+            expect(output).toContain(`from "system/collections/generic"`);
+        });
+
+        test("keeps spotfire external even when the user esbuild config overrides format/external", async () => {
+            // A dedicated project path so the user esbuild config is not served
+            // from the ESM import cache of another test.
+            const overrideProject =
+                "tests/testprojects/esm-external-override";
+            const overrideBuild = path.join(overrideProject, "build");
+            const overrideSrc = path.join(overrideProject, "src");
+            const overrideScripts = path.join(overrideSrc, "scripts");
+            const overrideManifest = path.join(
+                overrideProject,
+                "mod-manifest.json"
+            );
+            const overrideEnv = path.join(overrideProject, "env.d.ts");
+            const overrideEsbuild = path.join(
+                overrideProject,
+                "esbuild.config.js"
+            );
+
+            await setupProject(overrideProject, ModType.Action, "2.6");
+
+            // A user config that would otherwise break the ESM build.
+            await writeFile(
+                overrideEsbuild,
+                `export default { target: "es2022", format: "iife", external: ["some-lib"] };\n`,
+                "utf-8"
+            );
+            await writeFile(
+                path.join(overrideScripts, "esm-script.ts"),
+                [
+                    `import * as application from "spotfire/dxp/application";`,
+                    `export function esmScript() {`,
+                    `    console.log(application);`,
+                    `}`,
+                    `RegisterEntryPoint(esmScript);`,
+                    ``,
+                ].join("\n"),
+                "utf-8"
+            );
+
+            await build({
+                outdir: overrideBuild,
+                src: overrideSrc,
+                watch: false,
+                debug: true,
+                manifestPath: overrideManifest,
+                envPath: overrideEnv,
+                esbuildConfig: overrideEsbuild,
+                quiet: true,
+            });
+
+            const output = await readFile(
+                path.join(overrideBuild, "esm-script.js"),
+                "utf-8"
+            );
+            expect(output).toContain(`from "spotfire/dxp/application"`);
         });
     });
 
