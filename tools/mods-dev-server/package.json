@@ -54,6 +54,10 @@
         "puppeteer": "^24.6.0",
         "supertest": "^6.1.6"
     },
+    "overrides": {
+        "diff": "^8.0.4",
+        "serialize-javascript": "^7.0.6"
+    },
     "engines": {
         "node": ">=22.0.0"
     }
