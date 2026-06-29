@@ -10,6 +10,9 @@ export interface ServerSettings {
     /** Server port. */
     port?: number;
 
+    /** Host/interface to bind to. Defaults to 127.0.0.1. */
+    host?: string;
+
     /** Whether or not to open a browser. Defaults to true. */
     open?: boolean;
 

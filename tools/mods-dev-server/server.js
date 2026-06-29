@@ -54,6 +54,7 @@ const manifestName = "mod-manifest.json";
 /** @type {import("./server").ServerSettings} */
 const defaultSettings = {
     port: 8090,
+    host: "127.0.0.1",
     open: true,
     root: ".",
     path: "/" + manifestName,
@@ -123,11 +124,11 @@ function start(settings = {}) {
     server.on("error", (e) => {
         // @ts-ignore
         if (e.code === "EADDRINUSE") {
-            let serverUrl = "http://" + "127.0.0.1" + ":" + settings.port;
+            let serverUrl = "http://" + settings.host + ":" + settings.port;
             console.log(colors.yellow("%s is already in use. Trying another port."), serverUrl);
             setTimeout(function pickNewPort() {
                 server.close();
-                server.listen(0, "127.0.0.1");
+                server.listen(0, settings.host);
             }, 500);
         } else {
             console.error(colors.red(e.toString()));
@@ -163,7 +164,7 @@ function start(settings = {}) {
         });
     });
 
-    server.listen(settings.port, "127.0.0.1");
+    server.listen(settings.port, settings.host);
 
     const reloadInstances = _.debounce(() => {
         let openConnections = [...wss.clients].filter((client) => client.readyState == ws.OPEN);

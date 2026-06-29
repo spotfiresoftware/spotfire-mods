@@ -44,6 +44,8 @@ if (require.main === module) {
                         // @ts-ignore
                         port: argv.port,
                         // @ts-ignore
+                        host: argv.host,
+                        // @ts-ignore
                         root: argv._[0] || defaultSettings.root,
                         // @ts-ignore
                         path: argv.path,
@@ -59,6 +61,11 @@ if (require.main === module) {
                 describe: "The server port.",
                 number: true,
                 default: defaultSettings.port
+            })
+            .option("host", {
+                describe: "The host/interface to bind to.",
+                string: true,
+                default: defaultSettings.host
             })
             .option("path", {
                 describe: "The server url path.",

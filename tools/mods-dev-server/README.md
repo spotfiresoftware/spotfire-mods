@@ -13,6 +13,7 @@ mods-dev-server <source folder name>
 ## Configuration
 
 - `--port 8091` sets the server port. Defaults to `8090`.
+- `--host 0.0.0.0` sets the host/interface to bind to. Defaults to `127.0.0.1`.
 - `--open false` sets wether or not to open a web page on server startup. Defaults to `true`.
 - `--path /sub-folder/mod-manifest.json` sets the path to open. Defaults to `/mod-manifest.json`.
 - `--help` lists all available options.
