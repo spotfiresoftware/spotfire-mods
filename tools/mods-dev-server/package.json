@@ -59,6 +59,6 @@
         "serialize-javascript": "^7.0.6"
     },
     "engines": {
-        "node": ">=22.0.0"
+        "node": ">=22.12.0"
     }
 }
