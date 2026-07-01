@@ -1,0 +1,25 @@
+{
+    "name": "my-action-mod",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "build": "mods-sdk build",
+        "build:dev": "mods-sdk build --watch --debug",
+        "tsc:dev": "tsc --watch",
+        "server": "mods-dev-server --allow-project-root true"
+    },
+    "dependencies": {
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "@spotfire/mods-api": "~MODS-API-VERSION",
+        "@spotfire/mods-dev-server": "^1.2.0",
+        "@spotfire/mods-sdk": "^MODS-SDK-VERSION",
+        "esbuild": "^0.27.3",
+        "prettier": "^3.8.1",
+        "typescript": "^5.9.3"
+    },
+    "engines": {
+        "node": ">=22.0.0"
+    }
+}

@@ -584,6 +584,17 @@
                 "examples": ["index.html", "main.css", "main.js"],
                 "pattern": "^(.*)$"
             }
+        },
+        "classification": {
+            "type": "array",
+            "title": "Mod Classification",
+            "description": "Specifies the classification of the mod, which determines the license required to run it. Use 'Industry Pro' to indicate that this mod requires an Industry Pro license. Requires apiVersion >= 2.5.",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "enum": ["Industry Pro"]
+            }
         }
     }
 }

@@ -22,12 +22,15 @@ export function isError<TSuccess, TErr>(
 export enum ModType {
     Visualization = "Visualization",
     Action = "Action",
+    Agent = "Agent",
 }
 
 export function isModType(str: string): str is ModType {
     if (str === ModType.Action) {
         return true;
     } else if (str === ModType.Visualization) {
+        return true;
+    } else if (str === ModType.Agent) {
         return true;
     }
 
@@ -94,19 +97,31 @@ export interface ManifestParameter {
     singleColumn?: boolean;
 }
 
+export interface ScriptBase {
+    id?: string;
+    name?: string;
+    file?: string;
+    entryPoint?: string;
+}
+
+export interface ManifestScript extends ScriptBase {
+    parameters?: ManifestParameter[];
+}
+
+export type AgentType = "marking" | "visual";
+
+export interface ManifestAgent extends ScriptBase {
+    type?: AgentType;
+}
+
 export interface Manifest {
     apiVersion?: string;
     version?: string;
     type?: string;
     name?: string;
     id?: string;
-    scripts?: {
-        id?: string;
-        name?: string;
-        file?: string;
-        entryPoint?: string;
-        parameters?: ManifestParameter[];
-    }[];
+    scripts?: ManifestScript[];
+    agents?: ManifestAgent[];
     files?: string[];
 }
 
@@ -115,7 +130,7 @@ export function deepCopy<T>(t: T) {
 }
 
 export class ApiVersion {
-    constructor(private major: number, private minor: number) {}
+    constructor(private major: number, private minor: number) { }
 
     previous() {
         if (this.minor === 0) {
@@ -151,6 +166,8 @@ export const features = {
     OptionalParameter: { major: 2, minor: 1 },
     EnumParameter: { major: 2, minor: 1 },
     DataViews: { major: 2, minor: 1 },
+    ScriptInvocations: { major: 2, minor: 5 },
+    Agents: { major: 2, minor: 5 },
 };
 type Feature = keyof typeof features;
 

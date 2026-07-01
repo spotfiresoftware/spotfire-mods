@@ -7,11 +7,63 @@
     "version",
     "name",
     "id",
-    "scripts",
     "icon",
     "type"
   ],
   "additionalProperties": false,
+  "$defs": {
+    "scriptBase": {
+      "type": "object",
+      "required": ["id", "name", "file", "entryPoint"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Id",
+          "default": "script-id",
+          "description": "The identifier. This needs to be unique within the mod and must not change between versions of the mod.",
+          "examples": ["script-id", "1"],
+          "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "default": "script-name",
+          "description": "Specifies the display name.",
+          "examples": ["script-name"],
+          "pattern": "^(.*)$"
+        },
+        "file": {
+          "type": "string",
+          "title": "File",
+          "default": "script.js",
+          "description": "Specifies the path of the script file relative to the mod manifest.",
+          "examples": ["script.js", "build/script.js"],
+          "pattern": "^(.*)$"
+        },
+        "entryPoint": {
+          "type": "string",
+          "title": "Entry point",
+          "default": "scriptFunction",
+          "description": "Specifies the unique entry point. The entry point has to be unique across all scripts and agents included in the mod.",
+          "examples": ["scriptFunction"],
+          "pattern": "^[$A-Za-z_][0-9A-Za-z_$]*$"
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "A description of what this script does.",
+          "default": "Description of the script",
+          "pattern": "^(.*)$"
+        },
+        "icon": {
+          "type": "string",
+          "title": "Specifies the name of the file containing the svg icon.",
+          "default": "script-icon.svg",
+          "pattern": "^.*\\.svg$"
+        }
+      }
+    }
+  },
   "properties": {
     "version": {
       "type": "string",
@@ -72,7 +124,7 @@
         "type": "string",
         "title": "The exended capability.",
         "default": [],
-        "enum": ["LibraryRead", "LibraryWrite"],
+        "enum": ["LibraryRead", "LibraryWrite", "AI"],
         "examples": ["LibraryRead"],
         "pattern": "^(.*)$"
       }
@@ -89,490 +141,482 @@
         "pattern": "^(.*)$"
       }
     },
+    "classification": {
+      "type": "array",
+      "title": "Mod Classification",
+      "description": "Specifies the classification of the mod, which determines the license required to run it. Use 'Industry Pro' to indicate that this mod requires an Industry Pro license. Requires apiVersion >= 2.5.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["Industry Pro"]
+      }
+    },
     "scripts": {
       "type": "array",
       "title": "The scripts stored in the mod",
       "description": "All scripts which can be executed inside of Spotfire.",
       "items": {
-        "type": "object",
         "title": "Script",
-        "required": ["id", "name", "file", "entryPoint"],
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id",
-            "default": "script-id",
-            "description": "The identifier of the script. This needs to be unique within the mod has must not change between versions of the mod.",
-            "examples": ["script-id", "1"],
-            "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "default": "script-name",
-            "description": "Specifies the display name of the script.",
-            "examples": ["script-name"],
-            "pattern": "^(.*)$"
-          },
-          "file": {
-            "type": "string",
-            "title": "File",
-            "default": "script.js",
-            "description": "Specifies the path of the script file relative to the mod manifest.",
-            "examples": ["script.js", "build/script.js"],
-            "pattern": "^(.*)$"
-          },
-          "entryPoint": {
-            "type": "string",
-            "title": "Entry point",
-            "default": "scriptFunction",
-            "description": "Specifies the unique entry point of the script. The entry point has to be unique across all scripts included in the mod.",
-            "examples": ["scriptFunction"],
-            "pattern": "^[$A-Za-z_][0-9A-Za-z_$]*$"
-          },
-          "description": {
-            "type": "string",
-            "title": "Description",
-            "description": "A description of what this script does.",
-            "default": "Description of the script",
-            "pattern": "^(.*)$"
-          },
-          "wrapInTransaction": {
-            "type": "boolean",
-            "title": "Wrap the script in a transaction",
-            "description": "Flag indicating if the script should be wrapped in a transaction.",
-            "default": true,
-            "pattern": "^(true)(false)$"
-          },
-          "icon": {
-            "type": "string",
-            "title": "Specifies the name of the file containing the svg icon to be used for this script.",
-            "default": "script-icon.svg",
-            "pattern": "^.*\\.svg$"
-          },
-          "parameters": {
-            "type": "array",
-            "title": "Script parameters",
-            "description": "All parameters of the entry point function.",
-            "items": {
-              "type": "object",
-              "title": "Parameter",
-              "required": ["name", "type"],
-              "additionalProperties": false,
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "title": "Name",
-                  "default": "myParam",
-                  "description": "The JavaScript identifier for the parameter.",
-                  "examples": ["myParam", "table", "visual"],
-                  "allOf": [
-                    {
-                      "not": {
-                        "title": "'document' is a reserved parameter name",
-                        "pattern": "^(D|d)(O|o)(C|c)(U|u)(M|m)(E|e)(N|n)(T|t)$"
-                      }
-                    },
-                    {
-                      "not": {
-                        "title": "'application' is a reserved parameter name",
-                        "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
-                      }
-                    },
-                    {
-                      "not": {
-                        "title": "'resources' is a reserved parameter name",
-                        "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
-                      }
-                    },
-                    {
-                      "title": "Parameter names can only contain letters, numbers, and underscores",
-                      "pattern": "^[0-9A-Za-z_]*$"
-                    },
-                    {
-                      "title": "Parameter names must start with a letter or an underscore",
-                      "pattern": "^[A-Za-z_]"
-                    }
-                  ]
-                },
-                "type": {
-                  "type": "string",
-                  "title": "Type",
-                  "description": "The Spotfire type of the parameter.",
-                  "enum": [
-                    "Boolean",
-                    "Currency",
-                    "DataTable",
-                    "DataColumn",
-                    "Date",
-                    "DateTime",
-                    "Integer",
-                    "LongInteger",
-                    "Real",
-                    "SingleReal",
-                    "String",
-                    "Time",
-                    "TimeSpan",
-                    "Page",
-                    "Visualization",
-                    "DataViewDefinition"
-                  ],
-                  "examples": ["String", "DataTable", "Page"]
-                },
-                "displayName": {
-                  "type": "string",
-                  "title": "Display name",
-                  "description": "A description of this parameter.",
-                  "default": "Display name of the parameter.",
-                  "pattern": "^(.*)$"
-                },
-                "description": {
-                  "type": "string",
-                  "title": "Description",
-                  "description": "A description of this parameter.",
-                  "default": "Description of the parameter",
-                  "pattern": "^(.*)$"
-                },
-                "optional": {
-                  "type": "boolean",
-                  "title": "Optional parameter",
-                  "description": "If the parameter is optional.",
-                  "default": true
-                },
-                "enum": {
-                  "type": "array",
-                  "title": "Enumerated values",
-                  "description": "Array of allowed values for this parameter.",
-                  "minItems": 1,
-                  "items": {
-                    "type": "string",
-                    "minLength": 0
-                  }
-                },
-                "allowedDataTypes": {
-                  "type": "array",
-                  "title": "Enumerated values",
-                  "description": "Array of allowed values for this parameter.",
-                  "minItems": 1,
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "All",
-                      "AllNumeric",
-                      "Integer",
-                      "Real",
-                      "SingleReal",
-                      "Currency",
-                      "String",
-                      "Date",
-                      "Time",
-                      "DateTime",
-                      "Boolean",
-                      "Binary",
-                      "LongInteger"
-                    ]
-                  }
-                },
-                "singleColumn": {
-                  "type": "boolean",
-                  "title": "Single column data view",
-                  "description": "If the data view should only allow single columns.",
-                  "default": true
-                },
-                "disableLimitations": {
-                  "type": "boolean",
-                  "title": "Disable limitations",
-                  "description": "If the data view should not allow limitations to be configured.",
-                  "default": true
-                },
-                "array": {
-                  "type": "boolean",
-                  "title": "Array parameter",
-                  "description": "If the parameter is an array.",
-                  "default": true
-                },
-                "range": {
+        "allOf": [
+          { "$ref": "#/$defs/scriptBase" },
+          {
+            "type": "object",
+            "properties": {
+              "wrapInTransaction": {
+                "type": "boolean",
+                "title": "Wrap the script in a transaction",
+                "description": "Flag indicating if the script should be wrapped in a transaction.",
+                "default": true,
+                "pattern": "^(true)(false)$"
+              },
+              "parameters": {
+                "type": "array",
+                "title": "Script parameters",
+                "description": "All parameters of the entry point function.",
+                "items": {
                   "type": "object",
-                  "title": "Range parameter",
-                  "description": "The valid range of a numeric parameter.",
+                  "title": "Parameter",
+                  "required": ["name", "type"],
                   "additionalProperties": false,
                   "properties": {
-                    "min": {
-                      "title": "Min value",
-                      "description": "The minimum value of the valid parameter range."
+                    "name": {
+                      "type": "string",
+                      "title": "Name",
+                      "default": "myParam",
+                      "description": "The JavaScript identifier for the parameter.",
+                      "examples": ["myParam", "table", "visual"],
+                      "allOf": [
+                        {
+                          "not": {
+                            "title": "'document' is a reserved parameter name",
+                            "pattern": "^(D|d)(O|o)(C|c)(U|u)(M|m)(E|e)(N|n)(T|t)$"
+                          }
+                        },
+                        {
+                          "not": {
+                            "title": "'application' is a reserved parameter name",
+                            "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
+                          }
+                        },
+                        {
+                          "not": {
+                            "title": "'resources' is a reserved parameter name",
+                            "pattern": "^(A|a)(P|p)(P|p)(L|l)(I|i)(C|c)(A|a)(T|t)(I|i)(O|o)(N|n)$"
+                          }
+                        },
+                        {
+                          "title": "Parameter names can only contain letters, numbers, and underscores",
+                          "pattern": "^[0-9A-Za-z_]*$"
+                        },
+                        {
+                          "title": "Parameter names must start with a letter or an underscore",
+                          "pattern": "^[A-Za-z_]"
+                        }
+                      ]
                     },
-                    "max": {
-                      "title": "Max value",
-                      "description": "The maximum value of the valid parameter range."
+                    "type": {
+                      "type": "string",
+                      "title": "Type",
+                      "description": "The Spotfire type of the parameter.",
+                      "enum": [
+                        "Boolean",
+                        "Currency",
+                        "DataTable",
+                        "DataColumn",
+                        "Date",
+                        "DateTime",
+                        "Integer",
+                        "LongInteger",
+                        "Real",
+                        "SingleReal",
+                        "String",
+                        "Time",
+                        "TimeSpan",
+                        "Page",
+                        "Visualization",
+                        "DataViewDefinition"
+                      ],
+                      "examples": ["String", "DataTable", "Page"]
                     },
-                    "minExcluded": {
+                    "displayName": {
+                      "type": "string",
+                      "title": "Display name",
+                      "description": "A description of this parameter.",
+                      "default": "Display name of the parameter.",
+                      "pattern": "^(.*)$"
+                    },
+                    "description": {
+                      "type": "string",
+                      "title": "Description",
+                      "description": "A description of this parameter.",
+                      "default": "Description of the parameter",
+                      "pattern": "^(.*)$"
+                    },
+                    "optional": {
                       "type": "boolean",
-                      "title": "Exclude the min value",
-                      "description": "If the min value is excluded from the range.",
-                      "default": false
+                      "title": "Optional parameter",
+                      "description": "If the parameter is optional.",
+                      "default": true
                     },
-                    "maxExcluded": {
+                    "enum": {
+                      "type": "array",
+                      "title": "Enumerated values",
+                      "description": "Array of allowed values for this parameter.",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string",
+                        "minLength": 0
+                      }
+                    },
+                    "allowedDataTypes": {
+                      "type": "array",
+                      "title": "Enumerated values",
+                      "description": "Array of allowed values for this parameter.",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "All",
+                          "AllNumeric",
+                          "Integer",
+                          "Real",
+                          "SingleReal",
+                          "Currency",
+                          "String",
+                          "Date",
+                          "Time",
+                          "DateTime",
+                          "Boolean",
+                          "Binary",
+                          "LongInteger"
+                        ]
+                      }
+                    },
+                    "singleColumn": {
                       "type": "boolean",
-                      "title": "Exclude the max value",
-                      "description": "If the max value is excluded from the range.",
-                      "default": false
-                    }
-                  }
-                }
-              },
-              "allOf": [
-                {
-                  "if": {
-                    "title": "String enum",
-                    "properties": {
-                      "type": {
-                        "enum": ["String"]
-                      }
+                      "title": "Single column data view",
+                      "description": "If the data view should only allow single columns.",
+                      "default": true
                     },
-                    "required": ["type", "enum"]
-                  },
-                  "then": {
-                    "not": {
-                      "title": "Enums can't be optional.",
+                    "disableLimitations": {
+                      "type": "boolean",
+                      "title": "Disable limitations",
+                      "description": "If the data view should not allow limitations to be configured.",
+                      "default": true
+                    },
+                    "array": {
+                      "type": "boolean",
+                      "title": "Array parameter",
+                      "description": "If the parameter is an array.",
+                      "default": true
+                    },
+                    "range": {
+                      "type": "object",
+                      "title": "Range parameter",
+                      "description": "The valid range of a numeric parameter.",
+                      "additionalProperties": false,
                       "properties": {
-                        "optional": {
-                          "enum": [true]
+                        "min": {
+                          "title": "Min value",
+                          "description": "The minimum value of the valid parameter range."
+                        },
+                        "max": {
+                          "title": "Max value",
+                          "description": "The maximum value of the valid parameter range."
+                        },
+                        "minExcluded": {
+                          "type": "boolean",
+                          "title": "Exclude the min value",
+                          "description": "If the min value is excluded from the range.",
+                          "default": false
+                        },
+                        "maxExcluded": {
+                          "type": "boolean",
+                          "title": "Exclude the max value",
+                          "description": "If the max value is excluded from the range.",
+                          "default": false
                         }
-                      },
-                      "required": ["optional"]
+                      }
                     }
                   },
-                  "else": {
-                    "not": {
-                      "title": "Only strings can be enums.",
-                      "required": ["enum"]
-                    }
-                  }
-                },
-                {
-                  "not": {
-                    "title": "Booleans can't be optional.",
-                    "properties": {
-                      "type": {
-                        "enum": ["Boolean"]
+                  "allOf": [
+                    {
+                      "if": {
+                        "title": "String enum",
+                        "properties": {
+                          "type": {
+                            "enum": ["String"]
+                          }
+                        },
+                        "required": ["type", "enum"]
                       },
-                      "optional": {
-                        "enum": [true]
-                      }
-                    },
-                    "required": ["type", "optional"]
-                  }
-                },
-                {
-                  "if": {
-                    "required": ["allowedDataTypes"]
-                  },
-                  "then": {
-                    "title": "Only DataViewDefinition and DataColumn can have allowedDataTypes",
-                    "properties": {
-                      "type": {
-                        "enum": ["DataViewDefinition", "DataColumn"]
-                      }
-                    },
-                    "required": ["type"]
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "type": {
-                        "enum": ["DataColumn"]
-                      }
-                    },
-                    "required": ["type"]
-                  },
-                  "then": {},
-                  "else": {
-                    "not": {
-                      "title": "Only data columns can be arrays.",
-                      "properties": {
-                        "array": { "enum": [true] }
-                      },
-                      "required": ["array"]
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "type": {
-                        "enum": ["DataViewDefinition"]
-                      }
-                    },
-                    "required": ["type"]
-                  },
-                  "then": {
-                    "title": "Data views have to define allowed data types.",
-                    "required": ["allowedDataTypes"]
-                  },
-                  "else": {
-                    "allOf": [
-                      {
+                      "then": {
                         "not": {
-                          "title": "Only data views can be single column.",
+                          "title": "Enums can't be optional.",
                           "properties": {
-                            "singleColumn": { "enum": [true] }
+                            "optional": {
+                              "enum": [true]
+                            }
                           },
-                          "required": ["singleColumn"]
+                          "required": ["optional"]
                         }
                       },
-                      {
+                      "else": {
                         "not": {
-                          "title": "Only data views can disable limitations.",
+                          "title": "Only strings can be enums.",
+                          "required": ["enum"]
+                        }
+                      }
+                    },
+                    {
+                      "not": {
+                        "title": "Booleans can't be optional.",
+                        "properties": {
+                          "type": {
+                            "enum": ["Boolean"]
+                          },
+                          "optional": {
+                            "enum": [true]
+                          }
+                        },
+                        "required": ["type", "optional"]
+                      }
+                    },
+                    {
+                      "if": {
+                        "required": ["allowedDataTypes"]
+                      },
+                      "then": {
+                        "title": "Only DataViewDefinition and DataColumn can have allowedDataTypes",
+                        "properties": {
+                          "type": {
+                            "enum": ["DataViewDefinition", "DataColumn"]
+                          }
+                        },
+                        "required": ["type"]
+                      }
+                    },
+                    {
+                      "if": {
+                        "properties": {
+                          "type": {
+                            "enum": ["DataColumn"]
+                          }
+                        },
+                        "required": ["type"]
+                      },
+                      "then": {},
+                      "else": {
+                        "not": {
+                          "title": "Only data columns can be arrays.",
                           "properties": {
-                            "disableLimitations": { "enum": [true] }
+                            "array": { "enum": [true] }
                           },
-                          "required": ["disableLimitations"]
+                          "required": ["array"]
                         }
                       }
-                    ]
-                  }
-                },
-                {
-                  "if": {
-                    "title": "Any numeric",
-                    "oneOf": [
-                      {
+                    },
+                    {
+                      "if": {
                         "properties": {
                           "type": {
-                            "enum": ["Integer"]
+                            "enum": ["DataViewDefinition"]
                           }
-                        }
+                        },
+                        "required": ["type"]
                       },
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["LongInteger"]
-                          }
-                        }
+                      "then": {
+                        "title": "Data views have to define allowed data types.",
+                        "required": ["allowedDataTypes"]
                       },
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["SingleReal"]
-                          }
-                        }
-                      },
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["Real"]
-                          }
-                        }
-                      },
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["Currency"]
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  "then": {
-                    "properties": {}
-                  },
-                  "else": {
-                    "title": "Only numerics can define range.",
-                    "not": {
-                      "required": ["range"]
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "oneOf": [
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["Integer"]
-                          }
-                        }
-                      },
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["LongInteger"]
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "range": {
-                        "properties": {
-                          "min": {
-                            "type": "integer"
+                      "else": {
+                        "allOf": [
+                          {
+                            "not": {
+                              "title": "Only data views can be single column.",
+                              "properties": {
+                                "singleColumn": { "enum": [true] }
+                              },
+                              "required": ["singleColumn"]
+                            }
                           },
-                          "max": {
-                            "type": "integer"
+                          {
+                            "not": {
+                              "title": "Only data views can disable limitations.",
+                              "properties": {
+                                "disableLimitations": { "enum": [true] }
+                              },
+                              "required": ["disableLimitations"]
+                            }
                           }
-                        }
+                        ]
                       }
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "oneOf": [
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["SingleReal"]
-                          }
-                        }
-                      },
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["Real"]
-                          }
-                        }
-                      },
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["Currency"]
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  "then": {
-                    "properties": {
-                      "range": {
-                        "properties": {
-                          "min": {
-                            "type": "number"
+                    },
+                    {
+                      "if": {
+                        "title": "Any numeric",
+                        "oneOf": [
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["Integer"]
+                              }
+                            }
                           },
-                          "max": {
-                            "type": "number"
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["LongInteger"]
+                              }
+                            }
+                          },
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["SingleReal"]
+                              }
+                            }
+                          },
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["Real"]
+                              }
+                            }
+                          },
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["Currency"]
+                              }
+                            }
                           }
-                        }
-                      }
-                    }
-                  },
-                  "else": {
-                    "properties": {
-                      "range": {
+                        ]
+                      },
+                      "then": {
+                        "properties": {}
+                      },
+                      "else": {
+                        "title": "Only numerics can define range.",
                         "not": {
-                          "required": ["minExcluded", "maxExcluded"]
+                          "required": ["range"]
+                        }
+                      }
+                    },
+                    {
+                      "if": {
+                        "oneOf": [
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["Integer"]
+                              }
+                            }
+                          },
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["LongInteger"]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "then": {
+                        "properties": {
+                          "range": {
+                            "properties": {
+                              "min": {
+                                "type": "integer"
+                              },
+                              "max": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "if": {
+                        "oneOf": [
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["SingleReal"]
+                              }
+                            }
+                          },
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["Real"]
+                              }
+                            }
+                          },
+                          {
+                            "properties": {
+                              "type": {
+                                "enum": ["Currency"]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "then": {
+                        "properties": {
+                          "range": {
+                            "properties": {
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "else": {
+                        "properties": {
+                          "range": {
+                            "not": {
+                              "required": ["minExcluded", "maxExcluded"]
+                            }
+                          }
                         }
                       }
                     }
-                  }
+                  ]
                 }
-              ]
+              }
             }
           }
-        }
+        ]
+      }
+    },
+    "agents": {
+      "type": "array",
+      "title": "The agents declared in the mod",
+      "description": "Agents that provide AI-driven analysis based on the current context.",
+      "items": {
+        "title": "Agent",
+        "allOf": [
+          { "$ref": "#/$defs/scriptBase" },
+          {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "title": "Agent type",
+                "description": "The type of context this agent operates on.",
+                "enum": ["marking", "visual"]
+              }
+            }
+          }
+        ]
       }
     }
   }

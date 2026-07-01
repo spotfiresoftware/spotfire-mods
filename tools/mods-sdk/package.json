@@ -1,6 +1,6 @@
 {
     "name": "@spotfire/mods-sdk",
-    "version": "1.1.3",
+    "version": "1.2.0",
     "description": "Developer SDK for Spotfire® Mods",
     "repository": {
         "type": "git",

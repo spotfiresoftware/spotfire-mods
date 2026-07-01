@@ -23,6 +23,28 @@ describe("new-template", () => {
         expect(existsSync(path.join(projectFolder, ".gitignore"))).toBeTruthy();
     });
 
+    test("agent mod starter can be created", async () => {
+        const projectFolder = "tests/testprojects/new-agent-mod";
+        await setupProject(projectFolder, ModType.Agent);
+
+        const manifest = path.join(projectFolder, "mod-manifest.json");
+        const manifestJson = JSON.parse(readFileSync(manifest, "utf-8"));
+        expect(manifestJson["apiVersion"]).toEqual("2.5");
+        expect(manifestJson["type"]).toEqual("action");
+        expect(manifestJson["name"]).toEqual("New Agent Mod");
+        expect(manifestJson["id"]).toEqual("new-agent-mod");
+        expect(manifestJson["agents"]).toBeDefined();
+        expect(manifestJson["agents"].length).toBeGreaterThan(0);
+
+        const packageJsonPath = path.join(projectFolder, "package.json");
+        const packageJson = JSON.parse(
+            readFileSync(packageJsonPath, "utf-8")
+        );
+        expect(
+            packageJson["devDependencies"]["@spotfire/mods-api"]
+        ).toEqual("~2.5.0");
+    });
+
     test("visualization mod starter can be created", async () => {
         const projectFolder = "tests/testprojects/new-visualization-mod";
         await setupProject(projectFolder, ModType.Visualization);
@@ -77,6 +99,23 @@ describe("new-template", () => {
             expect(
                 packageJson["devDependencies"]["@spotfire/mods-api"]
             ).toEqual("~2.1.0");
+        });
+
+        test("api version 2.5 uses preview semver", async () => {
+            const projectFolder = "tests/testprojects/action-mod-2.5";
+            await setupProject(projectFolder, ModType.Action, "2.5");
+
+            const manifest = path.join(projectFolder, "mod-manifest.json");
+            const manifestJson = JSON.parse(readFileSync(manifest, "utf-8"));
+            expect(manifestJson["apiVersion"]).toEqual("2.5");
+
+            const packageJsonPath = path.join(projectFolder, "package.json");
+            const packageJson = JSON.parse(
+                readFileSync(packageJsonPath, "utf-8")
+            );
+            expect(
+                packageJson["devDependencies"]["@spotfire/mods-api"]
+            ).toEqual("~2.5.0");
         });
     });
 });
