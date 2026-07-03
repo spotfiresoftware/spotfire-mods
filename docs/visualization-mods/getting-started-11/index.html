@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.157.0"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.163.3"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
 
 
 <title>Getting started (before 14.4) | Spotfire® Mods</title>
-  <meta itemprop="name" content="Getting started (before 14.4)">
-  <meta itemprop="description" content="This guide describes how to get a visualization mod running in Spotfire.">
-  <meta itemprop="datePublished" content="2025-12-18T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-12-18T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1490">
+	<meta itemprop="name" content="Getting started (before 14.4)">
+	<meta itemprop="description" content="This guide describes how to get a visualization mod running in Spotfire.">
+	<meta itemprop="datePublished" content="2025-12-18T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2025-12-18T00:00:00+00:00">
+	<meta itemprop="wordCount" content="1490">
 
 
 
@@ -255,11 +255,61 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorial</a>
+    <a  href="/spotfire-mods/docs/action-mods/tutorials/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorials</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modstutorials">
+      
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an action mod</a>
   </li>
   <ul>
     <li class="collapse " id="spotfire-modsdocsaction-modstutorial">
       
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an insight agent</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsinsight-agent-tutorial">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
       
       
     </li>
@@ -760,42 +810,42 @@ This is an example of a spider chart developed in TypeScript, rendered with D3.<
 <h2 id="mod-example-folder-structure">Mod example folder structure</h2>
 <p>The following files and folders are part of the example:</p>
 <table>
-  <thead>
-      <tr>
-          <th>File</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>.vscode</td>
-          <td>Settings for VS Code.</td>
-      </tr>
-      <tr>
-          <td>spotfire</td>
-          <td>Files related to the mod API.</td>
-      </tr>
-      <tr>
-          <td>src</td>
-          <td>Folder for the mod&rsquo;s source code.</td>
-      </tr>
-      <tr>
-          <td>package.json</td>
-          <td>Lists the Node.js dependencies and necessary scripts.</td>
-      </tr>
-      <tr>
-          <td>prettier.config.js</td>
-          <td>Configuration file for formatting with the tool prettier.</td>
-      </tr>
-      <tr>
-          <td>README.md</td>
-          <td>Instructions on how to get started.</td>
-      </tr>
-      <tr>
-          <td>tsconfig.json</td>
-          <td>TypeScript project file. It links the <code>/spotfire/spotfire-api.dts</code> file for IntelliSense in your code.</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>File</th>
+					<th>Description</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>.vscode</td>
+					<td>Settings for VS Code.</td>
+			</tr>
+			<tr>
+					<td>spotfire</td>
+					<td>Files related to the mod API.</td>
+			</tr>
+			<tr>
+					<td>src</td>
+					<td>Folder for the mod&rsquo;s source code.</td>
+			</tr>
+			<tr>
+					<td>package.json</td>
+					<td>Lists the Node.js dependencies and necessary scripts.</td>
+			</tr>
+			<tr>
+					<td>prettier.config.js</td>
+					<td>Configuration file for formatting with the tool prettier.</td>
+			</tr>
+			<tr>
+					<td>README.md</td>
+					<td>Instructions on how to get started.</td>
+			</tr>
+			<tr>
+					<td>tsconfig.json</td>
+					<td>TypeScript project file. It links the <code>/spotfire/spotfire-api.dts</code> file for IntelliSense in your code.</td>
+			</tr>
+	</tbody>
 </table>
 <h2 id="the-mod-manifestjson-file">The mod-manifest.json file</h2>
 <p>All metadata that concerns the mod is defined in a file called mod-manifest.json. It is used to give the mod a name and an id, and to define axes and their placement. It is also used to list all files used by the mod. Only files listed in the ‘files’ property will be embedded by Spotfire.</p>

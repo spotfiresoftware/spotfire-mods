@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Using the API on Spotfire® Mods</title>
-    <link>/spotfire-mods/docs/visualization-mods/using-the-api/</link>
-    <description>Recent content in Using the API on Spotfire® Mods</description>
-    <generator>Hugo</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 18 Dec 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/spotfire-mods/docs/visualization-mods/using-the-api/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>API overview</title>
-      <link>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</guid>
-      <description>&lt;p&gt;The &lt;a href=&#34;/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; is an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The visualization is a simplified view of the API. While the Mod API relies heavily on asynchronous behavior via Promises, the visualization only displays the interfaces defined in the &lt;em&gt;spotfire-api.d.ts&lt;/em&gt; file. There are some advanced types available in the declaration file that are not displayed in the hierarchy visualization. The advanced types describe some of the more intricate functionality in the API.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Visualization mods API documentation</title>
-      <link>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</link>
-      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</guid>
-      <description>&lt;p&gt;The &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods&#34;&gt;visualiztion mods API documentation&lt;/a&gt; lists all interfaces, type aliases, and functions in the visualization mods API. It contains a short introduction and describes how to use them. From each interface you can also find a direct link to the &lt;a href=&#34;/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; to get a hierarchical perspective.&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods&#34;&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/api-documentation.png&#34; alt=&#34;API Documentation&#34;&gt;&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;&#xA;&lt;p&gt;The latest API version is backwards compatible with older 1.x release. All new functionality is marked by a &lt;code&gt;version&lt;/code&gt; tag.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Mod data views</title>
-      <link>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</link>
-      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</guid>
-      <description>&lt;h2 id=&#34;defining-a-data-view&#34;&gt;Defining a data view&lt;/h2&gt;&#xA;&lt;p&gt;A mod can define one or more aggregated data view definitions.&lt;/p&gt;&#xA;&lt;p&gt;The data view is declared in the mod manifest. Its content is specified as a number of axes and an optional color axis. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.&lt;/p&gt;&#xA;&lt;p&gt;In the simplest form, the data view definition part of a mod manifest could look like this.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Visualization mod manifest schema</title>
-      <link>/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/</guid>
-      <description>&lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/visualization-mods-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;&#xD;&#xA;&lt;script type=&#34;application/javascript&#34;&gt;&#xD;&#xA;&#xD;&#xA;    function resizeIFrameToFitContent( ) {&#xD;&#xA;        let frame = document.getElementById(&#34;schema-frame&#34;);&#xD;&#xA;        frame.height = frame.contentWindow.document.body.scrollHeight;&#xD;&#xA;    }&#xD;&#xA;    window.addEventListener(&#34;resize&#34;,resizeIFrameToFitContent);&#xD;&#xA;&lt;/script&gt;</description>
-    </item>
-    <item>
-      <title>Working with mod readers</title>
-      <link>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</link>
-      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</guid>
-      <description>&lt;p&gt;The Spotfire Mod API exposes a set of &lt;a href=&#34;/spotfire-mods/overview/#Readable&#34;&gt;Readables&lt;/a&gt;, such as the &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html&#34;&gt;&lt;code&gt;DataView&lt;/code&gt;&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/AnalysisProperty.html&#34;&gt;&lt;code&gt;properties&lt;/code&gt;&lt;/a&gt;. These can be consumed by a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html&#34;&gt;Reader&lt;/a&gt; in order to read their values and subscribe to changes.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;),&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;!-- managing state, the callback will always be invoked with the latest up to date state. --&gt;&#xD;&#xA;&lt;p&gt;The aim of a &lt;code&gt;reader&lt;/code&gt; is to simplify the synchronization of reading related values. An example is a visualization that depends on the window&amp;rsquo;s &lt;code&gt;size&lt;/code&gt; and the &lt;code&gt;dataview&lt;/code&gt;. When one of the two changes, the visualization needs to be redrawn. The &lt;code&gt;reader&lt;/code&gt; fetches new values and keeps unchanged values in memory.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Using the API on Spotfire® Mods</title>
+		<link>/spotfire-mods/docs/visualization-mods/using-the-api/</link>
+		<description>Recent content in Using the API on Spotfire® Mods</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 18 Dec 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="/spotfire-mods/docs/visualization-mods/using-the-api/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>API overview</title>
+				<link>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</link>
+				<pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-overview/</guid>
+				<description>&lt;p&gt;The &lt;a href=&#34;/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; is an alternative perspective of the API, compared to the more classic &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods&#34;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The visualization is a simplified view of the API. While the Mod API relies heavily on asynchronous behavior via Promises, the visualization only displays the interfaces defined in the &lt;em&gt;spotfire-api.d.ts&lt;/em&gt; file. There are some advanced types available in the declaration file that are not displayed in the hierarchy visualization. The advanced types describe some of the more intricate functionality in the API.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Visualization mods API documentation</title>
+				<link>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</link>
+				<pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/</guid>
+				<description>&lt;p&gt;The &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods&#34;&gt;visualiztion mods API documentation&lt;/a&gt; lists all interfaces, type aliases, and functions in the visualization mods API. It contains a short introduction and describes how to use them. From each interface you can also find a direct link to the &lt;a href=&#34;/spotfire-mods/overview&#34;&gt;API overview&lt;/a&gt; to get a hierarchical perspective.&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods&#34;&gt;&lt;img src=&#34;/spotfire-mods/docs/visualization-mods/using-the-api/api-docs/api-documentation.png&#34; alt=&#34;API Documentation&#34;&gt;&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;older-versions&#34;&gt;Older versions&lt;/h2&gt;&#xA;&lt;p&gt;The latest API version is backwards compatible with older 1.x release. All new functionality is marked by a &lt;code&gt;version&lt;/code&gt; tag.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; There will be a runtime error if a &lt;em&gt;new&lt;/em&gt; API feature is used without incrementing the mod manifest&amp;rsquo;s &lt;code&gt;apiVersion&lt;/code&gt; property.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Mod data views</title>
+				<link>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</link>
+				<pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/using-the-api/mod-data-views/</guid>
+				<description>&lt;h2 id=&#34;defining-a-data-view&#34;&gt;Defining a data view&lt;/h2&gt;&#xA;&lt;p&gt;A mod can define one or more aggregated data view definitions.&lt;/p&gt;&#xA;&lt;p&gt;The data view is declared in the mod manifest. Its content is specified as a number of axes and an optional color axis. The Spotfire UI will provide controls to set actual columns/expressions used to build the data view in runtime.&lt;/p&gt;&#xA;&lt;p&gt;In the simplest form, the data view definition part of a mod manifest could look like this.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Visualization mod manifest schema</title>
+				<link>/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/</link>
+				<pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/</guid>
+				<description>&lt;iframe id=&#34;schema-frame&#34; width=&#34;100%&#34; onload=&#34;resizeIFrameToFitContent()&#34; src=&#34;/spotfire-mods/visualization-mods-schema/index.html&#34;  frameborder=&#34;0&#34; allowfullscreen=&#34;allowfullscreen&#34; allow=&#34;geolocation *; microphone *; camera *; midi *; encrypted-media *&#34;&gt;&lt;/iframe&gt;&#xD;&#xA;&lt;script type=&#34;application/javascript&#34;&gt;&#xD;&#xA;&#xD;&#xA;    function resizeIFrameToFitContent( ) {&#xD;&#xA;        let frame = document.getElementById(&#34;schema-frame&#34;);&#xD;&#xA;        frame.height = frame.contentWindow.document.body.scrollHeight;&#xD;&#xA;    }&#xD;&#xA;    window.addEventListener(&#34;resize&#34;,resizeIFrameToFitContent);&#xD;&#xA;&lt;/script&gt;</description>
+			</item>
+			<item>
+				<title>Working with mod readers</title>
+				<link>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</link>
+				<pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/using-the-api/working-with-readables/</guid>
+				<description>&lt;p&gt;The Spotfire Mod API exposes a set of &lt;a href=&#34;/spotfire-mods/overview/#Readable&#34;&gt;Readables&lt;/a&gt;, such as the &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/DataView.html&#34;&gt;&lt;code&gt;DataView&lt;/code&gt;&lt;/a&gt; and &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/AnalysisProperty.html&#34;&gt;&lt;code&gt;properties&lt;/code&gt;&lt;/a&gt;. These can be consumed by a &lt;a href=&#34;/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html&#34;&gt;Reader&lt;/a&gt; in order to read their values and subscribe to changes.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;createReader&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;property&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;myProperty&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;),&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;mod&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;windowSize&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;());&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;!-- managing state, the callback will always be invoked with the latest up to date state. --&gt;&#xD;&#xA;&lt;p&gt;The aim of a &lt;code&gt;reader&lt;/code&gt; is to simplify the synchronization of reading related values. An example is a visualization that depends on the window&amp;rsquo;s &lt;code&gt;size&lt;/code&gt; and the &lt;code&gt;dataview&lt;/code&gt;. When one of the two changes, the visualization needs to be redrawn. The &lt;code&gt;reader&lt;/code&gt; fetches new values and keeps unchanged values in memory.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

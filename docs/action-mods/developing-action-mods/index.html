@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.157.0"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.163.3"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
 
 
 <title>Developing action mods | Spotfire® Mods</title>
-  <meta itemprop="name" content="Developing action mods">
-  <meta itemprop="description" content="This guide describes how to continue developing and testing your action mod in Spotfire.">
-  <meta itemprop="datePublished" content="2024-06-17T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-06-17T00:00:00+00:00">
-  <meta itemprop="wordCount" content="488">
+	<meta itemprop="name" content="Developing action mods">
+	<meta itemprop="description" content="This guide describes how to continue developing and testing your action mod in Spotfire.">
+	<meta itemprop="datePublished" content="2024-06-17T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2024-06-17T00:00:00+00:00">
+	<meta itemprop="wordCount" content="488">
 
 
 
@@ -255,11 +255,61 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorial</a>
+    <a  href="/spotfire-mods/docs/action-mods/tutorials/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorials</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modstutorials">
+      
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an action mod</a>
   </li>
   <ul>
     <li class="collapse " id="spotfire-modsdocsaction-modstutorial">
       
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an insight agent</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsinsight-agent-tutorial">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
       
       
     </li>
@@ -720,22 +770,22 @@ This script takes a single string argument and prints it to the console with an 
 </ul>
 <p>All metadata that concerns the mod is defined in the mod-manifest.json file. A list of the entries that are common to all mods can be found in the <a href="/spotfire-mods/docs/getting-started/">getting started guide</a>. The entries that are specific to action mods are listed below:</p>
 <table>
-  <thead>
-      <tr>
-          <th>Entry</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>capabilities</td>
-          <td>Any extended capabilites required by the scripts. Currently supports <code>LibraryRead</code> and <code>LibraryWrite</code>.</td>
-      </tr>
-      <tr>
-          <td>scripts</td>
-          <td>An array of the scripts in the action mod.</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>Entry</th>
+					<th>Description</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>capabilities</td>
+					<td>Any extended capabilites required by the scripts. Currently supports <code>LibraryRead</code> and <code>LibraryWrite</code>.</td>
+			</tr>
+			<tr>
+					<td>scripts</td>
+					<td>An array of the scripts in the action mod.</td>
+			</tr>
+	</tbody>
 </table>
 <p>For details, see the <a href="/spotfire-mods/docs/action-mods/using-the-api/mod-schema/">manifest schema</a>.</p>
 <h2 id="whats-next">What&rsquo;s next?</h2>

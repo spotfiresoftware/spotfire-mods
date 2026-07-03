@@ -1,21 +1,47 @@
 ---
 title: "Snippets"
 linkTitle: "Snippets"
-date: 2025-09-26
-weight: 3
+date: 2026-07-01
+weight: 4
 description: >
-    Snippets showing what is possible to do with the API.
+    Use snippets to discover what you can build with the mods API.
 ---
 
-## How to use a snippet
+In the [Script snippets](#script-snippets) section, you find examples of scripts you can add to your action mod. In the [Agent snippets](#agent-snippets) section, you find examples of agents you can add to your mod.
 
-Each snippet listed below contains three code blocks. The first block shows the command to run to add the script with an ID and a name. For example `npx @spotfire/mods-sdk add-script my-snippet-id --name my-snippet-name`.
-The second block shows the expected entry in the `scripts` array of the mod manifest. The third block shows the source code of the script.
-Test the snippet by adding the entry to your mod manifest, then copy and paste the source code into the script file.
-Some snippets use APIs which require your mod to declare additional capabilities.
+## Script snippets
 
-## Snippets
+These snippets show various examples of actions you can create by adding scripts to your action mod.
+Each snippet contains the following three code blocks:
+
+1. The first block shows the command to run to add the script with an ID and a name:
+
+   ```sh
+   npx @spotfire/mods-sdk add-script my-snippet-id --name my-snippet-name
+   ```
+
+2. The second block shows the expected entry in the `scripts` array of the mod manifest.
+3. The third block shows the source code of the script.
+
+Test the snippet by adding the entry to your mod manifest, then copy and paste the source code into the script file. Some snippets use APIs which require your mod to declare additional capabilities.
 $INSERT_SNIPPETS_HERE$
+
+## Agent snippets
+
+These snippets show examples of what [insight agents](/spotfire-mods/docs/action-mods/insight-agent-tutorial/) can do during the insight phase, such as running data transformations and data functions in the background.
+Each snippet contains the following three code blocks:
+
+1. The first block shows the command to run to add the agent to your mod with an ID and a name, as well as the type of agent:
+
+   ```sh
+   npx @spotfire/mods-sdk add-agent <id> --name "<name>" --type <visual|marking>
+   ```
+
+2. The second block shows the expected entry in the `agents` array of the mod manifest.
+3. The third block shows the source code of the agent.
+
+Test the snippet by adding the entry to your mod manifest, then copy and paste the source code into the script file.
+$INSERT_AGENTS_HERE$
 
 [DataColumn]: /spotfire-mods/docs/action-mods/using-the-api/parameter-types/#datacolumn
 [DataViewDefinition]: /spotfire-mods/docs/action-mods/using-the-api/parameter-types/#dataviewdefinition

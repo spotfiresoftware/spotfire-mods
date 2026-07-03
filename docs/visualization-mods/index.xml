@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Visualization mods on Spotfire® Mods</title>
-    <link>/spotfire-mods/docs/visualization-mods/</link>
-    <description>Recent content in Visualization mods on Spotfire® Mods</description>
-    <generator>Hugo</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 18 Dec 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/spotfire-mods/docs/visualization-mods/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Developing visualization mods</title>
-      <link>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</guid>
-      <description>&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;You have read the &lt;a href=&#34;/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;.&lt;/li&gt;&#xA;&lt;li&gt;You have created a new visualization mod template project.&lt;/li&gt;&#xA;&lt;li&gt;You have started a local development server and connected Spotfire to it.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;sub&gt;&lt;img src=&#34;/spotfire-mods/images/exclamation.png&#34; style=&#34;width: 0.8em;vertical-align: baseline;&#34;&gt; &lt;/img&gt;Note: Spotfire versions earlier than 14.4 have a slightly different development workflow for visualization mods. See &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt; to learn more.&#xA;&lt;/sub&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;develop-and-test-the-mod&#34;&gt;Develop and test the mod&lt;/h2&gt;&#xA;&lt;h3 id=&#34;1-add-the-mod-to-the-analysis&#34;&gt;1. Add the mod to the analysis&lt;/h3&gt;&#xA;&lt;p&gt;In the &lt;em&gt;Mods development&lt;/em&gt; tool, click the &lt;em&gt;Add to page&lt;/em&gt; button to instantiate the mod on the current analysis page.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Getting started (before 14.4)</title>
-      <link>/spotfire-mods/docs/visualization-mods/getting-started-11/</link>
-      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/getting-started-11/</guid>
-      <description>&lt;h2 id=&#34;developing-a-visualization-mod&#34;&gt;Developing a visualization mod&lt;/h2&gt;&#xA;&lt;p&gt;Spotfire® Mods is a framework to create interactive visualizations in Spotfire®. It is based on web technologies and it runs in a sandboxed iframe.&lt;/p&gt;&#xA;&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt; &lt;br&gt;&#xA;This is needed to develop and test a mod. Development can be done against the installed client (Spotfire® Analyst) or the web client (Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/getting-started-11/#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Visualization mods on Spotfire® Mods</title>
+		<link>/spotfire-mods/docs/visualization-mods/</link>
+		<description>Recent content in Visualization mods on Spotfire® Mods</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 18 Dec 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="/spotfire-mods/docs/visualization-mods/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Developing visualization mods</title>
+				<link>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</link>
+				<pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/developing-visualization-mods/</guid>
+				<description>&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;You have read the &lt;a href=&#34;/spotfire-mods/docs/getting-started/&#34;&gt;getting started guide&lt;/a&gt;.&lt;/li&gt;&#xA;&lt;li&gt;You have created a new visualization mod template project.&lt;/li&gt;&#xA;&lt;li&gt;You have started a local development server and connected Spotfire to it.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;sub&gt;&lt;img src=&#34;/spotfire-mods/images/exclamation.png&#34; style=&#34;width: 0.8em;vertical-align: baseline;&#34;&gt; &lt;/img&gt;Note: Spotfire versions earlier than 14.4 have a slightly different development workflow for visualization mods. See &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt; to learn more.&#xA;&lt;/sub&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;develop-and-test-the-mod&#34;&gt;Develop and test the mod&lt;/h2&gt;&#xA;&lt;h3 id=&#34;1-add-the-mod-to-the-analysis&#34;&gt;1. Add the mod to the analysis&lt;/h3&gt;&#xA;&lt;p&gt;In the &lt;em&gt;Mods development&lt;/em&gt; tool, click the &lt;em&gt;Add to page&lt;/em&gt; button to instantiate the mod on the current analysis page.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Getting started (before 14.4)</title>
+				<link>/spotfire-mods/docs/visualization-mods/getting-started-11/</link>
+				<pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/getting-started-11/</guid>
+				<description>&lt;h2 id=&#34;developing-a-visualization-mod&#34;&gt;Developing a visualization mod&lt;/h2&gt;&#xA;&lt;p&gt;Spotfire® Mods is a framework to create interactive visualizations in Spotfire®. It is based on web technologies and it runs in a sandboxed iframe.&lt;/p&gt;&#xA;&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt; &lt;br&gt;&#xA;This is needed to develop and test a mod. Development can be done against the installed client (Spotfire® Analyst) or the web client (Spotfire® Business Author) using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser. For more details, see &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/getting-started-11/#development-in-web-client&#34;&gt;Development in the Spotfire web client&lt;/a&gt; below.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

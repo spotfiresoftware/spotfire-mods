@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.157.0"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/whats-new/index.xml">
+<meta name="generator" content="Hugo 0.163.3"><link rel="alternate" type="application/rss&#43;xml" href="/spotfire-mods/docs/whats-new/index.xml">
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
@@ -11,11 +11,11 @@
 
 
 <title>What&#39;s new? | Spotfire® Mods</title>
-  <meta itemprop="name" content="What&#39;s new?">
-  <meta itemprop="description" content="This page describes some of the latest additions to the mods API and SDK.">
-  <meta itemprop="datePublished" content="2026-04-07T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-04-07T00:00:00+00:00">
-  <meta itemprop="wordCount" content="4253">
+	<meta itemprop="name" content="What&#39;s new?">
+	<meta itemprop="description" content="This page describes some of the latest additions to the mods API and SDK.">
+	<meta itemprop="datePublished" content="2026-07-01T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2026-07-01T00:00:00+00:00">
+	<meta itemprop="wordCount" content="5306">
 
 
 
@@ -256,11 +256,61 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorial</a>
+    <a  href="/spotfire-mods/docs/action-mods/tutorials/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorials</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modstutorials">
+      
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an action mod</a>
   </li>
   <ul>
     <li class="collapse " id="spotfire-modsdocsaction-modstutorial">
       
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an insight agent</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsinsight-agent-tutorial">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
       
       
     </li>
@@ -615,27 +665,33 @@
 
 <nav id="TableOfContents">
   <ul>
+    <li><a href="#mods-api-25">Mods API 2.5</a>
+      <ul>
+        <li><a href="#action-mods">Action mods</a></li>
+        <li><a href="#document-model-additions">Document-model additions</a></li>
+      </ul>
+    </li>
     <li><a href="#mods-api-24">Mods API 2.4</a>
       <ul>
         <li><a href="#visualization-mods">Visualization mods</a></li>
-        <li><a href="#action-mods">Action mods</a></li>
+        <li><a href="#action-mods-1">Action mods</a></li>
       </ul>
     </li>
     <li><a href="#mods-api-23">Mods API 2.3</a>
       <ul>
         <li><a href="#visualization-mods-1">Visualization mods</a></li>
-        <li><a href="#action-mods-1">Action mods</a></li>
+        <li><a href="#action-mods-2">Action mods</a></li>
       </ul>
     </li>
     <li><a href="#mods-api-22">Mods API 2.2</a>
       <ul>
-        <li><a href="#action-mods-2">Action mods</a></li>
+        <li><a href="#action-mods-3">Action mods</a></li>
         <li><a href="#visualization-mods-2">Visualization mods</a></li>
       </ul>
     </li>
     <li><a href="#mods-api-21">Mods API 2.1</a>
       <ul>
-        <li><a href="#action-mods-3">Action mods</a></li>
+        <li><a href="#action-mods-4">Action mods</a></li>
         <li><a href="#visualization-mods-3">Visualization mods</a></li>
       </ul>
     </li>
@@ -678,7 +734,7 @@
 	
 	
 	
-	<p class="-text-secondary pt-3 h6" >Reading time: 19 minutes and 45 seconds.</p>
+	<p class="-text-secondary pt-3 h6" >Reading time: 24 minutes and 45 seconds.</p>
 	<h1>What&#39;s new?</h1>
 	<div class="lead">This page describes some of the latest additions to the mods API and SDK.</div>
 	
@@ -689,26 +745,89 @@
 <li><a href="https://www.npmjs.com/package/@spotfire/mods-dev-server">@spotfire/mods-dev-server</a></li>
 </ul>
 <p>If you have started from an SDK template, simply run <code>npm update</code> to get the latest compatible versions.</p>
+<h2 id="mods-api-25">Mods API 2.5</h2>
+<p>Version 2.5 of the mods API is centered on action mods and introduces <strong>insight agents</strong> — AI-powered scripts that analyze a visualization or a marked column, reason about the data with a large language model, and report back ranked, actionable recommendations to the user.
+Using features introduced in the 2.5 API requires Spotfire version 15.0 or later.
+To upgrade an existing mod, follow these steps:</p>
+<ol>
+<li>Update the <code>&quot;apiVersion&quot;</code> field in the mod manifest to <code>&quot;2.5&quot;</code>.</li>
+<li>Update the version of <code>&quot;@spotfire/mods-api&quot;</code> in the <code>package.json</code> file to <code>~2.5.0</code>.</li>
+<li>Update <code>&quot;@spotfire/mods-sdk&quot;</code> to the latest version. Insight agents require a newer SDK; older versions cannot generate the agent types, so the build will fail.</li>
+<li>Run <code>npm update</code>.</li>
+</ol>
+<h3 id="action-mods">Action mods</h3>
+<h4 id="insight-agents">Insight agents</h4>
+<p>An insight agent is a new kind of action mod entry point that Spotfire can run on the user&rsquo;s behalf to discover insights in an analysis.
+Agents are declared in a new <code>&quot;agents&quot;</code> section of the mod manifest, where each agent has a <code>&quot;type&quot;</code> that is either <code>&quot;visual&quot;</code> or <code>&quot;marking&quot;</code>:</p>
+<ul>
+<li>A <strong>visual</strong> agent runs against a visualization. Its entry function receives a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.VisualInsightAgentContext.html">VisualInsightAgentContext</a>, exposing the originating <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.VisualInsightAgentContext.html#visual">Visual</a> snapshot.</li>
+<li>A <strong>marking</strong> agent runs when the user marks rows. Its entry function receives a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.MarkingInsightAgentContext.html">MarkingInsightAgentContext</a>, which additionally exposes the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.MarkingInsightAgentContext.html#analyzedcolumn">AnalyzedColumn</a> that was marked.</li>
+</ul>
+<p>An agent runs in two phases.
+In the <strong>insight phase</strong>, the entry function executes on a background thread against a read-only <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.VisualInsightAgentContext.html#document">snapshot</a> of the document, so it can read tables, axes, and marking without blocking the user or risking a partial document modification.
+When the agent finds something worth acting on, it builds one or more <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.ActionModInsight.html">ActionModInsight</a> results.
+Each insight wraps an invocation of an existing action mod script, created with <code>utils.CreateScriptInvocation(&quot;script-id&quot;, { ... })</code> and passing arguments such as <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ActionModScriptArgumentLiteral.html">ActionModScriptArgumentLiteral</a> and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ActionModScriptArgumentNode.html">ActionModScriptArgumentNode</a>.
+In the <strong>action phase</strong>, if the user chooses to act on an insight, that script runs on the application thread against the live document and performs the actual modification.
+The agent surfaces everything to the user by calling <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.VisualInsightAgentContext.html#reportresult">ReportResult(title, summary, insights?)</a>.</p>
+<p>Insights can carry a preview through the optional last argument of <code>ActionModInsight</code>, an <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.InsightImage.html">InsightImage</a>.
+Use <code>InsightImage.LivePreview()</code> to render a live page or visual, <code>InsightImage.CustomIcon(svg)</code> for a custom SVG, <code>InsightImage.Binary(filePath)</code> for a bundled image resource, or <code>InsightImage.ActionIcon()</code> / <code>InsightImage.None()</code>.</p>
+<p>During the insight phase, an agent can interact with the user through <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.UserInteraction.html">UserInteraction</a>: report progress with <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.UserInteraction.html#reportprogress">ReportProgress</a>, or ask a question with <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.UserInteraction.html#promptuser">PromptUser</a>, optionally offering a set of <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Insights.UserQuestionOption.html">UserQuestionOption</a> choices.</p>
+<p>To get started, follow the new <a href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/">insight agent tutorial</a>, which builds a visual agent that suggests calculated columns.</p>
+<h4 id="the-ai-service">The AI service</h4>
+<p>The new <a href="/spotfire-mods/api-docs/action-mods/modules/Spotfire.Dxp.Framework.Ai.html">Spotfire.Dxp.Framework.Ai</a> namespace gives agents access to the AI model configured for the Spotfire environment.
+Reach it from any agent context via <code>context.AiService</code>, an <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiService.html">AiService</a> that exposes <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiService.html#hasmodels">HasModels</a> and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiService.html#getdefaultmodel">GetDefaultModel</a>.
+Build the conversation with an <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiChatHistory.html">AiChatHistory</a> (<code>AddSystemMessage</code>, <code>AddUserMessage</code>, <code>AddAssistantMessage</code>, <code>AddToolMessage</code>) and call <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiModel.html#chatcompletion">AiModel.ChatCompletion</a>.</p>
+<p>For structured output, pass a JSON schema as the constructor argument of <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.CompletionSettings.html">CompletionSettings</a> so the model returns easily parseable JSON (the <a href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/">insight agent tutorial</a> shows how to parse this defensively with Zod).
+To let the model call back into your own code mid-conversation, pass <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiTool.html">AiTool</a> instances — typically an <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.ActionAiTool.html">ActionAiTool</a> created from a name, description, parameter JSON schema, and a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.ActionAiTool.ToolCallback.html">ToolCallback</a>.
+When a request fails, the model throws an <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiModelException.html">AiModelException</a> carrying <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiModelException.html#isretryable">IsRetryable</a>, <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiModelException.html#httpstatuscode">HttpStatusCode</a>, <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiModelException.html#modelname">ModelName</a>, and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiModelException.html#providererrormessage">ProviderErrorMessage</a>, so an agent can react to transport errors, and report a meaningful result.
+The <a href="/spotfire-mods/api-docs/action-mods/classes/System.Net.HttpStatusCode.html">System.Net.HttpStatusCode</a> enum is now available to branch on those status codes.</p>
+<p>Follow the <a href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/">insight agent tutorial</a> for an example of a complete agent that uses the AI service.</p>
+<h4 id="data-transformations-in-the-insight-phase">Data transformations in the insight phase</h4>
+<p>An agent can also run data transformations and data functions during the insight phase, entirely in the background.
+The existing <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFlowBuilder.html">DataFlowBuilder</a> pipeline can be connected and executed without binding the result into the document, so an agent can compute derived columns or aggregations to base its insights on.
+In API version 2.5, the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionExecutorService.html">DataFunctionExecutorService</a>, <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionInvocation.html">DataFunctionInvocation</a>, and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Data.DataFunctions.DataFunctionInvocationBuilder.html">DataFunctionInvocationBuilder</a> no longer require single-input/single-output of <code>DataFunctionTransformation</code>. This means that an agent can now feed multiple named inputs (data-flow readers and scalar values) into any built-in or saved data function, and read back multiple named outputs as <code>DataRowReader</code>s.
+The executor is resolved as a global service via <code>context.ImportContext.GetService(DataFunctionExecutorService)</code>.
+See the snippets <a href="/spotfire-mods/docs/action-mods/snippets/#run-a-data-flow-during-the-insight-phase">Run a data flow during the insight phase</a> and <a href="/spotfire-mods/docs/action-mods/snippets/#run-a-data-function-during-the-insight-phase">Run a data function during the insight phase</a> for example usages of these APIs.</p>
+<h3 id="document-model-additions">Document-model additions</h3>
+<p>Spotfire 15.0 brings a number of visualization and data-model additions that are available to action mod scripts and are readable from insight agents.</p>
+<h4 id="curve-fitting-and-forecasting">Curve fitting and forecasting</h4>
+<p>The <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.FittingModels.FittingModelCollection.html">FittingModelCollection</a> gains two new models:
+The <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.FittingModels.ArpsDeclineCurveFittingModel.html">ArpsDeclineCurveFittingModel</a> implements the Arps decline curve used for oil-and-gas production forecasting, with editable fit parameters exposed through the reusable <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.FittingModels.CurveFitParameter.html">CurveFitParameter</a> node (each settable to automatic, bounded, or fixed via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.FittingModels.CurveFitParameterMode.html">CurveFitParameterMode</a>), a configurable <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.FittingModels.ArpsDeclineCurveFittingModel.html#timeunit">TimeUnit</a> (<a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.FittingModels.ArpsTimeUnit.html">ArpsTimeUnit</a>), and a forecast that ends either at an economic limit or after a fixed time.
+A new <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.FittingModels.Q1Q3LineFittingModel.html">Q1Q3LineFittingModel</a> and a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.FittingModels.FittingModelLayer.html">FittingModelLayer</a> (for reordering fitting models among other reference layers) round out the additions.</p>
+<h4 id="probit-plot">Probit plot</h4>
+<p>The new <a href="/spotfire-mods/api-docs/action-mods/modules/Spotfire.Dxp.Application.Visuals.Distributions.html">Spotfire.Dxp.Application.Visuals.Distributions</a> namespace adds the <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.Distributions.ProbitPlot.html">ProbitPlot</a> visualization, which plots each row&rsquo;s value against the quantile of a theoretical normal distribution to assess normality.
+It supports the usual color, shape, size, rotation and labeling axes, fitting models, and a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.Distributions.ProbitPlot.html#showprobitscale">ShowProbitScale</a> toggle.
+Create this visualization by passing the <code>ProbitPlot</code> type to the page&rsquo;s <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.VisualCollection.html">Visuals.AddNew</a> method (<code>page.Visuals.AddNew(ProbitPlot)</code>).
+See the snippet <a href="/spotfire-mods/docs/action-mods/snippets/#create-and-configure-a-probit-plot">Create and configure a probit plot</a>.</p>
+<h4 id="reference-layers">Reference layers</h4>
+<p>Programmatic control over reference layers is substantially expanded.
+A new <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerData.html">ReferenceLayerData</a> node, reached via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayer.html#data">ReferenceLayer.Data</a>, lets a reference layer be driven from a different <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerData.html#datatablereference">DataTableReference</a> and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerData.html#whereclauseexpression">WhereClauseExpression</a> than its parent visualization, with its own marking and filter limiting (<a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerData.html#limitbymarking">LimitByMarking</a>, <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerData.html#applyparentdatalimiting">ApplyParentDataLimiting</a>).
+New per-layer axes — <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerColorAxis.html">ReferenceLayerColorAxis</a> (with <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerColorAxis.html#inheritscale">InheritScale</a>), <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerXAxis.html">ReferenceLayerXAxis</a> and <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ReferenceElements.ReferenceLayerElementByAxis.html">ReferenceLayerElementByAxis</a> — give per-layer coloring, axis-range participation, and grouping that are independent of the parent visualization.
+See the snippets <a href="/spotfire-mods/docs/action-mods/snippets/#drive-a-reference-layer-from-a-separate-table">Drive a reference layer from a separate table</a> and <a href="/spotfire-mods/docs/action-mods/snippets/#give-a-reference-layer-an-independent-color-scale">Give a reference layer an independent color scale</a>.</p>
+<h4 id="adaptive-time-labels-and-log-scale-gridlines">Adaptive time labels and log-scale gridlines</h4>
+<p>Every continuous scale now exposes an <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.Components.ContinuousDateTime.AdaptiveTimeLabels.html">AdaptiveTimeLabels</a> settings node, via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ScaleBase.html#adaptivetimelabels">ScaleBase.AdaptiveTimeLabels</a>, that automatically tailors date/time label formatting to the visible range, with a <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.Components.ContinuousDateTime.AdaptiveTimeLabels.html#dateformat">DateFormat</a> choice between <code>Standard</code> and a compact <code>AbbreviatedMonthName</code> format (e.g. &ldquo;1 Apr 2026&rdquo;), plus <code>MultipleLines</code> and <code>Enabled</code> toggles.
+Another addition is opt-in minor gridlines for logarithmic scales through <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.ScaleBase.html#showadditionallogscalegridlines">ScaleBase.ShowAdditionalLogScaleGridlines</a>.
+See the snippet <a href="/spotfire-mods/docs/action-mods/snippets/#enable-adaptive-time-labels-on-a-date-axis">Enable adaptive time labels on a date axis</a>.</p>
 <h2 id="mods-api-24">Mods API 2.4</h2>
 <p>This version of the mods API extends the multiple data view definition feature introduced in version 2.3 by allowing visualization mods to define a dynamic number of data views.
-This feature enables the ability to develop mod visualizations with a dynamic number of layers of a certain type.
-Visualization mods also contain many more additions such as the ability to extend the axes of another data view, new transaction APIs, and new readable APIs.</p>
-<p>Version 2.4 does not contain any addition to the action mods framework itself, but many API additions have been made as part of Spotfire 14.8.</p>
+This feature enables the development of visualization mods with a dynamic number of layers of a certain type.
+The update also includes several other additions for visualization mods, such as the ability to extend the axes of another data view, new transaction APIs, and new readable APIs.</p>
+<p>Version 2.4 does not contain any additions to the action mods framework itself, but many API additions have been introduced as part of Spotfire 14.8.</p>
 <h3 id="visualization-mods">Visualization mods</h3>
 <h4 id="dynamic-layers">Dynamic layers</h4>
-<p>With version 2.4 of the visualization mods API you can define layer types via the <code>&quot;layers&quot;</code> property in the mod manifest.
-Layer types may contain a single main data view definition and many named data view definitions.
-A layer may also define its own mod properties whose values are unique to each instance of the layer.
-A layer can be added via Spotfire&rsquo;s UI (unless <code>&quot;disableAddRemove&quot;</code> is set to <code>true</code>) or via the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayers.html#add">ModLayers.add</a> API.
-You can think of layers as sub visualizations inside your visualization mod, and the layer instance type <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html">ModLayer</a> supports many of the same APIs that the mod visualization does.</p>
-<p>The dynamic nature of layers allow you to create advanced visualizations which contain sub elements of a certain type.
-For instance you can now create a graphical table where each column defines a mini visualization such as a scatter plot or a bar chart.
-Another use-case is layered visualizations such as map charts where you may have many feature or scatter layers stacked on top of each other.</p>
-<p>To keep axes in sync across data views you can inherit the axis and data configuration via the <code>&quot;extendedAxes&quot;</code> property.
+<p>With version 2.4 of the visualization mods API, you can define layer types via the <code>&quot;layers&quot;</code> property in the mod manifest.
+Layer types may contain a single main data view definition and multiple named data view definitions.
+A layer may also define its own mod properties, whose values are unique to each instance of the layer.
+A layer can be added via the Spotfire UI (unless <code>&quot;disableAddRemove&quot;</code> is set to <code>true</code>) or via the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayers.html#add">ModLayers.add</a> API.
+You can think of layers as sub-visualizations inside your visualization mod, and the layer <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html">ModLayer</a> instance type supports many of the same APIs that the parent mod visualization does.</p>
+<p>The dynamic nature of layers allows you to create advanced visualizations that contain sub-elements of a certain type.
+For instance, you can now create a graphical table where each column defines a mini visualization such as a scatter plot or a bar chart.
+Another use case is layered visualizations, such as map charts, where you may have many feature or scatter layers stacked on top of each other.</p>
+<p>To keep axes in sync across data views, you can inherit the axis and data configuration via the <code>&quot;extendedAxes&quot;</code> property.
 This property takes an array of axis names defined further up in the manifest.</p>
-<p>To see a simple example of a visualization using the layers feature checkout the <a href="https://github.com/spotfiresoftware/spotfire-mods/tree/master/examples/ts-dev-graphical-table">ts-dev-graphical-table</a> example project.
+<p>To see a simple example of a visualization using the layers feature, see the <a href="https://github.com/spotfiresoftware/spotfire-mods/tree/master/examples/ts-dev-graphical-table">ts-dev-graphical-table</a> example project.
 This project implements a graphical table supporting the bar chart and scatter plot mini visualizations.
-It uses the extended axes feature to sync the &ldquo;Row by&rdquo; axis across mini visualizations.</p>
+It uses the extended axes feature to sync the &ldquo;Row by&rdquo; axis across the mini visualizations.</p>
 <p>The most straightforward way to show layers in a visualization mod is to add the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#layers">ModVisualization.layers</a> readable to your main render loop and render each layer instance consecutively.
 For example:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
@@ -738,15 +857,15 @@ For example:</p>
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
 </span></span></code></pre></div><p>The data views for layers are eagerly materialized for best performance in most cases.
-If your mod visualization requires a more advanced rendering flow you can pass a <a href="/spotfire-mods/api-docs/visualization-mods/types/LayerMode.html">LayerMode</a> argument to the layers readable to gain greater control over when data is materialized.
-For instance passing <code>&quot;LazyData&quot;</code> means Spotfire will not attempt to materialize the data view until the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html#data-1">ModLayer.data</a> readable is awaited.
-For total control you can pass the <code>&quot;CollectionOnly&quot;</code> layer mode and setup individual readables on each layer instance.</p>
+If your visualization mod requires a more advanced rendering flow, you can pass a <a href="/spotfire-mods/api-docs/visualization-mods/types/LayerMode.html">LayerMode</a> argument to the layers readable to gain greater control over when data is materialized.
+For instance, passing <code>&quot;LazyData&quot;</code> means Spotfire will not attempt to materialize the data view until the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html#data-1">ModLayer.data</a> readable is awaited.
+For total control, you can pass the <code>&quot;CollectionOnly&quot;</code> layer mode and set up individual readables on each layer instance.</p>
 <h4 id="extended-axes">Extended axes</h4>
-<p>Mod visualization containing multiple data views often need to share some common splitting axes across all views being visualized.
-For instance a graphical table contains a top-level &ldquo;Row by&rdquo; axis which every mini visualization needs to respect.
-Previously this required duplicating the &ldquo;Row by&rdquo; axis across all data view definitions and adding error modes when the axes&rsquo; data tables and expression went out-of-sync.
+<p>A visualization mod containing multiple data views often needs to share some common splitting axes across all views being visualized.
+For instance, a graphical table contains a top-level &ldquo;Row by&rdquo; axis that every mini visualization must respect.
+Previously, this required duplicating the &ldquo;Row by&rdquo; axis across all data view definitions and adding error modes when the axes&rsquo; data tables and expressions went out of sync.
 The <code>&quot;extendedAxes&quot;</code> property allows you to solve this issue by specifying a list of axes you want to inherit from an ancestor data view.
-For instance the manifest of a graphical table containing a bar chart mini visualization may look something like this:</p>
+For instance, the manifest of a graphical table containing a bar chart mini visualization may look something like this:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;apiVersion&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2.4&#34;</span><span style="color:#000;font-weight:bold">,</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">&#34;dataViewDefinition&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
@@ -771,17 +890,17 @@ For instance the manifest of a graphical table containing a bar chart mini visua
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">]</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
-</span></span></code></pre></div><p>When configuring a bar chart instance in this visualization the &ldquo;Data&rdquo; configuration will not be availble since it is controlled by the top-level data view containing the &ldquo;Row by&rdquo; axis.
-The axis can be read via the layers regular data readable similar to any other axis, but attempting to configure it will throw an error since its expression is controlled by the top-level data view.</p>
+</span></span></code></pre></div><p>When configuring a bar chart instance in this visualization, the &ldquo;Data&rdquo; configuration will not be available since it is controlled by the top-level data view containing the &ldquo;Row by&rdquo; axis.
+The axis can be read via the layer&rsquo;s regular data readable, similar to any other axis, but attempting to configure it will throw an error since its expression is controlled by the top-level data view.</p>
 <h4 id="title">Title</h4>
-<p>There is a new readable <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#title">ModVisualization.title</a> that allows mod to read, subscribe to and modify the mod title. Dynamic layers also has an identical readable <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html#title">ModLayer.title</a>.</p>
+<p>There is a new readable, <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#title">ModVisualization.title</a>, that allows a mod to read, subscribe to, and modify the mod title. Dynamic layers also have an identical readable, <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModLayer.html#title">ModLayer.title</a>.</p>
 <h4 id="pauseresume">Pause/resume</h4>
-<p>Sometimes a mod has a need to pause rendering, for example when the user begins a long running operation like area marking. In version 2.4 the reader can be temporarily stopped using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ReaderSubscription.html#pause">pause</a> function and resumed using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ReaderSubscription.html#resume">resume</a> function. While paused, no document changes will cause the render callback function to be invoked. Upon resume, the API will first await any current modifications, like marking operations, before the next render callback will occur. This will ensure a non flickering experience on resume.</p>
+<p>Sometimes a mod must pause rendering, for example when the user begins a long-running operation like area marking. In version 2.4, the reader can be temporarily stopped using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ReaderSubscription.html#pause">pause</a> function and resumed using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ReaderSubscription.html#resume">resume</a> function. While paused, no document changes will cause the render callback function to be invoked. Upon resume, the API will first await any current modifications, like marking operations, before the next render callback will occur. This ensures a non-flickering experience on resume.</p>
 <h4 id="readable-api-additions">Readable API additions</h4>
-<p>All readables in version 2.4 and upwards will cache its result internally, and return new instances only when there is a new value available on the backend. The underlying mechanism used is the same as when a reader invoke its registered callback function. This is an optimization required for the new <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#layers">layer</a> functionality, and should in most cases not require any code changes in existing mods. Only mods that rely on reference equality on readables will need to be refactored. A performance benefit is that awaiting a readable like <code>(await mod.property(&quot;myProperty&quot;)).value()</code> will immediately return the cached result until the mod property changes in the backend.</p>
-<p>In version 2.4 it is also valid to create multiple readers for a single readable. For example in the example below, every <code>&quot;layerReader&quot;</code> could include a mod global property <code>mod.property(&quot;renderStyle&quot;)</code> that would affect the rendering of all layers.</p>
+<p>All readables in version 2.4 and upwards will cache their results internally, and return new instances only when there is a new value available on the backend. The underlying mechanism used is the same as when a reader invokes its registered callback function. This is an optimization required for the new <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/ModVisualization.html#layers">layer</a> functionality, and should in most cases not require any code changes in existing mods. Only mods that rely on reference equality on readables will need to be refactored. A performance benefit is that awaiting a readable like <code>(await mod.property(&quot;myProperty&quot;)).value()</code> will immediately return the cached result until the mod property changes in the backend.</p>
+<p>In version 2.4, it is also valid to create multiple readers for a single readable. For instance, in the example below, every <code>&quot;layerReader&quot;</code> could include a mod global property, <code>mod.property(&quot;renderStyle&quot;)</code>, that would affect the rendering of all layers.</p>
 <h6 id="dynamically-creating-readers">Dynamically creating readers</h6>
-<p>Before the introduction of dynamic layers, all <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Readable.html">readables</a> that could be used when creating a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html">reader</a> was statically known from the API and the manifest. With dynamic layers, it is not always possible to statically know what readables that a reader require. For example, a mod that renders layers independently from eachother may want to set up a separate reader for every layer instance. While bookkeeping of new and removed layers needs to be performed by the mod itself, it may be handy to create one reader per layer. This is per se not</p>
+<p>Before the introduction of dynamic layers, all <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Readable.html">readables</a> that could be used when creating a <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html">reader</a> were statically known from the API and the manifest. With dynamic layers, it is not always possible to statically know which readables a reader requires. For example, a mod that renders layers independently from each other may want to set up a separate reader for every layer instance. While bookkeeping of new and removed layers must be performed by the mod itself, it may be handy to create one reader per layer. This is per se not</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">layers</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;CollectionOnly&#34;</span><span style="color:#000;font-weight:bold">));</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">layerReaders</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">Map</span><span style="color:#000;font-weight:bold">&lt;</span><span style="color:#204a87;font-weight:bold">String</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#c4a000">Spotfire.ReaderSubscription</span><span style="color:#000;font-weight:bold">&gt;();</span>
@@ -814,7 +933,7 @@ The axis can be read via the layers regular data readable similar to any other a
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
 </span></span></code></pre></div><h6 id="using-readerhasreadablechanged">Using Reader.hasReadableChanged</h6>
-<p>A layered mod that requires all layers when rendering may still want to query the API for udpate status on layer readables, similar to the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html#hasvaluechanged">Reader.hasValueChanged</a> method. This method will not work for layer.data() in the example below since it expects the resolved value, not the readable itself. There is a new similar method in API version 2.4, <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html#hasvaluechanged">Reader.hasReadableChanged</a>, that will tell whether a readable has a new value available since the last query. This is subtly different from its sibling method that tells whether the current argument has a new value compared to the last invocation.</p>
+<p>A layered mod that requires all layers when rendering may still want to query the API for update status on layer readables, similar to the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html#hasvaluechanged">Reader.hasValueChanged</a> method. This method will not work for layer.data() in the example below, since it expects the resolved value, not the readable itself. There is a new similar method in API version 2.4, <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Reader.html#hasvaluechanged">Reader.hasReadableChanged</a>, that will indicate whether a readable has a new value available since the last query. This is subtly different from its sibling method that indicates whether the current argument has a new value compared to the last invocation.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">initialize</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">async</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span>: <span style="color:#204a87;font-weight:bold">Spotfire.Mod</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">=&gt;</span> <span style="color:#000;font-weight:bold">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">reader</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">createReader</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">mod</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">visualization</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">layers</span><span style="color:#000;font-weight:bold">());</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#000">reader</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">subscribe</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">render</span><span style="color:#000;font-weight:bold">);</span>
@@ -828,26 +947,26 @@ The axis can be read via the layers regular data readable similar to any other a
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">}}</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">});</span>
 </span></span></code></pre></div><h4 id="any-modification-requiring-prior-user-activation">Any modification requiring prior user activation</h4>
-<p>Mods specifying API version 2.4 will require a prior user gesture before attempting to modify any part of the document. The main purpose for this is to prevent a mod from modifying the document in a render loop, which is an API misuse that mainly breaks the undo/redo mechanism, export errors or other more subtle bugs. Any user gesture, such as key down, mouse down, or scroll wheel, is enough to allow API modifications. Mods specifying API version less than 2.4 will in Spotfire 14.8 or later yield a browser console warning.</p>
+<p>Mods specifying API version 2.4 will require a prior user gesture before attempting to modify any part of the document. The main purpose of this is to prevent a mod from modifying the document in a render loop, which is an API misuse that mainly breaks the undo/redo mechanism, causes export errors or introduces other more subtle bugs. Any user gesture, such as a keydown, mousedown, or scroll wheel event, is enough to allow API modifications. Mods specifying an API version lower than 2.4 will, in Spotfire 14.8 or later, yield a browser console warning.</p>
 <h4 id="invisible-and-sticky-transactions">Invisible and sticky transactions</h4>
-<p>When modifying the Spotfire analysis via the visualization mods API, it may sometimes be useful to control the undo/redo stack, which is done using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#transaction">transaction</a> API. Prior to 2.4, there was only possible to group a set of modifications into one undo step, and for most usages this was made implicitly by the API.</p>
+<p>When modifying the Spotfire analysis via the visualization mods API, it may sometimes be useful to control the undo/redo stack, which is done using the <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#transaction">transaction</a> API. Prior to 2.4, it was only possible to group a set of modifications into one undo step, and for most usages, this was handled implicitly by the API.</p>
 <ul>
 <li>
-<p><a href="spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#stickyTransaction">Sticky transaction</a> will automatically merge a set of modifications with the preceding transactions if they share the supplied transaction identifier. This type of transaction is useful for example when the mod updates a mod property when dragging a slider handle, resulting in only the final value being recorded in the undo/redo stack.</p>
+<p><a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#stickyTransaction">Sticky transactions</a> will automatically merge a set of modifications with the preceding transactions if they share the supplied transaction identifier. This type of transaction is useful, for example, when the mod updates a mod property while dragging a slider handle, resulting in only the final value being recorded in the undo/redo stack.</p>
 </li>
 <li>
-<p><a href="spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#invisibleTransaction">Invisible transaction</a> allows the mod author to make document modifications that will be invisible in regards to the undo/redo stack. For example if the mod as a notion of currently active section for interaction within the mod, this may be recorded as an invisible transaction. These changes will never produce its own undo/redo step.</p>
+<p><a href="/spotfire-mods/api-docs/visualization-mods/interfaces/Mod.html#invisibleTransaction">Invisible transactions</a> allow the mod author to make document modifications that will be invisible with regard to the undo/redo stack. For example, if the mod has a notion of a currently active section for interaction within the mod, this may be recorded as an invisible transaction. These changes will never produce their own undo/redo steps.</p>
 </li>
 </ul>
 <h4 id="reading-data-from-dual-mode-axis">Reading data from dual mode axis</h4>
-<p>Reading row data for dual mod axis is in API versions prior to 2.4 somewhat cumbersome. Before using any of the methods <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#categorical">DataViewRow.categorical</a> or <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#continuous">DataViewRow.continuous</a>, you first need to check th current axis mode to know which of the two methods to use, or the method will throw an error.</p>
-<p>With API version 2.4 there are two new sibling methods; <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#tryCategorical">DataViewRow.tryCategorical</a> or <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#tryContinuous">DataViewRow.tryContinuous</a>. These methods will return null for <em>dual mode</em> axis that currently has an empty expression or does not match the current mode. They will however still throw an error if the <code>&quot;axisName&quot;</code> does not match a dual mode axis.</p>
-<h3 id="action-mods">Action mods</h3>
-<p>No new additions to the action mods framework have been added.
-However, Spotfire 14.8 introduces new features which are supported in the API.
+<p>Reading row data for a dual mod axis in API versions prior to 2.4 is somewhat cumbersome. Before using either of the methods <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#categorical">DataViewRow.categorical</a> or <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#continuous">DataViewRow.continuous</a>, you first need to check the current axis mode to know which of the two methods to use, or the method will throw an error.</p>
+<p>With API version 2.4, there are two new sibling methods: <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#tryCategorical">DataViewRow.tryCategorical</a> or <a href="/spotfire-mods/api-docs/visualization-mods/interfaces/DataViewRow.html#tryContinuous">DataViewRow.tryContinuous</a>. These methods will return null for a dual mode axis that currently has an empty expression or does not match the current mode. They will however still throw an error if the <code>&quot;axisName&quot;</code> does not match a dual mode axis.</p>
+<h3 id="action-mods-1">Action mods</h3>
+<p>There are no new additions to the action mods framework.
+However, Spotfire 14.8 introduces new features that are supported in the API.
 These include:</p>
 <ul>
-<li>The ability to configure mod visualizations which define dynamic layers via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ModVisualization.html#layers">ModVisualization.Layers</a>.</li>
+<li>The ability to configure visualization mods that define dynamic layers via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Mods.ModVisualization.html#layers">ModVisualization.Layers</a>.</li>
 <li>Adding statistic layers to reference elements via <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Application.Visuals.Layers.LayerCollection.html#addnewreferencestatisticlayer">LayerCollection.AddNewReferenceStatisticLayer</a>.</li>
 </ul>
 <h2 id="mods-api-23">Mods API 2.3</h2>
@@ -935,7 +1054,7 @@ The render function for the network graph can look something like this:</p>
 A limitation is that axes cannot be shared between data view definitions.
 This means that it is up to you as the mod developer to perform any necessary matching, and to keep axes consistent between data view definitions.
 For instance, to support trellising, you need to add a &ldquo;Trellis by&rdquo; axis to both &ldquo;Nodes&rdquo; and &ldquo;Edges&rdquo;, and report errors if the axes are out of sync or become inconsistent.</p>
-<h3 id="action-mods-1">Action mods</h3>
+<h3 id="action-mods-2">Action mods</h3>
 <p>No new additions to the action mods framework have been added.
 However, Spotfire 14.7 introduces many new features which are supported in the API.
 These include:</p>
@@ -953,7 +1072,7 @@ To upgrade an existing mod, follow these steps:</p>
 <li>Update the version of <code>&quot;@spotfire/mods-api&quot;</code> in the <code>package.json</code> file to <code>~2.2.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
-<h3 id="action-mods-2">Action mods</h3>
+<h3 id="action-mods-3">Action mods</h3>
 <p>No new additions to the action mods framework has been added however, Spotfire 14.6 introduces many new features which are supported in the API.
 One such new feature is &ldquo;reference elements&rdquo;, which allows you to add reference layers to certain visualizations and show trend lines.
 As an example on how to use the new APIs for this feature, see the snippet <a href="/spotfire-mods/docs/action-mods/snippets/#add-a-reference-layer-showing-trend-lines">&ldquo;Add a reference layer showing trend lines&rdquo;</a>.</p>
@@ -974,7 +1093,7 @@ To upgrade your mod, follow these steps:</p>
 <li>Update the version of <code>@spotfire/mods-api</code> in the <code>package.json</code> file to <code>~2.1.0</code>.</li>
 <li>Run <code>npm update</code>.</li>
 </ol>
-<h3 id="action-mods-3">Action mods</h3>
+<h3 id="action-mods-4">Action mods</h3>
 <p>Version 2.1 of the API contains a lot of improvements and new features for action mods.</p>
 <h4 id="new-parameter-types">New parameter types</h4>
 <p>This API introduces two new types with two variants each: <a href="/spotfire-mods/docs/whats-new/#datacolumn">DataColumn</a> (array: true/false) and <a href="/spotfire-mods/docs/whats-new/#dataviewdefinition">DataViewDefinition</a> (singleColumn: true/false).
@@ -1108,7 +1227,7 @@ an expression that is not aggregating.</p>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified April 7, 2026
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 1, 2026
 </div>
 </div>
 

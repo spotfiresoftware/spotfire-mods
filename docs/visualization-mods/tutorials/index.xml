@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Tutorials on Spotfire® Mods</title>
-    <link>/spotfire-mods/docs/visualization-mods/tutorials/</link>
-    <description>Recent content in Tutorials on Spotfire® Mods</description>
-    <generator>Hugo</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 18 Dec 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/spotfire-mods/docs/visualization-mods/tutorials/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Create a bar chart using Google Charts</title>
-      <link>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</link>
-      <pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</guid>
-      <description>&lt;p&gt;We will be using the Spotfire API and &lt;a href=&#34;https://developers.google.com/chart&#34;&gt;Google Charts&lt;/a&gt; to create a basic bar chart.&lt;/p&gt;&#xA;&lt;p&gt;This tutorial will cover the following:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Initial setup&lt;/li&gt;&#xA;&lt;li&gt;Consuming and visualizing data&lt;/li&gt;&#xA;&lt;li&gt;Selection/marking&lt;/li&gt;&#xA;&lt;li&gt;Theme-ing&lt;/li&gt;&#xA;&lt;li&gt;Controlling the mod using a popout&lt;/li&gt;&#xA;&lt;li&gt;Export to PDF&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The mod created in this tutorial (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;ts-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;. The example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Create an icon for your visualization mod</title>
-      <link>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</link>
-      <pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</guid>
-      <description>&lt;h2 id=&#34;what-is-an-svg-icon&#34;&gt;What is an SVG icon?&lt;/h2&gt;&#xA;&lt;p&gt;SVG stands for Scalable Vector Graphics, and is an open standard XML-based vector image format. SVG images can be created and edited with any text editor, as well as with drawing software. All major modern web browsers have SVG rendering support.&lt;/p&gt;&#xA;&lt;h2 id=&#34;how-do-i-create-an-svg-for-my-mod&#34;&gt;How do I create an SVG for my mod?&lt;/h2&gt;&#xA;&lt;p&gt;There are a number of ways to create SVG icons; either you can create them in a web-based SVG editor, using a licensed program on your computer, or using a web-based design program.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Tutorials on Spotfire® Mods</title>
+		<link>/spotfire-mods/docs/visualization-mods/tutorials/</link>
+		<description>Recent content in Tutorials on Spotfire® Mods</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 18 Dec 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="/spotfire-mods/docs/visualization-mods/tutorials/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Create a bar chart using Google Charts</title>
+				<link>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</link>
+				<pubDate>Thu, 18 Dec 2025 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/tutorials/barchart-googlechart/</guid>
+				<description>&lt;p&gt;We will be using the Spotfire API and &lt;a href=&#34;https://developers.google.com/chart&#34;&gt;Google Charts&lt;/a&gt; to create a basic bar chart.&lt;/p&gt;&#xA;&lt;p&gt;This tutorial will cover the following:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Initial setup&lt;/li&gt;&#xA;&lt;li&gt;Consuming and visualizing data&lt;/li&gt;&#xA;&lt;li&gt;Selection/marking&lt;/li&gt;&#xA;&lt;li&gt;Theme-ing&lt;/li&gt;&#xA;&lt;li&gt;Controlling the mod using a popout&lt;/li&gt;&#xA;&lt;li&gt;Export to PDF&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The mod created in this tutorial (&lt;code&gt;&#39;js-dev-barchart-googlecharts&#39;&lt;/code&gt;), as well as the starter project used in the tutorial (&lt;code&gt;&#39;ts-dev-starter&#39;&lt;/code&gt;), can be found among the &lt;a href=&#34;http://spotfi.re/mods-examples&#34;&gt;example projects&lt;/a&gt;. The example project covers some additional cases that are outside the scope of this tutorial.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Create an icon for your visualization mod</title>
+				<link>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</link>
+				<pubDate>Fri, 14 Jun 2024 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/visualization-mods/tutorials/mod-icons/</guid>
+				<description>&lt;h2 id=&#34;what-is-an-svg-icon&#34;&gt;What is an SVG icon?&lt;/h2&gt;&#xA;&lt;p&gt;SVG stands for Scalable Vector Graphics, and is an open standard XML-based vector image format. SVG images can be created and edited with any text editor, as well as with drawing software. All major modern web browsers have SVG rendering support.&lt;/p&gt;&#xA;&lt;h2 id=&#34;how-do-i-create-an-svg-for-my-mod&#34;&gt;How do I create an SVG for my mod?&lt;/h2&gt;&#xA;&lt;p&gt;There are a number of ways to create SVG icons; either you can create them in a web-based SVG editor, using a licensed program on your computer, or using a web-based design program.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

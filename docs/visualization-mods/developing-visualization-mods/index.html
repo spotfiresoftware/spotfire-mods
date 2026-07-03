@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.157.0"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.163.3"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
 
 
 <title>Developing visualization mods | Spotfire® Mods</title>
-  <meta itemprop="name" content="Developing visualization mods">
-  <meta itemprop="description" content="This guide describes how to get a visualization mod running in Spotfire.">
-  <meta itemprop="datePublished" content="2024-06-14T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-06-14T00:00:00+00:00">
-  <meta itemprop="wordCount" content="592">
+	<meta itemprop="name" content="Developing visualization mods">
+	<meta itemprop="description" content="This guide describes how to get a visualization mod running in Spotfire.">
+	<meta itemprop="datePublished" content="2024-06-14T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2024-06-14T00:00:00+00:00">
+	<meta itemprop="wordCount" content="592">
 
 
 
@@ -255,11 +255,61 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorial</a>
+    <a  href="/spotfire-mods/docs/action-mods/tutorials/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorials</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modstutorials">
+      
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an action mod</a>
   </li>
   <ul>
     <li class="collapse " id="spotfire-modsdocsaction-modstutorial">
       
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an insight agent</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsinsight-agent-tutorial">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
       
       
     </li>
@@ -706,30 +756,30 @@ The root folder contains all static content, like the <code>index.html</code>, a
 <p>The SDK template for visualization mods contains a simple mod with a categorical X-axis, a continuous Y-axis, a dual mode color axis, and a mod property. The only source code file is located in <code>src/main.ts</code>, but in most cases a mod should be split in multiple source code files.</p>
 <p>All metadata that concerns the mod is defined in the mod-manifest.json file. A list of the entries that are common to all mods can be found in the <a href="/spotfire-mods/docs/getting-started/">getting started guide</a>. The entries that are specific to visualization mods are listed below:</p>
 <table>
-  <thead>
-      <tr>
-          <th>Entry</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>dataViewDefinition</td>
-          <td>Specifies how Spotfire computes the data consumed by the mod.</td>
-      </tr>
-      <tr>
-          <td>externalResources</td>
-          <td>An array of any external resources that the mod is required to load.</td>
-      </tr>
-      <tr>
-          <td>properties</td>
-          <td>An array of mod properties.</td>
-      </tr>
-      <tr>
-          <td>legend</td>
-          <td>Specifies the default behavior of the legend.</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>Entry</th>
+					<th>Description</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>dataViewDefinition</td>
+					<td>Specifies how Spotfire computes the data consumed by the mod.</td>
+			</tr>
+			<tr>
+					<td>externalResources</td>
+					<td>An array of any external resources that the mod is required to load.</td>
+			</tr>
+			<tr>
+					<td>properties</td>
+					<td>An array of mod properties.</td>
+			</tr>
+			<tr>
+					<td>legend</td>
+					<td>Specifies the default behavior of the legend.</td>
+			</tr>
+	</tbody>
 </table>
 <p>For details, see the <a href="/spotfire-mods/docs/visualization-mods/using-the-api/mod-schema/">manifest schema</a>.</p>
 <h2 id="development-in-web-client">Development in the Spotfire web client</h2>

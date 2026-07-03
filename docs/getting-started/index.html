@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.157.0"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.163.3"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
 
 
 <title>Getting started | Spotfire® Mods</title>
-  <meta itemprop="name" content="Getting started">
-  <meta itemprop="description" content="This guide describes how to get started with mods development in Spotfire.">
-  <meta itemprop="datePublished" content="2025-12-16T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-12-16T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1186">
+	<meta itemprop="name" content="Getting started">
+	<meta itemprop="description" content="This guide describes how to get started with mods development in Spotfire.">
+	<meta itemprop="datePublished" content="2025-12-16T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2025-12-16T00:00:00+00:00">
+	<meta itemprop="wordCount" content="1186">
 
 
 
@@ -255,11 +255,61 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorial</a>
+    <a  href="/spotfire-mods/docs/action-mods/tutorials/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorials</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modstutorials">
+      
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an action mod</a>
   </li>
   <ul>
     <li class="collapse " id="spotfire-modsdocsaction-modstutorial">
       
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an insight agent</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsinsight-agent-tutorial">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
       
       
     </li>
@@ -725,46 +775,46 @@ Your mod will be rebuilt when any TypeScript file is changed or when the mod man
 <p>When updating and saving the source file, the build watcher will automatically rebuild the mod. The mods development server will then, when connected, send the new mod content to Spotfire for automatic update.</p>
 <p>All metadata that concerns the mod is defined in the mod-manifest.json file. Below is a list of the entries that are common to all mods. Each mod type also has some specific entries that you can read more about in <a href="/spotfire-mods/docs/action-mods/developing-action-mods/#3-continue-development">Developing action mods</a> and <a href="/spotfire-mods/docs/visualization-mods/developing-visualization-mods/#3-edit-your-example">Developing visualization mods</a>.</p>
 <table>
-  <thead>
-      <tr>
-          <th>Entry</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>id</td>
-          <td>The id of the mod. Note that this must be unique.</td>
-      </tr>
-      <tr>
-          <td>type</td>
-          <td>Specifies the type of mod, <em>action</em> or <em>visualization</em>. This is available from apiVersion 2.0.</td>
-      </tr>
-      <tr>
-          <td>apiVersion</td>
-          <td>The api version requested. This will affect which Spotfire versions the mod will work on.</td>
-      </tr>
-      <tr>
-          <td>name</td>
-          <td>The name of the mod.</td>
-      </tr>
-      <tr>
-          <td>description</td>
-          <td>A description of the mod. This is available from apiVersion 2.0.</td>
-      </tr>
-      <tr>
-          <td>version</td>
-          <td>The version of the mod.</td>
-      </tr>
-      <tr>
-          <td>icon</td>
-          <td>File path to the embedded icon, which is used in various places in the Spotfire UI.</td>
-      </tr>
-      <tr>
-          <td>files</td>
-          <td>An array of all files that should be bundled in the mod. Only files specified here will be embedded by Spotfire.</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>Entry</th>
+					<th>Description</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>id</td>
+					<td>The id of the mod. Note that this must be unique.</td>
+			</tr>
+			<tr>
+					<td>type</td>
+					<td>Specifies the type of mod, <em>action</em> or <em>visualization</em>. This is available from apiVersion 2.0.</td>
+			</tr>
+			<tr>
+					<td>apiVersion</td>
+					<td>The api version requested. This will affect which Spotfire versions the mod will work on.</td>
+			</tr>
+			<tr>
+					<td>name</td>
+					<td>The name of the mod.</td>
+			</tr>
+			<tr>
+					<td>description</td>
+					<td>A description of the mod. This is available from apiVersion 2.0.</td>
+			</tr>
+			<tr>
+					<td>version</td>
+					<td>The version of the mod.</td>
+			</tr>
+			<tr>
+					<td>icon</td>
+					<td>File path to the embedded icon, which is used in various places in the Spotfire UI.</td>
+			</tr>
+			<tr>
+					<td>files</td>
+					<td>An array of all files that should be bundled in the mod. Only files specified here will be embedded by Spotfire.</td>
+			</tr>
+	</tbody>
 </table>
 <p>Changes to the mod manifest are not automatically sent to Spotfire like the content. Whenever the manifest is updated, you must click the <em>Reload manifest</em> button.</p>
 <p>Depending on the type of the connected mod, the actual workflow of developing and testing the mod is different. See <a href="/spotfire-mods/docs/action-mods/developing-action-mods//">Developing action mods</a> and <a href="/spotfire-mods/docs/visualization-mods/developing-visualization-mods//">Developing visualization mods</a> for details.</p>

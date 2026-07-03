@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Working with Spotfire® Mods on Spotfire® Mods</title>
-    <link>/spotfire-mods/docs/</link>
-    <description>Recent content in Working with Spotfire® Mods on Spotfire® Mods</description>
-    <generator>Hugo</generator>
-    <language>en</language>
-    <lastBuildDate>Tue, 16 Dec 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/spotfire-mods/docs/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Getting started</title>
-      <link>/spotfire-mods/docs/getting-started/</link>
-      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>/spotfire-mods/docs/getting-started/</guid>
-      <description>&lt;p&gt;The getting started guide covers the aspects that are common to both mod types. When you have created a mod project and connected to it, continue to the articles with details specific to &lt;a href=&#34;/spotfire-mods/docs/action-mods/developing-action-mods/&#34;&gt;action mods&lt;/a&gt; or &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/developing-visualization-mods/&#34;&gt;visualization mods&lt;/a&gt;. This guide describes the workflow for developing mods from Spotfire version 14.4 and later. In earlier Spotfire versions, where only visualization mods are available, the workflow is slightly different, see &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt; &lt;br&gt;&#xA;This is needed to develop and test a mod. Development can be done against the installed client or the web client using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser.&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Working with Spotfire® Mods on Spotfire® Mods</title>
+		<link>/spotfire-mods/docs/</link>
+		<description>Recent content in Working with Spotfire® Mods on Spotfire® Mods</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 16 Dec 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="/spotfire-mods/docs/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Getting started</title>
+				<link>/spotfire-mods/docs/getting-started/</link>
+				<pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
+				<guid>/spotfire-mods/docs/getting-started/</guid>
+				<description>&lt;p&gt;The getting started guide covers the aspects that are common to both mod types. When you have created a mod project and connected to it, continue to the articles with details specific to &lt;a href=&#34;/spotfire-mods/docs/action-mods/developing-action-mods/&#34;&gt;action mods&lt;/a&gt; or &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/developing-visualization-mods/&#34;&gt;visualization mods&lt;/a&gt;. This guide describes the workflow for developing mods from Spotfire version 14.4 and later. In earlier Spotfire versions, where only visualization mods are available, the workflow is slightly different, see &lt;a href=&#34;/spotfire-mods/docs/visualization-mods/getting-started-11/&#34;&gt;Getting started (before 14.4)&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;A running instance of Spotfire with an open analysis file.&lt;/strong&gt; &lt;br&gt;&#xA;This is needed to develop and test a mod. Development can be done against the installed client or the web client using the &lt;a href=&#34;https://www.google.com/chrome&#34;&gt;Google Chrome&lt;/a&gt; web browser.&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

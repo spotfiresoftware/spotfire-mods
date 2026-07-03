@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Tutorial on Spotfire® Mods</title>
-    <link>/spotfire-mods/docs/action-mods/tutorial/</link>
-    <description>Recent content in Tutorial on Spotfire® Mods</description>
-    <generator>Hugo</generator>
-    <language>en</language>
-    <lastBuildDate></lastBuildDate>
-    <atom:link href="/spotfire-mods/docs/action-mods/tutorial/index.xml" rel="self" type="application/rss+xml" />
-  </channel>
+	<channel>
+		<title>Create an action mod on Spotfire® Mods</title>
+		<link>/spotfire-mods/docs/action-mods/tutorial/</link>
+		<description>Recent content in Create an action mod on Spotfire® Mods</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<lastBuildDate></lastBuildDate>
+		
+			<atom:link href="/spotfire-mods/docs/action-mods/tutorial/index.xml" rel="self" type="application/rss+xml" />
+	</channel>
 </rss>

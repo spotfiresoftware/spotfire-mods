@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.157.0"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="generator" content="Hugo 0.163.3"><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 
 
 <link rel="shortcut icon"  href="/spotfire-mods/favicons/favicon.ico" >
 
 
 <title>Create a bar chart using Google Charts | Spotfire® Mods</title>
-  <meta itemprop="name" content="Create a bar chart using Google Charts">
-  <meta itemprop="description" content="This step-by-step tutorial describes how to create a basic bar chart using Google Charts and the Spotfire API.">
-  <meta itemprop="datePublished" content="2025-12-18T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2025-12-18T00:00:00+00:00">
-  <meta itemprop="wordCount" content="2714">
+	<meta itemprop="name" content="Create a bar chart using Google Charts">
+	<meta itemprop="description" content="This step-by-step tutorial describes how to create a basic bar chart using Google Charts and the Spotfire API.">
+	<meta itemprop="datePublished" content="2025-12-18T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2025-12-18T00:00:00+00:00">
+	<meta itemprop="wordCount" content="2714">
 
 
 
@@ -255,11 +255,61 @@
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorial</a>
+    <a  href="/spotfire-mods/docs/action-mods/tutorials/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Tutorials</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modstutorials">
+      
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an action mod</a>
   </li>
   <ul>
     <li class="collapse " id="spotfire-modsdocsaction-modstutorial">
       
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
+      
+      
+      
+        
+          
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/spotfire-mods/docs/action-mods/insight-agent-tutorial/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Create an insight agent</a>
+  </li>
+  <ul>
+    <li class="collapse " id="spotfire-modsdocsaction-modsinsight-agent-tutorial">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+        
       
       
     </li>
@@ -914,37 +964,37 @@ we&rsquo;ll make this tutorial slightly simpliflied by changing the color axis t
 <li>A Google visualization expects data to be in the following format (and complains if it&rsquo;s not):</li>
 </ul>
 <table>
-  <thead>
-      <tr>
-          <th>SeriesNames</th>
-          <th>Series1</th>
-          <th>Style</th>
-          <th>Series2</th>
-          <th>Style</th>
-          <th>Series3</th>
-          <th>Style</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Category1</td>
-          <td>Value11</td>
-          <td>CssColor11</td>
-          <td>Value12</td>
-          <td>CssColor12</td>
-          <td>Value13</td>
-          <td>CssColor13</td>
-      </tr>
-      <tr>
-          <td>Category2</td>
-          <td>Value21</td>
-          <td>CssColor21</td>
-          <td>Value22</td>
-          <td>CssColor22</td>
-          <td>Value23</td>
-          <td>CssColor23</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>SeriesNames</th>
+					<th>Series1</th>
+					<th>Style</th>
+					<th>Series2</th>
+					<th>Style</th>
+					<th>Series3</th>
+					<th>Style</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Category1</td>
+					<td>Value11</td>
+					<td>CssColor11</td>
+					<td>Value12</td>
+					<td>CssColor12</td>
+					<td>Value13</td>
+					<td>CssColor13</td>
+			</tr>
+			<tr>
+					<td>Category2</td>
+					<td>Value21</td>
+					<td>CssColor21</td>
+					<td>Value22</td>
+					<td>CssColor22</td>
+					<td>Value23</td>
+					<td>CssColor23</td>
+			</tr>
+	</tbody>
 </table>
 <ul>
 <li>We loop over the X hierarchy to create the data table by filling a row with null values first, and then populating it with existing values at proper positions.</li>
