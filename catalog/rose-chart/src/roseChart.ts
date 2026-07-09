@@ -23,7 +23,7 @@ export interface RoseChartSlice {
     x0: number;
     x1: number;
     label: string;
-    mark(): void;
+    mark(toggleOrAdd: boolean): void;
     sectors: RoseChartSector[];
 }
 
@@ -35,7 +35,7 @@ export interface RoseChartSector {
     y1: number;
     color: string;
     id: string;
-    mark(): void;
+    mark(toggleOrAdd: boolean): void;
 }
 
 export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
@@ -94,9 +94,9 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
         .enter()
         .append("svg:path")
         .attr("class", "sector")
-        .on("click", (d) => {
-            d.mark();
-            d3.event.stopPropagation();
+        .on("click", (e: any, row: any) => {
+            row.mark(e.ctrlKey);
+            e.stopPropagation();
         })
         .style("stroke-width", 1)
         .style("opacity", 0)
@@ -177,7 +177,9 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
             (enter) => {
                 return enter
                     .append("text")
-                    .on("click", (d) => d.mark())
+                    .on("click", (e: any, d: any) => {
+                        d.mark(e.ctrlKey);
+                    })
                     .on("mouseover.hover", (d) => settings.onMouseover(d))
                     .attr("class", "label")
                     .style("opacity", 0)
@@ -199,7 +201,9 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
             },
             (update) =>
                 update
-                    .on("click", (d) => d.mark())
+                    .on("click", (e: any, d: any) => {
+                        d.mark(e.sourceEvent.ctrlKey);
+                    })
                     .select("textPath")
                     .call((update) =>
                         update
@@ -230,7 +234,9 @@ export function render(slices: RoseChartSlice[], settings: RoseChartSettings) {
 
     rectangularSelection(svg, {
         clearMarking: settings.clearMarking,
-        mark: (d: RoseChartSector) => d.mark(),
+        mark: (d: RoseChartSector, toggleOrAdd: boolean) => {
+            d.mark(toggleOrAdd);
+        },
         getCenter(d: any) {
             let c = arc.centroid(d);
             return { x: c[0] + size.width / 2, y: c[1] + size.height / 2 };
