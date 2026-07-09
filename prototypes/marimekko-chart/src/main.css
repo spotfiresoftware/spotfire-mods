@@ -1,0 +1,144 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
+html,
+body{
+    margin: 0;
+    overflow: visible;
+    height: 100%;
+    width: 100%;
+}
+
+#mod-container {
+    display: grid;
+    height: 100%;
+    width: 100%;
+}
+
+#mod-container {
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+#y-scale,
+#x-scale,
+#canvas,
+#x-title {
+    height: 100%;
+    width: 100%;
+}
+
+#y-scale {
+    overflow: visible;
+    grid-column: 1/2;
+    grid-row: 2/3;
+}
+
+#x-scale {
+    overflow: visible;
+    grid-column: 2/3;
+    grid-row: 3/4;
+}
+
+#canvas {
+    grid-column: 2/3;
+    grid-row: 2/3;
+    display: grid;
+    gap: 1px 1px;
+    justify-items: start;
+    align-items: end;
+}
+
+.selection {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    border: 1px solid #677085;
+    background-color: rgba(0, 90, 230, 0.17);
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+}
+
+.selection-bg {
+    visibility: hidden;
+    position: absolute;
+    background-color: rgba(200, 90, 230, 0);
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.bar {
+    border-bottom-width: 0;
+    text-align: center;
+    position: relative;
+}
+
+.bar:hover {
+    border-color: currentColor;
+}
+
+.bar-label {
+    position: absolute;
+    top: -15px;
+    text-align: center;
+    white-space: nowrap;
+    overflow-x: hidden; 
+    overflow-y: visible;
+    text-overflow: ellipsis;
+}
+
+.segment {
+    display: block;
+    outline: "1px solid white";
+}
+
+.segment-label {
+    position: absolute;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+#x-title {
+    position: relative;
+    grid-column: 2/3;
+    grid-row: 1/2;
+    text-align: center;
+    cursor: pointer;
+}
+
+.bar-category-label {
+    text-align: center;
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+#settings-icon {
+    grid-column: 3/4;
+    grid-row: 1/2;
+    height: 16px;
+    width: 16px;
+    fill: #bdbfc3;
+    transition: opacity 0.25s cubic-bezier(1, 0.28, 0, 0.94);
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#settings-icon:hover {
+    fill: #858991;
+}
+
