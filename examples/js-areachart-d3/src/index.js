@@ -35,7 +35,8 @@ Spotfire.initialize(async (mod) => {
         mod.windowSize(),
         mod.property("chartType"),
         mod.property("roundedCurves"),
-        mod.property("gapfill")
+        mod.property("gapfill"),
+        mod.property("xAxisLabelOrientation")
     );
 
     /**
@@ -57,10 +58,11 @@ Spotfire.initialize(async (mod) => {
      * @param {Spotfire.AnalysisProperty<string>} chartType
      * @param {Spotfire.AnalysisProperty<boolean>} roundedCurves
      * @param {Spotfire.AnalysisProperty<boolean>} gapfill
+     * @param {Spotfire.ModProperty<string>} xAxisLabelOrientation - the x-axis label orientation
      */
-    async function onChange(dataView, windowSize, chartType, roundedCurves, gapfill) {
+    async function onChange(dataView, windowSize, chartType, roundedCurves, gapfill, xAxisLabelOrientation) {
         try {
-            await render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill);
+            await render(state, mod, dataView, windowSize, chartType, roundedCurves, gapfill, xAxisLabelOrientation);
 
             context.signalRenderComplete();
 
