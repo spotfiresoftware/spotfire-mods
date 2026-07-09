@@ -4,13 +4,14 @@ export interface MarkingSettings {
     /**
      * Callback to clear the marking.
      */
-    clearMarking(): void;
+    clearMarking(altKey: boolean): void;
 
     /**
      * Marking callback that will be invoked for each marked element.
      * @param datum d3 Data object bound to the marked element.
+     * @param toogleOrAdd boolean True if marking should be an ToggleOrAdd operation.
      */
-    mark(datum: unknown): void;
+    mark(datum: unknown, toogleOrAdd: boolean): void;
 
     /**
      * Get the calculated center of a datum object. The default is to take the center of the bounding box.
@@ -64,7 +65,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         rectangle.attr("d", drawRectangle(start[0], start[1], moved[0] - start[0], moved[1] - start[1]));
     };
 
-    const endSelection = function (start: [number, number], end: [number, number]) {
+    const endSelection = function (start: [number, number], end: [number, number], ctrlKey: boolean, altKey: boolean) {
         rectangle.attr("visibility", "hidden");
 
         // Ignore rectangular markings that were just a click.
@@ -82,7 +83,7 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
             }
 
             if (clearMarking) {
-                settings.clearMarking();
+                settings.clearMarking(altKey);
             }
 
             return;
@@ -94,11 +95,11 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
             .filter(settings.centerMarking ? partOfMarking : fullyPartOfMarking);
 
         if (markedSectors.size() === 0) {
-            return settings.clearMarking();
+            return settings.clearMarking(altKey);
         }
 
         markedSectors.each((n: any) => {
-            settings.mark(n);
+            settings.mark(n, ctrlKey);
         });
 
         function fullyPartOfMarking(this: SVGPathElement) {
@@ -134,22 +135,24 @@ export function rectangularSelection(svg: d3.Selection<d3.BaseType, any, any, an
         }
     };
 
-    svg.on("mousedown", function (this: any) {
-        if (d3.event.which === 3) {
+    svg.on("mousedown", function (e: any) {
+        if (e.which === 3) {
             return;
         }
 
-        firstTarget = d3.event.target;
+        firstTarget = e.target;
 
         let subject = d3.select(window),
-            start = d3.mouse(this);
+            start:  [number, number] = [e.x, e.y],
+            ctrlKey = e.ctrlKey,
+            altKey = e.altKey;
         startSelection(start);
         subject
-            .on("mousemove.rectangle", function () {
-                moveSelection(start, d3.mouse(svg.node() as any));
+            .on("mousemove.rectangle", function (e: any) {
+                moveSelection(start, [e.x, e.y]);
             })
-            .on("mouseup.rectangle", function () {
-                endSelection(start, d3.mouse(svg.node() as any));
+            .on("mouseup.rectangle", function (e: any) {
+                endSelection(start, [e.x, e.y], ctrlKey, altKey);
                 subject.on("mousemove.rectangle", null).on("mouseup.rectangle", null);
             });
     });
