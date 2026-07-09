@@ -10,7 +10,6 @@
         "noEmit": true,
         "noImplicitAny": true,
         "strict": true,
-        "charset": "utf8",
         "sourceMap": true,
         "esModuleInterop": true,
         "inlineSources": true,
