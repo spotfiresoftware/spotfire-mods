@@ -1,321 +1,126 @@
-import * as d3 from "d3";
+import { Frame, FrameFactory } from "./index";
 import { continueOnIdle } from "./interactionLock";
+import { throttle } from "./modutils";
 
-const playButtonSvg = document.querySelector("#play_button")?.lastChild!;
-const pauseButtonSvg = document.querySelector("#pause_button")?.lastChild!;
-const animationSpeedButtonSvg = document.querySelector(
-    "#animation_speed_button g"
-)!;
-const speedButtonSize = 24,
-    playButtonSize = 16,
-    padding = 8,
-    progressHeight = 6,
-    progressX =
-        (Math.max(speedButtonSize, playButtonSize) - progressHeight) / 2;
+type SetupVisualization = (animationControl: AnimationControl) => RenderFrame;
+type RenderFrame = (frame: Frame, animationSpeed: number) => void;
 
-export function animationControl(animationSpeedProperty: {
-    set: (value: number) => void;
-}) {
-    let animationScale: d3.ScaleLinear<number, number>;
-    let valueChanged: (value: number, changedByUser: boolean) => void;
-    let animationSpeed: number;
+/**
+ * The Animation control class is responsible for keeping track of the animation state and drive the rendering of the visualization.
+ */
+export class AnimationControl {
+    private frames: FrameFactory[] = [];
+    private renderFrame: RenderFrame = () => {};
+    private throttleRender = throttle(() => this.render());
 
-    let animationIndex = 0;
-    let range: number[];
-    let playing = false;
-    let animationMax: number;
+    private animationIndex = 0;
+    private animationSpeed = 500;
+    private defaultSpeed = 500;
+    private playing = false;
+    private timer: any = null;
 
-    return {
-        render,
-        update(
-            _animationScale: d3.ScaleLinear<number, number>,
-            _valueChanged: (value: number, changedByUser: boolean) => void,
-            _animationSpeed: number
-        ) {
-            animationScale = _animationScale;
-            valueChanged = _valueChanged;
-            animationSpeed = _animationSpeed;
+    constructor(private speedProperty: { set(v: any): void }) {}
 
-            range = animationScale.range();
-            animationMax = animationScale.domain()[1];
-            if (animationIndex != 0) {
-                animationIndex = Math.min(animationIndex, animationMax);
+    update(frames: FrameFactory[], setupVisualization: SetupVisualization) {
+        this.frames = frames;
+        this.renderFrame = setupVisualization(this);
+        this.render();
+    }
+
+    isPlaying(setter?: boolean) {
+        if (setter != undefined) {
+            this.animationSpeed = this.defaultSpeed;
+            if (setter) {
+                this.play();
+            } else {
+                this.pause();
             }
-        },
-        getIndex() {
-            return animationIndex;
-        },
-        isPlaying() {
-            return playing;
-        },
-    };
-
-    function showSpeedSlider() {
-        let times = [0.1, 0.3, 0.5, 1, 3, 5, 10].reverse();
-        function toTime(index: number) {
-            return (
-                1000 *
-                (index >= 0
-                    ? times[index] || times[times.length - 1]
-                    : times[0])
-            );
-        }
-        function toIndex(time: number) {
-            for (var i = 0; i < times.length; i++) {
-                if (time / 1000 >= times[i]) {
-                    return i;
-                }
-            }
-
-            return 0;
+            this.throttleRender();
         }
 
-        let current = document.getElementById("animationSpeedSlider");
-        if (current) {
-            document.body.removeChild(current);
-            document.body.removeChild(
-                document.getElementById("animationSpeedLabel")!
-            );
+        return this.playing;
+    }
+
+    currentIndex() {
+        return this.animationIndex;
+    }
+
+    domain() {
+        return [0, this.frames.length - 1];
+    }
+
+    speed(s?: number) {
+        if (s != undefined) {
+            this.speedProperty.set(s);
+            this.defaultSpeed = s;
+            this.animationSpeed = s;
+        }
+
+        return this.defaultSpeed;
+    }
+
+    setIndex(i: number) {
+        this.pause();
+        this.animationIndex = i;
+        this.animationSpeed = 50;
+        this.throttleRender();
+    }
+
+    visible() {
+        return this.frames.length > 1;
+    }
+
+    render() {
+        const emptyFrame = { name: "", bubbles: [] };
+
+        if (this.animationIndex >= this.frames.length) {
+            this.animationIndex = 0;
+        }
+
+        const frame = this.frames[this.animationIndex];
+        if (!frame) {
+            this.renderFrame(emptyFrame, 0);
             return;
         }
 
-        let input = document.createElement("input");
-        input.id = "animationSpeedSlider";
-        input.type = "range";
-        input.style.bottom = speedButtonSize + padding + "px";
-        input["max"] = "0";
-        input["max"] = String(times.length - 1);
-        input.value = String(toIndex(animationSpeed));
-        document.body.appendChild(input);
+        if (!frame.bubbles) {
+            frame.bubbles = frame.bubbleFactory();
+        }
 
-        let label = document.createElement("label");
-        label.htmlFor = "animationSpeedSlider";
-        label.id = "animationSpeedLabel";
-        label.style.bottom = speedButtonSize + 2 * padding + 100 + "px";
-        label.textContent = `${toTime(Number(input.value)) / 1000}s`;
-        document.body.appendChild(label);
-
-        input.oninput = function () {
-            label.textContent = `${toTime(Number(input.value)) / 1000}s`;
-        };
-
-        input.onchange = function () {
-            document.body.removeChild(input);
-            document.body.removeChild(label);
-            animationSpeedProperty.set(toTime(Number(input.value)));
-        };
+        this.renderFrame((frame as Frame) || emptyFrame, this.animationSpeed);
     }
 
-    function render(
-        context: d3.Selection<SVGGElement, unknown, HTMLElement, any>
-    ) {
-        animationScale.range([
-            range[0] + playButtonSize + padding,
-            range[1] - speedButtonSize - padding,
-        ]);
+    private pause() {
+        this.playing = false;
+        clearTimeout(this.timer);
+    }
 
-        let playButton: any = context.select("svg");
-        setPlaying(playing);
+    private isAtLastFrame() {
+        return this.animationIndex == this.frames.length - 1;
+    }
 
-        var dispatch = d3.dispatch("sliderChange");
-
-        let animationSpeedButton = context.select<SVGGElement>(
-            "#animationSpeed"
-        );
-        if (animationSpeedButton.empty()) {
-            animationSpeedButton = context.append("g");
-            animationSpeedButton
-                .attr("id", "animationSpeed")
-                .node()!
-                .append(animationSpeedButtonSvg);
+    private play() {
+        if (this.isAtLastFrame()) {
+            this.animationIndex = 0;
         }
 
-        animationSpeedButton
-            .attr(
-                "transform",
-                `translate(${animationScale.range()[1] + padding} 0)`
-            )
-            .attr("width", speedButtonSize)
-            .attr("height", speedButtonSize)
-            .attr("class", "animationSpeed")
-            .on("click", showSpeedSlider);
-
-        let animationSlider = context.select<SVGRectElement>(
-            "#animationSlider"
-        );
-
-        if (animationSlider.empty()) {
-            animationSlider = context
-                .append("rect")
-                .attr("id", "animationSlider");
-        }
-        animationSlider
-            .attr("x", animationScale(0) || 0)
-            .attr("y", progressX)
-            .attr(
-                "width",
-                Math.max(
-                    0,
-                    animationScale.range()[1] - animationScale.range()[0]
-                )
-            )
-            .attr("height", 8)
-            .attr("class", "animation-tray")
-            .on("click", sliderclick)
-            .call(
-                d3
-                    .drag<SVGRectElement, any>()
-                    .on("start", function () {
-                        dispatch.call(
-                            "sliderChange",
-                            this,
-                            Math.round(
-                                animationScale.invert(
-                                    d3.mouse(animationSlider.node()!)[0]
-                                )
-                            )
-                        );
-
-                        d3.event.sourceEvent.preventDefault();
-                    })
-                    .on("drag", function () {
-                        dispatch.call(
-                            "sliderChange",
-                            this,
-                            Math.round(
-                                animationScale.invert(
-                                    d3.mouse(animationSlider.node()!)[0]
-                                )
-                            )
-                        );
-                    })
-            );
-
-        dispatch.on("sliderChange.slider", function (value) {
-            setSliderValue(value);
-            animationIndex = value;
-            valueChanged(value, true);
-        });
-
-        let animationIndicator = context.select<SVGRectElement>(
-            "#animationIndicator"
-        );
-        if (animationIndicator.empty()) {
-            animationIndicator = context
-                .append("rect")
-                .attr("id", "animationIndicator");
-        }
-
-        animationIndicator
-            .attr("x", animationScale(0) || 0)
-            .attr("y", progressX)
-            .attr(
-                "width",
-                Math.max(
-                    0,
-                    animationScale(animationIndex)! - animationScale(0)!
-                )
-            )
-            .attr("height", 8)
-            .attr("class", "animation-indicator");
-
-        let animationHandle = context.select<SVGCircleElement>(
-            "#animationHandle"
-        );
-        if (animationHandle.empty()) {
-            animationHandle = context
-                .append("circle")
-                .attr("id", "animationHandle");
-        }
-
-        animationHandle
-            .attr("cy", progressX + 4)
-            .attr("cx", animationScale(animationIndex) || 0)
-            .attr("r", 6)
-            .attr("class", "animation-handle");
-
-        function sliderclick() {
-            setPlaying(false);
-            animationIndex = Math.round(
-                animationScale.invert(d3.mouse(animationSlider.node()!)[0])
-            );
-            setSliderValue(animationIndex);
-            valueChanged(animationIndex, true);
-        }
-
-        function setPlaying(isPlaying: boolean) {
-            playing = isPlaying;
-            let svg = (!isPlaying ? playButtonSvg : pauseButtonSvg)?.cloneNode(
-                true
-            );
-
-            if (playButton.empty()) {
-                context.attr("id", "playButton").node()!.append(svg);
-            } else {
-                context.select<SVGElement>("svg").node()!.replaceWith(svg);
-            }
-
-            playButton = context.select("svg");
-            playButton
-                .attr("x", 0)
-                .attr("y", (speedButtonSize - playButtonSize) / 2)
-                .attr("height", playButtonSize)
-                .attr("width", playButtonSize)
-                .attr("class", "playbutton")
-                .on("click", playClicked);
-        }
-
-        function playClicked() {
-            if (!playing) {
-                // Reset to start when clicking play if the animation has reached the end.
-                if (animationIndex >= animationMax) {
-                    animationIndex = 0;
-                }
-
-                setPlaying(true);
-                d3.timeout(play, 100);
-            } else {
-                setPlaying(false);
-            }
-        }
-
-        async function play() {
-            if (!playing) {
+        this.playing = true;
+        this.render();
+        let instance = this;
+        this.timer = setTimeout(async function next() {
+            if (!instance.playing) {
                 return;
             }
 
-            if (animationIndex <= animationMax) {
-                await continueOnIdle();
-
-                setSliderValue(animationIndex, animationSpeed);
-                valueChanged(animationIndex, false);
-
-                animationIndex += 1;
-                d3.timeout(play, animationSpeed);
+            await continueOnIdle();
+            if (instance.isAtLastFrame()) {
+                instance.pause();
             } else {
-                setPlaying(false);
+                instance.animationIndex++;
             }
-        }
 
-        function setSliderValue(value: number, transitionduration = 0) {
-            animationIndicator
-                .attr("aria-labelledby", value)
-                .transition()
-                .ease(d3.easeLinear)
-                .duration(transitionduration)
-                .attr(
-                    "width",
-                    Math.max(
-                        0,
-                        (animationScale(value) || 0) - (animationScale(0) || 0)
-                    )
-                );
-            animationHandle
-                .attr("aria-labelledby", value)
-                .transition()
-                .ease(d3.easeLinear)
-                .duration(transitionduration)
-                .attr("cx", animationScale(value) || 0);
-        }
+            instance.render();
+            instance.timer = setTimeout(next, instance.animationSpeed);
+        }, this.animationSpeed);
     }
 }
