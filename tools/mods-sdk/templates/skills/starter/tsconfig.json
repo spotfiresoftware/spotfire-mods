@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "build",
+        "lib": ["ES2022"],
+        "target": "ES2022",
+        "skipLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "moduleResolution": "Bundler",
+        "moduleDetection": "force"
+    }
+}

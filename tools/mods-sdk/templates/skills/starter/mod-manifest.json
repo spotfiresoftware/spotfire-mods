@@ -1,0 +1,18 @@
+{
+    "apiVersion": "$MOD-API-VERSION",
+    "version": "1.0",
+    "type": "action",
+    "name": "$MOD-NAME",
+    "id": "$MOD-ID",
+    "description": "Description of what the mod does.",
+    "capabilities": ["AI"],
+    "icon": "icon.svg",
+    "files": ["skills/$SKILL-ID/SKILL.md"],
+    "skills": [
+        {
+            "id": "$SKILL-ID",
+            "name": "$SKILL-NAME",
+            "description": "Describes what the skill does so the AI knows when to use it."
+        }
+    ]
+}

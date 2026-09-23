@@ -3,11 +3,14 @@ import { existsSync } from "fs";
 import { mkdir, readdir, cp, readFile, writeFile } from "fs/promises";
 import path from "path";
 import readline from "readline/promises";
+import { createSkillFolder } from "./add-skill.js";
 import {
     ModType,
     QuietOtions,
     capitalize,
     capitalizeBeforeSeparators,
+    features,
+    formatVersion,
     getDirname,
     getVersion,
     isModType,
@@ -34,6 +37,9 @@ async function getTemplateFolder(type: TemplateType) {
             break;
         case ModType.Agent:
             typeFolder = "agents";
+            break;
+        case ModType.Skill:
+            typeFolder = "skills";
             break;
         case "gitignore":
             typeFolder = "gitignore";
@@ -137,17 +143,30 @@ async function createModTemplate({
         }
 
         const defaultApiVersion =
-            modType === ModType.Agent
-                ? "2.5"
-                : modType === ModType.Action
-                    ? "2.0"
-                    : "1.3";
+            modType === ModType.Skill
+                ? "2.6"
+                : modType === ModType.Agent
+                    ? "2.5"
+                    : modType === ModType.Action
+                        ? "2.0"
+                        : "1.3";
         const apiVersion = parseApiVersion(
             _apiVersion ?? defaultApiVersion
         );
         if (apiVersion.status === "error") {
             throw new Error(
                 `Unregonized API version, error: ${apiVersion.error}`
+            );
+        }
+
+        if (
+            modType === ModType.Skill &&
+            !apiVersion.result.supportsFeature("Skills")
+        ) {
+            throw new Error(
+                `Skills require apiVersion ${formatVersion(
+                    features.Skills
+                )} or later, was '${apiVersion.result.toManifest()}'.`
             );
         }
 
@@ -177,11 +196,26 @@ async function createModTemplate({
                 );
             }
 
+            if (apiVersion.result.supportsFeature("Esm")) {
+                // From apiVersion 2.6 entry points are registered via
+                // RegisterEntryPoint, so the manifest no longer stores one.
+                manifestJson = manifestJson.replace(
+                    /\n[^\n]*"entryPoint":[^\n]*/g,
+                    ""
+                );
+            }
+
             return manifestJson
                 .replace("$MOD-NAME", modName)
                 .replace("$MOD-ID", modId)
-                .replace("$MOD-API-VERSION", apiVersion.result.toManifest());
+                .replace("$MOD-API-VERSION", apiVersion.result.toManifest())
+                .replaceAll("$SKILL-ID", modId)
+                .replaceAll("$SKILL-NAME", modName);
         });
+
+        if (modType === ModType.Skill) {
+            await setupSkill({ targetFolder, skillId: modId, skillName: modName });
+        }
 
         if (gitignore) {
             await createGitIgnore({ targetFolder, ...quiet });
@@ -203,14 +237,51 @@ async function createModTemplate({
     } finally {
         rl.close();
     }
+}
 
-    async function replaceInFile(
-        filePath: string,
-        replaceFunction: (fileContents: string) => string
-    ) {
-        const fileContents = await readFile(filePath, "utf-8");
-        await writeFile(filePath, replaceFunction(fileContents), "utf-8");
-    }
+async function replaceInFile(
+    filePath: string,
+    replaceFunction: (fileContents: string) => string
+) {
+    const fileContents = await readFile(filePath, "utf-8");
+    await writeFile(filePath, replaceFunction(fileContents), "utf-8");
+}
+
+/**
+ * Finishes the skill template by creating the skill the project is named after. The skill folder is
+ * not part of the template since it is named after the skill id and since 'references' and 'assets'
+ * start out empty, which a template cannot express.
+ *
+ * The skill is scaffolded with the same helper as the add-skill command so that the two produce
+ * identical skills. The manifest is not written by add-skill though: the template ships it already
+ * formatted, and rewriting it here would lose that formatting when prettier is unavailable (which
+ * it is when the SDK runs through npx).
+ */
+async function setupSkill({
+    targetFolder,
+    skillId,
+    skillName,
+}: {
+    targetFolder: string;
+    skillId: string;
+    skillName: string;
+}) {
+    await createSkillFolder({
+        skillFolder: path.join(targetFolder, "skills", skillId),
+        skillId,
+        skillName,
+    });
+
+    // A skill contains no code, but the project is a regular action mod project to which scripts
+    // and agents can be added later. The build looks for entry points in 'src/scripts', so the
+    // folder has to exist for the build to succeed in a project which only contains a skill.
+    await mkdir(path.join(targetFolder, "src", "scripts"), { recursive: true });
+
+    await replaceInFile(path.join(targetFolder, "README.md"), (contents) =>
+        contents
+            .replaceAll("$SKILL-ID", skillId)
+            .replaceAll("$SKILL-NAME", skillName)
+    );
 }
 
 async function ask(rl: readline.Interface, question: string) {

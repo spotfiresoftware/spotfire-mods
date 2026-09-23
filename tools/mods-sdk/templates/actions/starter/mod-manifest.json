@@ -9,7 +9,7 @@
     "icon": "icon.svg",
     "scripts": [
         {
-            "id": "script-id",
+            "id": "my-script",
             "name": "My script",
             "file": "build/my-script.js",
             "entryPoint": "myScript",

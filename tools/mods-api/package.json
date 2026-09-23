@@ -1,6 +1,6 @@
 {
     "name": "@spotfire/mods-api",
-    "version": "2.5.0",
+    "version": "2.6.0-preview.0",
     "description": "API typings and schemas for Spotfire® Mods",
     "repository": {
         "type": "git",
@@ -12,5 +12,8 @@
         "action-mods/*.json",
         "visualization-mods/*.d.ts",
         "visualization-mods/*.json"
-    ]
+    ],
+    "peerDependencies": {
+        "@spotfire/mods-sdk": ">=1.3.0-preview.0"
+    }
 }

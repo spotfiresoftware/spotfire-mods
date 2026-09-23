@@ -12,9 +12,44 @@
   ],
   "additionalProperties": false,
   "$defs": {
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "description"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Id",
+          "description": "The identifier. This needs to be unique within the mod and must not change between versions of the mod. It also defines the skill folder name: the instructions are read from 'skills/{id}/SKILL.md' and any resources under 'skills/{id}/references' or 'skills/{id}/assets' are loaded on demand.",
+          "examples": ["sales-analyst"],
+          "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-._]*(?<=[a-zA-Z0-9])$"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "Specifies the display name shown to the user.",
+          "examples": ["Sales Analyst"],
+          "pattern": "^(.*)$"
+        },
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "Describes what the skill does so the AI knows when to use it.",
+          "examples": ["Analyzes sales data and answers questions about revenue trends."],
+          "pattern": "^(.*)$"
+        },
+        "icon": {
+          "type": "string",
+          "title": "Icon",
+          "description": "Optional. Specifies the path of the SVG icon file, relative to the mod manifest. Falls back to the mod icon when omitted.",
+          "examples": ["skills/sales-analyst/icon.svg"],
+          "pattern": "^.*\\.svg$"
+        }
+      }
+    },
     "scriptBase": {
       "type": "object",
-      "required": ["id", "name", "file", "entryPoint"],
+      "required": ["id", "name", "file"],
       "properties": {
         "id": {
           "type": "string",
@@ -40,14 +75,6 @@
           "examples": ["script.js", "build/script.js"],
           "pattern": "^(.*)$"
         },
-        "entryPoint": {
-          "type": "string",
-          "title": "Entry point",
-          "default": "scriptFunction",
-          "description": "Specifies the unique entry point. The entry point has to be unique across all scripts and agents included in the mod.",
-          "examples": ["scriptFunction"],
-          "pattern": "^[$A-Za-z_][0-9A-Za-z_$]*$"
-        },
         "description": {
           "type": "string",
           "title": "Description",
@@ -60,6 +87,11 @@
           "title": "Specifies the name of the file containing the svg icon.",
           "default": "script-icon.svg",
           "pattern": "^.*\\.svg$"
+        },
+        "entryPoint": {
+          "not": {},
+          "title": "'entryPoint' has no effect",
+          "description": "The 'entryPoint' property is ignored from API version 2.6 and should be removed. Scripts and agents must instead declare their entry point by calling 'RegisterEntryPoint' in the script."
         }
       }
     }
@@ -169,6 +201,13 @@
                 "description": "Flag indicating if the script should be wrapped in a transaction.",
                 "default": true,
                 "pattern": "^(true)(false)$"
+              },
+              "visibility": {
+                "type": "string",
+                "title": "Script visibility",
+                "description": "Whether the script is offered as an action in the user interface. Requires apiVersion >= 2.6.",
+                "default": "public",
+                "enum": ["public", "internal"]
               },
               "parameters": {
                 "type": "array",
@@ -612,11 +651,20 @@
                 "type": "string",
                 "title": "Agent type",
                 "description": "The type of context this agent operates on.",
-                "enum": ["marking", "visual"]
+                "enum": ["marking", "visual", "document"]
               }
             }
           }
         ]
+      }
+    },
+    "skills": {
+      "type": "array",
+      "title": "The skills declared in the mod",
+      "description": "Declarative AI skills surfaced to end users. Requires apiVersion >= 2.6.",
+      "items": {
+        "title": "Skill",
+        "$ref": "#/$defs/skill"
       }
     }
   }

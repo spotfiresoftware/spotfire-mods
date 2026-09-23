@@ -18,9 +18,22 @@ import {
     isParameterType,
     mkStdout,
     readApiVersion,
+    readManifest,
     toTypeName,
     typeFeature,
 } from "./utils.js";
+
+/**
+ * Bare module specifiers provided by the Spotfire runtime. Everything declared
+ * by the action mods API lives under these namespaces (e.g.
+ * "spotfire/dxp/application", "system/collections/generic").
+ */
+export const RUNTIME_EXTERNALS = [
+    "spotfire",
+    "spotfire/*",
+    "system",
+    "system/*",
+];
 
 function isValidEntryPoint(entryPoint: string) {
     const entryPointRegex = /^[$A-Z_][0-9A-Z_$]*$/i;
@@ -161,21 +174,36 @@ export async function generateEnvFile({
         error(apiVersionResult.error);
     }
 
+    const isEsm =
+        apiVersionResult.status === "success" &&
+        apiVersionResult.result.supportsFeature("Esm");
+
     for (const script of manifest.scripts ?? []) {
         if (!script.name) {
             error("Script has no name.");
         }
 
-        if (!script.entryPoint) {
+        let interfaceName: string | undefined;
+        if (isEsm) {
+            // From apiVersion 2.6 the manifest no longer declares an
+            // 'entryPoint'; the parameters interface is derived from the
+            // script id instead.
+            if (!script.id) {
+                error(`Missing id for script '${script.name}'`);
+            } else {
+                interfaceName = toTypeName(script.id) + "Parameters";
+            }
+        } else if (!script.entryPoint) {
             error(`Missing entry point for script '${script.name}'`);
         } else if (!isValidEntryPoint(script.entryPoint)) {
             error(`Invalid entry point name: '${script.entryPoint}'.`);
+        } else {
+            interfaceName = toTypeName(script.entryPoint) + "Parameters";
         }
 
         let tsType = "";
 
-        if (script.entryPoint) {
-            const interfaceName = toTypeName(script.entryPoint) + "Parameters";
+        if (interfaceName) {
             tsType += `\ninterface ${interfaceName} {`;
         }
 
@@ -435,25 +463,30 @@ async function restartEsbuildImpl({
     esbuildConfigPath,
     outdir,
     debug,
+    enforce,
     quiet,
 }: {
     defaultConfig: esbuild.BuildOptions;
     esbuildConfigPath: string;
     outdir: string;
     debug: boolean;
+    enforce?: (options: esbuild.BuildOptions) => esbuild.BuildOptions;
 } & QuietOtions) {
     try {
         if (ctx) {
             await ctx.dispose();
         }
 
-        const esbuildOptions = await getEsbuildOptions({
+        let esbuildOptions = await getEsbuildOptions({
             esbuildConfigPath,
             defaultConfig,
             outdir,
             debug,
             quiet: ctx != null || quiet,
         });
+        if (enforce) {
+            esbuildOptions = enforce(esbuildOptions);
+        }
         ctx = await esbuild.context(esbuildOptions);
         await ctx.rebuild();
         await ctx.watch();
@@ -591,6 +624,56 @@ async function getTypeFromManifest(manifestPath: string) {
     return null;
 }
 
+/**
+ * Loads the user's esbuild config module (which default exports a config
+ * object). Returns null if the file does not exist or cannot be loaded.
+ */
+export async function loadUserEsbuildConfig(
+    esbuildConfigPath: string
+): Promise<esbuild.BuildOptions | null> {
+    if (!existsSync(esbuildConfigPath)) {
+        return null;
+    }
+
+    try {
+        const dirname = await getDirname();
+        let importPath = path
+            .relative(dirname, path.resolve(esbuildConfigPath))
+            .replace(/\\/g, "/");
+        if (!importPath.startsWith("..") && !importPath.startsWith(".")) {
+            importPath = "./" + importPath;
+        }
+
+        const userConfig = (await import(importPath)).default;
+        if (typeof userConfig === "object" && userConfig != null) {
+            return userConfig as esbuild.BuildOptions;
+        }
+    } catch {
+        // An invalid config is ignored; callers fall back to the defaults.
+    }
+
+    return null;
+}
+
+/**
+ * Enforces the invariants required for ESM action mods (apiVersion >= 2.6): the
+ * output must be an ES module and the Spotfire API must stay external. Applied
+ * after the user esbuild config is merged so a user config cannot accidentally
+ * clobber them.
+ */
+function enforceEsmOptions(
+    options: esbuild.BuildOptions
+): esbuild.BuildOptions {
+    const userExternal = (options.external ?? []).filter(
+        (e) => !RUNTIME_EXTERNALS.includes(e)
+    );
+    return {
+        ...options,
+        format: "esm",
+        external: [...RUNTIME_EXTERNALS, ...userExternal],
+    };
+}
+
 async function getEsbuildOptions({
     defaultConfig,
     esbuildConfigPath,
@@ -605,51 +688,36 @@ async function getEsbuildOptions({
 } & QuietOtions) {
     const stdout = mkStdout(quiet);
 
-    if (existsSync(esbuildConfigPath)) {
+    const userConfig = await loadUserEsbuildConfig(esbuildConfigPath);
+    if (userConfig) {
         stdout(`Found esbuild config at '${esbuildConfigPath}'.`);
-        try {
-            const dirname = await getDirname();
-            let importPath = path
-                .relative(dirname, path.resolve(esbuildConfigPath))
-                .replace(/\\/g, "/");
-            if (!importPath.startsWith("..") && !importPath.startsWith(".")) {
-                importPath = "./" + importPath;
+        const defaultRecord = defaultConfig as Record<string, unknown>;
+        const userRecord = userConfig as Record<string, unknown>;
+        const overrides: {
+            [option: string]: { oldVal: unknown; newVal: unknown };
+        } = {};
+        for (const defaultConfigKey of Object.keys(defaultConfig)) {
+            if (!(defaultConfigKey in userConfig)) {
+                continue;
             }
 
-            const userConfig = (await import(importPath)).default;
-            if (typeof userConfig === "object") {
-                const overrides: {
-                    [option: string]: { oldVal: unknown; newVal: unknown };
-                } = {};
-                for (const defaultConfigKey of Object.keys(defaultConfig)) {
-                    if (!(defaultConfigKey in userConfig)) {
-                        continue;
-                    }
-
-                    const oldVal =
-                        defaultConfig[
-                        defaultConfigKey as keyof typeof defaultConfig
-                        ];
-                    const newVal = userConfig[defaultConfigKey];
-                    if (oldVal !== newVal) {
-                        overrides[defaultConfigKey] = { oldVal, newVal };
-                    }
-                }
-
-                if (Object.keys(overrides).length > 0) {
-                    stdout("Overriding esbuild config with:");
-                    for (const [key, { oldVal, newVal }] of Object.entries(
-                        overrides
-                    )) {
-                        stdout(`  ${key}: ${oldVal} -> ${newVal}`);
-                    }
-                }
-
-                return { ...defaultConfig, ...userConfig };
+            const oldVal = defaultRecord[defaultConfigKey];
+            const newVal = userRecord[defaultConfigKey];
+            if (oldVal !== newVal) {
+                overrides[defaultConfigKey] = { oldVal, newVal };
             }
-        } catch (e) {
-            stdout(`esbuild config is invalid, exception: ${e}`);
         }
+
+        if (Object.keys(overrides).length > 0) {
+            stdout("Overriding esbuild config with:");
+            for (const [key, { oldVal, newVal }] of Object.entries(
+                overrides
+            )) {
+                stdout(`  ${key}: ${oldVal} -> ${newVal}`);
+            }
+        }
+
+        return { ...defaultConfig, ...userConfig };
     }
 
     return defaultConfig;
@@ -680,10 +748,21 @@ async function buildActionMod({
             `Cannot find 'scripts' folder in source directory, looked at '${scriptsDir}'.`
         );
     }
+
+    // From apiVersion 2.6 the Spotfire API is consumed through ESM imports
+    // (e.g. `import { Document } from "spotfire/dxp/application"`). These bare
+    // imports are provided by the Spotfire runtime, so they are marked as
+    // external and the scripts are emitted as ES modules instead of IIFEs.
+    const manifest = await readManifest(manifestPath);
+    const apiVersionResult = readApiVersion(manifest);
+    const isEsm =
+        apiVersionResult.status === "success" &&
+        apiVersionResult.result.supportsFeature("Esm");
+
     const defaultConfig: esbuild.BuildOptions = {
         outdir: absOutDir,
         bundle: true,
-        format: "iife",
+        format: isEsm ? "esm" : "iife",
         minify: !debug,
         sourcemap: debug,
         entryNames: "[name]",
@@ -714,6 +793,7 @@ async function buildActionMod({
             esbuildConfigPath,
             outdir: absOutDir,
             debug,
+            enforce: isEsm ? enforceEsmOptions : undefined,
             ...quiet,
         });
 
@@ -730,13 +810,16 @@ async function buildActionMod({
         }
     } else {
         stdout(`Looking for script files in '${scriptsDir}'`);
-        const esbuildOptions = await getEsbuildOptions({
+        let esbuildOptions = await getEsbuildOptions({
             esbuildConfigPath,
             defaultConfig,
             outdir: absOutDir,
             debug,
             ...quiet,
         });
+        if (isEsm) {
+            esbuildOptions = enforceEsmOptions(esbuildOptions);
+        }
         const ctx = await esbuild.context({
             ...esbuildOptions,
         });

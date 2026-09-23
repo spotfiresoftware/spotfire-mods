@@ -1,5 +1,5 @@
 {
-    "name": "my-action-mod",
+    "name": "my-skill-mod",
     "version": "1.0.0",
     "type": "module",
     "scripts": {
@@ -7,9 +7,6 @@
         "build:dev": "mods-sdk build --watch --debug",
         "tsc:dev": "tsc --watch",
         "server": "mods-dev-server --allow-project-root true"
-    },
-    "dependencies": {
-        "zod": "^4.3.6"
     },
     "devDependencies": {
         "@spotfire/mods-api": "~MODS-API-VERSION",
@@ -20,7 +17,7 @@
         "typescript": "^5.9.3"
     },
     "engines": {
-        "node": ">=22.0.0"
+        "node": ">=22.12.0"
     },
     "allowScripts": {
         "esbuild": true
