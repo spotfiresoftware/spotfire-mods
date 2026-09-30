@@ -44,6 +44,11 @@ const colors = require("colors/safe");
  */
 const _ = require("lodash");
 
+/**
+ * Keeps track of which origins are allowed to read from the development server.
+ */
+const origins = require("./origins");
+
 const package = require("./package.json");
 
 const applicationJson = "application/json; charset=utf-8";
@@ -58,7 +63,9 @@ const defaultSettings = {
     open: true,
     root: ".",
     path: "/" + manifestName,
-    allowProjectRoot: false
+    allowProjectRoot: false,
+    allowedOrigins: [],
+    promptForNewOrigins: true
 };
 
 module.exports.start = start;
@@ -72,14 +79,25 @@ module.exports.settings = Object.freeze(defaultSettings);
 function start(settings = {}) {
     /** @type {string[]} */
     let declaredExternalResourcesInManifest = [];
-    const allowedOrigins = new Set();
     /** @type {string[]} */
     let manifestFiles = [];
+
+    /** The allowed origins that have actually made a request. Added to the CSP of the served mod. */
+    const connectedOrigins = new Set();
 
     let serverUrl = "";
     let wsServerUrl = "";
 
     settings = Object.assign({}, defaultSettings, settings);
+
+    // There is nobody to answer the prompt unless the server was started from a terminal.
+    const interactive = settings.promptForNewOrigins !== false && Boolean(process.stdin.isTTY && process.stdout.isTTY);
+
+    const originGate = origins.createOriginGate({
+        allowedOrigins: settings.allowedOrigins,
+        configPath: settings.originsConfigPath,
+        prompt: interactive ? origins.createConsolePrompt() : undefined
+    });
 
     const rootDirectoryAbsolutePath = path.resolve(settings.root);
     const manifestPath = path.join(rootDirectoryAbsolutePath, manifestName);
@@ -95,6 +113,11 @@ function start(settings = {}) {
 
     app.use(compression());
     app.use(cacheHeaders);
+
+    // Answered ahead of the allow list, so that Spotfire can ask about its own standing without the
+    // request being held by a prompt.
+    app.use("/@spotfire/api/origin", originStatus);
+
     app.use(cspHeaders);
     app.use(corsHeaders);
     app.use(preflight);
@@ -145,6 +168,13 @@ function start(settings = {}) {
         wsServerUrl = "ws://" + address.address + ":" + address.port;
         console.log(colors.green('Serving "%s" at %s'), settings.root, serverUrl);
 
+        const allowed = [...(originGate.trustLoopback ? ["localhost (any port)"] : []), ...originGate.allowed.values()];
+        console.log(
+            "Allowed origins: " +
+                (allowed.length ? allowed.join(", ") : "none") +
+                (interactive ? ". Other origins are asked about." : ". Other origins are blocked.")
+        );
+
         // Launch the default browser
         if (settings.open) {
             let { path: serverPath = "/" } = settings;
@@ -156,6 +186,16 @@ function start(settings = {}) {
     // Upgrade event is used for setting up the web socket connection.
     server.on("upgrade", (request, socket, head) => {
         if (request.url != "/live-reload") {
+            return;
+        }
+
+        // The live reload snippet runs in the sandboxed mod iframe and therefore has the opaque "null"
+        // origin. Anything else has to be on the allow list already. Web socket connections cannot be held
+        // while the developer answers a prompt, so unknown origins are turned away rather than asked about.
+        const origin = request.headers.origin;
+        if (origin != undefined && origin !== "null" && !originGate.isKnownAllowed(origin)) {
+            console.log(colors.red(`Blocked a live reload connection from the unknown origin '${origin}'.`));
+            socket.destroy();
             return;
         }
 
@@ -213,7 +253,7 @@ function start(settings = {}) {
         res.setHeader(
             "content-security-policy",
             `sandbox allow-scripts; default-src 'self' 'unsafe-eval' 'unsafe-inline' blob: data: ${[
-                ...allowedOrigins.values(),
+                ...connectedOrigins.values(),
                 ...declaredExternalResourcesInManifest
             ].join(" ")} ${wsServerUrl}`
         );
@@ -299,30 +339,102 @@ function start(settings = {}) {
                     }
                 }
             }
-        } catch (err) { }
+        } catch (err) {}
     }
 
     /**
      * Middleware to manage CORS headers.
+     *
+     * Only origins on the allow list are let in. Unknown origins are brought to the developer in a prompt,
+     * which holds the request until it is answered.
      *
      * @param {connect.IncomingMessage} req
      * @param {http.ServerResponse} res
      * @param {connect.NextFunction} next
      */
     function corsHeaders(req, res, next) {
-        const isCorsRequest = req.headers.origin != undefined;
-        const requestFromOutsideSandbox = req.headers.origin != "null";
+        // Requests from the sandboxed iframe carry the opaque "null" origin and are left without CORS
+        // headers on purpose. E.g. module loading will not work in embedded mode. The same goes for
+        // requests without a usable origin header.
+        const origin = origins.normalizeOrigin(req.headers.origin);
 
-        // Prevent CORS requests from the sandboxed iframe. E.g module loading will not work in embedded mode.
-        if (isCorsRequest && requestFromOutsideSandbox) {
-            allowedOrigins.add(req.headers.origin);
+        if (origin == undefined) {
+            next();
+            return;
+        }
 
+        // The response varies with the origin, even when the request is denied.
+        res.setHeader("Vary", "Origin");
+
+        originGate
+            .isAllowed(origin)
+            .then((allowed) => {
+                if (allowed) {
+                    connectedOrigins.add(origin);
+
+                    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+                    res.setHeader("Access-Control-Allow-Origin", origin);
+                    res.setHeader("Access-Control-Allow-Private-Network", "true");
+                }
+
+                next();
+            })
+            .catch(next);
+    }
+
+    /**
+     * Middleware telling the caller whether its own origin is allowed to read from the development server.
+     *
+     * Spotfire calls this before connecting to a mod under development. An origin that is not allowed yet
+     * gets a chance to tell the user where the question will show up, e.g. in the terminal of the editor
+     * running the development server, instead of leaving them with a connection that appears to be stuck.
+     *
+     * Unlike every other endpoint this one answers all origins, including the ones that are not allowed.
+     * It only reveals whether the calling origin itself is allowed, which that origin can find out anyway
+     * by making a request, and it never changes the allow list nor raises the prompt.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function originStatus(req, res, next) {
+        if (req.method !== "GET" && req.method !== "OPTIONS") {
+            res.statusCode = 405;
+            res.setHeader("Allow", "GET, OPTIONS");
+            res.end();
+            return;
+        }
+
+        const origin = origins.normalizeOrigin(req.headers.origin);
+
+        if (origin != undefined) {
+            res.setHeader("Vary", "Origin");
             res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Origin", origin);
             res.setHeader("Access-Control-Allow-Private-Network", "true");
         }
 
-        next();
+        if (req.method === "OPTIONS") {
+            res.statusCode = 204;
+            res.end();
+            return;
+        }
+
+        // A request without an origin header is not a cross origin request and is not subject to the allow list.
+        const status = req.headers.origin == undefined ? "allowed" : originGate.status(req.headers.origin);
+
+        res.setHeader("Content-Type", applicationJson);
+        res.write(
+            JSON.stringify({
+                origin: origin ?? null,
+                allowed: status === "allowed",
+                status: status,
+
+                // Whether connecting from this origin will raise a question the developer has to answer.
+                willPrompt: status === "unknown" && interactive
+            })
+        );
+        res.end();
     }
 
     /**

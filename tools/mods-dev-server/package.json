@@ -9,6 +9,7 @@
     "homepage": "https://github.com/spotfiresoftware/spotfire-mods/tree/master/tools/mods-dev-server",
     "files": [
         "cli.js",
+        "origins.js",
         "server.js",
         "websocket.html"
     ],

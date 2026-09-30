@@ -18,6 +18,24 @@ export interface ServerSettings {
 
     /** If the server should expose the spotfire/modProjectRoot endpoint. */
     allowProjectRoot?: boolean;
+
+    /**
+     * Origins allowed to read from the server, in addition to the ones in the local configuration file.
+     * Localhost is always allowed, on any port. Defaults to an empty list.
+     */
+    allowedOrigins?: string[];
+
+    /**
+     * Whether to ask, on the console, if an unknown origin should be allowed. Unknown origins are denied
+     * when the server is not started from a terminal, since there is then nobody to answer. Defaults to true.
+     */
+    promptForNewOrigins?: boolean;
+
+    /**
+     * The local configuration file holding the origins allowed for all future sessions.
+     * Defaults to `.spotfire/mods-dev-server.json` in the home directory.
+     */
+    originsConfigPath?: string;
 }
 
 export declare function start(settings: ServerSettings) : http.Server;
