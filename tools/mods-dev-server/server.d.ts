@@ -20,12 +20,6 @@ export interface ServerSettings {
     allowProjectRoot?: boolean;
 
     /**
-     * Whether to ask, on the console, if an unknown origin should be allowed. Unknown origins are denied
-     * when the server is not started from a terminal, since there is then nobody to answer. Defaults to true.
-     */
-    promptForNewOrigins?: boolean;
-
-    /**
      * The local configuration file holding the origins allowed for all future sessions.
      * Defaults to `.spotfire/mods-dev-server.json` in the home directory.
      */

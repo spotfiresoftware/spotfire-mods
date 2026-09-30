@@ -63,8 +63,7 @@ const defaultSettings = {
     open: true,
     root: ".",
     path: "/" + manifestName,
-    allowProjectRoot: false,
-    promptForNewOrigins: true
+    allowProjectRoot: false
 };
 
 module.exports.start = start;
@@ -90,7 +89,7 @@ function start(settings = {}) {
     settings = Object.assign({}, defaultSettings, settings);
 
     // There is nobody to answer the prompt unless the server was started from a terminal.
-    const interactive = settings.promptForNewOrigins !== false && Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
 
     const originGate = origins.createOriginGate({
         configPath: settings.originsConfigPath,

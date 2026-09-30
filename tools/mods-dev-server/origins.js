@@ -242,9 +242,6 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
         /** The origins currently allowed to read from the development server. */
         allowed,
 
-        /** Whether the developer will be asked about an unknown origin. */
-        interactive: Boolean(prompt),
-
         /** Whether loopback origins are allowed without asking. */
         trustLoopback,
 

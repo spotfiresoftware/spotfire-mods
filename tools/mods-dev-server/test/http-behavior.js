@@ -10,10 +10,10 @@ const indexHtml = fs.readFileSync(path.join(__dirname, "test-files", "index.html
 // origins the developer running them happens to have accepted.
 const unusedOriginsConfigPath = path.join(__dirname, "test-files", "no-such-origins-config.json");
 
+// These tests only ever send loopback and "null" origins, so they never reach the prompt.
 const devServer = require("../server").start({
     root: path.join(__dirname, "test-files"),
     open: false,
-    promptForNewOrigins: false,
     originsConfigPath: unusedOriginsConfigPath
 });
 

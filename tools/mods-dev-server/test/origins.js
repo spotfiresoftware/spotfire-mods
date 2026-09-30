@@ -213,12 +213,10 @@ describe("Origin allow list in the server", function () {
     let devServer;
 
     before(function () {
-        devServer = server.start({
-            root: path.join(__dirname, "test-files"),
-            open: false,
-            promptForNewOrigins: false,
-            originsConfigPath: configAllowing("https://spotfire.example.com")
-        });
+        devServer = startServer(
+            { originsConfigPath: configAllowing("https://spotfire.example.com") },
+            { fromTerminal: false }
+        );
     });
 
     after(function () {
@@ -337,23 +335,8 @@ describe("Origin query on a server started from a terminal", function () {
     let devServer;
 
     before(function () {
-        // Pretend the server was started from a terminal, so that it is willing to ask about unknown
-        // origins. Only the query endpoint is used below, and it never raises the prompt.
-        const stdin = Object.getOwnPropertyDescriptor(process.stdin, "isTTY");
-        const stdout = Object.getOwnPropertyDescriptor(process.stdout, "isTTY");
-        Object.defineProperty(process.stdin, "isTTY", { value: true, configurable: true });
-        Object.defineProperty(process.stdout, "isTTY", { value: true, configurable: true });
-
-        try {
-            devServer = server.start({
-                root: path.join(__dirname, "test-files"),
-                open: false,
-                originsConfigPath: noConfig
-            });
-        } finally {
-            restore(process.stdin, "isTTY", stdin);
-            restore(process.stdout, "isTTY", stdout);
-        }
+        // Only the query endpoint is used below, and it never raises the prompt.
+        devServer = startServer({ originsConfigPath: noConfig }, { fromTerminal: true });
     });
 
     after(function () {
@@ -387,6 +370,28 @@ describe("Origin query on a server started from a terminal", function () {
             .end(done);
     });
 });
+
+/**
+ * Start a development server over the test files, pretending that it was or was not started from a
+ * terminal. Whether there is a console to ask on is the only thing deciding if unknown origins are
+ * brought up in a prompt, and the test run itself may or may not have one.
+ *
+ * @param {import("../server").ServerSettings} settings
+ * @param {{ fromTerminal: boolean }} options
+ */
+function startServer(settings, { fromTerminal }) {
+    const stdin = Object.getOwnPropertyDescriptor(process.stdin, "isTTY");
+    const stdout = Object.getOwnPropertyDescriptor(process.stdout, "isTTY");
+    Object.defineProperty(process.stdin, "isTTY", { value: fromTerminal, configurable: true });
+    Object.defineProperty(process.stdout, "isTTY", { value: fromTerminal, configurable: true });
+
+    try {
+        return server.start({ root: path.join(__dirname, "test-files"), open: false, ...settings });
+    } finally {
+        restore(process.stdin, "isTTY", stdin);
+        restore(process.stdout, "isTTY", stdout);
+    }
+}
 
 /**
  * Put a property descriptor back the way it was, or remove the property if it had none.
