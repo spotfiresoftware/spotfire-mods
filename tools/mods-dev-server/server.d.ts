@@ -20,12 +20,6 @@ export interface ServerSettings {
     allowProjectRoot?: boolean;
 
     /**
-     * Origins allowed to read from the server, in addition to the ones in the local configuration file.
-     * Localhost is always allowed, on any port. Defaults to an empty list.
-     */
-    allowedOrigins?: string[];
-
-    /**
      * Whether to ask, on the console, if an unknown origin should be allowed. Unknown origins are denied
      * when the server is not started from a terminal, since there is then nobody to answer. Defaults to true.
      */

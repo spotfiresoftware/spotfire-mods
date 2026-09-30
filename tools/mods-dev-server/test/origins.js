@@ -12,6 +12,32 @@ const server = require("../server");
 /** A configuration file that does not exist, so that the tests do not pick up the developer's own origins. */
 const noConfig = path.join(__dirname, "test-files", "no-such-origins-config.json");
 
+/** Directories holding the configuration files written by the tests. @type {string[]} */
+const temporaryDirectories = [];
+
+afterEach(function () {
+    let directory;
+    while ((directory = temporaryDirectories.pop()) != undefined) {
+        fs.rmSync(directory, { recursive: true, force: true });
+    }
+});
+
+function temporaryConfigPath() {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), "mods-dev-server-test-"));
+    temporaryDirectories.push(directory);
+    return path.join(directory, "mods-dev-server.json");
+}
+
+/**
+ * A local configuration file allowing the given origins.
+ * @param {...string} allowedOrigins
+ */
+function configAllowing(...allowedOrigins) {
+    const configPath = temporaryConfigPath();
+    fs.writeFileSync(configPath, JSON.stringify({ allowedOrigins }));
+    return configPath;
+}
+
 describe("Origin allow list", function () {
     describe("normalizeOrigin", function () {
         it("should bring origins to a canonical form", function () {
@@ -58,10 +84,8 @@ describe("Origin allow list", function () {
 
     describe("createOriginGate", function () {
         it("should allow loopback and configured origins, and deny the rest without a prompt", async function () {
-            const gate = origins.createOriginGate({
-                allowedOrigins: ["HTTPS://Spotfire.Example.com"],
-                configPath: noConfig
-            });
+            // Configured with odd casing, which the gate is expected to see past.
+            const gate = origins.createOriginGate({ configPath: configAllowing("HTTPS://Spotfire.Example.com") });
 
             assert.strictEqual(await gate.isAllowed("http://localhost:8001"), true);
             assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
@@ -71,15 +95,9 @@ describe("Origin allow list", function () {
         });
 
         it("should read origins allowed for all future sessions from the configuration file", async function () {
-            const configPath = temporaryConfigPath();
-            fs.writeFileSync(configPath, JSON.stringify({ allowedOrigins: ["https://spotfire.example.com"] }));
+            const gate = origins.createOriginGate({ configPath: configAllowing("https://spotfire.example.com") });
 
-            try {
-                const gate = origins.createOriginGate({ configPath });
-                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
-            } finally {
-                fs.rmSync(path.dirname(configPath), { recursive: true, force: true });
-            }
+            assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
         });
 
         it("should ask about an unknown origin and remember the answer for the session", async function () {
@@ -142,27 +160,22 @@ describe("Origin allow list", function () {
             const configPath = temporaryConfigPath();
             fs.writeFileSync(configPath, JSON.stringify({ someOtherSetting: true }));
 
-            try {
-                const gate = origins.createOriginGate({ configPath, prompt: async () => "always" });
-                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
+            const gate = origins.createOriginGate({ configPath, prompt: async () => "always" });
+            assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
 
-                const config = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
-                assert.deepStrictEqual(config.allowedOrigins, ["https://spotfire.example.com"]);
-                assert.strictEqual(config.someOtherSetting, true, "should keep other settings intact");
+            const config = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+            assert.deepStrictEqual(config.allowedOrigins, ["https://spotfire.example.com"]);
+            assert.strictEqual(config.someOtherSetting, true, "should keep other settings intact");
 
-                // A new session picks the origin up without asking again.
-                const nextSession = origins.createOriginGate({ configPath });
-                assert.strictEqual(await nextSession.isAllowed("https://spotfire.example.com"), true);
-            } finally {
-                fs.rmSync(path.dirname(configPath), { recursive: true, force: true });
-            }
+            // A new session picks the origin up without asking again.
+            const nextSession = origins.createOriginGate({ configPath });
+            assert.strictEqual(await nextSession.isAllowed("https://spotfire.example.com"), true);
         });
 
         it("should report where an origin stands without asking about it", async function () {
             let asked = 0;
             const gate = origins.createOriginGate({
-                allowedOrigins: ["https://spotfire.example.com"],
-                configPath: noConfig,
+                configPath: configAllowing("https://spotfire.example.com"),
                 prompt: async () => {
                     asked++;
                     return "deny";
@@ -204,8 +217,7 @@ describe("Origin allow list in the server", function () {
             root: path.join(__dirname, "test-files"),
             open: false,
             promptForNewOrigins: false,
-            allowedOrigins: ["https://spotfire.example.com"],
-            originsConfigPath: noConfig
+            originsConfigPath: configAllowing("https://spotfire.example.com")
         });
     });
 
@@ -389,8 +401,4 @@ function restore(target, property, descriptor) {
     } else {
         delete target[property];
     }
-}
-
-function temporaryConfigPath() {
-    return path.join(fs.mkdtempSync(path.join(os.tmpdir(), "mods-dev-server-test-")), "mods-dev-server.json");
 }

@@ -213,22 +213,17 @@ function createConsolePrompt(input = process.stdin, output = process.stdout) {
  * Create the gate deciding whether an origin may read from the development server.
  *
  * @param {object} options
- * @param {string[]} [options.allowedOrigins] Origins allowed in addition to the loopback ones, e.g. from the command line.
  * @param {string} [options.configPath] The local configuration file to read from and write to.
  * @param {((origin: string) => Promise<"session" | "always" | "deny">) | undefined} [options.prompt]
  *  Asks the developer what to do with an unknown origin. Unknown origins are denied when omitted.
  */
-function createOriginGate({ allowedOrigins = [], configPath = configFilePath, prompt } = {}) {
+function createOriginGate({ configPath = configFilePath, prompt } = {}) {
     // Change this to false to remove automatic trust for loopback origins, making localhost need consent as well. Lets the
     // consent flow be tried out from Spotfire Analyst, which is always served from a loopback address.
-    const trustLoopback = true;
+    const trustLoopback = false;
 
     /** Origins allowed for the running session, including the ones allowed for all future sessions. */
-    const allowed = new Set(
-        [...allowedOrigins, ...readAllowedOriginsFromConfig(configPath)]
-            .map(normalizeOrigin)
-            .filter((origin) => origin != undefined)
-    );
+    const allowed = new Set(readAllowedOriginsFromConfig(configPath));
 
     /** Origins the developer has rejected, or that were rejected because there was nobody to ask. */
     const denied = new Set();

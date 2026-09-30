@@ -52,11 +52,7 @@ if (require.main === module) {
                         // @ts-ignore
                         open: argv.open,
                         // @ts-ignore
-                        allowProjectRoot: argv.allowProjectRoot,
-                        // @ts-ignore
-                        allowedOrigins: argv.allowOrigin,
-                        // @ts-ignore
-                        promptForNewOrigins: argv.promptForNewOrigins
+                        allowProjectRoot: argv.allowProjectRoot
                     });
                 }
             )
@@ -87,19 +83,6 @@ if (require.main === module) {
                     "Whether or not the server should expose an endpoint at /spotfire/modProjectRoot for retrieving the path to the project root.",
                 boolean: true,
                 default: defaultSettings.allowProjectRoot
-            })
-            .option("allow-origin", {
-                describe:
-                    "An origin allowed to read from the server, in addition to the ones in the local configuration file. Localhost is always allowed. Repeat the option to allow several origins.",
-                string: true,
-                array: true,
-                default: defaultSettings.allowedOrigins
-            })
-            .option("prompt-for-new-origins", {
-                describe:
-                    "Whether to ask, on the console, if an unknown origin should be allowed. Unknown origins are denied when the server is not started from a terminal.",
-                boolean: true,
-                default: defaultSettings.promptForNewOrigins
             })
             .boolean(["open"])
             .version(packageJson.version)

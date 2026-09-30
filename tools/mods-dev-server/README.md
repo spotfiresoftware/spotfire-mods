@@ -19,8 +19,6 @@ mods-dev-server <source folder name>
 - `--help` lists all available options.
 - `--version` lists the current package version.
 - `--allow-project-root` expose an endpoint at /spotfire/modProjectRoot for retrieving the path to the project root, necessary for debugging action mods.
-- `--allow-origin https://spotfire.example.com` allows an origin to read from the server. Repeat the option to allow several origins.
-- `--no-prompt-for-new-origins` never asks about unknown origins, they are denied right away.
 
 ## Allowed origins
 
@@ -44,8 +42,8 @@ Allow this origin? [s]ession, [a]lways, [d]eny (default):
 - `deny` blocks the origin, and it is not asked about again during the session.
 
 The question is only asked when the server is started from a terminal. Unknown origins are denied right away
-when there is nobody to answer, for example when the server is started from a build tool. Origins can then be
-allowed up front with `--allow-origin`, or by listing them in the local configuration file:
+when there is nobody to answer, for example when the server is started from a build tool. Origins are then
+allowed up front by listing them in the local configuration file:
 
 ```json
 {

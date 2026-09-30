@@ -64,7 +64,6 @@ const defaultSettings = {
     root: ".",
     path: "/" + manifestName,
     allowProjectRoot: false,
-    allowedOrigins: [],
     promptForNewOrigins: true
 };
 
@@ -94,7 +93,6 @@ function start(settings = {}) {
     const interactive = settings.promptForNewOrigins !== false && Boolean(process.stdin.isTTY && process.stdout.isTTY);
 
     const originGate = origins.createOriginGate({
-        allowedOrigins: settings.allowedOrigins,
         configPath: settings.originsConfigPath,
         prompt: interactive ? origins.createConsolePrompt() : undefined
     });
