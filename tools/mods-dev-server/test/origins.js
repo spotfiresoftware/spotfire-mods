@@ -4,6 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const { PassThrough, Writable } = require("stream");
 const test = require("supertest");
 
 const origins = require("../origins");
@@ -184,15 +185,38 @@ describe("Origin allow list", function () {
 
             assert.strictEqual(gate.status("http://localhost:8001"), "allowed");
             assert.strictEqual(gate.status("https://spotfire.example.com"), "allowed");
-            assert.strictEqual(gate.status("https://unknown.example.com"), "unknown");
-            assert.strictEqual(gate.status("null"), "denied");
-            assert.strictEqual(gate.status(undefined), "denied");
+            assert.strictEqual(gate.status("https://unknown.example.com"), "willPrompt");
+            assert.strictEqual(gate.status("null"), "rejected");
+            assert.strictEqual(gate.status(undefined), "rejected");
             assert.strictEqual(asked, 0, "asking where an origin stands should not raise the prompt");
 
-            // Once the developer has answered, the answer is reflected.
+            // Once the developer has turned the origin down, it is reported as rejected rather than
+            // as a question still waiting to be asked.
             await gate.isAllowed("https://unknown.example.com");
-            assert.strictEqual(gate.status("https://unknown.example.com"), "denied");
+            assert.strictEqual(gate.status("https://unknown.example.com"), "rejected");
             assert.strictEqual(asked, 1);
+        });
+
+        it("should not report an origin as rejected when there was nobody to ask", async function () {
+            const gate = origins.createOriginGate({ configPath: noConfig });
+
+            assert.strictEqual(gate.status("https://unknown.example.com"), "cannotPrompt");
+
+            // Turning the origin away must not be mistaken for the developer having said no.
+            assert.strictEqual(await gate.isAllowed("https://unknown.example.com"), false);
+            assert.strictEqual(gate.status("https://unknown.example.com"), "cannotPrompt");
+        });
+
+        it("should not report an origin as rejected when the prompt could not be put", async function () {
+            const gate = origins.createOriginGate({
+                configPath: noConfig,
+                prompt: async () => {
+                    throw new Error("No console to ask on");
+                }
+            });
+
+            assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), false);
+            assert.strictEqual(gate.status("https://spotfire.example.com"), "cannotPrompt");
         });
 
         it("should deny an origin when the prompt fails", async function () {
@@ -263,12 +287,7 @@ describe("Origin allow list in the server", function () {
             .get("/@spotfire/api/origin")
             .set("Origin", "https://spotfire.example.com")
             .expect("Access-Control-Allow-Origin", "https://spotfire.example.com")
-            .expect(200, {
-                origin: "https://spotfire.example.com",
-                allowed: true,
-                status: "allowed",
-                willPrompt: false
-            })
+            .expect(200, { origin: "https://spotfire.example.com", status: "allowed" })
             .end(done);
     });
 
@@ -278,14 +297,8 @@ describe("Origin allow list in the server", function () {
             .set("Origin", "https://unknown.example.com")
             // The answer has to be readable by the origin it is about, or it is of no use.
             .expect("Access-Control-Allow-Origin", "https://unknown.example.com")
-            .expect(200, {
-                origin: "https://unknown.example.com",
-                allowed: false,
-                status: "unknown",
-
-                // This server was not started from a terminal, so nobody will be asked.
-                willPrompt: false
-            })
+            // This server was not started from a terminal, so nobody can be asked.
+            .expect(200, { origin: "https://unknown.example.com", status: "cannotPrompt" })
             .end(done);
     });
 
@@ -348,12 +361,7 @@ describe("Origin query on a server started from a terminal", function () {
             .get("/@spotfire/api/origin")
             .set("Origin", "https://unknown.example.com")
             .expect("Access-Control-Allow-Origin", "https://unknown.example.com")
-            .expect(200, {
-                origin: "https://unknown.example.com",
-                allowed: false,
-                status: "unknown",
-                willPrompt: true
-            })
+            .expect(200, { origin: "https://unknown.example.com", status: "willPrompt" })
             .end(done);
     });
 
@@ -361,34 +369,65 @@ describe("Origin query on a server started from a terminal", function () {
         test(devServer)
             .get("/@spotfire/api/origin")
             .set("Origin", "http://localhost:8001")
-            .expect(200, {
-                origin: "http://localhost:8001",
-                allowed: true,
-                status: "allowed",
-                willPrompt: false
-            })
+            .expect(200, { origin: "http://localhost:8001", status: "allowed" })
             .end(done);
     });
+
+    it("should report an origin the developer has turned down as rejected", async function () {
+        const rejected = "https://rejected.example.com";
+
+        // Answering the question is what separates a rejection from a question not yet asked.
+        await test(devServer).get("/@spotfire/api/origin").set("Origin", rejected).expect(200, {
+            origin: rejected,
+            status: "willPrompt"
+        });
+
+        answerPromptWith("d");
+        await test(devServer).get("/mod-manifest.json").set("Origin", rejected);
+
+        await test(devServer)
+            .get("/@spotfire/api/origin")
+            .set("Origin", rejected)
+            .expect(200, { origin: rejected, status: "rejected" });
+    });
 });
+
+/** Stands in for the console of the most recently started server. @type {Writable | undefined} */
+let consoleInput;
+
+/**
+ * Type an answer to the question the development server is asking on its console.
+ * @param {string} answer
+ */
+function answerPromptWith(answer) {
+    consoleInput?.write(answer + "\n");
+}
 
 /**
  * Start a development server over the test files, pretending that it was or was not started from a
  * terminal. Whether there is a console to ask on is the only thing deciding if unknown origins are
  * brought up in a prompt, and the test run itself may or may not have one.
  *
+ * The console is stood in for rather than borrowed, both so that the test run's own terminal is left
+ * alone and so that answers can be typed with {@link answerPromptWith}.
+ *
  * @param {import("../server").ServerSettings} settings
  * @param {{ fromTerminal: boolean }} options
  */
 function startServer(settings, { fromTerminal }) {
-    const stdin = Object.getOwnPropertyDescriptor(process.stdin, "isTTY");
+    const input = new PassThrough();
+    Object.defineProperty(input, "isTTY", { value: fromTerminal });
+
+    const stdin = Object.getOwnPropertyDescriptor(process, "stdin");
     const stdout = Object.getOwnPropertyDescriptor(process.stdout, "isTTY");
-    Object.defineProperty(process.stdin, "isTTY", { value: fromTerminal, configurable: true });
+    Object.defineProperty(process, "stdin", { value: input, configurable: true });
     Object.defineProperty(process.stdout, "isTTY", { value: fromTerminal, configurable: true });
 
     try {
+        consoleInput = input;
         return server.start({ root: path.join(__dirname, "test-files"), open: false, ...settings });
     } finally {
-        restore(process.stdin, "isTTY", stdin);
+        restore(process, "stdin", stdin);
         restore(process.stdout, "isTTY", stdout);
     }
 }

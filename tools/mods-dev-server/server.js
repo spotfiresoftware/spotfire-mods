@@ -186,16 +186,10 @@ function start(settings = {}) {
             return;
         }
 
-        // The live reload snippet runs in the sandboxed mod iframe and therefore has the opaque "null"
-        // origin. Anything else has to be on the allow list already. Web socket connections cannot be held
-        // while the developer answers a prompt, so unknown origins are turned away rather than asked about.
-        const origin = request.headers.origin;
-        if (origin != undefined && origin !== "null" && !originGate.isKnownAllowed(origin)) {
-            console.log(colors.red(`Blocked a live reload connection from the unknown origin '${origin}'.`));
-            socket.destroy();
-            return;
-        }
-
+        // Deliberately not held against the allow list. A refused handshake is indistinguishable from a
+        // server that has stopped, so Spotfire would report the development server as down while it is
+        // running. The channel carries the single word "reload" and serves none of the mod content the
+        // allow list protects.
         wss.handleUpgrade(request, socket, head, (socket) => {
             wss.emit("connection", socket, request);
         });
@@ -380,15 +374,17 @@ function start(settings = {}) {
     }
 
     /**
-     * Middleware telling the caller whether its own origin is allowed to read from the development server.
+     * Middleware telling the caller where its own origin stands with the development server, as one of
+     * `allowed`, `rejected`, `willPrompt` or `cannotPrompt`.
      *
-     * Spotfire calls this before connecting to a mod under development. An origin that is not allowed yet
-     * gets a chance to tell the user where the question will show up, e.g. in the terminal of the editor
-     * running the development server, instead of leaving them with a connection that appears to be stuck.
+     * Spotfire calls this before connecting to a mod under development, so that it can tell the user
+     * what is in the way: a question waiting to be answered in the terminal running the development
+     * server, a rejection, or a server with no console to ask on. Without it a connection held by the
+     * prompt and a connection that will never be allowed look exactly the same.
      *
      * Unlike every other endpoint this one answers all origins, including the ones that are not allowed.
-     * It only reveals whether the calling origin itself is allowed, which that origin can find out anyway
-     * by making a request, and it never changes the allow list nor raises the prompt.
+     * It only reveals where the calling origin itself stands, which that origin can find out anyway by
+     * making a request, and it never changes the allow list nor raises the prompt.
      *
      * @param {connect.IncomingMessage} req
      * @param {http.ServerResponse} res
@@ -421,16 +417,7 @@ function start(settings = {}) {
         const status = req.headers.origin == undefined ? "allowed" : originGate.status(req.headers.origin);
 
         res.setHeader("Content-Type", applicationJson);
-        res.write(
-            JSON.stringify({
-                origin: origin ?? null,
-                allowed: status === "allowed",
-                status: status,
-
-                // Whether connecting from this origin will raise a question the developer has to answer.
-                willPrompt: status === "unknown" && interactive
-            })
-        );
+        res.write(JSON.stringify({ origin: origin ?? null, status: status }));
         res.end();
     }
 

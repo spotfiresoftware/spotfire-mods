@@ -220,13 +220,20 @@ function createConsolePrompt(input = process.stdin, output = process.stdout) {
 function createOriginGate({ configPath = configFilePath, prompt } = {}) {
     // Change this to false to remove automatic trust for loopback origins, making localhost need consent as well. Lets the
     // consent flow be tried out from Spotfire Analyst, which is always served from a loopback address.
-    const trustLoopback = false;
+    const trustLoopback = true;
 
     /** Origins allowed for the running session, including the ones allowed for all future sessions. */
     const allowed = new Set(readAllowedOriginsFromConfig(configPath));
 
-    /** Origins the developer has rejected, or that were rejected because there was nobody to ask. */
-    const denied = new Set();
+    /** Origins the developer has turned down. Cleared when the server is restarted. */
+    const rejected = new Set();
+
+    /**
+     * Origins already turned away because there was nobody to ask. Kept apart from the rejected ones so
+     * that a developer who never saw the question is not reported as having said no, and only used to
+     * keep the same origin from logging on every request.
+     */
+    const unanswerable = new Set();
 
     /**
      * Pending questions, keyed by origin, so that concurrent requests from the same origin are only
@@ -247,34 +254,35 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
 
         /**
          * Where the origin currently stands with the development server. Never asks the developer, so an
-         * origin that has not been seen yet is reported as "unknown" rather than being brought up in a prompt.
+         * origin that has not been seen yet is reported as the question it would raise rather than
+         * raising it.
+         *
+         * - `allowed` the origin may read from the server.
+         * - `rejected` the developer has turned the origin down.
+         * - `willPrompt` the origin is unknown, and the developer will be asked about it.
+         * - `cannotPrompt` the origin is unknown, but there is no console to ask the developer on.
          *
          * @param {string | undefined} origin The raw origin header value.
-         * @returns {"allowed" | "denied" | "unknown"}
+         * @returns {"allowed" | "rejected" | "willPrompt" | "cannotPrompt"}
          */
         status(origin) {
             const normalizedOrigin = normalizeOrigin(origin);
 
             // The opaque "null" origin of the sandboxed mod iframe is never given access.
             if (normalizedOrigin == undefined) {
-                return "denied";
+                return "rejected";
             }
 
             if ((trustLoopback && isLoopbackOrigin(normalizedOrigin)) || allowed.has(normalizedOrigin)) {
                 return "allowed";
             }
 
-            return denied.has(normalizedOrigin) ? "denied" : "unknown";
-        },
+            if (rejected.has(normalizedOrigin)) {
+                return "rejected";
+            }
 
-        /**
-         * Whether the origin is already known to be allowed. Never asks the developer, and is therefore
-         * suitable for requests that cannot be held while waiting for an answer.
-         *
-         * @param {string | undefined} origin The raw origin header value.
-         */
-        isKnownAllowed(origin) {
-            return this.status(origin) === "allowed";
+            // An origin that could not be asked about is not asked about again.
+            return prompt && !unanswerable.has(normalizedOrigin) ? "willPrompt" : "cannotPrompt";
         },
 
         /**
@@ -295,12 +303,13 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
                 return true;
             }
 
-            if (denied.has(normalizedOrigin)) {
+            if (rejected.has(normalizedOrigin) || unanswerable.has(normalizedOrigin)) {
                 return false;
             }
 
             if (!prompt) {
-                denied.add(normalizedOrigin);
+                // Turned away, but not rejected by the developer, who never got to see the question.
+                unanswerable.add(normalizedOrigin);
                 console.log(
                     colors.red(`Blocked a request from the unknown origin '${normalizedOrigin}'.`),
                     colors.yellow(
@@ -330,19 +339,24 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
         // Keep the queue going even if a question fails, e.g. because the console was closed.
         promptQueue = question.catch(() => {});
 
-        /** @type {"session" | "always" | "deny"} */
+        /** @type {"session" | "always" | "deny" | undefined} */
         let answer;
         try {
             answer = await question;
         } catch (e) {
             console.log(colors.red(`Could not ask about the origin '${normalizedOrigin}': ${e}`));
-            answer = "deny";
         } finally {
             pending.delete(normalizedOrigin);
         }
 
+        if (answer == undefined) {
+            // The question never reached the developer, so the origin has not been turned down by them.
+            unanswerable.add(normalizedOrigin);
+            return false;
+        }
+
         if (answer === "deny") {
-            denied.add(normalizedOrigin);
+            rejected.add(normalizedOrigin);
             console.log(colors.red(`Denied requests from '${normalizedOrigin}'.`));
             return false;
         }

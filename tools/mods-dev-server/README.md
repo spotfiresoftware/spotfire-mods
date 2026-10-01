@@ -53,27 +53,29 @@ allowed up front by listing them in the local configuration file:
 
 ### Asking where an origin stands
 
-`GET /@spotfire/api/origin` reports whether the calling origin is allowed. Spotfire uses it before
-connecting to a mod under development, so that it can point the user at the question waiting for them in the
-terminal instead of leaving them with a connection that appears to be stuck.
+`GET /@spotfire/api/origin` reports where the calling origin stands. Spotfire uses it before connecting to a
+mod under development, so that it can tell the user what is in the way instead of leaving them with a
+connection that appears to be stuck.
 
 ```json
 {
     "origin": "https://spotfire.example.com",
-    "allowed": false,
-    "status": "unknown",
-    "willPrompt": true
+    "status": "willPrompt"
 }
 ```
 
-- `allowed` is whether the origin may read from the server right now.
-- `status` is `allowed`, `denied` for an origin that has been turned down, or `unknown` for one that has not
-  been seen yet.
-- `willPrompt` is whether connecting from this origin will raise a question the developer has to answer.
+`status` is one of:
+
+| Status         | Meaning                                                                      |
+| -------------- | ---------------------------------------------------------------------------- |
+| `allowed`      | The origin may read from the server.                                           |
+| `rejected`     | The developer answered `deny`. Restart the server to be asked again.           |
+| `willPrompt`   | The origin is unknown, and the developer is about to be asked about it.        |
+| `cannotPrompt` | The origin is unknown, but there is no console to ask the developer on.        |
 
 Unlike the other endpoints this one answers all origins, including the ones that are not allowed, since an
-answer nobody can read is of no use. It only reveals whether the calling origin itself is allowed, it never
-changes the allow list, and it never raises the prompt.
+answer nobody can read is of no use. It only reveals where the calling origin itself stands, it never changes
+the allow list, and it never raises the prompt.
 
 ## Node.js API
 
