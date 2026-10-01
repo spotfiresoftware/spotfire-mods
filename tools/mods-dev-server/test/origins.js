@@ -30,6 +30,14 @@ function temporaryConfigPath() {
 }
 
 /**
+ * Read back a local configuration file written by the tests.
+ * @param {string} configPath
+ */
+function readConfig(configPath) {
+    return JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+}
+
+/**
  * A local configuration file allowing the given origins.
  * @param {...string} allowedOrigins
  */
@@ -171,6 +179,72 @@ describe("Origin allow list", function () {
             // A new session picks the origin up without asking again.
             const nextSession = origins.createOriginGate({ configPath });
             assert.strictEqual(await nextSession.isAllowed("https://spotfire.example.com"), true);
+        });
+
+        describe("addAllowedOriginToConfig", function () {
+            it("should bring a hand written origin to its canonical form rather than add it twice", function () {
+                const configPath = temporaryConfigPath();
+                fs.writeFileSync(configPath, JSON.stringify({ allowedOrigins: ["HTTPS://Spotfire.Example.com/"] }));
+
+                origins.addAllowedOriginToConfig("https://spotfire.example.com", configPath);
+
+                assert.deepStrictEqual(readConfig(configPath).allowedOrigins, ["https://spotfire.example.com"]);
+            });
+
+            it("should keep the origins already in the file, in canonical form", function () {
+                const configPath = temporaryConfigPath();
+                fs.writeFileSync(
+                    configPath,
+                    JSON.stringify({ allowedOrigins: ["HTTP://Other.Example.com:8080", "https://kept.example.com"] })
+                );
+
+                origins.addAllowedOriginToConfig("https://spotfire.example.com", configPath);
+
+                assert.deepStrictEqual(readConfig(configPath).allowedOrigins, [
+                    "http://other.example.com:8080",
+                    "https://kept.example.com",
+                    "https://spotfire.example.com"
+                ]);
+            });
+
+            it("should collapse duplicate spellings already in the file", function () {
+                const configPath = temporaryConfigPath();
+                fs.writeFileSync(
+                    configPath,
+                    JSON.stringify({
+                        allowedOrigins: ["https://spotfire.example.com", "HTTPS://Spotfire.Example.com/"]
+                    })
+                );
+
+                origins.addAllowedOriginToConfig("https://other.example.com", configPath);
+
+                assert.deepStrictEqual(readConfig(configPath).allowedOrigins, [
+                    "https://spotfire.example.com",
+                    "https://other.example.com"
+                ]);
+            });
+
+            it("should leave entries that are not origins alone", function () {
+                const configPath = temporaryConfigPath();
+                fs.writeFileSync(configPath, JSON.stringify({ allowedOrigins: ["not an origin"] }));
+
+                origins.addAllowedOriginToConfig("https://spotfire.example.com", configPath);
+
+                // Throwing it away would quietly edit something the developer wrote by hand.
+                assert.deepStrictEqual(readConfig(configPath).allowedOrigins, [
+                    "not an origin",
+                    "https://spotfire.example.com"
+                ]);
+            });
+
+            it("should not add an origin that is already there", function () {
+                const configPath = temporaryConfigPath();
+                fs.writeFileSync(configPath, JSON.stringify({ allowedOrigins: ["https://spotfire.example.com"] }));
+
+                origins.addAllowedOriginToConfig("https://spotfire.example.com", configPath);
+
+                assert.deepStrictEqual(readConfig(configPath).allowedOrigins, ["https://spotfire.example.com"]);
+            });
         });
 
         it("should report where an origin stands without asking about it", async function () {

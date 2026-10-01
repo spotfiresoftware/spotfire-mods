@@ -130,6 +130,10 @@ function readAllowedOriginsFromConfig(filePath = configFilePath) {
 /**
  * Add an origin to the local configuration file, keeping any other settings in it intact.
  *
+ * The origins already in the file are brought to their canonical form as they are written back, so that
+ * a hand written entry does not end up alongside the same origin in a different spelling. Entries that
+ * are not origins at all are left untouched rather than silently thrown away.
+ *
  * @param {string} origin An origin as returned by {@link normalizeOrigin}.
  * @param {string} [filePath] Defaults to the local configuration file.
  */
@@ -146,9 +150,15 @@ function addAllowedOriginToConfig(origin, filePath = configFilePath) {
         // Start from an empty configuration if the file is missing or broken.
     }
 
-    const allowedOrigins = Array.isArray(config.allowedOrigins) ? config.allowedOrigins : [];
-    if (!allowedOrigins.includes(origin)) {
-        allowedOrigins.push(origin);
+    const existing = Array.isArray(config.allowedOrigins) ? config.allowedOrigins : [];
+
+    /** @type {string[]} */
+    const allowedOrigins = [];
+    for (const entry of [...existing, origin]) {
+        const canonical = typeof entry === "string" ? normalizeOrigin(entry) ?? entry : entry;
+        if (!allowedOrigins.includes(canonical)) {
+            allowedOrigins.push(canonical);
+        }
     }
 
     config.allowedOrigins = allowedOrigins;
