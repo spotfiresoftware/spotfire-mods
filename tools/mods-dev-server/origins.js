@@ -108,7 +108,15 @@ function readAllowedOriginsFromConfig(filePath = configFilePath) {
     try {
         content = fs.readFileSync(filePath, { encoding: "utf-8" });
     } catch (e) {
-        // A missing configuration file simply means that no origins have been accepted yet.
+        const isMissingFile =
+            e instanceof Error &&
+            "code" in e &&
+            e.code === "ENOENT";
+
+        if (!isMissingFile) {
+            console.log(colors.yellow(`Could not read allowed origins from '${filePath}': ${e}`));
+        }
+
         return [];
     }
 
