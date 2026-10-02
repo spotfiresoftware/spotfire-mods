@@ -51,6 +51,12 @@ allowed up front by listing them in the local configuration file:
 }
 ```
 
+The server writes this file with an empty list when it is not there, so there is always one to add origins to.
+
+Changes to the file take effect while the server is running, so an origin can be allowed, or taken away
+again, without restarting. Allowing an origin this way also clears an earlier `deny`, which is what lets a
+Spotfire instance that was turned down be let in without a restart.
+
 ### Asking where an origin stands
 
 `GET /@spotfire/api/origin` reports where the calling origin stands. Spotfire uses it before connecting to a

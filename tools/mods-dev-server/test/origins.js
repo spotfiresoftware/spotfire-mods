@@ -10,23 +10,68 @@ const test = require("supertest");
 const origins = require("../origins");
 const server = require("../server");
 
-/** A configuration file that does not exist, so that the tests do not pick up the developer's own origins. */
-const noConfig = path.join(__dirname, "test-files", "no-such-origins-config.json");
+/**
+ * A configuration file allowing nothing, so that the tests do not pick up the developer's own origins.
+ * Kept out of the served test files, since a gate writes an empty configuration file where it finds none.
+ */
+const noConfigDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "mods-dev-server-no-config-"));
+const noConfig = path.join(noConfigDirectory, "mods-dev-server.json");
+
+after(function () {
+    fs.rmSync(noConfigDirectory, { recursive: true, force: true });
+});
+
+/** Gates created by the tests, so that no watcher outlives the test that started it. @type {any[]} */
+const gates = [];
 
 /** Directories holding the configuration files written by the tests. @type {string[]} */
 const temporaryDirectories = [];
 
-afterEach(function () {
+afterEach(async function () {
+    // Watchers go first, so that no directory is pulled out from under one.
+    let gate;
+    while ((gate = gates.pop()) != undefined) {
+        await gate.close();
+    }
+
     let directory;
     while ((directory = temporaryDirectories.pop()) != undefined) {
         fs.rmSync(directory, { recursive: true, force: true });
     }
 });
 
-function temporaryConfigPath() {
+/**
+ * Create an origin gate that stops watching when the test ends.
+ * @param {Parameters<typeof origins.createOriginGate>[0]} [options]
+ */
+function createGate(options) {
+    const gate = origins.createOriginGate({ pollInterval, ...options });
+    gates.push(gate);
+    return gate;
+}
+
+function temporaryDirectory() {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), "mods-dev-server-test-"));
     temporaryDirectories.push(directory);
-    return path.join(directory, "mods-dev-server.json");
+    return directory;
+}
+
+function temporaryConfigPath() {
+    return path.join(temporaryDirectory(), "mods-dev-server.json");
+}
+
+/** How often the gates under test look at their configuration file. Kept brief to keep the suite brisk. */
+const pollInterval = 50;
+
+/**
+ * Change the configuration file and give the gate watching it time to notice.
+ *
+ * @param {string} configPath
+ * @param {object} config
+ */
+async function writeAndSettle(configPath, config) {
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 4) + "\n", { encoding: "utf-8" });
+    await new Promise((resolve) => setTimeout(resolve, pollInterval * 6));
 }
 
 /**
@@ -94,7 +139,7 @@ describe("Origin allow list", function () {
     describe("createOriginGate", function () {
         it("should allow loopback and configured origins, and deny the rest without a prompt", async function () {
             // Configured with odd casing, which the gate is expected to see past.
-            const gate = origins.createOriginGate({ configPath: configAllowing("HTTPS://Spotfire.Example.com") });
+            const gate = createGate({ configPath: configAllowing("HTTPS://Spotfire.Example.com") });
 
             assert.strictEqual(await gate.isAllowed("http://localhost:8001"), true);
             assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
@@ -104,7 +149,7 @@ describe("Origin allow list", function () {
         });
 
         it("should read origins allowed for all future sessions from the configuration file", async function () {
-            const gate = origins.createOriginGate({ configPath: configAllowing("https://spotfire.example.com") });
+            const gate = createGate({ configPath: configAllowing("https://spotfire.example.com") });
 
             assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
         });
@@ -112,7 +157,7 @@ describe("Origin allow list", function () {
         it("should ask about an unknown origin and remember the answer for the session", async function () {
             /** @type {string[]} */
             const asked = [];
-            const gate = origins.createOriginGate({
+            const gate = createGate({
                 configPath: noConfig,
                 prompt: async (origin) => {
                     asked.push(origin);
@@ -129,7 +174,7 @@ describe("Origin allow list", function () {
             let asked = 0;
             /** @type {(answer: "session" | "always" | "deny") => void} */
             let answer;
-            const gate = origins.createOriginGate({
+            const gate = createGate({
                 configPath: noConfig,
                 prompt: () => {
                     asked++;
@@ -152,7 +197,7 @@ describe("Origin allow list", function () {
 
         it("should not ask again about a denied origin", async function () {
             let asked = 0;
-            const gate = origins.createOriginGate({
+            const gate = createGate({
                 configPath: noConfig,
                 prompt: async () => {
                     asked++;
@@ -169,7 +214,7 @@ describe("Origin allow list", function () {
             const configPath = temporaryConfigPath();
             fs.writeFileSync(configPath, JSON.stringify({ someOtherSetting: true }));
 
-            const gate = origins.createOriginGate({ configPath, prompt: async () => "always" });
+            const gate = createGate({ configPath, prompt: async () => "always" });
             assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
 
             const config = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
@@ -177,8 +222,97 @@ describe("Origin allow list", function () {
             assert.strictEqual(config.someOtherSetting, true, "should keep other settings intact");
 
             // A new session picks the origin up without asking again.
-            const nextSession = origins.createOriginGate({ configPath });
+            const nextSession = createGate({ configPath });
             assert.strictEqual(await nextSession.isAllowed("https://spotfire.example.com"), true);
+        });
+
+        describe("picking up changes to the configuration file", function () {
+            // Spotfire tells the user to add their address to the allowed origins of the development
+            // server, so an edit made while it runs has to count without it being restarted.
+
+            it("should allow an origin added to the file while running", async function () {
+                const configPath = configAllowing();
+                const gate = createGate({ configPath });
+                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), false);
+
+                await writeAndSettle(configPath, { allowedOrigins: ["https://spotfire.example.com"] });
+
+                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
+            });
+
+            it("should stop allowing an origin taken out of the file while running", async function () {
+                const configPath = configAllowing("https://spotfire.example.com");
+                const gate = createGate({ configPath });
+                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
+
+                await writeAndSettle(configPath, { allowedOrigins: [] });
+
+                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), false);
+            });
+
+            it("should allow an origin the developer turned down earlier once the file allows it", async function () {
+                const configPath = configAllowing();
+                const gate = createGate({ configPath, prompt: async () => "deny" });
+
+                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), false);
+                assert.strictEqual(gate.status("https://spotfire.example.com"), "rejected");
+
+                // The other half of the advice Spotfire gives, which is to restart the server to be
+                // asked again. Editing the file has to work just as well.
+                await writeAndSettle(configPath, { allowedOrigins: ["https://spotfire.example.com"] });
+
+                assert.strictEqual(gate.status("https://spotfire.example.com"), "allowed");
+                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), true);
+            });
+
+            it("should keep an origin allowed for the session when the file changes", async function () {
+                const configPath = configAllowing();
+                const gate = createGate({ configPath, prompt: async () => "session" });
+                assert.strictEqual(await gate.isAllowed("https://session.example.com"), true);
+
+                await writeAndSettle(configPath, { allowedOrigins: ["https://other.example.com"] });
+
+                // Asked for rather than tried, since the prompt would allow it all over again and say
+                // nothing about whether rereading the file took the session grant away.
+                assert.strictEqual(gate.status("https://session.example.com"), "allowed");
+            });
+
+            it("should stop watching once closed", async function () {
+                const configPath = configAllowing();
+                const gate = createGate({ configPath });
+
+                await gate.close();
+                await writeAndSettle(configPath, { allowedOrigins: ["https://spotfire.example.com"] });
+
+                assert.strictEqual(await gate.isAllowed("https://spotfire.example.com"), false);
+            });
+        });
+
+        describe("createConfigIfMissing", function () {
+            it("should write a file ready for the developer to add an origin to", function () {
+                const configPath = temporaryConfigPath();
+
+                assert.strictEqual(origins.createConfigIfMissing(configPath), true);
+
+                assert.deepStrictEqual(readConfig(configPath), { allowedOrigins: [] });
+            });
+
+            it("should leave an existing file alone", function () {
+                const configPath = configAllowing("https://spotfire.example.com");
+
+                assert.strictEqual(origins.createConfigIfMissing(configPath), false);
+
+                assert.deepStrictEqual(readConfig(configPath).allowedOrigins, ["https://spotfire.example.com"]);
+            });
+
+            it("should be done for the developer when the gate starts", function () {
+                const configPath = path.join(temporaryDirectory(), ".spotfire", "mods-dev-server.json");
+
+                createGate({ configPath });
+
+                // Including the directory, which is not there either the first time around.
+                assert.deepStrictEqual(readConfig(configPath), { allowedOrigins: [] });
+            });
         });
 
         describe("addAllowedOriginToConfig", function () {
@@ -249,7 +383,7 @@ describe("Origin allow list", function () {
 
         it("should report where an origin stands without asking about it", async function () {
             let asked = 0;
-            const gate = origins.createOriginGate({
+            const gate = createGate({
                 configPath: configAllowing("https://spotfire.example.com"),
                 prompt: async () => {
                     asked++;
@@ -272,7 +406,7 @@ describe("Origin allow list", function () {
         });
 
         it("should not report an origin as rejected when there was nobody to ask", async function () {
-            const gate = origins.createOriginGate({ configPath: noConfig });
+            const gate = createGate({ configPath: noConfig });
 
             assert.strictEqual(gate.status("https://unknown.example.com"), "cannotPrompt");
 
@@ -282,7 +416,7 @@ describe("Origin allow list", function () {
         });
 
         it("should not report an origin as rejected when the prompt could not be put", async function () {
-            const gate = origins.createOriginGate({
+            const gate = createGate({
                 configPath: noConfig,
                 prompt: async () => {
                     throw new Error("No console to ask on");
@@ -294,7 +428,7 @@ describe("Origin allow list", function () {
         });
 
         it("should deny an origin when the prompt fails", async function () {
-            const gate = origins.createOriginGate({
+            const gate = createGate({
                 configPath: noConfig,
                 prompt: async () => {
                     throw new Error("No console to ask on");

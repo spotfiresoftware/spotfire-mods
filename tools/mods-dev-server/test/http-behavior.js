@@ -2,13 +2,21 @@ const test = require("supertest");
 
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
 
 const mainCss = fs.readFileSync(path.join(__dirname, "test-files", "main.css"), { encoding: "utf8" });
 const indexHtml = fs.readFileSync(path.join(__dirname, "test-files", "index.html"), { encoding: "utf8" });
 
-// Point the origin configuration at a file that does not exist so that the tests are unaffected by the
-// origins the developer running them happens to have accepted.
-const unusedOriginsConfigPath = path.join(__dirname, "test-files", "no-such-origins-config.json");
+// Point the origin configuration somewhere empty so that the tests are unaffected by the origins the
+// developer running them happens to have accepted. Kept out of the served test files, since the server
+// writes an empty configuration file where it finds none.
+const unusedOriginsDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "mods-dev-server-http-behavior-"));
+const unusedOriginsConfigPath = path.join(unusedOriginsDirectory, "mods-dev-server.json");
+
+after(function () {
+    devServer.close();
+    fs.rmSync(unusedOriginsDirectory, { recursive: true, force: true });
+});
 
 // These tests only ever send loopback and "null" origins, so they never reach the prompt.
 const devServer = require("../server").start({

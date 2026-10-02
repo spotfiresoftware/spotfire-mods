@@ -14,6 +14,9 @@
  * mod is developed in the Spotfire web client the origin cannot be known in advance, so unknown origins
  * are instead brought to the developer in an interactive prompt. Accepted origins are either remembered
  * for the running session or persisted in a local configuration file for all future sessions.
+ *
+ * The configuration file is created empty when it is missing, and watched for changes, so that an
+ * origin can be allowed, or taken away again, while the server is running.
  */
 
 const fs = require("fs");
@@ -32,6 +35,7 @@ module.exports = {
     isLoopbackOrigin,
     readAllowedOriginsFromConfig,
     addAllowedOriginToConfig,
+    createConfigIfMissing,
     createConsolePrompt,
     createOriginGate
 };
@@ -228,20 +232,70 @@ function createConsolePrompt(input = process.stdin, output = process.stdout) {
 }
 
 /**
+ * Write an empty configuration file when there is none, so that a developer told to allow an origin
+ * finds a file of the right shape to add it to instead of having to know the format. An existing file
+ * is left alone.
+ *
+ * @param {string} [filePath] Defaults to the local configuration file.
+ * @returns {boolean} Whether a file was written.
+ */
+function createConfigIfMissing(filePath = configFilePath) {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+
+    try {
+        // Exclusive, so that a file written in the meantime is not overwritten.
+        fs.writeFileSync(filePath, JSON.stringify({ allowedOrigins: [] }, null, 4) + "\n", {
+            encoding: "utf-8",
+            flag: "wx"
+        });
+
+        return true;
+    } catch (e) {
+        if (e instanceof Error && "code" in e && e.code === "EEXIST") {
+            return false;
+        }
+
+        throw e;
+    }
+}
+
+/**
+ * Quote origins for a console message, as `'a'`, or `'a', 'b'` when there are several.
+ * @param {string[]} origins
+ */
+function quoteAll(origins) {
+    return origins.map((origin) => `'${origin}'`).join(", ");
+}
+
+/**
  * Create the gate deciding whether an origin may read from the development server.
  *
  * @param {object} options
  * @param {string} [options.configPath] The local configuration file to read from and write to.
  * @param {((origin: string) => Promise<"session" | "always" | "deny">) | undefined} [options.prompt]
  *  Asks the developer what to do with an unknown origin. Unknown origins are denied when omitted.
+ * @param {number} [options.pollInterval] How often, in milliseconds, the configuration file is looked
+ *  at for changes.
  */
-function createOriginGate({ configPath = configFilePath, prompt } = {}) {
+function createOriginGate({ configPath = configFilePath, prompt, pollInterval = 1000 } = {}) {
     // Change this to false to remove automatic trust for loopback origins, making localhost need consent as well. Lets the
     // consent flow be tried out from Spotfire Analyst, which is always served from a loopback address.
     const trustLoopback = true;
 
-    /** Origins allowed for the running session, including the ones allowed for all future sessions. */
-    const allowed = new Set(readAllowedOriginsFromConfig(configPath));
+    try {
+        if (createConfigIfMissing(configPath)) {
+            console.log(`Created '${configPath}' to list the origins you want allowed up front.`);
+        }
+    } catch (e) {
+        // Serving without the file beats refusing to start over a home directory that cannot be written.
+        console.log(colors.yellow(`Could not create '${configPath}': ${e}`));
+    }
+
+    /** Origins allowed by the configuration file. Replaced whenever the file changes on disk. */
+    let configured = new Set(readAllowedOriginsFromConfig(configPath));
+
+    /** Origins allowed for the running session only, never written to the configuration file. */
+    const sessionAllowed = new Set();
 
     /** Origins the developer has turned down. Cleared when the server is restarted. */
     const rejected = new Set();
@@ -263,12 +317,29 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
     /** @type {Promise<unknown>} */
     let promptQueue = Promise.resolve();
 
+    // Edits to the configuration file take effect while the server is running, so that the developer can
+    // allow an origin, or take one away again, without restarting.
+    //
+    // Watched by polling its status rather than by hooking into the file system, which is what makes
+    // this hold up in the cases that matter: the file is noticed whether it is written in place,
+    // replaced wholesale the way an editor saves it, deleted, or created only later on. An operating
+    // system level watch instead faults with EPERM when the directory holding the file is removed, and
+    // takes the server down with it. Left unpersistent so that watching never keeps the process alive.
+    fs.watchFile(configPath, { interval: pollInterval, persistent: false }, reloadConfig);
+
     return {
         /** The origins currently allowed to read from the development server. */
-        allowed,
+        get allowed() {
+            return new Set([...configured, ...sessionAllowed]);
+        },
 
         /** Whether loopback origins are allowed without asking. */
         trustLoopback,
+
+        /** Stop watching the configuration file for changes. */
+        close() {
+            fs.unwatchFile(configPath, reloadConfig);
+        },
 
         /**
          * Where the origin currently stands with the development server. Never asks the developer, so an
@@ -291,7 +362,7 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
                 return "rejected";
             }
 
-            if ((trustLoopback && isLoopbackOrigin(normalizedOrigin)) || allowed.has(normalizedOrigin)) {
+            if (isAllowedNow(normalizedOrigin)) {
                 return "allowed";
             }
 
@@ -317,7 +388,7 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
                 return false;
             }
 
-            if ((trustLoopback && isLoopbackOrigin(normalizedOrigin)) || allowed.has(normalizedOrigin)) {
+            if (isAllowedNow(normalizedOrigin)) {
                 return true;
             }
 
@@ -346,6 +417,45 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
             return answer;
         }
     };
+
+    /**
+     * Whether the origin may read right now, be it by the configuration file or for this session only.
+     * @param {string} normalizedOrigin An origin as returned by {@link normalizeOrigin}.
+     */
+    function isAllowedNow(normalizedOrigin) {
+        if (trustLoopback && isLoopbackOrigin(normalizedOrigin)) {
+            return true;
+        }
+
+        return configured.has(normalizedOrigin) || sessionAllowed.has(normalizedOrigin);
+    }
+
+    /**
+     * Read the configuration file again after it has changed on disk. Origins the gate itself has just
+     * written are already accounted for, so only what the developer did is reported.
+     */
+    function reloadConfig() {
+        const previous = configured;
+        configured = new Set(readAllowedOriginsFromConfig(configPath));
+
+        const added = [...configured].filter((origin) => !previous.has(origin));
+        const removed = [...previous].filter((origin) => !configured.has(origin));
+
+        // An origin the file now allows starts afresh, so that taking it away again raises the question
+        // anew rather than reusing an answer given before the edit.
+        for (const origin of added) {
+            rejected.delete(origin);
+            unanswerable.delete(origin);
+        }
+
+        if (added.length > 0) {
+            console.log(colors.green(`Now allowing ${quoteAll(added)}, added to '${configPath}'.`));
+        }
+
+        if (removed.length > 0) {
+            console.log(colors.yellow(`No longer allowing ${quoteAll(removed)}, removed from '${configPath}'.`));
+        }
+    }
 
     /**
      * Ask the developer about an origin and remember the answer.
@@ -379,13 +489,16 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
             return false;
         }
 
-        allowed.add(normalizedOrigin);
-
         if (answer === "always") {
             try {
                 addAllowedOriginToConfig(normalizedOrigin, configPath);
+
+                // Taken on board before the watcher reports the write back, so that the gate's own
+                // change is not announced a second time as if the developer had made it.
+                configured.add(normalizedOrigin);
                 console.log(colors.green(`Allowed '${normalizedOrigin}' and added it to '${configPath}'.`));
             } catch (e) {
+                sessionAllowed.add(normalizedOrigin);
                 console.log(
                     colors.yellow(
                         `Allowed '${normalizedOrigin}' for this session only. Could not write '${configPath}': ${e}`
@@ -393,6 +506,7 @@ function createOriginGate({ configPath = configFilePath, prompt } = {}) {
                 );
             }
         } else {
+            sessionAllowed.add(normalizedOrigin);
             console.log(colors.green(`Allowed '${normalizedOrigin}' for this session.`));
         }
 

@@ -140,6 +140,9 @@ function start(settings = {}) {
     const server = http.createServer(app);
     const wss = new ws.WebSocketServer({ noServer: true });
 
+    // The gate watches its configuration file, so it has to be let go of along with the server.
+    server.on("close", () => originGate.close());
+
     // Handle server startup errors
     server.on("error", (e) => {
         // @ts-ignore
