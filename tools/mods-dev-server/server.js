@@ -123,6 +123,12 @@ function start(settings = {}) {
         // We need to be able to retrieve the absolute path to the project root to
         // enable source maps when debugging scripts in action mods.
         app.use("/modProjectRoot", (req, res, next) => {
+            if (originGate.status(req.headers.origin) !== "allowed") {
+                res.statusCode = 403;
+                res.end();
+                return;
+            }
+
             res.setHeader("Content-Type", "text/plain; charset=UTF-8");
             res.write(rootDirectoryAbsolutePath);
             res.end();
@@ -271,6 +277,7 @@ function start(settings = {}) {
         // Do not report ugly error.
         if (!settings.allowProjectRoot && url === "modProjectRoot") {
             next();
+            return;
         }
 
         if (manifestFiles.length && url != manifestName && !manifestFiles.includes(url)) {

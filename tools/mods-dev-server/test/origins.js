@@ -551,6 +551,54 @@ describe("Origin allow list in the server", function () {
     });
 });
 
+describe("The project root of a server that exposes it", function () {
+    // The path is one on the developer's own disk, so it is withheld from an origin off the allow list
+    // rather than served in the hope that the browser keeps it from being read.
+
+    /** @type {import("http").Server} */
+    let devServer;
+
+    before(function () {
+        devServer = startServer(
+            { originsConfigPath: configAllowing("https://spotfire.example.com"), allowProjectRoot: true },
+            { fromTerminal: false }
+        );
+    });
+
+    after(function () {
+        devServer.close();
+    });
+
+    it("should give the project root to an allowed origin", function (done) {
+        test(devServer)
+            .get("/modProjectRoot")
+            .set("Origin", "https://spotfire.example.com")
+            .expect("Access-Control-Allow-Origin", "https://spotfire.example.com")
+            .expect(200, path.join(__dirname, "test-files"), done);
+    });
+
+    it("should not give the project root to an unknown origin", function (done) {
+        test(devServer)
+            .get("/modProjectRoot")
+            .set("Origin", "https://evil.example.com")
+            .expect(withoutTheProjectRoot)
+            .expect(403, done);
+    });
+
+    it("should not give the project root to a caller that names no origin", function (done) {
+        // Spotfire always names an origin, so anything that does not is something else entirely, and
+        // the allow list is of no use in judging it.
+        test(devServer).get("/modProjectRoot").expect(withoutTheProjectRoot).expect(403, done);
+    });
+
+    /** @param {import("supertest").Response} res */
+    function withoutTheProjectRoot(res) {
+        if (res.text) {
+            throw new Error("The project root should have been withheld, but got: " + res.text);
+        }
+    }
+});
+
 describe("Origin query on a server started from a terminal", function () {
     /** @type {import("http").Server} */
     let devServer;
