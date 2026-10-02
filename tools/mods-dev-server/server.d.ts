@@ -18,6 +18,12 @@ export interface ServerSettings {
 
     /** If the server should expose the spotfire/modProjectRoot endpoint. */
     allowProjectRoot?: boolean;
+
+    /**
+     * The local configuration file holding the origins allowed for all future sessions.
+     * Defaults to `.spotfire/mods-dev-server.json` in the home directory.
+     */
+    originsConfigPath?: string;
 }
 
 export declare function start(settings: ServerSettings) : http.Server;

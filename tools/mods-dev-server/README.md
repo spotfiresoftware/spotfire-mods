@@ -18,7 +18,70 @@ mods-dev-server <source folder name>
 - `--path /sub-folder/mod-manifest.json` sets the path to open. Defaults to `/mod-manifest.json`.
 - `--help` lists all available options.
 - `--version` lists the current package version.
-- `--allow-project-root` expose an endpoint at /spotfire/modProjectRoot for retrieving the path to the project root, necessary for debugging action mods.
+- `--allow-project-root` expose an endpoint at /spotfire/modProjectRoot for retrieving the path to the project root, necessary for debugging action mods. Only origins on the allow list are told the path.
+
+## Allowed origins
+
+The development server only shares its content with origins it trusts.
+
+Localhost is trusted by default, on any port, since Spotfire Analyst serves the mod development dialog from
+`localhost:8001` and picks a higher port number when several windows are opened.
+
+When a mod is developed in the Spotfire web client the origin cannot be known in advance. The first request
+from such an origin is held while the server asks about it on the console:
+
+```text
+A mod is requested from an unknown origin: https://spotfire.example.com
+Only accept origins you recognize, such as the Spotfire web client you are developing in.
+Allow this origin? [s]ession, [a]lways, [d]eny (default):
+```
+
+- `session` allows the origin until the server is stopped.
+- `always` also adds the origin to the local configuration file, `.spotfire/mods-dev-server.json` in your
+  home directory, so that it is allowed in all future sessions.
+- `deny` blocks the origin, and it is not asked about again during the session.
+
+The question is only asked when the server is started from a terminal. Unknown origins are denied right away
+when there is nobody to answer, for example when the server is started from a build tool. Origins are then
+allowed up front by listing them in the local configuration file:
+
+```json
+{
+    "allowedOrigins": ["https://spotfire.example.com"]
+}
+```
+
+The server writes this file with an empty list when it is not there, so there is always one to add origins to.
+
+Changes to the file take effect while the server is running, so an origin can be allowed, or taken away
+again, without restarting. Allowing an origin this way also clears an earlier `deny`, which is what lets a
+Spotfire instance that was turned down be let in without a restart.
+
+### Asking where an origin stands
+
+`GET /@spotfire/api/origin` reports where the calling origin stands. Spotfire uses it before connecting to a
+mod under development, so that it can tell the user what is in the way instead of leaving them with a
+connection that appears to be stuck.
+
+```json
+{
+    "origin": "https://spotfire.example.com",
+    "status": "willPrompt"
+}
+```
+
+`status` is one of:
+
+| Status         | Meaning                                                                      |
+| -------------- | ---------------------------------------------------------------------------- |
+| `allowed`      | The origin may read from the server.                                           |
+| `rejected`     | The developer answered `deny`. Restart the server to be asked again.           |
+| `willPrompt`   | The origin is unknown, and the developer is about to be asked about it.        |
+| `cannotPrompt` | The origin is unknown, but there is no console to ask the developer on.        |
+
+Unlike the other endpoints this one answers all origins, including the ones that are not allowed, since an
+answer nobody can read is of no use. It only reveals where the calling origin itself stands, it never changes
+the allow list, and it never raises the prompt.
 
 ## Node.js API
 
