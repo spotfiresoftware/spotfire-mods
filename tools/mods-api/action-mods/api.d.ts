@@ -4,7 +4,7 @@
  * in the license file that is distributed with this file.
  * 
  * Spotfire Action Mods API declaration.
- * Version: 2.6
+ * Version: 2.7
  */
 
 declare namespace Spotfire.Dxp {
@@ -9331,6 +9331,15 @@ declare namespace Spotfire.Dxp {
                  * @group Default capability
                  */
                 get Measures(): BoxPlotStatisticsTable.MeasureCollection;
+                /**
+                 * Gets or sets a value indicating whether to show the header displaying the categories.
+                 * 
+                 * @since 2.7
+                 * 
+                 * @group Default capability
+                 */
+                get ShowCategoryHeaders(): JsType<System.Boolean>;
+                set ShowCategoryHeaders(value: JsType<System.Boolean>);
                 /**
                  * Gets or sets a value indicating whether to render gridlines or not.
                  * 
@@ -50715,6 +50724,14 @@ declare namespace Spotfire.Dxp {
              * @group Default capability
              */
             class SbdfLibraryDataSource extends DataSource {
+                /**
+                 * Gets the identifier of the source library item.
+                 * 
+                 * @since 2.7
+                 * 
+                 * @group Extended capability 'LibraryRead'
+                 */
+                get Id(): JsType<System.Guid>;
                 /**
                  * Initializes a new instance of the {@link Spotfire.Dxp.Data.Import.SbdfLibraryDataSource} class.
                  * @param libraryItem The library item.
