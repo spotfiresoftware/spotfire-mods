@@ -13,9 +13,9 @@
 <title>Create an insight agent | Spotfire® Mods</title>
 	<meta itemprop="name" content="Create an insight agent">
 	<meta itemprop="description" content="Build an insight agent that uses an AI model to suggest calculated columns for a visualization&#39;s data table.">
-	<meta itemprop="datePublished" content="2026-07-01T00:00:00+00:00">
-	<meta itemprop="dateModified" content="2026-07-01T00:00:00+00:00">
-	<meta itemprop="wordCount" content="1968">
+	<meta itemprop="datePublished" content="2026-09-21T00:00:00+00:00">
+	<meta itemprop="dateModified" content="2026-09-21T00:00:00+00:00">
+	<meta itemprop="wordCount" content="2559">
 
 
 
@@ -674,6 +674,8 @@
         <li><a href="#4-implement-the-agent">4. Implement the agent</a></li>
         <li><a href="#5-run-debug-and-share">5. Run, debug, and share</a></li>
         <li><a href="#running-calculations-during-the-insight-phase">Running calculations during the insight phase</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#calling-mcp-tools-from-your-agent">Calling MCP tools from your agent</a></li>
         <li><a href="#where-to-go-next">Where to go next</a></li>
       </ul>
     </li>
@@ -736,7 +738,7 @@
 	
 	
 	
-	<p class="-text-secondary pt-3 h6" >Reading time: 8 minutes and 56 seconds.</p>
+	<p class="-text-secondary pt-3 h6" >Reading time: 11 minutes and 45 seconds.</p>
 	<h1>Create an insight agent</h1>
 	<div class="lead">Build an insight agent that uses an AI model to suggest calculated columns for a visualization&rsquo;s data table.</div>
 	
@@ -754,10 +756,12 @@ When it is done it reports a result – a title, a summary, and any insights it 
 <li><strong>Action phase</strong> – runs on the application thread against the live document when the user applies an insight.
 This is an ordinary action mod script, so it can modify the document.</li>
 </ul>
-<p>There are two kinds of agents, declared by the <code>&quot;type&quot;</code> field in the manifest&rsquo;s <code>&quot;agents&quot;</code> array:</p>
+<p>There are three kinds of agents, declared by the <code>&quot;type&quot;</code> field in the manifest&rsquo;s <code>&quot;agents&quot;</code> array:</p>
 <ul>
 <li>A <code>&quot;marking&quot;</code> agent is triggered after the user has marked data, and receives the marked rows.</li>
 <li>A <code>&quot;visual&quot;</code> agent can be triggered from any visualization, and doesn&rsquo;t require any marked data.</li>
+<li>A <code>&quot;document&quot;</code> agent analyzes the analysis as a whole, and doesn&rsquo;t require a visualization at all. It requires
+action mods API version 2.6 or later.</li>
 </ul>
 <p>We will build a visual agent.</p>
 <h3 id="1-set-up-the-project">1. Set up the project</h3>
@@ -1018,6 +1022,59 @@ If you want to run calculations during the agent phase, start from these snippet
 <li><a href="/spotfire-mods/docs/action-mods/snippets/#run-a-data-flow-during-the-insight-phase">Run a data flow during the insight phase</a> — chain transformations onto the visual&rsquo;s data table and read back the result.</li>
 <li><a href="/spotfire-mods/docs/action-mods/snippets/#run-a-data-function-during-the-insight-phase">Run a data function during the insight phase</a> — execute a registered data function with the new <code>DataFunctionExecutorService</code>.</li>
 </ul>
+<h3 id="skills">Skills</h3>
+<p>An agent is code that Spotfire runs on a background thread.
+A <strong>skill</strong> sits at the other end of the scale: markdown instructions that the AI reads and follows itself, with no script behind them.
+Both ship in an action mod, so the agent you just built can travel with the house rules for the thing it does.</p>
+<p>Skills need API version 2.6 and follow the open <a href="https://openagentskills.dev">Agent Skills</a> standard.
+Declare them in a <code>&quot;skills&quot;</code> section next to <code>&quot;scripts&quot;</code> and <code>&quot;agents&quot;</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#4e9a06">&#34;skills&#34;</span><span style="color:#a40000">:</span> <span style="color:#000;font-weight:bold">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&#34;id&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;calculated-column-conventions&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&#34;name&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;Calculated column conventions&#34;</span><span style="color:#000;font-weight:bold">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">&#34;description&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;How to name and write calculated columns in this analysis.&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">]</span>
+</span></span></code></pre></div><p>The <code>&quot;description&quot;</code> is what the AI reads to decide whether the skill applies, so write it for the model rather than for the user.
+The <code>&quot;id&quot;</code> doubles as the folder name, and the instructions go at the conventional path <code>skills/calculated-column-conventions/SKILL.md</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-md" data-lang="md"><span style="display:flex;"><span><span style="color:#000080;font-weight:bold"># Calculated column conventions
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Follow these rules whenever you add or review a calculated column in this analysis.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">-</span> Prefix a generated column name with 🤖, so it can be told apart from the source data.
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">-</span> Put the reason for the column in its description, never in its name.
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">-</span> Prefer <span style="color:#4e9a06">`If()`</span> over a nested <span style="color:#4e9a06">`Case()`</span> for a two-way split.
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">-</span> Only reference columns the table actually has; check the column list first.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>For the full expression reference, read <span style="color:#4e9a06">`references/expressions.md`</span>.
+</span></span></code></pre></div><p><code>SKILL.md</code> and the optional skill icon are packaged for you.
+Anything else the skill needs goes under <code>skills/{id}/references/</code> (documentation, rules, schemas and worked examples, text only) or <code>skills/{id}/assets/</code> (templates, data and PNG, JPEG, GIF or WebP images), and has to be listed in the manifest&rsquo;s <code>&quot;files&quot;</code> array like any other mod resource.
+Those files are read only when <code>SKILL.md</code> names them, which is what lets the body stay short — Spotfire loads the whole body every time the skill is picked.</p>
+<p>With the build watcher running, click <em>Reload manifest</em> and the skill shows up in the AI insights panel: the model can pick it from the description alone, or the user can name it from the composer&rsquo;s <code>/</code> menu.
+The mod has to be trusted before its instructions are read.
+Edits to <code>SKILL.md</code> are picked up on the next read, so you can iterate on the wording without reloading anything.</p>
+<h3 id="calling-mcp-tools-from-your-agent">Calling MCP tools from your agent</h3>
+<p>An agent is not limited to the tools it defines itself.
+When an administrator has configured <a href="https://modelcontextprotocol.io/">MCP</a> servers on the Spotfire server, <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.Mcp.McpService.html">context.McpService</a> lists them, and each <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.Mcp.McpEndpoint.html">McpEndpoint</a> hands back its tools as ordinary <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.AiTool.html">AiTool</a> instances, so they go into the same <code>ChatCompletion</code> call as the rest:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">AiTool</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">Spotfire</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Dxp</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Framework</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Ai</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000;font-weight:bold">{</span> <span style="color:#000">List</span> <span style="color:#000;font-weight:bold">}</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">System</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Collections</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Generic</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">tools</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">new</span> <span style="color:#000">List</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">AiTool</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">endpoint</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">McpService</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">GetMcpEndpoints</span><span style="color:#000;font-weight:bold">())</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8f5902;font-style:italic">// GetTools connects to the server and blocks until it answers.
+</span></span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">tool</span> <span style="color:#204a87;font-weight:bold">of</span> <span style="color:#000">endpoint</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">GetTools</span><span style="color:#000;font-weight:bold">().</span><span style="color:#000">Tools</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">tools</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">Add</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">tool</span><span style="color:#000;font-weight:bold">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">answer</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">context</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">AiService</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">GetDefaultModel</span><span style="color:#000;font-weight:bold">().</span><span style="color:#000">ChatCompletion</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">history</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">tools</span><span style="color:#000;font-weight:bold">);</span>
+</span></span></code></pre></div><p>A few things to keep in mind:</p>
+<ul>
+<li>This requires API version 2.6, and the <code>&quot;AI&quot;</code> capability.</li>
+<li><a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.Mcp.McpService.html#getmcpendpoints">GetMcpEndpoints</a> does not connect to any MCP server, so filter on the endpoint&rsquo;s <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.Mcp.McpEndpoint.html#name">Name</a> or <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.Mcp.McpEndpoint.html#id">Id</a> when the agent only needs one of them.</li>
+<li><a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.Mcp.McpToolsRetrievalResult.html#tools">Tools</a> is empty unless <a href="/spotfire-mods/api-docs/action-mods/classes/Spotfire.Dxp.Framework.Ai.Mcp.McpToolsRetrievalResult.html#status">Status</a> is <code>Success</code>. <code>AuthorizationRequired</code> means the user has to sign in to that server first, which is worth saying in the reported result rather than reporting that nothing was found.</li>
+</ul>
+<p>The snippet <a href="/spotfire-mods/docs/action-mods/snippets/#call-mcp-tools-during-the-insight-phase">Call MCP tools during the insight phase</a> puts this together into a complete agent.</p>
 <h3 id="where-to-go-next">Where to go next</h3>
 <ul>
 <li>The <a href="/spotfire-mods/docs/action-mods/snippets/">snippets</a> page contains more action mod and agent snippets.</li>
@@ -1033,7 +1090,7 @@ If you want to run calculations during the agent phase, start from these snippet
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 1, 2026
+	<div class="text-muted mt-5 pt-3 border-top">Last modified September 21, 2026
 </div>
 </div>
 

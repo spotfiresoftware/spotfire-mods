@@ -254,6 +254,27 @@
                                                                                                                     
                                                                                                                 </div>
                                                                                                             </dd>
+                                                                                                            <dt data-property-name="visibility">
+                                                                                                                <span class="json-property-name">visibility:</span>
+                                                                                                                
+                                                                                                                <span class="json-property-type">string</span>    <span class="json-property-enum" title="Possible values">, x &isin; {
+                                                                                                                                <span class="json-property-enum-item">public</span>
+                                                                                                                                (default)
+                                                                                                                            ,
+                                                                                                                                <span class="json-property-enum-item">internal</span>
+                                                                                                                            
+                                                                                                                        }
+                                                                                                                        </span>
+                                                                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                                                                
+                                                                                                            </dt>
+                                                                                                            <dd>
+                                                                                                                <p>Whether the script is offered as an action in the user interface. Requires apiVersion &gt;= 2.6.</p>
+                                                                                                
+                                                                                                                <div class="json-inner-schema">
+                                                                                                                    
+                                                                                                                </div>
+                                                                                                            </dd>
                                                                                                             <dt data-property-name="parameters">
                                                                                                                 <span class="json-property-name">parameters:</span>
                                                                                                                 
@@ -655,6 +676,8 @@
                                                                                                                                 <span class="json-property-enum-item">marking</span>
                                                                                                                             ,
                                                                                                                                 <span class="json-property-enum-item">visual</span>
+                                                                                                                            ,
+                                                                                                                                <span class="json-property-enum-item">document</span>
                                                                                                                             
                                                                                                                         }
                                                                                                                         </span>
@@ -673,6 +696,29 @@
                                                                                                 </section>
                                                                             </section>
                                                                         </section>
+                                                                </div>
+                                                            </section>                </div>
+                                    </dd>
+                                    <dt data-property-name="skills">
+                                        <span class="json-property-name">skills:</span>
+                                        
+                                        <span class="json-property-type">object[]</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+                                        
+                                    </dt>
+                                    <dd>
+                                        <p>Declarative AI skills surfaced to end users. Requires apiVersion &gt;= 2.6.</p>
+                        
+                                        <div class="json-inner-schema">
+                                            
+                                                            <section class="json-schema-array-items">
+                                                                
+                                                                <span class="json-property-type">    <a class="json-schema-ref" href="#/$defs/skill">#/$defs/skill</a>
+                                                                </span>
+                                                                <span class="json-property-range" title="Value limits"></span>
+                                                                
+                                                                <div class="json-inner-schema">
+                                                                    
                                                                 </div>
                                                             </section>                </div>
                                     </dd>
