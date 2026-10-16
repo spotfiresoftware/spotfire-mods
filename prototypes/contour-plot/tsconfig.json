@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "",
+        "target": "ES2019",
+        "lib": ["es2019", "dom"]
+    },
+    "include": ["./src/**/*.js", "./spotfire/*.d.ts", "./src/**/*.d.ts", "./node_modules/**/*.d.ts"]
+}

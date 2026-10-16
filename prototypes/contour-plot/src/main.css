@@ -1,0 +1,44 @@
+/*
+* Copyright © 2020. TIBCO Software Inc.
+* This file is subject to the license terms contained
+* in the license file that is distributed with this file.
+*/
+
+body{
+    margin: 0;
+    overflow: hidden;
+}
+
+#mod-container {
+    white-space: pre;
+}
+
+svg {
+    cursor: pointer;
+}
+
+.settings-icon {
+    width: 21px;
+    height: 21px;
+    display: block;
+    fill: #ccc;
+}
+
+.settings-icon:hover {
+    fill: #ddd;
+}
+
+path.hover {
+    fill: white;
+}
+
+.column {
+    float: left;
+    width: 20%;
+  }
+  
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
