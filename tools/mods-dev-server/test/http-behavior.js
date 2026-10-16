@@ -135,6 +135,80 @@ describe("Cache handling", function () {
     });
 });
 
+describe("Static file handling", function () {
+    it("should not serve index files through symlinks outside the project root", function (done) {
+        const targetDirectory = fs.mkdtempSync(path.join(__dirname, "outside-root-"));
+        const symlinkPath = path.join(__dirname, "test-files", "outside-root");
+        fs.writeFileSync(path.join(targetDirectory, "index.html"), "outside project root");
+
+        try {
+            fs.symlinkSync(targetDirectory, symlinkPath, process.platform === "win32" ? "junction" : "dir");
+        } catch (error) {
+            fs.rmSync(targetDirectory, { recursive: true, force: true });
+            if (error.code === "EPERM" || error.code === "EACCES") {
+                this.skip();
+                return;
+            }
+            throw error;
+        }
+
+        test(devServer)
+            .get("/outside-root/")
+            .expect(404)
+            .end((error) => {
+                fs.unlinkSync(symlinkPath);
+                fs.rmSync(targetDirectory, { recursive: true, force: true });
+                done(error);
+            });
+    });
+});
+
+describe("Snapshot handling", function () {
+    it("should snapshot files inside the project root", function (done) {
+        const filePath = path.join(__dirname, "test-files", "main.css");
+        test(devServer)
+            .post("/@spotfire/api/snapshot")
+            .set("Content-Type", "application/json; charset=utf-8")
+            .send({ filePaths: [filePath] })
+            .expect(200)
+            .expect((res) => {
+                if (res.body.snapshot[0][0] !== filePath || res.body.snapshot[0][1] <= 0) {
+                    throw new Error("Expected a snapshot for the in-root file.");
+                }
+            })
+            .end(done);
+    });
+
+    it("should reject parent-folder paths", function (done) {
+        test(devServer)
+            .post("/@spotfire/api/snapshot")
+            .set("Content-Type", "application/json; charset=utf-8")
+            .send({ filePaths: [path.join("..", "http-behavior.js")] })
+            .expect(400)
+            .expect((res) => {
+                if (!res.body.error.includes("outside the project root")) {
+                    throw new Error("Expected a parent-folder path to be rejected.");
+                }
+            })
+            .end(done);
+    });
+
+    it("should reject absolute paths outside the project root", function (done) {
+        const filePath = path.join(__dirname, "http-behavior.js");
+        test(devServer)
+            .post("/@spotfire/api/snapshot")
+            .set("Content-Type", "application/json; charset=utf-8")
+            .send({ filePaths: [filePath] })
+            .expect(400)
+            .expect((res) => {
+                if (!res.body.error.includes("outside the project root")) {
+                    throw new Error("Expected an outside-root path to be rejected.");
+                }
+            })
+            .end(done);
+    });
+});
+
 describe("CSP headers", function () {
     it("should add external resources to CSP header", function (done) {
         test(devServer)

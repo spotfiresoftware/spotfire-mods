@@ -88,6 +88,8 @@ function start(settings = {}) {
         throw `The path '${rootDirectoryAbsolutePath}' does not exist.`;
     }
 
+    const realRootDirectoryAbsolutePath = fs.realpathSync(rootDirectoryAbsolutePath);
+
     setupManifestListener();
 
     const app = connect();
@@ -114,6 +116,7 @@ function start(settings = {}) {
     app.use("/@spotfire/api/info", info);
 
     app.use(checkIfPartOfManifest);
+    app.use(checkStaticPath);
     app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(settings)));
     app.use(serveStaticFiles);
 
@@ -342,6 +345,66 @@ function start(settings = {}) {
     }
 
     /**
+     * Prevent static file requests from resolving outside the project root through symlinks.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function checkStaticPath(req, res, next) {
+        if (req.method !== "GET" && req.method !== "HEAD") {
+            next();
+            return;
+        }
+
+        let requestPath;
+        try {
+            requestPath = decodeURIComponent((req.url || "").split("?")[0]);
+        } catch (e) {
+            next();
+            return;
+        }
+
+        const absoluteFilePath = path.resolve(rootDirectoryAbsolutePath, `.${requestPath}`);
+        if (!isPathWithinRoot(rootDirectoryAbsolutePath, absoluteFilePath)) {
+            res.statusCode = 404;
+            res.end();
+            return;
+        }
+
+        try {
+            const realFilePath = fs.realpathSync(absoluteFilePath);
+            if (!isPathWithinRoot(realRootDirectoryAbsolutePath, realFilePath)) {
+                res.statusCode = 404;
+                res.end();
+                return;
+            }
+
+            if (requestPath.endsWith("/") && fs.statSync(realFilePath).isDirectory()) {
+                for (const indexFile of ["index.html", "index.htm"]) {
+                    const absoluteIndexFilePath = path.join(absoluteFilePath, indexFile);
+                    if (!fs.existsSync(absoluteIndexFilePath)) {
+                        continue;
+                    }
+
+                    const realIndexFilePath = fs.realpathSync(absoluteIndexFilePath);
+                    if (!isPathWithinRoot(realRootDirectoryAbsolutePath, realIndexFilePath)) {
+                        res.statusCode = 404;
+                        res.end();
+                        return;
+                    }
+
+                    break;
+                }
+            }
+        } catch (e) {
+            // Let serve-static handle missing or inaccessible paths.
+        }
+
+        next();
+    }
+
+    /**
      * Middleware for taking a snapshot of the mod files.
      *
      * @param {connect.IncomingMessage} req
@@ -385,7 +448,7 @@ function start(settings = {}) {
                     throw new Error("Missing property 'filePaths'");
                 }
 
-                res.write(JSON.stringify(takeSnapshot(manifestFiles.filePaths)));
+                res.write(JSON.stringify(takeSnapshot(manifestFiles.filePaths, rootDirectoryAbsolutePath)));
             } catch (e) {
                 res.statusCode = 400;
                 res.write(
@@ -506,19 +569,49 @@ function cacheHeaders(req, res, next) {
 /**
  * Records the modified time (ms since UNIX epoch) of the requested files.
  * @param {string[]} filePaths
+ * @param {string} rootDirectory
  */
-function takeSnapshot(filePaths) {
+function takeSnapshot(filePaths, rootDirectory) {
     /**
      * @type {[string, number][]}
      */
     const snapshot = [];
+    const realRootDirectory = fs.realpathSync(rootDirectory);
     for (const filePath of filePaths) {
+        const absoluteFilePath = path.resolve(rootDirectory, filePath);
+        if (!isPathWithinRoot(rootDirectory, absoluteFilePath)) {
+            throw new Error(`File path '${filePath}' is outside the project root.`);
+        }
+
         try {
-            const stats = fs.statSync(filePath);
+            const realFilePath = fs.realpathSync(absoluteFilePath);
+            if (!isPathWithinRoot(realRootDirectory, realFilePath)) {
+                throw new Error(`File path '${filePath}' is outside the project root.`);
+            }
+
+            const stats = fs.statSync(realFilePath);
             snapshot.push([filePath, stats.mtimeMs]);
         } catch (e) {
+            if (e instanceof Error && e.message.includes("is outside the project root")) {
+                throw e;
+            }
             snapshot.push([filePath, 0]);
         }
     }
     return { snapshot: snapshot };
+}
+
+/**
+ * @param {string} rootDirectory
+ * @param {string} filePath
+ * @returns {boolean}
+ */
+function isPathWithinRoot(rootDirectory, filePath) {
+    const relativeFilePath = path.relative(rootDirectory, filePath);
+    return (
+        relativeFilePath === "" ||
+        (relativeFilePath !== ".." &&
+            !relativeFilePath.startsWith(`..${path.sep}`) &&
+            !path.isAbsolute(relativeFilePath))
+    );
 }
