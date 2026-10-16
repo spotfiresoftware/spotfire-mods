@@ -2,6 +2,8 @@ import * as d3 from "d3";
 import { Tooltip } from "spotfire/spotfire-api-1-2";
 
 export const _MS_PER_DAY = 24 * 3600 * 1000;
+// Upper bound on the Start/End span so a malformed or malicious date range can't force a multi-million iteration render.
+export const MAX_DATE_RANGE_DAYS = 3660;
 
 export function getMinDate(a: Date, b: Date) {
     if (a && b) {
@@ -47,9 +49,11 @@ export function getDates(begin: Date, end: Date) {
     const e = new Date(end);
     e.setHours(0, 0, 0, 0);
 
-    while (s.getTime() <= e.getTime()) {
+    let count = 0;
+    while (s.getTime() <= e.getTime() && count < MAX_DATE_RANGE_DAYS) {
         dates.push(s.getTime());
         s = addDays(s, 1);
+        count++;
     }
     return dates;
 }

@@ -59,7 +59,7 @@ export function buildHeader(headerContainer: D3_SELECTION_SVGG, renderInfo: Rend
     moment.locale(lang);
 
     const yearsOptions: HeaderOptions = {
-        format: "yyyy",
+        format: "YYYY",
         headerContainer: headerContainer,
         heightScale: heightScale,
         minHeight: yearMonthMinHeight + 1,

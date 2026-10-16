@@ -10,6 +10,7 @@
         "sourceMap": true,
         "inlineSources": true,
         "module": "es2015",
+        "moduleResolution": "node",
         "outDir": "./build/",
         "lib": ["es2019", "dom"],
         "baseUrl": ".",

@@ -5,7 +5,7 @@ import { GanttData, ViewMode } from "./custom-types";
 import { config } from "./global-settings";
 import { RenderState } from "./interfaces";
 import { render } from "./render";
-import { addDays, getMaxDate, getMinDate, increaseBrightness, _MS_PER_DAY } from "./utils";
+import { addDays, dateDiffInDays, getMaxDate, getMinDate, increaseBrightness, MAX_DATE_RANGE_DAYS, _MS_PER_DAY } from "./utils";
 var events = require("events");
 
 const Spotfire = window.Spotfire;
@@ -82,6 +82,15 @@ Spotfire.initialize(async (mod) => {
             minDate = getMinDate(minDate, v.start);
             maxDate = getMaxDate(maxDate, v.end);
         });
+
+        if (dateDiffInDays(minDate, maxDate) > MAX_DATE_RANGE_DAYS) {
+            mod.controls.errorOverlay.show(
+                `The Start/End date range is too large to render (max ${MAX_DATE_RANGE_DAYS} days). Please narrow the date range.`,
+                "DateRange"
+            );
+            return;
+        }
+        mod.controls.errorOverlay.hide("DateRange");
 
         minDate = addDays(minDate, -5);
         maxDate = addDays(maxDate, 5);
@@ -204,13 +213,13 @@ Spotfire.initialize(async (mod) => {
                     start: startDates[0],
                     end: endDates[0],
                     isMarked: node.rows().every((r) => r.isMarked()),
-                    color: getColor(node, tasksRootNode, colorAxis.isCategorical)
+                    color: getColor(node, tasksRootNode, !!colorAxis.parts.length, colorAxis.isCategorical)
                 };
             }
         }
     }
 
-    function getColor(node: DataViewHierarchyNode, root: DataViewHierarchyNode, isCategorical: boolean) {
+    function getColor(node: DataViewHierarchyNode, root: DataViewHierarchyNode, hasColorExpression: boolean, isCategorical: boolean) {
         let color = config.defaultBarColor;
 
         const unmarkedRows = node.rows().filter((r) => !r.isMarked());
@@ -222,21 +231,23 @@ Spotfire.initialize(async (mod) => {
                 color = node.rows()[0].color().hexCode;
             }
 
-            if (isCategorical) {
-                const colorValue = node.rows()[0].categorical("Color").value()[0].key;
-                const differentElements = node.rows().filter((r) => {
-                    return r.categorical("Color").value()[0].key !== colorValue;
-                }).length;
-                if (differentElements > 0) {
-                    color = config.defaultBarColor;
-                }
-            } else {
-                const colorValue = node.rows()[0].continuous("Color").value();
-                const differentElements = node.rows().filter((r) => {
-                    return r.continuous("Color").value() !== colorValue;
-                }).length;
-                if (differentElements > 0) {
-                    color = config.defaultBarColor;
+            if (hasColorExpression) {
+                if (isCategorical) {
+                    const colorValue = node.rows()[0].categorical("Color").value()[0].key;
+                    const differentElements = node.rows().filter((r) => {
+                        return r.categorical("Color").value()[0].key !== colorValue;
+                    }).length;
+                    if (differentElements > 0) {
+                        color = config.defaultBarColor;
+                    }
+                } else {
+                    const colorValue = node.rows()[0].continuous("Color").value();
+                    const differentElements = node.rows().filter((r) => {
+                        return r.continuous("Color").value() !== colorValue;
+                    }).length;
+                    if (differentElements > 0) {
+                        color = config.defaultBarColor;
+                    }
                 }
             }
         } else {

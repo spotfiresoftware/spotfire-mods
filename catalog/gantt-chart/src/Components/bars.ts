@@ -6,8 +6,7 @@ import * as d3 from "d3";
 //@ts-ignore
 import * as moment from "moment";
 import { RenderInfo } from "../interfaces";
-//@ts-ignore
-import invert from "invert-color/lib/invert";
+import invert from "invert-color";
 import { Tooltip } from "spotfire/spotfire-api-1-2";
 
 export function renderBars(parent: D3_SELECTION, renderInfo: RenderInfo) {

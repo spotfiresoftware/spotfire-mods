@@ -1,2 +1,8 @@
-node_modules
-dist
+# Distribution directory
+dist/
+
+# Dependency directories
+node_modules/
+
+# Whitesource code scan
+whitesource/
