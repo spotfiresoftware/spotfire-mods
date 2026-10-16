@@ -1,0 +1,17 @@
+{
+    "name": "marimekko-chart-mod",
+    "version": "1.0.0",
+    "description": "",
+    "main": "main.js",
+    "scripts": {
+        "start": "npm ci && npm run server",
+        "server": "mods-dev-server src"
+    },
+    "author": "losterlu",
+    "license": "ISC",
+    "devDependencies": {
+        "@tibco/spotfire-mods-dev-server": "^1.0.1",
+        "d3": "^5.16.0"
+    },
+    "dependencies": {}
+}
