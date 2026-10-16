@@ -20,7 +20,12 @@ Spotfire.initialize(async (mod) => {
         mod.visualization.data(),
         mod.windowSize(),
         mod.property("gridDensity"),
-        mod.property("extras")
+        mod.property("extras"),
+        mod.property("outerScales"),
+        mod.property("innerScales"),
+        mod.property("zoom"),
+        mod.property("xCoord"),
+        mod.property("yCoord")
     );
 
     reader.subscribe(generalErrorHandler(mod, 40000)(onChange), (err) => {
@@ -31,8 +36,14 @@ Spotfire.initialize(async (mod) => {
         dataView: DataView,
         windowSize: Spotfire.Size,
         densityProp: ModProperty<number>,
-        extrasProp: ModProperty<boolean>
+        extrasProp: ModProperty<boolean>,
+        outerScalesProp: ModProperty<boolean>,
+        innerScalesProp: ModProperty<boolean>,
+        zoomProp: ModProperty<number>,
+        xCoordProp: ModProperty<number>,
+        yCoordProp: ModProperty<number>
     ) {
+
         mod.controls.errorOverlay.hide();
         let colorRoot = await (await dataView.hierarchy(colorAxisName))?.root();
 
@@ -69,6 +80,11 @@ Spotfire.initialize(async (mod) => {
                 size: windowSize,
                 gridDensity: densityProp.value()!,
                 showExtras: extrasProp.value()!,
+                showOuterScales: outerScalesProp.value()!,
+                showInnerScales : innerScalesProp.value()!,
+                zoom : zoomProp,
+                xCoord: xCoordProp,
+                yCoord: yCoordProp,
                 clearMarking: dataView.clearMarking,
                 mouseLeave: () => mod.controls.tooltip.hide()
             },
@@ -78,7 +94,12 @@ Spotfire.initialize(async (mod) => {
         if (context.isEditing) {
             renderSettings([
                 { label: resources.gridDensity, type: "range", property: densityProp, max: 20, min: 0, step: 1 },
-                { label: resources.extras, type: "checkbox", property: extrasProp }
+                { label: resources.extras, type: "checkbox", property: extrasProp },
+                { label: resources.outerScales, type: "checkbox", property: outerScalesProp},
+                { label: resources.innerScales, type: "checkbox", property: innerScalesProp},
+                { label: resources.xCoord, type: "range", property: xCoordProp, max: 100, min: -100, step: 1 },
+                { label: resources.yCoord, type: "range", property: yCoordProp, max: 100, min: -100, step: 1 },
+                { label: resources.zoom, type: "range", property: zoomProp, max: 400, min: 0, step: 20 }
             ]);
         }
 
