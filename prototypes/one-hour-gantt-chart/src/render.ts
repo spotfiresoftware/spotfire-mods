@@ -8,6 +8,9 @@ import { Serie, Point } from "./series";
 type D3_SELECTION = d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 type D3_SERIE_SELECTION = d3.Selection<SVGGElement, Serie, SVGGElement | null, unknown>;
 
+/** Upper bound on characters considered by the x-axis label truncation loop, far beyond anything that could ever fit on screen. */
+const MAX_X_LABEL_LENGTH = 200;
+
 /**
  * Main svg container
  */
@@ -310,7 +313,7 @@ export async function render(
                     ? (d * 100) / cfg.levels + "%"
                     : Math.floor(yScale.invert((d * radius) / cfg.levels) * 100) / 100;
             })
-            .on("mouseover", d => {
+            .on("mouseover", (_event, d) => {
                 colorSeries.length === 0
                     ? tooltip.hide()
                     : cfg.yAxisNormalization
@@ -418,7 +421,7 @@ export async function render(
             .style("font-family", styling.scales.fontFamily)
             .style("font-size", styling.scales.fontSize + "px")
 
-            .on("mouseover", d => {
+            .on("mouseover", (_event, d) => {
                 tooltip.show(d);
             })
             .on("mouseout", () => tooltip.hide());
@@ -429,7 +432,8 @@ export async function render(
             xLabels
                 .append("tspan")
                 .text(function (d) {
-                    return d;
+                    // Cap upfront so the per-character reflow loop below can't be forced into O(n) iterations by an oversized label.
+                    return d.length > MAX_X_LABEL_LENGTH ? d.slice(0, MAX_X_LABEL_LENGTH) : d;
                 })
                 .each(function () {
                     let currentElement = d3.select(this);
@@ -461,7 +465,8 @@ export async function render(
             xLabels
                 .append("tspan")
                 .text(function (d) {
-                    return d;
+                    // Cap upfront so the per-character reflow loop below can't be forced into O(n) iterations by an oversized label.
+                    return d.length > MAX_X_LABEL_LENGTH ? d.slice(0, MAX_X_LABEL_LENGTH) : d;
                 })
                 .each(function () {
                     let currentElement = d3.select(this);
@@ -482,13 +487,15 @@ export async function render(
                         var previousElemenetBoundingRect = previousNode.getBoundingClientRect();
                         const svgElementBoundingRect = svgNode.getBoundingClientRect();
 
-                        while (
-                            overlap(currentElementBoundingRect, previousElemenetBoundingRect) ||
+                        const overlapsPrevious = () => overlap(currentElementBoundingRect, previousElemenetBoundingRect);
+                        const needsTrim = () =>
+                            overlapsPrevious() ||
                             currentElementBoundingRect.top < svgElementBoundingRect.top ||
                             currentElementBoundingRect.right > svgElementBoundingRect.right ||
                             currentElementBoundingRect.bottom > svgElementBoundingRect.bottom ||
-                            currentElementBoundingRect.left < svgElementBoundingRect.left
-                        ) {
+                            currentElementBoundingRect.left < svgElementBoundingRect.left;
+
+                        while (needsTrim()) {
                             if (currentText.length <= 1 && previousText!.length <= 1) {
                                 previousElement = currentElementParent;
                                 return;
@@ -504,7 +511,9 @@ export async function render(
                                 currentElementBoundingRect = currentNode.getBoundingClientRect();
                             }
 
-                            if (previousText!.length > 1) {
+                            // Only sacrifice the neighboring label to resolve an actual overlap between the two,
+                            // not because the current label is still too big to fit the canvas on its own.
+                            if (overlapsPrevious() && previousText!.length > 1) {
                                 if (previousText!.slice(-3) === "...") {
                                     previousText = previousText!.slice(0, -4);
                                 } else {
