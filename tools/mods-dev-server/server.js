@@ -121,7 +121,7 @@ function start(settings = {}) {
 
     app.use(checkIfPartOfManifest);
     app.use(checkStaticPath);
-    app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(settings)));
+    app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(rootDirectoryAbsolutePath)));
     app.use(serveStaticFiles);
 
     const server = http.createServer(app);
@@ -365,6 +365,12 @@ function start(settings = {}) {
             return;
         }
 
+        if (!requestPath.startsWith("/")) {
+            res.statusCode = 404;
+            res.end();
+            return;
+        }
+
         const absoluteFilePath = path.resolve(rootDirectoryAbsolutePath, `.${requestPath}`);
 
         // serve-static serves the first index file that is not a directory.
@@ -489,10 +495,9 @@ function onlyWhenOriginIsSet(middleware) {
 
 /**
  * Inject the web socket snippet in html pages.
- * @param {any} settings
- *
+ * @param {string} rootDirectory Absolute path.
  */
-function injectWebSocketSnippet(settings) {
+function injectWebSocketSnippet(rootDirectory) {
     /**
      * @param {connect.IncomingMessage} req
      * @param {http.ServerResponse} res
@@ -508,7 +513,7 @@ function injectWebSocketSnippet(settings) {
         }
 
         // Read the same decoded path that checkStaticPath has verified is within the project root.
-        let filePath = path.join(settings.root, decodeURIComponent(url));
+        let filePath = path.join(rootDirectory, decodeURIComponent(url));
 
         if (!fs.existsSync(filePath)) {
             next();
