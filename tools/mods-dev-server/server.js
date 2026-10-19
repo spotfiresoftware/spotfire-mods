@@ -88,7 +88,6 @@ function start(settings = {}) {
         throw `The path '${rootDirectoryAbsolutePath}' does not exist.`;
     }
 
-    const realRootDirectoryAbsolutePath = fs.realpathSync(rootDirectoryAbsolutePath);
 
     setupManifestListener();
 
@@ -345,65 +344,38 @@ function start(settings = {}) {
     }
 
     /**
-     * Prevent static file requests from resolving outside the project root through symlinks.
+     * Prevent static file requests from resolving outside the project root through, direct or via symlinks.
      *
      * @param {connect.IncomingMessage} req
      * @param {http.ServerResponse} res
      * @param {connect.NextFunction} next
      */
     function checkStaticPath(req, res, next) {
-        if (req.method !== "GET" && req.method !== "HEAD") {
-            next();
-            return;
-        }
-
         let requestPath;
         try {
             requestPath = decodeURIComponent((req.url || "").split("?")[0]);
         } catch (e) {
-            next();
-            return;
-        }
-
-        const absoluteFilePath = path.resolve(rootDirectoryAbsolutePath, `.${requestPath}`);
-        if (!isPathWithinRoot(rootDirectoryAbsolutePath, absoluteFilePath)) {
             res.statusCode = 404;
             res.end();
             return;
         }
 
-        try {
-            const realFilePath = fs.realpathSync(absoluteFilePath);
-            if (!isPathWithinRoot(realRootDirectoryAbsolutePath, realFilePath)) {
-                res.statusCode = 404;
-                res.end();
-                return;
-            }
+        const absoluteFilePath = path.resolve(rootDirectoryAbsolutePath, `.${requestPath}`);
 
-            if (requestPath.endsWith("/") && fs.statSync(realFilePath).isDirectory()) {
-                for (const indexFile of ["index.html", "index.htm"]) {
-                    const absoluteIndexFilePath = path.join(absoluteFilePath, indexFile);
-                    if (!fs.existsSync(absoluteIndexFilePath)) {
-                        continue;
-                    }
+        // serve-static serves the first index file that is not a directory.
+        const indexFilePath =
+            requestPath.endsWith("/") &&
+            ["index.html", "index.htm"]
+                .map((indexFile) => path.join(absoluteFilePath, indexFile))
+                .find((filePath) => fs.existsSync(filePath) && !fs.statSync(filePath).isDirectory());
 
-                    const realIndexFilePath = fs.realpathSync(absoluteIndexFilePath);
-                    if (!isPathWithinRoot(realRootDirectoryAbsolutePath, realIndexFilePath)) {
-                        res.statusCode = 404;
-                        res.end();
-                        return;
-                    }
-
-                    // serve-static skips directories and tries the next index file.
-                    if (fs.statSync(realIndexFilePath).isDirectory()) {
-                        continue;
-                    }
-
-                    break;
-                }
-            }
-        } catch (e) {
-            // Let serve-static handle missing or inaccessible paths.
+        if (
+            !isPathWithinRoot(rootDirectoryAbsolutePath, absoluteFilePath) ||
+            (indexFilePath && !isPathWithinRoot(rootDirectoryAbsolutePath, indexFilePath))
+        ) {
+            res.statusCode = 404;
+            res.end();
+            return;
         }
 
         next();
@@ -516,8 +488,6 @@ function onlyWhenOriginIsSet(middleware) {
  *
  */
 function injectWebSocketSnippet(settings) {
-    const realRootDirectory = fs.realpathSync(settings.root);
-
     /**
      * @param {connect.IncomingMessage} req
      * @param {http.ServerResponse} res
@@ -532,22 +502,10 @@ function injectWebSocketSnippet(settings) {
             return;
         }
 
-        // Decode the path the same way as serve-static. Malformed paths are left for serve-static to reject.
-        let filePath;
-        try {
-            filePath = path.join(settings.root, decodeURIComponent(url));
-        } catch (e) {
-            next();
-            return;
-        }
+        // Read the same decoded path that checkStaticPath has verified is within the project root.
+        let filePath = path.join(settings.root, decodeURIComponent(url));
 
         if (!fs.existsSync(filePath)) {
-            next();
-            return;
-        }
-
-        // This middleware reads the file itself, so it must also prevent symlinks from escaping the project root.
-        if (!isPathWithinRoot(realRootDirectory, fs.realpathSync(filePath))) {
             next();
             return;
         }
@@ -596,7 +554,6 @@ function takeSnapshot(filePaths, rootDirectory) {
      * @type {[string, number][]}
      */
     const snapshot = [];
-    const realRootDirectory = fs.realpathSync(rootDirectory);
     for (const filePath of filePaths) {
         const absoluteFilePath = path.resolve(rootDirectory, filePath);
         if (!isPathWithinRoot(rootDirectory, absoluteFilePath)) {
@@ -604,17 +561,8 @@ function takeSnapshot(filePaths, rootDirectory) {
         }
 
         try {
-            const realFilePath = fs.realpathSync(absoluteFilePath);
-            if (!isPathWithinRoot(realRootDirectory, realFilePath)) {
-                throw new Error(`File path '${filePath}' is outside the project root.`);
-            }
-
-            const stats = fs.statSync(realFilePath);
-            snapshot.push([filePath, stats.mtimeMs]);
+            snapshot.push([filePath, fs.statSync(absoluteFilePath).mtimeMs]);
         } catch (e) {
-            if (e instanceof Error && e.message.includes("is outside the project root")) {
-                throw e;
-            }
             snapshot.push([filePath, 0]);
         }
     }
@@ -622,16 +570,31 @@ function takeSnapshot(filePaths, rootDirectory) {
 }
 
 /**
+ * Check that a path is within the root directory, also after resolving symlinks. Paths that do not exist
+ * are only checked as written since there are no symlinks to resolve.
  * @param {string} rootDirectory
- * @param {string} filePath
+ * @param {string} filePath Absolute path.
  * @returns {boolean}
  */
 function isPathWithinRoot(rootDirectory, filePath) {
-    const relativeFilePath = path.relative(rootDirectory, filePath);
-    return (
-        relativeFilePath === "" ||
-        (relativeFilePath !== ".." &&
-            !relativeFilePath.startsWith(`..${path.sep}`) &&
-            !path.isAbsolute(relativeFilePath))
-    );
+    /** @param {string} root @param {string} file */
+    const isWithin = (root, file) => {
+        const relativeFilePath = path.relative(root, file);
+        return (
+            relativeFilePath === "" ||
+            (relativeFilePath !== ".." &&
+                !relativeFilePath.startsWith(`..${path.sep}`) &&
+                !path.isAbsolute(relativeFilePath))
+        );
+    };
+
+    if (!isWithin(rootDirectory, filePath)) {
+        return false;
+    }
+
+    try {
+        return isWithin(fs.realpathSync(rootDirectory), fs.realpathSync(filePath));
+    } catch (e) {
+        return true;
+    }
 }
