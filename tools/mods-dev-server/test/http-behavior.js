@@ -136,29 +136,99 @@ describe("Cache handling", function () {
 });
 
 describe("Static file handling", function () {
-    it("should not serve index files through symlinks outside the project root", function (done) {
+    /** @type {(() => void)[]} */
+    let cleanups = [];
+
+    afterEach(function () {
+        cleanups.forEach((cleanup) => cleanup());
+        cleanups = [];
+    });
+
+    /**
+     * Create a symlink inside the project root to a temporary index.html, or its directory, outside the root.
+     * Skips the test when the platform does not allow creating the symlink.
+     * @param {Mocha.Context} context
+     * @param {string} linkPath
+     * @param {"dir" | "file"} type
+     */
+    function linkOutsideRoot(context, linkPath, type = "dir") {
         const targetDirectory = fs.mkdtempSync(path.join(__dirname, "outside-root-"));
-        const symlinkPath = path.join(__dirname, "test-files", "outside-root");
-        fs.writeFileSync(path.join(targetDirectory, "index.html"), "outside project root");
+        const targetFile = path.join(targetDirectory, "index.html");
+        fs.writeFileSync(targetFile, "outside project root");
+        cleanups.push(() => fs.rmSync(targetDirectory, { recursive: true, force: true }));
 
         try {
-            fs.symlinkSync(targetDirectory, symlinkPath, process.platform === "win32" ? "junction" : "dir");
+            if (type === "file") {
+                fs.symlinkSync(targetFile, linkPath, "file");
+            } else {
+                fs.symlinkSync(targetDirectory, linkPath, process.platform === "win32" ? "junction" : "dir");
+            }
         } catch (error) {
-            fs.rmSync(targetDirectory, { recursive: true, force: true });
             if (error.code === "EPERM" || error.code === "EACCES") {
-                this.skip();
-                return;
+                context.skip();
             }
             throw error;
         }
 
-        test(devServer)
-            .get("/outside-root/")
+        // Remove the link before its target.
+        cleanups.unshift(() => fs.unlinkSync(linkPath));
+    }
+
+    /**
+     * @param {test.Response} res
+     */
+    function expectNotOutsideContent(res) {
+        if (res.text && res.text.includes("outside project root")) {
+            throw new Error("Served a file outside the project root.");
+        }
+    }
+
+    it("should not serve index files through symlinks outside the project root", async function () {
+        linkOutsideRoot(this, path.join(__dirname, "test-files", "outside-root"));
+        await test(devServer).get("/outside-root/").expect(404).expect(expectNotOutsideContent);
+    });
+
+    it("should not inject into index files through symlinks outside the project root for other methods", async function () {
+        linkOutsideRoot(this, path.join(__dirname, "test-files", "outside-root"));
+        await test(devServer).post("/outside-root/index.html").expect(404).expect(expectNotOutsideContent);
+    });
+
+    it("should not inject into index files through symlinks with encoded names", async function () {
+        linkOutsideRoot(this, path.join(__dirname, "test-files", "%61lias"));
+        await test(devServer).get("/%61lias/index.html").expect(404).expect(expectNotOutsideContent);
+    });
+
+    it("should not inject into index files through symlinks with malformed encoded names", async function () {
+        linkOutsideRoot(this, path.join(__dirname, "test-files", "%ZZ"));
+        await test(devServer).get("/%ZZ/index.html").expect(404).expect(expectNotOutsideContent);
+    });
+
+    it("should not serve a later index file through a symlink when an earlier one is a directory", async function () {
+        const directory = path.join(__dirname, "test-files", "index-fallback");
+        fs.mkdirSync(path.join(directory, "index.html"), { recursive: true });
+        cleanups.push(() => fs.rmSync(directory, { recursive: true, force: true }));
+        linkOutsideRoot(this, path.join(directory, "index.htm"), "file");
+
+        await test(devServer)
+            .get("/index-fallback/")
+            .set("Origin", "http://localhost:8080")
             .expect(404)
-            .end((error) => {
-                fs.unlinkSync(symlinkPath);
-                fs.rmSync(targetDirectory, { recursive: true, force: true });
-                done(error);
+            .expect(expectNotOutsideContent);
+    });
+
+    it("should inject the live reload snippet into index files in directories with encoded names", async function () {
+        const directory = path.join(__dirname, "test-files", "my mod");
+        fs.mkdirSync(directory);
+        cleanups.push(() => fs.rmSync(directory, { recursive: true, force: true }));
+        fs.writeFileSync(path.join(directory, "index.html"), "<html><body>My mod</body></html>");
+
+        await test(devServer)
+            .get("/my%20mod/index.html")
+            .expect(200)
+            .expect((res) => {
+                if (res.text === "<html><body>My mod</body></html>") {
+                    throw new Error("Expected the live reload snippet to be injected.");
+                }
             });
     });
 });

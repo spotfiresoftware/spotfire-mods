@@ -394,6 +394,11 @@ function start(settings = {}) {
                         return;
                     }
 
+                    // serve-static skips directories and tries the next index file.
+                    if (fs.statSync(realIndexFilePath).isDirectory()) {
+                        continue;
+                    }
+
                     break;
                 }
             }
@@ -511,6 +516,8 @@ function onlyWhenOriginIsSet(middleware) {
  *
  */
 function injectWebSocketSnippet(settings) {
+    const realRootDirectory = fs.realpathSync(settings.root);
+
     /**
      * @param {connect.IncomingMessage} req
      * @param {http.ServerResponse} res
@@ -525,9 +532,22 @@ function injectWebSocketSnippet(settings) {
             return;
         }
 
-        let filePath = path.join(settings.root, url);
+        // Decode the path the same way as serve-static. Malformed paths are left for serve-static to reject.
+        let filePath;
+        try {
+            filePath = path.join(settings.root, decodeURIComponent(url));
+        } catch (e) {
+            next();
+            return;
+        }
 
         if (!fs.existsSync(filePath)) {
+            next();
+            return;
+        }
+
+        // This middleware reads the file itself, so it must also prevent symlinks from escaping the project root.
+        if (!isPathWithinRoot(realRootDirectory, fs.realpathSync(filePath))) {
             next();
             return;
         }
