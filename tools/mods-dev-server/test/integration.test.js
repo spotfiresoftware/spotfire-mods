@@ -1,15 +1,32 @@
 //@ts-check
 
 const fs = require("fs");
+const os = require("os");
+const path = require("path");
 const puppeteer = require("puppeteer");
 const assert = require("assert");
 
 const { spawn } = require("child_process");
 
+// Keep the CLI from creating a config file in the user config directory.
+const configHome = fs.mkdtempSync(path.join(os.tmpdir(), "mods-dev-server-config-"));
+after(() => fs.rmSync(configHome, { recursive: true, force: true }));
+
 describe("CLI", function () {
     it("should warn when no manifest is present in the root folder", async () => {
         const server = cli(["cli.js", "test", "-p", "5556", "-o", "false"]);
         await server.match("Could not find a mod-manifest.json in the root directory");
+    });
+
+    it("should create the config file with the default origins on first start", async () => {
+        const emptyConfigHome = fs.mkdtempSync(path.join(configHome, "empty-"));
+        const server = cli(["cli.js", "test/test-files", "-p", "5558", "-o", "false"], emptyConfigHome);
+        await server.match("Created ");
+        server.kill();
+
+        const configPath = path.join(emptyConfigHome, process.platform === "win32" ? "Spotfire" : "spotfire", "mods-dev-server.json");
+        const config = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+        assert.deepStrictEqual(config, { allowedOrigins: ["http://localhost"] });
     });
 });
 
@@ -97,8 +114,9 @@ function touchFile(file) {
  * wrapper around a node.js process with the ability to match the output.
  *
  * @param {string[]} args
+ * @param {string} configDirectory Used as the user config directory.
  */
-function cli(args) {
+function cli(args, configDirectory = configHome) {
     let output = "";
     /** @type {{ resolve: any; reject: any; promise: any; }} */
     let unwrappedPromise = null;
@@ -108,7 +126,8 @@ function cli(args) {
     let pattern = null;
 
     let child = spawn("node", args, {
-        cwd: process.cwd()
+        cwd: process.cwd(),
+        env: { ...process.env, LOCALAPPDATA: configDirectory, XDG_CONFIG_HOME: configDirectory }
     });
 
     child.stdout.setEncoding("utf8");

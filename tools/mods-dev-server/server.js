@@ -2,6 +2,8 @@
 
 const http = require("http");
 const fs = require("fs");
+const net = require("net");
+const os = require("os");
 const path = require("path");
 
 /**
@@ -51,6 +53,8 @@ const applicationJson = "application/json; charset=utf-8";
 const injectHtml = fs.readFileSync(path.join(__dirname, "websocket.html"), { encoding: "utf8" });
 
 const manifestName = "mod-manifest.json";
+const configPath = path.join(configDirectory(), "mods-dev-server.json");
+const defaultAllowedOrigins = ["http://localhost"];
 /** @type {import("./server").ServerSettings} */
 const defaultSettings = {
     port: 8090,
@@ -89,12 +93,18 @@ function start(settings = {}) {
     }
 
     const realRootDirectoryAbsolutePath = fs.realpathSync(rootDirectoryAbsolutePath);
+    const allowedOriginPrefixes = readAllowedOrigins(settings.allowedOrigins);
+    /** @type {Set<string>} */
+    const blockedOrigins = new Set();
+    /** @type {Set<string>} */
+    const blockedHosts = new Set();
 
     setupManifestListener();
 
     const app = connect();
     const serveStaticFiles = serveStatic(settings.root, { index: ["index.html", "index.htm"] });
 
+    app.use(checkHost);
     app.use(compression());
     app.use(cacheHeaders);
     app.use(cspHeaders);
@@ -306,6 +316,30 @@ function start(settings = {}) {
     }
 
     /**
+     * Middleware to reject requests made through DNS rebinding, where an attacker's domain resolves to this machine.
+     * The browser then treats the requests as same-origin, so no CORS check applies, but the Host header still
+     * contains the attacker's domain. IP addresses cannot be rebound, so they are always allowed.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function checkHost(req, res, next) {
+        if (!req.headers.host || isAllowedHost(req.headers.host, settings.host)) {
+            next();
+            return;
+        }
+
+        if (!blockedHosts.has(req.headers.host)) {
+            blockedHosts.add(req.headers.host);
+            console.log(colors.yellow(`Blocked request with Host header '${req.headers.host}'.`));
+        }
+
+        res.statusCode = 403;
+        res.end("Invalid Host header");
+    }
+
+    /**
      * Middleware to manage CORS headers.
      *
      * @param {connect.IncomingMessage} req
@@ -318,11 +352,23 @@ function start(settings = {}) {
 
         // Prevent CORS requests from the sandboxed iframe. E.g module loading will not work in embedded mode.
         if (isCorsRequest && requestFromOutsideSandbox) {
-            allowedOrigins.add(req.headers.origin);
+            const origin = req.headers.origin;
+            if (!isAllowedOrigin(origin, allowedOriginPrefixes)) {
+                if (!blockedOrigins.has(origin)) {
+                    blockedOrigins.add(origin);
+                    console.log(colors.yellow(blockedOriginMessage(origin)));
+                }
+
+                next();
+                return;
+            }
+
+            allowedOrigins.add(origin);
 
             res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Origin", origin);
             res.setHeader("Access-Control-Allow-Private-Network", "true");
+            res.setHeader("Vary", "Origin");
         }
 
         next();
@@ -599,6 +645,130 @@ function takeSnapshot(filePaths, rootDirectory) {
         }
     }
     return { snapshot: snapshot };
+}
+
+/**
+ * The directory for the user config file, following platform conventions. Spotfire keeps its other local files
+ * in %LOCALAPPDATA%\Spotfire on Windows. Other platforms follow the XDG Base Directory specification.
+ * @returns {string}
+ */
+function configDirectory() {
+    if (process.platform === "win32") {
+        return path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData", "Local"), "Spotfire");
+    }
+
+    // The XDG specification says that relative paths should be ignored.
+    const xdgConfigHome = process.env.XDG_CONFIG_HOME;
+    const configHome = xdgConfigHome && path.isAbsolute(xdgConfigHome) ? xdgConfigHome : path.join(os.homedir(), ".config");
+    return path.join(configHome, "spotfire");
+}
+
+/**
+ * Create the config file with the default origins so that users can find it. Failing to create it,
+ * e.g. in a read-only home directory, is not an error since the default origins apply anyway.
+ */
+function createConfigFile() {
+    if (fs.existsSync(configPath)) {
+        return;
+    }
+
+    try {
+        fs.mkdirSync(path.dirname(configPath), { recursive: true });
+        fs.writeFileSync(configPath, JSON.stringify({ allowedOrigins: defaultAllowedOrigins }, null, 4) + "\n");
+        console.log(`Created ${configPath}`);
+    } catch (e) {}
+}
+
+/**
+ * Read the protocol and hostname of the origins allowed to make CORS requests. Origins are read from
+ * a config file in the user config directory, not the mod project, so that they cannot be planted through a commit.
+ * @param {string[] | undefined} allowedOrigins Origins passed via the Node.js API, takes precedence over the config file.
+ * @returns {string[]}
+ */
+function readAllowedOrigins(allowedOrigins) {
+    if (!allowedOrigins) {
+        createConfigFile();
+    }
+
+    if (!allowedOrigins && fs.existsSync(configPath)) {
+        try {
+            allowedOrigins = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" })).allowedOrigins;
+        } catch (e) {
+            throw `Could not read '${configPath}': ${e}`;
+        }
+    }
+
+    if (!allowedOrigins) {
+        allowedOrigins = defaultAllowedOrigins;
+    }
+
+    if (!Array.isArray(allowedOrigins)) {
+        throw `"allowedOrigins" in '${configPath}' must be an array of addresses.`;
+    }
+
+    return allowedOrigins.map((origin) => {
+        try {
+            const url = new URL(origin);
+            return `${url.protocol}//${url.hostname}`;
+        } catch (e) {
+            throw `Invalid address '${origin}' in "allowedOrigins".`;
+        }
+    });
+}
+
+/**
+ * Explain how to allow a blocked origin.
+ * @param {string} origin
+ * @returns {string}
+ */
+function blockedOriginMessage(origin) {
+    let originToAdd = origin;
+    try {
+        const url = new URL(origin);
+        originToAdd = `${url.protocol}//${url.hostname}`;
+    } catch (e) {}
+
+    return (
+        `Blocked request from origin '${origin}'. If this is your Spotfire web client, add "${originToAdd}" ` +
+        `to "allowedOrigins" in ${configPath} and restart the server.`
+    );
+}
+
+/**
+ * Check whether a Host header refers to this machine by IP address, localhost or the host the server is bound to.
+ * @param {string} host The Host header, a hostname with an optional port.
+ * @param {string | undefined} boundHost
+ * @returns {boolean}
+ */
+function isAllowedHost(host, boundHost) {
+    let hostname;
+    try {
+        hostname = new URL(`http://${host}`).hostname;
+    } catch (e) {
+        return false;
+    }
+
+    return (
+        hostname === "localhost" ||
+        hostname.endsWith(".localhost") ||
+        hostname === boundHost ||
+        net.isIP(hostname.replace(/^\[|\]$/g, "")) !== 0
+    );
+}
+
+/**
+ * Check whether an origin matches one of the allowed origins. The port is ignored since the installed client may use a dynamic port.
+ * @param {string} origin
+ * @param {string[]} allowedOriginPrefixes
+ * @returns {boolean}
+ */
+function isAllowedOrigin(origin, allowedOriginPrefixes) {
+    try {
+        const url = new URL(origin);
+        return allowedOriginPrefixes.includes(`${url.protocol}//${url.hostname}`);
+    } catch (e) {
+        return false;
+    }
 }
 
 /**

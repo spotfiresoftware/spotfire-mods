@@ -18,6 +18,14 @@ export interface ServerSettings {
 
     /** If the server should expose the spotfire/modProjectRoot endpoint. */
     allowProjectRoot?: boolean;
+
+    /**
+     * Protocol and hostname of the origins allowed to make CORS requests, any port is allowed.
+     * Defaults to the "allowedOrigins" list in mods-dev-server.json, or ["http://localhost"] if not set. The file is in
+     * %LOCALAPPDATA%\Spotfire on Windows and in $XDG_CONFIG_HOME/spotfire (default ~/.config/spotfire) on other platforms.
+     * It is created on first start and only read when the server starts.
+     */
+    allowedOrigins?: string[];
 }
 
 export declare function start(settings: ServerSettings) : http.Server;

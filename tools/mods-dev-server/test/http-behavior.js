@@ -8,7 +8,8 @@ const indexHtml = fs.readFileSync(path.join(__dirname, "test-files", "index.html
 
 const devServer = require("../server").start({
     root: path.join(__dirname, "test-files"),
-    open: false
+    open: false,
+    allowedOrigins: ["http://localhost", "https://spotfire.example.com"]
 });
 
 describe("basic get requests", function () {
@@ -100,13 +101,41 @@ describe("Code injection", function () {
 });
 
 describe("CORS handling", function () {
-    it("Should allow * CORS request when origin is set", function (done) {
+    it("Should allow CORS request from an allowed origin on any port", function (done) {
         test(devServer)
             .get("/index.html")
-            .set("Origin", "http://localhost:8080")
+            .set("Origin", "http://localhost:51234")
+            .expect("Access-Control-Allow-Origin", "http://localhost:51234")
+            .expect(200, done);
+    });
+
+    it("Should allow CORS request from a configured web client origin", function (done) {
+        test(devServer)
+            .get("/index.html")
+            .set("Origin", "https://spotfire.example.com")
+            .expect("Access-Control-Allow-Origin", "https://spotfire.example.com")
+            .expect(200, done);
+    });
+
+    it("Should not allow CORS request from an origin that is not allowed", function (done) {
+        test(devServer)
+            .get("/index.html")
+            .set("Origin", "https://evil.example.com")
             .expect(function (res) {
-                if (res.headers["access-control-allow-origin"] != "*") {
-                    throw new Error("CORS header should be *, but was: " + res.headers["access-control-allow-origin"]);
+                if (res.headers["access-control-allow-origin"]) {
+                    throw new Error("CORS header should not exist");
+                }
+            })
+            .expect(200, done);
+    });
+
+    it("Should not allow CORS request when only the hostname matches", function (done) {
+        test(devServer)
+            .get("/index.html")
+            .set("Origin", "http://spotfire.example.com")
+            .expect(function (res) {
+                if (res.headers["access-control-allow-origin"]) {
+                    throw new Error("CORS header should not exist");
                 }
             })
             .expect(200, done);
@@ -122,6 +151,22 @@ describe("CORS handling", function () {
                 }
             })
             .expect(200, done);
+    });
+});
+
+describe("Host handling", function () {
+    for (const host of ["localhost:8090", "127.0.0.1:8090", "[::1]:8090", "192.168.1.10:8090", "mod.localhost:8090"]) {
+        it(`should allow requests with Host '${host}'`, function (done) {
+            test(devServer).get("/index.html").set("Host", host).expect(200, done);
+        });
+    }
+
+    it("should reject requests with a domain name Host to prevent DNS rebinding", function (done) {
+        test(devServer).get("/index.html").set("Host", "evil.example.com:8090").expect(403, done);
+    });
+
+    it("should reject requests with a domain name Host that starts with localhost", function (done) {
+        test(devServer).get("/index.html").set("Host", "localhost.evil.example.com").expect(403, done);
     });
 });
 
@@ -242,7 +287,8 @@ describe("multiple instances", function () {
     it("should add external resources to CSP header", function (done) {
         const devServer2 = require("../server").start({
             root: path.join(__dirname, "test-files"),
-            open: false
+            open: false,
+            allowedOrigins: ["http://localhost"]
         });
 
         test(devServer2)

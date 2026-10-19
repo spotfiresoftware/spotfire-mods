@@ -20,6 +20,25 @@ mods-dev-server <source folder name>
 - `--version` lists the current package version.
 - `--allow-project-root` expose an endpoint at /spotfire/modProjectRoot for retrieving the path to the project root, necessary for debugging action mods.
 
+### Allowed origins
+
+Only requests from `http://localhost` (any port) may read files from the server. The allowed origins are configured in `mods-dev-server.json`, which the server creates on first start:
+
+- Windows: `%LOCALAPPDATA%\Spotfire\mods-dev-server.json`
+- Linux and macOS: `$XDG_CONFIG_HOME/spotfire/mods-dev-server.json`, or `~/.config/spotfire/mods-dev-server.json` if `XDG_CONFIG_HOME` is not set
+
+If you use the Spotfire web client, add its address:
+
+```json
+{
+    "allowedOrigins": ["http://localhost", "https://spotfire.example.com"]
+}
+```
+
+Each entry is a protocol and hostname, any port is allowed. The list replaces the default, so keep `http://localhost` if you also use the installed client. **The file is only read on startup, so restart the server after changing it.** The file is kept in your user config directory rather than the mod project so that it cannot be changed through a commit to the project.
+
+To prevent DNS rebinding attacks, the server only answers requests addressed to `localhost`, an IP address, or the host set with `--host`.
+
 ## Node.js API
 
 Here is an example of how to use the package from Node.js:
