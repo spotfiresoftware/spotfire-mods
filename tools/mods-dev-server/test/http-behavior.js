@@ -2,6 +2,7 @@ const test = require("supertest");
 
 const path = require("path");
 const fs = require("fs");
+const net = require("net");
 
 const mainCss = fs.readFileSync(path.join(__dirname, "test-files", "main.css"), { encoding: "utf8" });
 const indexHtml = fs.readFileSync(path.join(__dirname, "test-files", "index.html"), { encoding: "utf8" });
@@ -202,6 +203,38 @@ describe("Static file handling", function () {
         linkOutsideRoot(this, path.join(__dirname, "test-files", "%ZZ"));
         await test(devServer).get("/%ZZ/index.html").expect(404).expect(expectNotOutsideContent);
     });
+
+    /**
+     * Send a GET request with a raw request target, which supertest would otherwise normalize.
+     * @param {string} target
+     * @returns {Promise<string>} the raw response.
+     */
+    async function rawGet(target) {
+        // The server may still be picking another port if the default port is in use.
+        if (!devServer.listening) {
+            await new Promise((resolve) => devServer.once("listening", resolve));
+        }
+
+        return new Promise((resolve, reject) => {
+            const socket = net.connect(devServer.address().port, "127.0.0.1", () => {
+                socket.write(`GET ${target} HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n`);
+            });
+            let response = "";
+            socket.on("data", (chunk) => (response += chunk));
+            socket.on("end", () => resolve(response));
+            socket.on("error", reject);
+        });
+    }
+
+    for (const target of ["/outside-root/index.html#ignored", "http://localhost/outside-root/index.html"]) {
+        it(`should not serve files through symlinks outside the project root for request target '${target}'`, async function () {
+            linkOutsideRoot(this, path.join(__dirname, "test-files", "outside-root"));
+            const response = await rawGet(target);
+            if (!response.startsWith("HTTP/1.1 404") || response.includes("outside project root")) {
+                throw new Error("Served a file outside the project root: " + response.split("\r\n")[0]);
+            }
+        });
+    }
 
     it("should not serve a later index file through a symlink when an earlier one is a directory", async function () {
         const directory = path.join(__dirname, "test-files", "index-fallback");

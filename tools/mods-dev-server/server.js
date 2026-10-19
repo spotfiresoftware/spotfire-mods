@@ -25,6 +25,11 @@ const compression = require("compression");
 const serveStatic = require("serve-static");
 
 /**
+ * parseurl is the url parser used by serve-static. Using the same parser ensures that paths are checked the way they are served.
+ */
+const parseurl = require("parseurl");
+
+/**
  * Web socket server library. Used for setting up connections to each instance.
  */
 const ws = require("ws");
@@ -353,7 +358,7 @@ function start(settings = {}) {
     function checkStaticPath(req, res, next) {
         let requestPath;
         try {
-            requestPath = decodeURIComponent((req.url || "").split("?")[0]);
+            requestPath = decodeURIComponent(parseurl(req)?.pathname || "");
         } catch (e) {
             res.statusCode = 404;
             res.end();
@@ -520,8 +525,8 @@ function injectWebSocketSnippet(settings) {
 }
 
 function cleanUrl(url = "") {
-    // Remove any query params.
-    url = url.split("?")[0];
+    // Remove any query params and fragments, and reduce absolute urls to their path, the same way as serve-static.
+    url = parseurl({ url })?.pathname || "";
 
     if (url.endsWith("/")) {
         url += "index.html";
