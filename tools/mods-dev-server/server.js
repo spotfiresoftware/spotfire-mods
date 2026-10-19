@@ -25,6 +25,11 @@ const compression = require("compression");
 const serveStatic = require("serve-static");
 
 /**
+ * parseurl is the url parser used by serve-static. Using the same parser ensures that paths are checked the way they are served.
+ */
+const parseurl = require("parseurl");
+
+/**
  * Web socket server library. Used for setting up connections to each instance.
  */
 const ws = require("ws");
@@ -88,6 +93,7 @@ function start(settings = {}) {
         throw `The path '${rootDirectoryAbsolutePath}' does not exist.`;
     }
 
+
     setupManifestListener();
 
     const app = connect();
@@ -114,7 +120,8 @@ function start(settings = {}) {
     app.use("/@spotfire/api/info", info);
 
     app.use(checkIfPartOfManifest);
-    app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(settings)));
+    app.use(checkStaticPath);
+    app.use(onlyWhenOriginIsSet(injectWebSocketSnippet(rootDirectoryAbsolutePath)));
     app.use(serveStaticFiles);
 
     const server = http.createServer(app);
@@ -342,6 +349,50 @@ function start(settings = {}) {
     }
 
     /**
+     * Prevent static file requests from resolving outside the project root through, direct or via symlinks.
+     *
+     * @param {connect.IncomingMessage} req
+     * @param {http.ServerResponse} res
+     * @param {connect.NextFunction} next
+     */
+    function checkStaticPath(req, res, next) {
+        let requestPath;
+        try {
+            requestPath = decodeURIComponent(parseurl(req)?.pathname || "");
+        } catch (e) {
+            res.statusCode = 404;
+            res.end();
+            return;
+        }
+
+        if (!requestPath.startsWith("/")) {
+            res.statusCode = 404;
+            res.end();
+            return;
+        }
+
+        const absoluteFilePath = path.resolve(rootDirectoryAbsolutePath, `.${requestPath}`);
+
+        // serve-static serves the first index file that is not a directory.
+        const indexFilePath =
+            requestPath.endsWith("/") &&
+            ["index.html", "index.htm"]
+                .map((indexFile) => path.join(absoluteFilePath, indexFile))
+                .find((filePath) => fs.existsSync(filePath) && !fs.statSync(filePath).isDirectory());
+
+        if (
+            !isPathWithinRoot(rootDirectoryAbsolutePath, absoluteFilePath) ||
+            (indexFilePath && !isPathWithinRoot(rootDirectoryAbsolutePath, indexFilePath))
+        ) {
+            res.statusCode = 404;
+            res.end();
+            return;
+        }
+
+        next();
+    }
+
+    /**
      * Middleware for taking a snapshot of the mod files.
      *
      * @param {connect.IncomingMessage} req
@@ -385,7 +436,7 @@ function start(settings = {}) {
                     throw new Error("Missing property 'filePaths'");
                 }
 
-                res.write(JSON.stringify(takeSnapshot(manifestFiles.filePaths)));
+                res.write(JSON.stringify(takeSnapshot(manifestFiles.filePaths, rootDirectoryAbsolutePath)));
             } catch (e) {
                 res.statusCode = 400;
                 res.write(
@@ -444,10 +495,9 @@ function onlyWhenOriginIsSet(middleware) {
 
 /**
  * Inject the web socket snippet in html pages.
- * @param {any} settings
- *
+ * @param {string} rootDirectory Absolute path.
  */
-function injectWebSocketSnippet(settings) {
+function injectWebSocketSnippet(rootDirectory) {
     /**
      * @param {connect.IncomingMessage} req
      * @param {http.ServerResponse} res
@@ -462,7 +512,8 @@ function injectWebSocketSnippet(settings) {
             return;
         }
 
-        let filePath = path.join(settings.root, url);
+        // Read the same decoded path that checkStaticPath has verified is within the project root.
+        let filePath = path.join(rootDirectory, decodeURIComponent(url));
 
         if (!fs.existsSync(filePath)) {
             next();
@@ -479,8 +530,8 @@ function injectWebSocketSnippet(settings) {
 }
 
 function cleanUrl(url = "") {
-    // Remove any query params.
-    url = url.split("?")[0];
+    // Remove any query params and fragments, and reduce absolute urls to their path, the same way as serve-static.
+    url = parseurl({ url })?.pathname || "";
 
     if (url.endsWith("/")) {
         url += "index.html";
@@ -506,19 +557,54 @@ function cacheHeaders(req, res, next) {
 /**
  * Records the modified time (ms since UNIX epoch) of the requested files.
  * @param {string[]} filePaths
+ * @param {string} rootDirectory
  */
-function takeSnapshot(filePaths) {
+function takeSnapshot(filePaths, rootDirectory) {
     /**
      * @type {[string, number][]}
      */
     const snapshot = [];
     for (const filePath of filePaths) {
+        const absoluteFilePath = path.resolve(rootDirectory, filePath);
+        if (!isPathWithinRoot(rootDirectory, absoluteFilePath)) {
+            throw new Error(`File path '${filePath}' is outside the project root.`);
+        }
+
         try {
-            const stats = fs.statSync(filePath);
-            snapshot.push([filePath, stats.mtimeMs]);
+            snapshot.push([filePath, fs.statSync(absoluteFilePath).mtimeMs]);
         } catch (e) {
             snapshot.push([filePath, 0]);
         }
     }
     return { snapshot: snapshot };
+}
+
+/**
+ * Check that a path is within the root directory, also after resolving symlinks. Paths that do not exist
+ * are only checked as written since there are no symlinks to resolve.
+ * @param {string} rootDirectory
+ * @param {string} filePath Absolute path.
+ * @returns {boolean}
+ */
+function isPathWithinRoot(rootDirectory, filePath) {
+    /** @param {string} root @param {string} file */
+    const isWithin = (root, file) => {
+        const relativeFilePath = path.relative(root, file);
+        return (
+            relativeFilePath === "" ||
+            (relativeFilePath !== ".." &&
+                !relativeFilePath.startsWith(`..${path.sep}`) &&
+                !path.isAbsolute(relativeFilePath))
+        );
+    };
+
+    if (!isWithin(rootDirectory, filePath)) {
+        return false;
+    }
+
+    try {
+        return isWithin(fs.realpathSync(rootDirectory), fs.realpathSync(filePath));
+    } catch (e) {
+        return true;
+    }
 }
